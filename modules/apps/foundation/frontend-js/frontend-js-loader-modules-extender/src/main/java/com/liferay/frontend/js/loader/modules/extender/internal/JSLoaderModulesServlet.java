@@ -14,6 +14,9 @@
 
 package com.liferay.frontend.js.loader.modules.extender.internal;
 
+import com.liferay.frontend.js.loader.modules.extender.registry.PackageConfig;
+import com.liferay.frontend.js.loader.modules.extender.internal.registry.PackageRegistry;
+import com.liferay.frontend.js.loader.modules.extender.registry.PackageDependency;
 import com.liferay.portal.kernel.util.Portal;
 
 import java.io.IOException;
@@ -96,7 +99,7 @@ public class JSLoaderModulesServlet extends HttpServlet {
 		printWriter.println("(function() {");
 		printWriter.println("Liferay.PATHS = {");
 
-		String delimiter = "";
+		String delimiter = "", delimiter2 = "";
 		Set<String> processedNames = new HashSet<>();
 
 		Collection<JSLoaderModule> jsLoaderModules =
@@ -196,6 +199,55 @@ public class JSLoaderModulesServlet extends HttpServlet {
 		}
 
 		printWriter.println("\n};");
+		printWriter.println("Liferay.PACKAGES = {");
+
+		delimiter = "";
+		processedNames.clear();
+
+		for (PackageConfig pkgConfig : _packageRegistry.getPackageConfigs()) {
+			// TODO: honor module aliases
+			/*
+			for (ModuleAlias moduleAlias : pkgConfig.getModuleAliases()) {
+				String aliasedName = moduleAlias.getAliasedName();
+				String sourceName = moduleAlias.getSourceName();
+
+				aliasedName = clearExtension(aliasedName);
+				sourceName = clearExtension(sourceName);
+
+				pkgMap.put(aliasedName, sourceName);
+			}
+			*/
+
+			printWriter.write(delimiter);
+			printWriter.write("  \"");
+			printWriter.write(pkgConfig.getIdentifier());
+			printWriter.write("\": {\n");
+			printWriter.write("    \"path\": \"/o/pkg/" + pkgConfig.getIdentifier() + "\",\n");
+			printWriter.write("    \"main\": \"" + pkgConfig.getMain() + "\",\n");
+
+			printWriter.write("    \"dependencies\": {\n");
+
+			delimiter2 = "";
+
+			for (PackageDependency dependency : pkgConfig.getDependencies()) {
+				PackageConfig resolved = _packageRegistry.resolve(dependency);
+
+				if (resolved != null) {
+					printWriter.write(delimiter2);
+					printWriter.write("      \"" + resolved.getName() + "\": \"" + resolved.getVersion() + "\"");
+
+					delimiter2 = ",\n";
+				}
+			}
+
+			printWriter.write("\n    }\n");
+
+			printWriter.write("  }");
+
+			delimiter = ",\n";
+		}
+
+		printWriter.println("\n};");
 
 		printWriter.println(
 			"Liferay.EXPOSE_GLOBAL = " + _details.exposeGlobal() + ";\n");
@@ -216,11 +268,19 @@ public class JSLoaderModulesServlet extends HttpServlet {
 		_jsLoaderModulesTracker = jsLoaderModulesTracker;
 	}
 
+	@Reference(unbind = "-")
+	protected void setPackageRegistry(
+		PackageRegistry packageRegistry) {
+
+		_packageRegistry = packageRegistry;
+	}
+
 	private static final long serialVersionUID = -6710474190850787492L;
 
 	private transient ComponentContext _componentContext;
 	private transient volatile Details _details;
 	private transient JSLoaderModulesTracker _jsLoaderModulesTracker;
+	private transient PackageRegistry _packageRegistry;
 	private transient Logger _logger;
 
 	@Reference
