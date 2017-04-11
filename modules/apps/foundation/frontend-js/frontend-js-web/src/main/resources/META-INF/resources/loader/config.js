@@ -22,6 +22,8 @@
 
 	__CONFIG__.paths = Liferay.PATHS;
 
+	__CONFIG__.packages = Liferay.PACKAGES;
+
 	__CONFIG__.namespace = 'Liferay';
 
 	__CONFIG__.exposeGlobal = Liferay.EXPOSE_GLOBAL;
