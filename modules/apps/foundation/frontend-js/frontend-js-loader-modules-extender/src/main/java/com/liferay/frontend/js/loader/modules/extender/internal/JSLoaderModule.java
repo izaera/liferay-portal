@@ -269,7 +269,7 @@ public class JSLoaderModule {
 			return;
 		}
 
-		try (Reader reader = new InputStreamReader(url.openStream())) {
+		try (Reader reader = new InputStreamReader(url.openStream(), "UTF-8")) {
 			JSONTokener jsonTokener = new JSONTokener(reader);
 
 			JSONObject jsonObject = new JSONObject(jsonTokener);
