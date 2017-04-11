@@ -17,6 +17,7 @@ package com.liferay.frontend.js.loader.modules.extender.internal;
 import com.liferay.portal.kernel.util.Portal;
 
 import java.io.IOException;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 
 import java.util.Collection;
@@ -89,7 +90,8 @@ public class JSLoaderModulesServlet extends HttpServlet {
 
 		ServletOutputStream servletOutputStream = response.getOutputStream();
 
-		PrintWriter printWriter = new PrintWriter(servletOutputStream, true);
+		PrintWriter printWriter = new PrintWriter(
+			new OutputStreamWriter(servletOutputStream, "UTF-8"), true);
 
 		printWriter.println("(function() {");
 		printWriter.println("Liferay.PATHS = {");
@@ -214,12 +216,14 @@ public class JSLoaderModulesServlet extends HttpServlet {
 		_jsLoaderModulesTracker = jsLoaderModulesTracker;
 	}
 
-	private ComponentContext _componentContext;
-	private volatile Details _details;
-	private JSLoaderModulesTracker _jsLoaderModulesTracker;
-	private Logger _logger;
+	private static final long serialVersionUID = -6710474190850787492L;
+
+	private transient ComponentContext _componentContext;
+	private transient volatile Details _details;
+	private transient JSLoaderModulesTracker _jsLoaderModulesTracker;
+	private transient Logger _logger;
 
 	@Reference
-	private Portal _portal;
+	private transient Portal _portal;
 
 }
