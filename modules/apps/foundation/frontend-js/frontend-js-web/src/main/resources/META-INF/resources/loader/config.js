@@ -5,7 +5,6 @@
 
 	window.__CONFIG__ = {
 		basePath: '',
-		packagesPath: '/o/pkg',
 		combine: combine,
 		reportMismatchedAnonymousModules: 'warn',
 		url: combine ? LiferayAUI.getComboPath() : themeDisplay.getPortalURL()
@@ -22,8 +21,6 @@
 	__CONFIG__.modules = Liferay.MODULES;
 
 	__CONFIG__.paths = Liferay.PATHS;
-
-	__CONFIG__.packages = Liferay.PACKAGES;
 
 	__CONFIG__.namespace = 'Liferay';
 
