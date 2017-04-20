@@ -198,51 +198,28 @@ public class JSLoaderModulesServlet extends HttpServlet {
 			}
 		}
 
-		printWriter.println("\n};");
-		printWriter.println("Liferay.PACKAGES = {");
-
-		delimiter = "";
-		processedNames.clear();
-
 		for (PackageConfig pkgConfig : _packageRegistry.getPackageConfigs()) {
-			// TODO: honor module aliases
-			/*
-			for (ModuleAlias moduleAlias : pkgConfig.getModuleAliases()) {
-				String aliasedName = moduleAlias.getAliasedName();
-				String sourceName = moduleAlias.getSourceName();
-
-				aliasedName = clearExtension(aliasedName);
-				sourceName = clearExtension(sourceName);
-
-				pkgMap.put(aliasedName, sourceName);
-			}
-			*/
+//			// TODO: honor module aliases???
+//			/*
+//			for (ModuleAlias moduleAlias : pkgConfig.getModuleAliases()) {
+//				String aliasedName = moduleAlias.getAliasedName();
+//				String sourceName = moduleAlias.getSourceName();
+//
+//				aliasedName = clearExtension(aliasedName);
+//				sourceName = clearExtension(sourceName);
+//
+//				pkgMap.put(aliasedName, sourceName);
+//			}
+//			*/
 
 			printWriter.write(delimiter);
-			printWriter.write("  \"");
+			printWriter.write("'");
 			printWriter.write(pkgConfig.getIdentifier());
-			printWriter.write("\": {\n");
-			printWriter.write("    \"path\": \"/o/pkg/" + pkgConfig.getIdentifier() + "\",\n");
-			printWriter.write("    \"main\": \"" + pkgConfig.getMain() + "\",\n");
-
-			printWriter.write("    \"dependencies\": {\n");
-
-			delimiter2 = "";
-
-			for (PackageDependency dependency : pkgConfig.getDependencies()) {
-				PackageConfig resolved = _packageRegistry.resolve(dependency);
-
-				if (resolved != null) {
-					printWriter.write(delimiter2);
-					printWriter.write("      \"" + resolved.getName() + "\": \"" + resolved.getVersion() + "\"");
-
-					delimiter2 = ",\n";
-				}
-			}
-
-			printWriter.write("\n    }\n");
-
-			printWriter.write("  }");
+			printWriter.write("': '");
+			printWriter.write(pkgConfig.getIdentifier());
+			printWriter.write('/');
+			printWriter.write(pkgConfig.getMain());
+			printWriter.write("'");
 
 			delimiter = ",\n";
 		}
