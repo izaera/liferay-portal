@@ -14,9 +14,10 @@
 
 package com.liferay.frontend.js.loader.modules.extender.internal;
 
-import com.liferay.frontend.js.loader.modules.extender.registry.PackageConfig;
 import com.liferay.frontend.js.loader.modules.extender.internal.registry.PackageRegistry;
-import com.liferay.frontend.js.loader.modules.extender.registry.PackageDependency;
+import com.liferay.frontend.js.loader.modules.extender.registry.JSModule;
+import com.liferay.frontend.js.loader.modules.extender.registry.JSPackage;
+import com.liferay.frontend.js.loader.modules.extender.registry.JSPackageDependency;
 import com.liferay.portal.kernel.util.Portal;
 
 import java.io.IOException;
@@ -35,6 +36,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.liferay.portal.kernel.util.StringPool;
 import org.apache.felix.utils.log.Logger;
 
 import org.osgi.service.component.ComponentContext;
@@ -131,6 +133,21 @@ public class JSLoaderModulesServlet extends HttpServlet {
 			delimiter = ",\n";
 		}
 
+		Collection<JSModule> jsModules =
+			_packageRegistry.getResolvedJSModules();
+
+		for (JSModule jsModule : jsModules) {
+			printWriter.write(delimiter);
+			printWriter.write("'");
+			printWriter.write(jsModule.getResolvedId());
+			printWriter.write("': '");
+			printWriter.write(_portal.getPathProxy());
+			printWriter.write(jsModule.getResolvedURL());
+			printWriter.write("'");
+
+			delimiter = ",\n";
+		}
+
 		printWriter.println("\n};");
 		printWriter.println("Liferay.MODULES = {");
 
@@ -163,6 +180,58 @@ public class JSLoaderModulesServlet extends HttpServlet {
 
 				delimiter = ",\n";
 			}
+		}
+
+		for (JSModule jsModule : jsModules) {
+			printWriter.write(delimiter);
+			printWriter.write("\"");
+			printWriter.write(jsModule.getResolvedId());
+			printWriter.write("\": {\n");
+
+			delimiter2 = "";
+
+			printWriter.write("  \"dependencies\": [");
+			for (String dependency : jsModule.getDependencies()) {
+				printWriter.write(delimiter2);
+				printWriter.write("\"" + dependency + "\"");
+
+				delimiter2 = ", ";
+			}
+			printWriter.write("],\n");
+
+			delimiter2 = "";
+
+			JSPackage jsPackage = jsModule.getJSPackage();
+
+			printWriter.write("  \"dependencyVersions\": {");
+			for (String dependency : jsModule.getDependencies()) {
+				JSPackageDependency jsPackageDependency =
+					jsPackage.getJSPackageDependency(dependency);
+
+				if (jsPackageDependency != null) {
+					printWriter.write(delimiter2);
+
+					printWriter.write("\"");
+					printWriter.write(dependency);
+					printWriter.write("\": ");
+
+					JSPackage jsDependencyPackage =
+						_packageRegistry.resolveJSPackageDependency(
+							jsPackageDependency);
+
+					printWriter.write("\"");
+					printWriter.write(
+						jsDependencyPackage.getVersion().toString());
+					printWriter.write("\"");
+
+					delimiter2 = ", ";
+				}
+			}
+			printWriter.write("}\n");
+
+			printWriter.write("}");
+
+			delimiter = ",\n";
 		}
 
 		printWriter.println("\n};");
@@ -198,31 +267,28 @@ public class JSLoaderModulesServlet extends HttpServlet {
 			}
 		}
 
-		for (PackageConfig pkgConfig : _packageRegistry.getPackageConfigs()) {
-//			// TODO: honor module aliases???
-//			/*
-//			for (ModuleAlias moduleAlias : pkgConfig.getModuleAliases()) {
-//				String aliasedName = moduleAlias.getAliasedName();
-//				String sourceName = moduleAlias.getSourceName();
-//
-//				aliasedName = clearExtension(aliasedName);
-//				sourceName = clearExtension(sourceName);
-//
-//				pkgMap.put(aliasedName, sourceName);
-//			}
-//			*/
+		Collection<JSPackage> jsPackages = _packageRegistry.getJSPackages();
 
+		for (JSPackage jsPackage : jsPackages) {
 			printWriter.write(delimiter);
 			printWriter.write("'");
-			printWriter.write(pkgConfig.getIdentifier());
+			printWriter.write(jsPackage.getName());
+			printWriter.write(StringPool.AT);
+			printWriter.write(jsPackage.getVersion().toString());
 			printWriter.write("': '");
-			printWriter.write(pkgConfig.getIdentifier());
-			printWriter.write('/');
-			printWriter.write(pkgConfig.getMain());
+			printWriter.write(jsPackage.getName());
+			printWriter.write(StringPool.AT);
+			printWriter.write(jsPackage.getVersion().toString());
+			printWriter.write(StringPool.SLASH);
+			printWriter.write(jsPackage.getMain());
 			printWriter.write("'");
 
 			delimiter = ",\n";
 		}
+		/*
+		*/
+
+		// TODO: honor module aliases???
 
 		printWriter.println("\n};");
 
@@ -246,9 +312,7 @@ public class JSLoaderModulesServlet extends HttpServlet {
 	}
 
 	@Reference(unbind = "-")
-	protected void setPackageRegistry(
-		PackageRegistry packageRegistry) {
-
+	protected void setPackageRegistry(PackageRegistry packageRegistry) {
 		_packageRegistry = packageRegistry;
 	}
 
