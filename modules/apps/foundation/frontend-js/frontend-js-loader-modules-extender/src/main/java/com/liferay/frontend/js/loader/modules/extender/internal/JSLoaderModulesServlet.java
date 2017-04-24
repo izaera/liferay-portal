@@ -267,26 +267,22 @@ public class JSLoaderModulesServlet extends HttpServlet {
 			}
 		}
 
-		Collection<JSPackage> jsPackages = _packageRegistry.getJSPackages();
-
-		for (JSPackage jsPackage : jsPackages) {
+		for (JSPackage jsPackage : _packageRegistry.getJSPackages()) {
 			printWriter.write(delimiter);
 			printWriter.write("'");
 			printWriter.write(jsPackage.getName());
 			printWriter.write(StringPool.AT);
 			printWriter.write(jsPackage.getVersion().toString());
-			printWriter.write("': '");
+			printWriter.write("': { value: '");
 			printWriter.write(jsPackage.getName());
 			printWriter.write(StringPool.AT);
 			printWriter.write(jsPackage.getVersion().toString());
 			printWriter.write(StringPool.SLASH);
 			printWriter.write(jsPackage.getMain());
-			printWriter.write("'");
+			printWriter.write("', exact: true}");
 
 			delimiter = ",\n";
 		}
-		/*
-		*/
 
 		// TODO: honor module aliases???
 
