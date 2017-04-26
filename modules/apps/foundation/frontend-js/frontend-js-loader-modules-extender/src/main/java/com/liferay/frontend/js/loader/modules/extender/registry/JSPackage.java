@@ -16,11 +16,11 @@ import com.liferay.portal.kernel.util.Validator;
 public class JSPackage implements JSBundleObject {
 
 	public JSPackage(
-		String name, String version, String main, boolean root) {
+		String name, String version, String mainModuleName, boolean root) {
 
 		_name = name;
-		_version = Version.from(version, true);
-		_main = Validator.isNull(main) ? "index.js" : main;
+		_version = version;
+		_mainModuleName = mainModuleName;
 		_root = root;
 	}
 
@@ -42,7 +42,7 @@ public class JSPackage implements JSBundleObject {
 		jsPackageDependency.setJSPackage(this);
 
 		_jsPackageDependencies.put(
-			jsPackageDependency.getName(), jsPackageDependency);
+			jsPackageDependency.getPackageName(), jsPackageDependency);
 	}
 
 	public JSBundle getJSBundle() {
@@ -59,12 +59,12 @@ public class JSPackage implements JSBundleObject {
 		return _name;
 	}
 
-	public Version getVersion() {
+	public String getVersion() {
 		return _version;
 	}
 
-	public String getMain() {
-		return _main;
+	public String getMainModuleName() {
+		return _mainModuleName;
 	}
 
 	public Collection<JSModule> getJSModules() {
@@ -79,8 +79,8 @@ public class JSPackage implements JSBundleObject {
 		return _jsPackageDependencies.values();
 	}
 
-	public JSPackageDependency getJSPackageDependency(String dependency) {
-		return _jsPackageDependencies.get(dependency);
+	public JSPackageDependency getJSPackageDependency(String packageName) {
+		return _jsPackageDependencies.get(packageName);
 	}
 
 
@@ -124,9 +124,9 @@ public class JSPackage implements JSBundleObject {
 		new HashMap<>();
 	private String _id;
 	private String _name;
-	private String _main;
+	private String _mainModuleName;
 	private List<JSModule> _jsModules = new ArrayList<>();
 	private List<JSModuleAlias> _jsModuleAliases = new ArrayList<>();
-	private Version _version;
+	private String _version;
 	private boolean _root;
 }

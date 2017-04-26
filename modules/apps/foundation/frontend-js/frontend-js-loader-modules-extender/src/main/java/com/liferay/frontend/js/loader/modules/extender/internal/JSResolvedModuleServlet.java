@@ -35,10 +35,13 @@ public class JSResolvedModuleServlet extends HttpServlet {
 			HttpServletRequest request, HttpServletResponse response)
 		throws ServletException, IOException {
 
-		String identifier = request.getPathInfo().substring(1);
+		String pathInfo = request.getPathInfo();
 
-		JSModule jsModule =
-			_packageRegistry.getResolvedJSModule(identifier);
+		String identifier = pathInfo.substring(1);
+
+		String moduleName = ModuleNameUtil.toModuleName(identifier);
+
+		JSModule jsModule = _packageRegistry.getResolvedJSModule(moduleName);
 
 		response.setContentType(ContentTypes.TEXT_JAVASCRIPT_UTF8);
 

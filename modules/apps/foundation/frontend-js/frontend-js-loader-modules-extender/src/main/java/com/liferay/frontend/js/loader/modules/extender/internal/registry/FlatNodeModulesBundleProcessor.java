@@ -1,5 +1,6 @@
 package com.liferay.frontend.js.loader.modules.extender.internal.registry;
 
+import com.liferay.frontend.js.loader.modules.extender.internal.ModuleNameUtil;
 import com.liferay.frontend.js.loader.modules.extender.registry.JSBundle;
 import com.liferay.frontend.js.loader.modules.extender.registry.JSModule;
 import com.liferay.frontend.js.loader.modules.extender.registry.JSPackage;
@@ -10,6 +11,7 @@ import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.Validator;
 import org.apache.felix.utils.log.Logger;
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -41,6 +43,7 @@ public class FlatNodeModulesBundleProcessor implements JSBundleProcessor {
 	public static final String TYPE = "npm-flat";
 	public static final String VERSION = "version";
 	public static final String DEPENDENCIES = "dependencies";
+	public static final String PEER_DEPENDENCIES = "peerDependencies";
 
 	@Activate
 	@Modified
@@ -68,10 +71,7 @@ public class FlatNodeModulesBundleProcessor implements JSBundleProcessor {
 			return null;
 		}
 
-		ServletContext servletContext = _bundleContext.getService(
-			serviceReference);
-
-		JSBundle jsBundle = new JSBundle(bundle, servletContext);
+		JSBundle jsBundle = new JSBundle(bundle);
 
 		processRootPackage(bundle, jsBundle);
 
@@ -117,9 +117,8 @@ public class FlatNodeModulesBundleProcessor implements JSBundleProcessor {
 
 			Collection<JSModule> jsModules = parseModules(
 				bundle,
-				"META-INF/resources/node_modules/" +
-					jsPackage.getName() + StringPool.AT +
-					jsPackage.getVersion() );
+				"META-INF/resources/node_modules/" + jsPackage.getName() +
+				StringPool.AT + jsPackage.getVersion() );
 
 			for (JSModule jsModule : jsModules) {
 				jsPackage.addJSModule(jsModule);
@@ -148,6 +147,8 @@ public class FlatNodeModulesBundleProcessor implements JSBundleProcessor {
 			}
 
 			String name = url.getPath().substring(location.length() + 2);
+
+			name = ModuleNameUtil.toModuleName(name);
 
 			Collection<String> dependencies;
 
@@ -187,20 +188,47 @@ public class FlatNodeModulesBundleProcessor implements JSBundleProcessor {
 			return null;
 		}
 
+		String main = jsonObject.getString(MAIN);
+
+		String mainModuleName =
+			Validator.isNull(main) ? "index" :
+				ModuleNameUtil.toModuleName(main);
+
 		JSPackage jsPackage = new JSPackage(
 			jsonObject.getString(NAME), jsonObject.getString(VERSION),
-			jsonObject.getString(MAIN), root);
+			mainModuleName, root);
 
 		JSONObject dependencies = jsonObject.getJSONObject(DEPENDENCIES);
 
-		Iterator<String> dependencyNames = dependencies.keys();
+		if (dependencies != null) {
+			Iterator<String> dependencyNames = dependencies.keys();
 
-		while (dependencyNames.hasNext()) {
-			String dependencyName = dependencyNames.next();
-			String versionConstraints = dependencies.getString(dependencyName);
+			while (dependencyNames.hasNext()) {
+				String dependencyName = dependencyNames.next();
+				String versionConstraints =
+					dependencies.getString(dependencyName);
 
-			jsPackage.addJSPackageDependency(
-				new JSPackageDependency(dependencyName, versionConstraints));
+				jsPackage.addJSPackageDependency(
+					new JSPackageDependency(
+						dependencyName, versionConstraints));
+			}
+		}
+
+		JSONObject peerDependencies = jsonObject.getJSONObject(
+			PEER_DEPENDENCIES);
+
+		if (peerDependencies != null) {
+			Iterator<String> peerDependencyNames = peerDependencies.keys();
+
+			while (peerDependencyNames.hasNext()) {
+				String peerDependencyName = peerDependencyNames.next();
+				String versionConstraints = peerDependencies.getString(
+					peerDependencyName);
+
+				jsPackage.addJSPackageDependency(
+					new JSPackageDependency(
+						peerDependencyName, versionConstraints));
+			}
 		}
 
 		// TODO: parse module aliases

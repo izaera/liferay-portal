@@ -77,7 +77,9 @@ public class JSBundlesServlet extends HttpServlet {
 
 		out.println("<name>" + jsPackage.getName() + "</name>");
 		out.println("<version>" + jsPackage.getVersion() + "</version>");
-		out.println("<main>" + jsPackage.getMain() + "</main>");
+		out.println(
+			"<main-module-name>" + jsPackage.getMainModuleName() +
+			"</main-module-name>");
 
 		printPackageDependencies(out, jsPackage.getJSPackageDependencies());
 
@@ -98,9 +100,9 @@ public class JSBundlesServlet extends HttpServlet {
 
 		for (JSPackageDependency jsPackageDependency : jsPackageDependencies) {
 			out.println(
-				"<dependency name=\""+ jsPackageDependency.getName() +
-				"\" version=\"" + jsPackageDependency.getVersionConstraints() +
-				"\" />");
+				"<dependency package-name=\""+
+				jsPackageDependency.getPackageName() + "\" version=\"" +
+				jsPackageDependency.getVersionConstraints() + "\" />");
 		}
 
 		out.println("</dependencies>");
@@ -113,7 +115,7 @@ public class JSBundlesServlet extends HttpServlet {
 
 		for (JSModuleAlias jsModuleAlias : jsModuleAliases) {
 			out.println(
-				"<module-alias name=\""+ jsModuleAlias.getName() +
+				"<module-alias module-name=\"" + jsModuleAlias.getModuleName() +
 				"\" alias=\"" + jsModuleAlias.getAlias() + "\" />");
 		}
 

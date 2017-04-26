@@ -16,6 +16,9 @@ package com.liferay.frontend.js.loader.modules.extender.registry.definitions;
  * This is useful to disambiguate duplicated assets.
  */
 public interface JSResolvableBundleAsset extends JSBundleAsset {
+
 	public String getResolvedURL();
+
 	public String getResolvedId();
+
 }

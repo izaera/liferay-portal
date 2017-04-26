@@ -1,11 +1,11 @@
 package com.liferay.frontend.js.loader.modules.extender.registry;
 
-import com.liferay.frontend.js.loader.modules.extender.internal.registry.PackageRegistry;
+import com.liferay.portal.kernel.util.StringPool;
 
 public class JSPackageDependency {
 
-	public JSPackageDependency(String name, String versionConstraints) {
-		_name = name;
+	public JSPackageDependency(String packageName, String versionConstraints) {
+		_packageName = packageName;
 		_versionConstraints = versionConstraints;
 	}
 
@@ -13,8 +13,8 @@ public class JSPackageDependency {
 		return _jsPackage;
 	}
 
-	public String getName() {
-		return _name;
+	public String getPackageName() {
+		return _packageName;
 	}
 
 	public String getVersionConstraints() {
@@ -23,13 +23,13 @@ public class JSPackageDependency {
 
 	@Override
 	public String toString() {
-		return getName() + ":" + getVersionConstraints();
+		return _packageName + StringPool.COLON + _versionConstraints;
 	}
 
 	protected void setJSPackage(JSPackage jsPackage) {
 		if (_jsPackage != null) {
 			throw new IllegalStateException(
-				"Package dependency " + getName() +
+				"Package dependency " + _packageName +
 				" is already contained in package " + _jsPackage.getId());
 		}
 
@@ -37,6 +37,6 @@ public class JSPackageDependency {
 	}
 
 	private JSPackage _jsPackage;
-	private String _name;
+	private String _packageName;
 	private String _versionConstraints;
 }

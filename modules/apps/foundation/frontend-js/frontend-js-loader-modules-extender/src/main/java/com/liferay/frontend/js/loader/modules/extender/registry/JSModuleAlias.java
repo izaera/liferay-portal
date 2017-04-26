@@ -2,8 +2,8 @@ package com.liferay.frontend.js.loader.modules.extender.registry;
 
 public class JSModuleAlias {
 
-	public JSModuleAlias(String name, String alias) {
-		_name = name;
+	public JSModuleAlias(String moduleName, String alias) {
+		_moduleName = moduleName;
 		_alias = alias;
 	}
 
@@ -11,8 +11,8 @@ public class JSModuleAlias {
 		return _jsPackage;
 	}
 
-	public String getName() {
-		return _name;
+	public String getModuleName() {
+		return _moduleName;
 	}
 
 	public String getAlias() {
@@ -21,7 +21,7 @@ public class JSModuleAlias {
 
 	@Override
 	public String toString() {
-		return getAlias() + "~=" + getName();
+		return getAlias() + "~=" + getModuleName();
 	}
 
 	protected void setJSPackage(JSPackage jsPackage) {
@@ -36,5 +36,5 @@ public class JSModuleAlias {
 
 	private String _alias;
 	private JSPackage _jsPackage;
-	private String _name;
+	private String _moduleName;
 }

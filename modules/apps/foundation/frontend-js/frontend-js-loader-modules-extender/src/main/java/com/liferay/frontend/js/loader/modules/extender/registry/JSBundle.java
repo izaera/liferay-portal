@@ -13,9 +13,8 @@ import javax.servlet.ServletContext;
 
 public class JSBundle implements JSBundleObject {
 
-	public JSBundle(Bundle bundle, ServletContext servletContext) {
+	public JSBundle(Bundle bundle) {
 		_bundle = bundle;
-		_servletContext = servletContext;
 		_jsPackages = new ArrayList<>();
 
 		_id = Long.toString(_bundle.getBundleId());
@@ -55,7 +54,6 @@ public class JSBundle implements JSBundleObject {
 	}
 
 	private final Bundle _bundle;
-	private final ServletContext _servletContext;
 	private final List<JSPackage> _jsPackages;
 	private final String _id;
 }

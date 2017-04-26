@@ -12,6 +12,7 @@ import java.util.concurrent.ConcurrentSkipListMap;
 import javax.servlet.ServletContext;
 
 import com.github.yuchi.semver.Range;
+import com.github.yuchi.semver.Version;
 import com.liferay.frontend.js.loader.modules.extender.registry.JSModule;
 import com.liferay.frontend.js.loader.modules.extender.registry.JSPackage;
 import com.liferay.frontend.js.loader.modules.extender.registry.JSPackageDependency;
@@ -38,12 +39,12 @@ public class PackageRegistry {
 	public JSPackage resolveJSPackageDependency(
 		JSPackageDependency jsPackageDependency) {
 
-		String dependencyName = jsPackageDependency.getName();
+		String packageName = jsPackageDependency.getPackageName();
 
 		List<JSPackage> jsPackages = new ArrayList<>();
 
 		for (JSPackage jsPackage : _jsPackages.values() ) {
-			if (jsPackage.getName().equals(dependencyName)) {
+			if (jsPackage.getName().equals(packageName)) {
 				jsPackages.add(jsPackage);
 			}
 		}
@@ -51,7 +52,10 @@ public class PackageRegistry {
 		Collections.sort(jsPackages, new Comparator<JSPackage>() {
 			@Override
 			public int compare(JSPackage o1, JSPackage o2) {
-				return o1.getVersion().compareTo(o2.getVersion());
+				Version version1 = Version.from(o1.getVersion(), true);
+				Version version2 = Version.from(o2.getVersion(), true);
+
+				return version1.compareTo(version2);
 			}
 		});
 
@@ -59,7 +63,9 @@ public class PackageRegistry {
 			jsPackageDependency.getVersionConstraints(), true);
 
 		for (JSPackage jsPackage : jsPackages) {
-			if (range.test(jsPackage.getVersion())) {
+			Version version = Version.from(jsPackage.getVersion(), true);
+
+			if (range.test(version)) {
 				return jsPackage;
 			}
 		}

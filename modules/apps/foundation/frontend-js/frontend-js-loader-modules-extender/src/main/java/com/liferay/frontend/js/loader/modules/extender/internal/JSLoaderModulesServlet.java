@@ -133,16 +133,16 @@ public class JSLoaderModulesServlet extends HttpServlet {
 			delimiter = ",\n";
 		}
 
-		Collection<JSModule> jsModules =
+		Collection<JSModule> resolvedJSModules =
 			_packageRegistry.getResolvedJSModules();
 
-		for (JSModule jsModule : jsModules) {
+		for (JSModule resolvedJSModule : resolvedJSModules) {
 			printWriter.write(delimiter);
 			printWriter.write("'");
-			printWriter.write(jsModule.getResolvedId());
+			printWriter.write(resolvedJSModule.getResolvedId());
 			printWriter.write("': '");
 			printWriter.write(_portal.getPathProxy());
-			printWriter.write(jsModule.getResolvedURL());
+			printWriter.write(resolvedJSModule.getResolvedURL());
 			printWriter.write("'");
 
 			delimiter = ",\n";
@@ -182,16 +182,16 @@ public class JSLoaderModulesServlet extends HttpServlet {
 			}
 		}
 
-		for (JSModule jsModule : jsModules) {
+		for (JSModule resolvedJSModule : resolvedJSModules) {
 			printWriter.write(delimiter);
 			printWriter.write("\"");
-			printWriter.write(jsModule.getResolvedId());
+			printWriter.write(resolvedJSModule.getResolvedId());
 			printWriter.write("\": {\n");
 
 			delimiter2 = "";
 
 			printWriter.write("  \"dependencies\": [");
-			for (String dependency : jsModule.getDependencies()) {
+			for (String dependency : resolvedJSModule.getDependencies()) {
 				printWriter.write(delimiter2);
 				printWriter.write("\"" + dependency + "\"");
 
@@ -199,29 +199,30 @@ public class JSLoaderModulesServlet extends HttpServlet {
 			}
 			printWriter.write("],\n");
 
+			JSPackage jsPackage = resolvedJSModule.getJSPackage();
+
 			delimiter2 = "";
 
-			JSPackage jsPackage = jsModule.getJSPackage();
-
 			printWriter.write("  \"dependencyVersions\": {");
-			for (String dependency : jsModule.getDependencies()) {
+			for (String dependencyPackageName :
+				resolvedJSModule.getDependencyPackageNames()) {
+
 				JSPackageDependency jsPackageDependency =
-					jsPackage.getJSPackageDependency(dependency);
+					jsPackage.getJSPackageDependency(dependencyPackageName);
 
 				if (jsPackageDependency != null) {
-					printWriter.write(delimiter2);
-
-					printWriter.write("\"");
-					printWriter.write(dependency);
-					printWriter.write("\": ");
-
 					JSPackage jsDependencyPackage =
 						_packageRegistry.resolveJSPackageDependency(
 							jsPackageDependency);
 
+					printWriter.write(delimiter2);
+
 					printWriter.write("\"");
-					printWriter.write(
-						jsDependencyPackage.getVersion().toString());
+					printWriter.write(jsDependencyPackage.getName());
+					printWriter.write("\": ");
+
+					printWriter.write("\"");
+					printWriter.write(jsDependencyPackage.getVersion());
 					printWriter.write("\"");
 
 					delimiter2 = ", ";
@@ -272,13 +273,13 @@ public class JSLoaderModulesServlet extends HttpServlet {
 			printWriter.write("'");
 			printWriter.write(jsPackage.getName());
 			printWriter.write(StringPool.AT);
-			printWriter.write(jsPackage.getVersion().toString());
+			printWriter.write(jsPackage.getVersion());
 			printWriter.write("': { value: '");
 			printWriter.write(jsPackage.getName());
 			printWriter.write(StringPool.AT);
-			printWriter.write(jsPackage.getVersion().toString());
+			printWriter.write(jsPackage.getVersion());
 			printWriter.write(StringPool.SLASH);
-			printWriter.write(jsPackage.getMain());
+			printWriter.write(jsPackage.getMainModuleName());
 			printWriter.write("', exact: true}");
 
 			delimiter = ",\n";

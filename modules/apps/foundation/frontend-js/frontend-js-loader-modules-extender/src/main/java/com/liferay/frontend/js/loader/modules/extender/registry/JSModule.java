@@ -1,12 +1,12 @@
 package com.liferay.frontend.js.loader.modules.extender.registry;
 
-import com.liferay.frontend.js.loader.modules.extender.registry.definitions.JSBundleAsset;
+import com.liferay.frontend.js.loader.modules.extender.internal.ModuleNameUtil;
 import com.liferay.frontend.js.loader.modules.extender.registry.definitions.JSResolvableBundleAsset;
-import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -15,6 +15,11 @@ public class JSModule implements JSResolvableBundleAsset {
 	public JSModule(String name, Collection<String> dependencies) {
 		_name = name;
 		_dependencies = dependencies;
+
+		for (String dependency : dependencies) {
+			_dependencyPackageNames.add(
+				ModuleNameUtil.getPackageName(dependency));
+		}
 	}
 
 	@Override
@@ -35,6 +40,10 @@ public class JSModule implements JSResolvableBundleAsset {
 		return _dependencies;
 	}
 
+	public Collection<String> getDependencyPackageNames() {
+		return _dependencyPackageNames;
+	}
+
 	@Override
 	public String getURL() {
 		return _url;
@@ -52,7 +61,7 @@ public class JSModule implements JSResolvableBundleAsset {
 
 	@Override
 	public InputStream openStream() throws IOException {
-		return _jsPackage.getResource(_name).openStream();
+		return _jsPackage.getResource(_name + ".js").openStream();
 	}
 
 	@Override
@@ -83,4 +92,5 @@ public class JSModule implements JSResolvableBundleAsset {
 	private String _resolvedURL;
 	private String _resolvedId;
 	private Collection<String> _dependencies;
+	private List<String> _dependencyPackageNames = new ArrayList<>();
 }
