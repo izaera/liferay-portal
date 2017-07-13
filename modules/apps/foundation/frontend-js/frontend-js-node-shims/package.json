@@ -28,7 +28,7 @@
 	},
 	"name": "frontend-js-node-shims",
 	"scripts": {
-		"build": "echo --------; env; echo --------; pwd; echo --------; find .; echo --------; node_modules/.bin/liferay-npm-bundler"
+		"build": "node_modules/liferay-npm-bundler/bin/liferay-npm-bundler.js"
 	},
 	"version": "1.0.0"
 }
