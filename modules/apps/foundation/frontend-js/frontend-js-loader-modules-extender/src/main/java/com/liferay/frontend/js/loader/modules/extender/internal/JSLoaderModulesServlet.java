@@ -110,14 +110,8 @@ public class JSLoaderModulesServlet extends HttpServlet {
 		for (JSLoaderModule jsLoaderModule : jsLoaderModules) {
 			if (_details.applyVersioning()) {
 				printWriter.println(delimiter);
-				printWriter.write("\"");
-				printWriter.write(jsLoaderModule.getName());
-				printWriter.write("@");
-				printWriter.write(jsLoaderModule.getVersion());
-				printWriter.write("\": \"");
-				printWriter.write(_portal.getPathProxy());
-				printWriter.write(jsLoaderModule.getContextPath());
-				printWriter.write("\"");
+				printWriter.write(
+					jsLoaderModule.getVersionedPathsConfiguration());
 
 				delimiter = ",";
 			}
@@ -126,12 +120,8 @@ public class JSLoaderModulesServlet extends HttpServlet {
 				processedNames.add(jsLoaderModule.getName());
 
 				printWriter.println(delimiter);
-				printWriter.write("\"");
-				printWriter.write(jsLoaderModule.getName());
-				printWriter.write("\": \"");
-				printWriter.write(_portal.getPathProxy());
-				printWriter.write(jsLoaderModule.getContextPath());
-				printWriter.write("\"");
+				printWriter.write(
+					jsLoaderModule.getUnversionedPathsConfiguration());
 
 				delimiter = ",";
 			}

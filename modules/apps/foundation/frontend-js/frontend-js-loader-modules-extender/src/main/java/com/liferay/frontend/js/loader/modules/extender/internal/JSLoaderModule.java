@@ -18,6 +18,7 @@ import aQute.bnd.osgi.Constants;
 
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -48,11 +49,13 @@ import org.osgi.framework.wiring.BundleWiring;
 public class JSLoaderModule {
 
 	public JSLoaderModule(
-		boolean applyVersioning, Bundle bundle, String contextPath) {
+		boolean applyVersioning, Bundle bundle, String contextPath,
+		String pathProxy) {
 
 		_applyVersioning = applyVersioning;
 		_bundle = bundle;
 		_contextPath = contextPath;
+		_pathProxy = pathProxy;
 
 		Version version = _bundle.getVersion();
 
@@ -96,6 +99,10 @@ public class JSLoaderModule {
 		return _unversionedMapsConfiguration;
 	}
 
+	public String getUnversionedPathsConfiguration() {
+		return _unversionedPathsConfiguration;
+	}
+
 	public String getVersion() {
 		return _version;
 	}
@@ -106,6 +113,10 @@ public class JSLoaderModule {
 
 	public String getVersionedMapsConfiguration() {
 		return _versionedMapsConfiguration;
+	}
+
+	public String getVersionedPathsConfiguration() {
+		return _versionedPathsConfiguration;
 	}
 
 	protected String generateConfiguration(
@@ -185,6 +196,31 @@ public class JSLoaderModule {
 		return mapsConfigurationJSONObject.toString();
 	}
 
+	protected String generatePathsConfiguration(boolean versioned) {
+		StringBundler sb = new StringBundler();
+
+		if (versioned) {
+			sb.append("\"");
+			sb.append(getName());
+			sb.append("@");
+			sb.append(getVersion());
+			sb.append("\": \"");
+			sb.append(_pathProxy);
+			sb.append(getContextPath());
+			sb.append("\"");
+		}
+		else {
+			sb.append("\"");
+			sb.append(getName());
+			sb.append("\": \"");
+			sb.append(_pathProxy);
+			sb.append(getContextPath());
+			sb.append("\"");
+		}
+
+		return sb.toString();
+	}
+
 	protected String normalize(String jsonString) {
 		if (jsonString.startsWith("{") && jsonString.endsWith("}")) {
 			jsonString = jsonString.substring(1, jsonString.length() - 1);
@@ -227,6 +263,9 @@ public class JSLoaderModule {
 		}
 
 		try (Reader reader = new InputStreamReader(url.openStream())) {
+			_unversionedPathsConfiguration = generatePathsConfiguration(false);
+			_versionedPathsConfiguration = generatePathsConfiguration(true);
+
 			JSONTokener jsonTokener = new JSONTokener(reader);
 
 			JSONObject jsonObject = new JSONObject(jsonTokener);
@@ -262,10 +301,13 @@ public class JSLoaderModule {
 	private final Bundle _bundle;
 	private final String _contextPath;
 	private final String _name;
+	private final String _pathProxy;
 	private String _unversionedConfiguration = "";
 	private String _unversionedMapsConfiguration = "";
+	private String _unversionedPathsConfiguration = "";
 	private final String _version;
 	private String _versionedConfiguration = "";
 	private String _versionedMapsConfiguration = "";
+	private String _versionedPathsConfiguration = "";
 
 }

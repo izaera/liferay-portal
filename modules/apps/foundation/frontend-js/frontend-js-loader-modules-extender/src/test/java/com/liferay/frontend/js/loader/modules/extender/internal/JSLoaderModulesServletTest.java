@@ -322,6 +322,9 @@ public class JSLoaderModulesServletTest extends PowerMockito {
 		JSLoaderModulesTracker jsLoaderModulesTracker =
 			new JSLoaderModulesTracker();
 
+		ReflectionTestUtil.setFieldValue(
+			jsLoaderModulesTracker, "_portal", PortalUtil.getPortal());
+
 		jsLoaderModulesTracker.setDetails(
 			Converter.cnv(Details.class, new HashMap<>()));
 
@@ -443,6 +446,9 @@ public class JSLoaderModulesServletTest extends PowerMockito {
 
 		jsLoaderModulesTracker.setDetails(
 			Converter.cnv(Details.class, properties));
+
+		ReflectionTestUtil.setFieldValue(
+			jsLoaderModulesTracker, "_portal", PortalUtil.getPortal());
 
 		jsLoaderModulesServlet.setJSLoaderModulesTracker(
 			jsLoaderModulesTracker);

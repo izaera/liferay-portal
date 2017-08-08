@@ -17,6 +17,7 @@ package com.liferay.frontend.js.loader.modules.extender.internal;
 import aQute.lib.converter.Converter;
 
 import com.liferay.osgi.util.ServiceTrackerFactory;
+import com.liferay.portal.kernel.util.Portal;
 
 import java.net.URL;
 
@@ -33,6 +34,7 @@ import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Modified;
+import org.osgi.service.component.annotations.Reference;
 import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
@@ -85,7 +87,7 @@ public class JSLoaderModulesTracker
 
 		JSLoaderModule jsLoaderModule = new JSLoaderModule(
 			_details.applyVersioning(), serviceReference.getBundle(),
-			contextPath);
+			contextPath, _portal.getPathProxy());
 
 		_jsLoaderModules.put(serviceReference, jsLoaderModule);
 
@@ -141,6 +143,10 @@ public class JSLoaderModulesTracker
 	private final Map<ServiceReference<ServletContext>, JSLoaderModule>
 		_jsLoaderModules = new ConcurrentSkipListMap<>();
 	private volatile long _lastModified = System.currentTimeMillis();
+
+	@Reference
+	private Portal _portal;
+
 	private ServiceTracker<ServletContext, ServiceReference<ServletContext>>
 		_serviceTracker;
 
