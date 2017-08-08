@@ -139,28 +139,27 @@ public class JSLoaderModulesServlet extends HttpServlet {
 	}
 
 	private void _printMapsConfiguration(PrintWriter printWriter) {
-		if (_details.disableVersioning()) {
-			return;
-		}
-
 		String delimiter = "";
 		Set<String> processedNames = new HashSet<>();
 
-		Collection<JSLoaderModule> jsLoaderModules =
-			_jsLoaderModulesTracker.getJSLoaderModules();
+		if (!_details.disableVersioning()) {
+			Collection<JSLoaderModule> jsLoaderModules =
+				_jsLoaderModulesTracker.getJSLoaderModules();
 
-		for (JSLoaderModule jsLoaderModule : jsLoaderModules) {
-			if (!processedNames.contains(jsLoaderModule.getName())) {
-				processedNames.add(jsLoaderModule.getName());
+			for (JSLoaderModule jsLoaderModule : jsLoaderModules) {
+				if (!processedNames.contains(jsLoaderModule.getName())) {
+					processedNames.add(jsLoaderModule.getName());
 
-				String mapsConfiguration =
-					jsLoaderModule.getMapsConfiguration();
+					String mapsConfiguration =
+						jsLoaderModule.getMapsConfiguration();
 
-				if (!Validator.isBlank(mapsConfiguration)) {
-					printWriter.write(delimiter);
-					printWriter.write(jsLoaderModule.getMapsConfiguration());
+					if (!Validator.isBlank(mapsConfiguration)) {
+						printWriter.write(delimiter);
+						printWriter.write(
+							jsLoaderModule.getMapsConfiguration());
 
-					delimiter = ",\n";
+						delimiter = ",\n";
+					}
 				}
 			}
 		}

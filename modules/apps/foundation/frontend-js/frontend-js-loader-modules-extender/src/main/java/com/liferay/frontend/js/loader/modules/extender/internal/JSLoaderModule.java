@@ -235,6 +235,9 @@ public class JSLoaderModule {
 
 		JSONObject mapsConfigurationJSONObject = new JSONObject();
 
+		mapsConfigurationJSONObject.put(
+			getName(), getName() + StringPool.AT + getVersion());
+
 		JSONObject configurationJSONObject = new JSONObject(
 			"{" + configuration + "}");
 
@@ -352,12 +355,10 @@ public class JSLoaderModule {
 			String exportJSSubmodules = GetterUtil.getString(
 				headers.get("Liferay-Export-JS-Submodules"));
 
-			if (Validator.isNotNull(exportJSSubmodules)) {
-				_mapsConfiguration = normalize(
-					generateMapsConfiguration(
-						_unversionedConfiguration,
-						StringUtil.split(exportJSSubmodules)));
-			}
+			_mapsConfiguration = normalize(
+				generateMapsConfiguration(
+					_unversionedConfiguration,
+					StringUtil.split(exportJSSubmodules)));
 		}
 		catch (IOException ioe) {
 			throw new RuntimeException(ioe);
