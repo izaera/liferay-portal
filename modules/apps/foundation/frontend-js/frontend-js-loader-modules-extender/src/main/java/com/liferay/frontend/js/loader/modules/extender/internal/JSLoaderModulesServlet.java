@@ -143,6 +143,10 @@ public class JSLoaderModulesServlet extends HttpServlet {
 	}
 
 	private void _printMapsConfiguration(PrintWriter printWriter) {
+		if (_details.disableVersioning()) {
+			return;
+		}
+
 		String delimiter = "";
 		Set<String> processedNames = new HashSet<>();
 
@@ -150,41 +154,15 @@ public class JSLoaderModulesServlet extends HttpServlet {
 			_jsLoaderModulesTracker.getJSLoaderModules();
 
 		for (JSLoaderModule jsLoaderModule : jsLoaderModules) {
-			if (processedNames.contains(jsLoaderModule.getName())) {
-				continue;
-			}
+			if (!processedNames.contains(jsLoaderModule.getName())) {
+				processedNames.add(jsLoaderModule.getName());
 
-			processedNames.add(jsLoaderModule.getName());
+				String mapsConfiguration =
+					jsLoaderModule.getMapsConfiguration();
 
-			if (_details.applyVersioning()) {
-				printWriter.write(delimiter);
-				printWriter.write("\"");
-				printWriter.write(jsLoaderModule.getName());
-				printWriter.write("\": \"");
-				printWriter.write(jsLoaderModule.getName());
-				printWriter.write("@");
-				printWriter.write(jsLoaderModule.getVersion());
-				printWriter.write("\"");
-
-				delimiter = ",\n";
-
-				String versionedMapsConfiguration =
-					jsLoaderModule.getVersionedMapsConfiguration();
-
-				if (Validator.isNotNull(versionedMapsConfiguration)) {
+				if (!Validator.isBlank(mapsConfiguration)) {
 					printWriter.write(delimiter);
-					printWriter.write(versionedMapsConfiguration);
-
-					delimiter = ",\n";
-				}
-			}
-			else {
-				String unversionedMapsConfiguration =
-					jsLoaderModule.getUnversionedMapsConfiguration();
-
-				if (Validator.isNotNull(unversionedMapsConfiguration)) {
-					printWriter.write(delimiter);
-					printWriter.write(unversionedMapsConfiguration);
+					printWriter.write(jsLoaderModule.getMapsConfiguration());
 
 					delimiter = ",\n";
 				}

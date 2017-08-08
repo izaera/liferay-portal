@@ -87,16 +87,16 @@ public class JSLoaderModule {
 		return _contextPath;
 	}
 
+	public String getMapsConfiguration() {
+		return _mapsConfiguration;
+	}
+
 	public String getName() {
 		return _name;
 	}
 
 	public String getUnversionedConfiguration() {
 		return _unversionedConfiguration;
-	}
-
-	public String getUnversionedMapsConfiguration() {
-		return _unversionedMapsConfiguration;
 	}
 
 	public String getUnversionedPathsConfiguration() {
@@ -109,10 +109,6 @@ public class JSLoaderModule {
 
 	public String getVersionedConfiguration() {
 		return _versionedConfiguration;
-	}
-
-	public String getVersionedMapsConfiguration() {
-		return _versionedMapsConfiguration;
 	}
 
 	public String getVersionedPathsConfiguration() {
@@ -281,14 +277,9 @@ public class JSLoaderModule {
 				headers.get("Liferay-Export-JS-Submodules"));
 
 			if (Validator.isNotNull(exportJSSubmodules)) {
-				_unversionedMapsConfiguration = normalize(
+				_mapsConfiguration = normalize(
 					generateMapsConfiguration(
 						_unversionedConfiguration,
-						StringUtil.split(exportJSSubmodules)));
-
-				_versionedMapsConfiguration = normalize(
-					generateMapsConfiguration(
-						_versionedConfiguration,
 						StringUtil.split(exportJSSubmodules)));
 			}
 		}
@@ -300,14 +291,13 @@ public class JSLoaderModule {
 	private final boolean _applyVersioning;
 	private final Bundle _bundle;
 	private final String _contextPath;
+	private String _mapsConfiguration = "";
 	private final String _name;
 	private final String _pathProxy;
 	private String _unversionedConfiguration = "";
-	private String _unversionedMapsConfiguration = "";
 	private String _unversionedPathsConfiguration = "";
 	private final String _version;
 	private String _versionedConfiguration = "";
-	private String _versionedMapsConfiguration = "";
 	private String _versionedPathsConfiguration = "";
 
 }
