@@ -37,8 +37,6 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.apache.felix.utils.log.Logger;
-
 import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -76,8 +74,6 @@ public class JSLoaderModulesServlet extends HttpServlet {
 		throws Exception {
 
 		_details = details;
-
-		_logger = new Logger(componentContext.getBundleContext());
 
 		_componentContext = componentContext;
 	}
@@ -331,7 +327,6 @@ public class JSLoaderModulesServlet extends HttpServlet {
 	private ComponentContext _componentContext;
 	private volatile Details _details;
 	private JSLoaderModulesTracker _jsLoaderModulesTracker;
-	private Logger _logger;
 	private NPMRegistry _npmRegistry;
 
 	@Reference
