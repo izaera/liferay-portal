@@ -148,6 +148,7 @@ public class JSLoaderModulesServletTest extends PowerMockito {
 			"'test@1.0.0/some.es':{'dependencies':['exports'," +
 				"'test@1.0.0/other.es']}",
 			content);
+		assertContains("'test':'test@1.0.0'", content);
 		assertContains("'foo':'/foo-13.2.23'", content);
 		assertContains("'foo@13.2.23':'/foo-13.2.23'", content);
 		assertContains(
@@ -158,6 +159,7 @@ public class JSLoaderModulesServletTest extends PowerMockito {
 			"'foo@13.2.23/foo.es':{'dependencies':['exports'," +
 				"'foo@13.2.23/fum.es','jquery@2.15.3/jquery.js']}",
 			content);
+		assertContains("'foo':'foo@13.2.23'", content);
 	}
 
 	@Test
@@ -210,6 +212,7 @@ public class JSLoaderModulesServletTest extends PowerMockito {
 			"'test@1.0.0/some.es':{'dependencies':['exports'," +
 				"'test@1.0.0/other.es']}",
 			content);
+		assertContains("'test':'test@1.2.0'", content);
 	}
 
 	@Test
@@ -251,6 +254,7 @@ public class JSLoaderModulesServletTest extends PowerMockito {
 			content);
 		assertContains(
 			"'test@1.0.0/other.es':{'dependencies':['exports']}", content);
+		assertContains("'test':'test@1.0.0'", content);
 	}
 
 	@Test(expected = JSONException.class)
@@ -310,6 +314,7 @@ public class JSLoaderModulesServletTest extends PowerMockito {
 			content, 1);
 		assertOccurrences(
 			"'test@1.0.0/other.es':{'dependencies':['exports']}", content, 1);
+		assertOccurrences("'test':'test@1.0.0'", content, 1);
 	}
 
 	@Test(expected = JSONException.class)
@@ -386,6 +391,7 @@ public class JSLoaderModulesServletTest extends PowerMockito {
 			content);
 		assertNotContains(
 			"'test@1.0.0/other.es':{'dependencies':['exports']}", content);
+		assertContains("'test':'test@1.0.0'", content);
 	}
 
 	protected void assertContains(String expected, String content) {
