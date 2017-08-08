@@ -18,10 +18,8 @@ import aQute.bnd.osgi.Constants;
 
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.portal.kernel.util.Validator;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -272,28 +270,18 @@ public class JSLoaderModule {
 	}
 
 	protected String generatePathsConfiguration(boolean versioned) {
-		StringBundler sb = new StringBundler();
+		JSONObject jsonObject = new JSONObject();
 
 		if (versioned) {
-			sb.append("\"");
-			sb.append(getName());
-			sb.append("@");
-			sb.append(getVersion());
-			sb.append("\": \"");
-			sb.append(_pathProxy);
-			sb.append(getContextPath());
-			sb.append("\"");
+			jsonObject.put(
+				getName() + StringPool.AT + getVersion(),
+				_pathProxy + getContextPath());
 		}
 		else {
-			sb.append("\"");
-			sb.append(getName());
-			sb.append("\": \"");
-			sb.append(_pathProxy);
-			sb.append(getContextPath());
-			sb.append("\"");
+			jsonObject.put(getName(), _pathProxy + getContextPath());
 		}
 
-		return sb.toString();
+		return jsonObject.toString();
 	}
 
 	protected String normalize(String jsonString) {
@@ -338,8 +326,10 @@ public class JSLoaderModule {
 		}
 
 		try (Reader reader = new InputStreamReader(url.openStream())) {
-			_unversionedPathsConfiguration = generatePathsConfiguration(false);
-			_versionedPathsConfiguration = generatePathsConfiguration(true);
+			_unversionedPathsConfiguration = normalize(
+				generatePathsConfiguration(false));
+			_versionedPathsConfiguration = normalize(
+				generatePathsConfiguration(true));
 
 			JSONTokener jsonTokener = new JSONTokener(reader);
 

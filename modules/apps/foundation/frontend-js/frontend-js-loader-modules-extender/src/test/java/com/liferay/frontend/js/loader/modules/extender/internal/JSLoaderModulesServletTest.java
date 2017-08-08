@@ -139,8 +139,8 @@ public class JSLoaderModulesServletTest extends PowerMockito {
 
 		content = content.replace('"', '\'');
 
-		assertContains("'test': '/test-1.0.0'", content);
-		assertContains("'test@1.0.0': '/test-1.0.0'", content);
+		assertContains("'test':'/test-1.0.0'", content);
+		assertContains("'test@1.0.0':'/test-1.0.0'", content);
 		assertContains(
 			"'test/some.es':{'dependencies':['exports','test@1.0.0/other.es']}",
 			content);
@@ -148,8 +148,8 @@ public class JSLoaderModulesServletTest extends PowerMockito {
 			"'test@1.0.0/some.es':{'dependencies':['exports'," +
 				"'test@1.0.0/other.es']}",
 			content);
-		assertContains("'foo': '/foo-13.2.23'", content);
-		assertContains("'foo@13.2.23': '/foo-13.2.23'", content);
+		assertContains("'foo':'/foo-13.2.23'", content);
+		assertContains("'foo@13.2.23':'/foo-13.2.23'", content);
 		assertContains(
 			"'foo/foo.es':{'dependencies':['exports','foo@13.2.23/fum.es'," +
 				"'jquery@2.15.3/jquery.js']}",
@@ -193,9 +193,9 @@ public class JSLoaderModulesServletTest extends PowerMockito {
 
 		content = content.replace('"', '\'');
 
-		assertContains("'test': '/test-1.2.0'", content);
-		assertContains("'test@1.2.0': '/test-1.2.0'", content);
-		assertContains("'test@1.0.0': '/test-1.0.0'", content);
+		assertContains("'test':'/test-1.2.0'", content);
+		assertContains("'test@1.2.0':'/test-1.2.0'", content);
+		assertContains("'test@1.0.0':'/test-1.0.0'", content);
 		assertContains(
 			"'test/some.es':{'dependencies':['exports','test@1.2.0/other.es']}",
 			content);
@@ -239,8 +239,8 @@ public class JSLoaderModulesServletTest extends PowerMockito {
 
 		content = content.replace('"', '\'');
 
-		assertContains("'test': '/test-1.0.0'", content);
-		assertContains("'test@1.0.0': '/test-1.0.0'", content);
+		assertContains("'test':'/test-1.0.0'", content);
+		assertContains("'test@1.0.0':'/test-1.0.0'", content);
 		assertContains(
 			"'test/some.es':{'dependencies':['exports','test@1.0.0/other.es']}",
 			content);
@@ -297,8 +297,8 @@ public class JSLoaderModulesServletTest extends PowerMockito {
 
 		content = content.replace('"', '\'');
 
-		assertOccurrences("'test': '/test-1.0.0'", content, 1);
-		assertOccurrences("'test@1.0.0': '/test-1.0.0'", content, 1);
+		assertOccurrences("'test':'/test-1.0.0'", content, 1);
+		assertOccurrences("'test@1.0.0':'/test-1.0.0'", content, 1);
 		assertOccurrences(
 			"'test/some.es':{'dependencies':['exports','test@1.0.0/other.es']}",
 			content, 1);
@@ -371,8 +371,8 @@ public class JSLoaderModulesServletTest extends PowerMockito {
 
 		content = content.replace('"', '\'');
 
-		assertContains("'test': '/test-1.0.0'", content);
-		assertContains("'test@1.0.0': '/test-1.0.0'", content);
+		assertContains("'test':'/test-1.0.0'", content);
+		assertContains("'test@1.0.0':'/test-1.0.0'", content);
 		assertContains(
 			"'test/some.es':{'dependencies':['exports','test/other.es']}",
 			content);
