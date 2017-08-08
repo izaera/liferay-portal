@@ -87,7 +87,7 @@ public class JSLoaderModulesTracker
 
 		JSLoaderModule jsLoaderModule = new JSLoaderModule(
 			_details.applyVersioning(), serviceReference.getBundle(),
-			contextPath, _portal.getPathProxy());
+			contextPath, _details.disableVersioning(), _portal.getPathProxy());
 
 		_jsLoaderModules.put(serviceReference, jsLoaderModule);
 

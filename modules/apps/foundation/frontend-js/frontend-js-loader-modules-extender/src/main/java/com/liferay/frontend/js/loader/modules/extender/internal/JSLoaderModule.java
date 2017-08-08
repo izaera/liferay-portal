@@ -50,11 +50,12 @@ public class JSLoaderModule {
 
 	public JSLoaderModule(
 		boolean applyVersioning, Bundle bundle, String contextPath,
-		String pathProxy) {
+		boolean disableVersioning, String pathProxy) {
 
 		_applyVersioning = applyVersioning;
 		_bundle = bundle;
 		_contextPath = contextPath;
+		_disableVersioning = disableVersioning;
 		_pathProxy = pathProxy;
 
 		Version version = _bundle.getVersion();
@@ -116,13 +117,9 @@ public class JSLoaderModule {
 	}
 
 	protected String generateConfiguration(
-		JSONObject jsonObject, BundleWiring bundleWiring,
-		boolean versionedModuleName) {
+		JSONObject jsonObject, BundleWiring bundleWiring, boolean versioned) {
 
-		if (versionedModuleName) {
-			return jsonObject.toString();
-		}
-		else {
+		if (_disableVersioning) {
 			JSONObject jsonObject2 = new JSONObject();
 
 			JSONArray namesJSONArray = jsonObject.names();
@@ -148,6 +145,85 @@ public class JSLoaderModule {
 			}
 
 			return jsonObject2.toString();
+		}
+		else {
+			if (!_applyVersioning) {
+				if (versioned) {
+					return "";
+				}
+
+				return jsonObject.toString();
+			}
+
+			List<BundleWire> bundleWires = bundleWiring.getRequiredWires(
+				Details.OSGI_WEBRESOURCE);
+
+			JSONArray namesJSONArray = jsonObject.names();
+
+			if (namesJSONArray == null) {
+				return jsonObject.toString();
+			}
+
+			for (int i = 0; i < namesJSONArray.length(); i++) {
+				String name = (String)namesJSONArray.get(i);
+
+				int x = name.indexOf('/');
+
+				if (x == -1) {
+					continue;
+				}
+
+				String moduleName = name.substring(0, x);
+
+				if (!moduleName.equals(getName())) {
+					continue;
+				}
+
+				String modulePath = name.substring(x);
+
+				moduleName = getName() + "@" + getVersion() + modulePath;
+
+				JSONObject nameJSONObject = jsonObject.getJSONObject(name);
+
+				JSONArray dependenciesJSONArray = nameJSONObject.getJSONArray(
+					"dependencies");
+
+				for (int j = 0; j < dependenciesJSONArray.length(); j++) {
+					String dependency = dependenciesJSONArray.getString(j);
+
+					int y = dependency.indexOf('/');
+
+					if (y == -1) {
+						continue;
+					}
+
+					String dependencyName = dependency.substring(0, y);
+					String dependencyPath = dependency.substring(y);
+
+					if (dependencyName.equals(getName())) {
+						dependencyName =
+							getName() + "@" + getVersion() + dependencyPath;
+
+						dependenciesJSONArray.put(j, dependencyName);
+					}
+					else {
+						normalizeDependencies(
+							dependencyName, dependencyPath,
+							dependenciesJSONArray, j, bundleWires);
+					}
+				}
+
+				if (versioned) {
+					jsonObject.remove(name);
+
+					jsonObject.put(moduleName, nameJSONObject);
+				}
+				else {
+					jsonObject.put(name, nameJSONObject);
+				}
+			}
+
+			return jsonObject.toString();
 		}
 	}
 
@@ -291,6 +367,7 @@ public class JSLoaderModule {
 	private final boolean _applyVersioning;
 	private final Bundle _bundle;
 	private final String _contextPath;
+	private final boolean _disableVersioning;
 	private String _mapsConfiguration = "";
 	private final String _name;
 	private final String _pathProxy;

@@ -38,8 +38,11 @@ public @interface Details {
 
 	public static final String OSGI_WEBRESOURCE = "osgi.webresource";
 
-	@Meta.AD(deflt = "true")
+	@Meta.AD(deflt = "true", description = "apply-versioning-description")
 	public boolean applyVersioning() default true;
+
+	@Meta.AD(deflt = "false", description = "disable-versioning-description")
+	public boolean disableVersioning() default false;
 
 	@Meta.AD(deflt = "true")
 	public boolean exposeGlobal() default true;

@@ -196,32 +196,20 @@ public class JSLoaderModulesServlet extends HttpServlet {
 			_jsLoaderModulesTracker.getJSLoaderModules();
 
 		for (JSLoaderModule jsLoaderModule : jsLoaderModules) {
-			String unversionedConfiguration =
-				jsLoaderModule.getUnversionedConfiguration();
-
-			if (unversionedConfiguration.length() == 0) {
-				continue;
-			}
-
 			if (!processedNames.contains(jsLoaderModule.getName())) {
 				processedNames.add(jsLoaderModule.getName());
 
 				printWriter.write(delimiter);
-				printWriter.write(unversionedConfiguration);
+				printWriter.write(jsLoaderModule.getUnversionedConfiguration());
 
 				delimiter = ",\n";
 			}
 
-			if (_details.applyVersioning()) {
-				String versionedConfiguration =
-					jsLoaderModule.getVersionedConfiguration();
+			if (!_details.disableVersioning()) {
+				printWriter.write(delimiter);
+				printWriter.write(jsLoaderModule.getVersionedConfiguration());
 
-				if (versionedConfiguration.length() > 0) {
-					printWriter.write(delimiter);
-					printWriter.write(versionedConfiguration);
-
-					delimiter = ",\n";
-				}
+				delimiter = ",\n";
 			}
 		}
 
@@ -305,22 +293,22 @@ public class JSLoaderModulesServlet extends HttpServlet {
 			_jsLoaderModulesTracker.getJSLoaderModules();
 
 		for (JSLoaderModule jsLoaderModule : jsLoaderModules) {
-			if (_details.applyVersioning()) {
-				printWriter.println(delimiter);
-				printWriter.write(
-					jsLoaderModule.getVersionedPathsConfiguration());
-
-				delimiter = ",";
-			}
-
 			if (!processedNames.contains(jsLoaderModule.getName())) {
 				processedNames.add(jsLoaderModule.getName());
 
-				printWriter.println(delimiter);
+				printWriter.write(delimiter);
 				printWriter.write(
 					jsLoaderModule.getUnversionedPathsConfiguration());
 
-				delimiter = ",";
+				delimiter = ",\n";
+			}
+
+			if (!_details.disableVersioning()) {
+				printWriter.write(delimiter);
+				printWriter.write(
+					jsLoaderModule.getVersionedPathsConfiguration());
+
+				delimiter = ",\n";
 			}
 		}
 
