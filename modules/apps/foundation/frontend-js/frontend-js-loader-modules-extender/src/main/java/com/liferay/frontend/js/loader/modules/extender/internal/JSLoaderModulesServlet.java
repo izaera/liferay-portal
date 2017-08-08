@@ -192,18 +192,30 @@ public class JSLoaderModulesServlet extends HttpServlet {
 			_jsLoaderModulesTracker.getJSLoaderModules();
 
 		for (JSLoaderModule jsLoaderModule : jsLoaderModules) {
+			String unversionedConfiguration =
+				jsLoaderModule.getUnversionedConfiguration();
+
+			if (Validator.isBlank(unversionedConfiguration)) {
+				continue;
+			}
+
 			if (!processedNames.contains(jsLoaderModule.getName())) {
 				processedNames.add(jsLoaderModule.getName());
 
 				printWriter.write(delimiter);
-				printWriter.write(jsLoaderModule.getUnversionedConfiguration());
+				printWriter.write(unversionedConfiguration);
 
 				delimiter = ",\n";
 			}
 
-			if (!_details.disableVersioning()) {
+			String versionedConfiguration =
+				jsLoaderModule.getVersionedConfiguration();
+
+			if (!_details.disableVersioning() &&
+				!Validator.isBlank(versionedConfiguration)) {
+
 				printWriter.write(delimiter);
-				printWriter.write(jsLoaderModule.getVersionedConfiguration());
+				printWriter.write(versionedConfiguration);
 
 				delimiter = ",\n";
 			}
