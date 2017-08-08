@@ -100,53 +100,122 @@ public class JSLoaderModulesServlet extends HttpServlet {
 		printWriter.println("(function() {");
 		printWriter.println("Liferay.PATHS = {");
 
+		_printPathsConfiguration(printWriter);
+
+		printWriter.println("\n};");
+		printWriter.println("Liferay.MODULES = {");
+
+		_printModulesConfiguration(printWriter);
+
+		printWriter.println("\n};");
+		printWriter.println("Liferay.MAPS = {");
+
+		_printMapsConfiguration(printWriter);
+
+		printWriter.println("\n};");
+
+		printWriter.println(
+			"Liferay.EXPOSE_GLOBAL = " + _details.exposeGlobal() + ";\n");
+
+		printWriter.println(
+			"Liferay.IGNORE_MODULE_VERSION = " + !_details.applyVersioning() +
+				";\n");
+
+		printWriter.println("}());");
+
+		printWriter.close();
+	}
+
+	protected void setDetails(Details details) {
+		_details = details;
+	}
+
+	@Reference(unbind = "-")
+	protected void setJSLoaderModulesTracker(
+		JSLoaderModulesTracker jsLoaderModulesTracker) {
+
+		_jsLoaderModulesTracker = jsLoaderModulesTracker;
+	}
+
+	@Reference(unbind = "-")
+	protected void setNPMRegistry(NPMRegistry npmRegistry) {
+		_npmRegistry = npmRegistry;
+	}
+
+	private void _printMapsConfiguration(PrintWriter printWriter) {
 		String delimiter = "";
-		String delimiter2 = "";
 		Set<String> processedNames = new HashSet<>();
 
 		Collection<JSLoaderModule> jsLoaderModules =
 			_jsLoaderModulesTracker.getJSLoaderModules();
 
 		for (JSLoaderModule jsLoaderModule : jsLoaderModules) {
-			if (_details.applyVersioning()) {
-				printWriter.println(delimiter);
-				printWriter.write(
-					jsLoaderModule.getVersionedPathsConfiguration());
-
-				delimiter = ",";
+			if (processedNames.contains(jsLoaderModule.getName())) {
+				continue;
 			}
 
-			if (!processedNames.contains(jsLoaderModule.getName())) {
-				processedNames.add(jsLoaderModule.getName());
+			processedNames.add(jsLoaderModule.getName());
 
-				printWriter.println(delimiter);
-				printWriter.write(
-					jsLoaderModule.getUnversionedPathsConfiguration());
+			if (_details.applyVersioning()) {
+				printWriter.write(delimiter);
+				printWriter.write("\"");
+				printWriter.write(jsLoaderModule.getName());
+				printWriter.write("\": \"");
+				printWriter.write(jsLoaderModule.getName());
+				printWriter.write("@");
+				printWriter.write(jsLoaderModule.getVersion());
+				printWriter.write("\"");
 
-				delimiter = ",";
+				delimiter = ",\n";
+
+				String versionedMapsConfiguration =
+					jsLoaderModule.getVersionedMapsConfiguration();
+
+				if (Validator.isNotNull(versionedMapsConfiguration)) {
+					printWriter.write(delimiter);
+					printWriter.write(versionedMapsConfiguration);
+
+					delimiter = ",\n";
+				}
+			}
+			else {
+				String unversionedMapsConfiguration =
+					jsLoaderModule.getUnversionedMapsConfiguration();
+
+				if (Validator.isNotNull(unversionedMapsConfiguration)) {
+					printWriter.write(delimiter);
+					printWriter.write(unversionedMapsConfiguration);
+
+					delimiter = ",\n";
+				}
 			}
 		}
 
-		Collection<JSModule> resolvedJSModules =
-			_npmRegistry.getResolvedJSModules();
-
-		for (JSModule resolvedJSModule : resolvedJSModules) {
+		for (JSPackage jsPackage : _npmRegistry.getJSPackages()) {
 			printWriter.write(delimiter);
 			printWriter.write("\"");
-			printWriter.write(resolvedJSModule.getResolvedId());
-			printWriter.write("\": \"");
-			printWriter.write(_portal.getPathProxy());
-			printWriter.write(resolvedJSModule.getResolvedURL());
-			printWriter.write("\"");
+			printWriter.write(jsPackage.getName());
+			printWriter.write(StringPool.AT);
+			printWriter.write(jsPackage.getVersion());
+			printWriter.write("\": {exactMatch: true, value: \"");
+			printWriter.write(jsPackage.getName());
+			printWriter.write(StringPool.AT);
+			printWriter.write(jsPackage.getVersion());
+			printWriter.write(StringPool.SLASH);
+			printWriter.write(jsPackage.getMainModuleName());
+			printWriter.write("\"}");
 
 			delimiter = ",\n";
 		}
+	}
 
-		printWriter.println("\n};");
-		printWriter.println("Liferay.MODULES = {");
+	private void _printModulesConfiguration(PrintWriter printWriter) {
+		String delimiter = "";
+		String delimiter2 = "";
+		Set<String> processedNames = new HashSet<>();
 
-		delimiter = "";
-		processedNames.clear();
+		Collection<JSLoaderModule> jsLoaderModules =
+			_jsLoaderModulesTracker.getJSLoaderModules();
 
 		for (JSLoaderModule jsLoaderModule : jsLoaderModules) {
 			String unversionedConfiguration =
@@ -177,6 +246,9 @@ public class JSLoaderModulesServlet extends HttpServlet {
 				}
 			}
 		}
+
+		Collection<JSModule> resolvedJSModules =
+			_npmRegistry.getResolvedJSModules();
 
 		for (JSModule resolvedJSModule : resolvedJSModules) {
 			printWriter.write(delimiter);
@@ -245,100 +317,49 @@ public class JSLoaderModulesServlet extends HttpServlet {
 
 			delimiter = ",\n";
 		}
+	}
 
-		printWriter.println("\n};");
-		printWriter.println("Liferay.MAPS = {");
+	private void _printPathsConfiguration(PrintWriter printWriter) {
+		String delimiter = "";
+		Set<String> processedNames = new HashSet<>();
 
-		delimiter = "";
-		processedNames.clear();
+		Collection<JSLoaderModule> jsLoaderModules =
+			_jsLoaderModulesTracker.getJSLoaderModules();
 
 		for (JSLoaderModule jsLoaderModule : jsLoaderModules) {
-			if (processedNames.contains(jsLoaderModule.getName())) {
-				continue;
-			}
-
-			processedNames.add(jsLoaderModule.getName());
-
 			if (_details.applyVersioning()) {
-				printWriter.write(delimiter);
-				printWriter.write("\"");
-				printWriter.write(jsLoaderModule.getName());
-				printWriter.write("\": \"");
-				printWriter.write(jsLoaderModule.getName());
-				printWriter.write("@");
-				printWriter.write(jsLoaderModule.getVersion());
-				printWriter.write("\"");
+				printWriter.println(delimiter);
+				printWriter.write(
+					jsLoaderModule.getVersionedPathsConfiguration());
 
-				delimiter = ",\n";
-
-				String versionedMapsConfiguration =
-					jsLoaderModule.getVersionedMapsConfiguration();
-
-				if (Validator.isNotNull(versionedMapsConfiguration)) {
-					printWriter.write(delimiter);
-					printWriter.write(versionedMapsConfiguration);
-
-					delimiter = ",\n";
-				}
+				delimiter = ",";
 			}
-			else {
-				String unversionedMapsConfiguration =
-					jsLoaderModule.getUnversionedMapsConfiguration();
 
-				if (Validator.isNotNull(unversionedMapsConfiguration)) {
-					printWriter.write(delimiter);
-					printWriter.write(unversionedMapsConfiguration);
+			if (!processedNames.contains(jsLoaderModule.getName())) {
+				processedNames.add(jsLoaderModule.getName());
 
-					delimiter = ",\n";
-				}
+				printWriter.println(delimiter);
+				printWriter.write(
+					jsLoaderModule.getUnversionedPathsConfiguration());
+
+				delimiter = ",";
 			}
 		}
 
-		for (JSPackage jsPackage : _npmRegistry.getJSPackages()) {
+		Collection<JSModule> resolvedJSModules =
+			_npmRegistry.getResolvedJSModules();
+
+		for (JSModule resolvedJSModule : resolvedJSModules) {
 			printWriter.write(delimiter);
 			printWriter.write("\"");
-			printWriter.write(jsPackage.getName());
-			printWriter.write(StringPool.AT);
-			printWriter.write(jsPackage.getVersion());
-			printWriter.write("\": {exactMatch: true, value: \"");
-			printWriter.write(jsPackage.getName());
-			printWriter.write(StringPool.AT);
-			printWriter.write(jsPackage.getVersion());
-			printWriter.write(StringPool.SLASH);
-			printWriter.write(jsPackage.getMainModuleName());
-			printWriter.write("\"}");
+			printWriter.write(resolvedJSModule.getResolvedId());
+			printWriter.write("\": \"");
+			printWriter.write(_portal.getPathProxy());
+			printWriter.write(resolvedJSModule.getResolvedURL());
+			printWriter.write("\"");
 
 			delimiter = ",\n";
 		}
-
-		printWriter.println("\n};");
-
-		printWriter.println(
-			"Liferay.EXPOSE_GLOBAL = " + _details.exposeGlobal() + ";\n");
-
-		printWriter.println(
-			"Liferay.IGNORE_MODULE_VERSION = " + !_details.applyVersioning() +
-				";\n");
-
-		printWriter.println("}());");
-
-		printWriter.close();
-	}
-
-	protected void setDetails(Details details) {
-		_details = details;
-	}
-
-	@Reference(unbind = "-")
-	protected void setJSLoaderModulesTracker(
-		JSLoaderModulesTracker jsLoaderModulesTracker) {
-
-		_jsLoaderModulesTracker = jsLoaderModulesTracker;
-	}
-
-	@Reference(unbind = "-")
-	protected void setNPMRegistry(NPMRegistry npmRegistry) {
-		_npmRegistry = npmRegistry;
 	}
 
 	private ComponentContext _componentContext;
