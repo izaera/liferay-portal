@@ -107,6 +107,85 @@ public class JSLoaderModulesServletTest extends PowerMockito {
 	}
 
 	@Test
+	public void testDisableVersioningConfiguresIgnoreModuleVersion()
+		throws Exception {
+
+		JSLoaderModulesServlet jsLoaderModulesServlet =
+			buildJSLoaderModulesServlet(
+				Collections.<String, Object>singletonMap(
+					"disableVersioning", Boolean.TRUE));
+
+		MockHttpServletRequest mockHttpServletRequest =
+			new MockHttpServletRequest();
+		MockHttpServletResponse mockHttpServletResponse =
+			new MockHttpServletResponse();
+
+		jsLoaderModulesServlet.service(
+			mockHttpServletRequest, mockHttpServletResponse);
+
+		String content = mockHttpServletResponse.getContentAsString();
+
+		content = content.replace('"', '\'');
+
+		assertContains("Liferay.IGNORE_MODULE_VERSION = true;", content);
+	}
+
+	@Test
+	public void testMultipleModulesNoVersioningOutput() throws Exception {
+		JSLoaderModulesServlet jsLoaderModulesServlet =
+			buildJSLoaderModulesServlet(
+				Collections.<String, Object>singletonMap(
+					"disableVersioning", Boolean.TRUE));
+
+		JSLoaderModulesTracker jsLoaderModulesTracker =
+			jsLoaderModulesServlet.getJSLoaderModulesTracker();
+
+		ServiceReference<ServletContext> serviceReference =
+			buildServiceReference(
+				"test", new Version("1.0.0"), true, 0,
+				getResource("dependencies/config1.js"));
+
+		jsLoaderModulesTracker.addingService(serviceReference);
+
+		serviceReference = buildServiceReference(
+			"foo", new Version("13.2.23"), true, 0,
+			getResource("dependencies/config2.js"));
+
+		jsLoaderModulesTracker.addingService(serviceReference);
+
+		MockHttpServletRequest mockHttpServletRequest =
+			new MockHttpServletRequest();
+		MockHttpServletResponse mockHttpServletResponse =
+			new MockHttpServletResponse();
+
+		jsLoaderModulesServlet.service(
+			mockHttpServletRequest, mockHttpServletResponse);
+
+		String content = mockHttpServletResponse.getContentAsString();
+
+		content = content.replace('"', '\'');
+
+		assertContains("'test':'/test-1.0.0'", content);
+		assertNotContains("'test@1.0.0':'/test-1.0.0'", content);
+		assertContains(
+			"'test/some.es':{'dependencies':['exports','test/other.es']}",
+			content);
+		assertNotContains("'test':'test@1.0.0'", content);
+
+		assertContains("'foo':'/foo-13.2.23'", content);
+		assertNotContains("'foo@13.2.23':'/foo-13.2.23'", content);
+		assertContains(
+			"'foo/foo.es':{'dependencies':['exports','foo/fum.es'," +
+				"'jquery/jquery.js']}",
+			content);
+		assertNotContains(
+			"'foo@13.2.23/foo.es':{'dependencies':['exports'," +
+				"'foo@13.2.23/fum.es','jquery@2.15.3/jquery.js']}",
+			content);
+		assertNotContains("'foo':'foo@13.2.23'", content);
+	}
+
+	@Test
 	public void testMultipleModulesOutput() throws Exception {
 		JSLoaderModulesServlet jsLoaderModulesServlet =
 			buildJSLoaderModulesServlet();
@@ -163,6 +242,60 @@ public class JSLoaderModulesServletTest extends PowerMockito {
 	}
 
 	@Test
+	public void testMultipleVersionsModuleNoVersioningOutput()
+		throws Exception {
+
+		JSLoaderModulesServlet jsLoaderModulesServlet =
+			buildJSLoaderModulesServlet(
+				Collections.<String, Object>singletonMap(
+					"disableVersioning", Boolean.TRUE));
+
+		JSLoaderModulesTracker jsLoaderModulesTracker =
+			jsLoaderModulesServlet.getJSLoaderModulesTracker();
+
+		ServiceReference<ServletContext> serviceReference =
+			buildServiceReference(
+				"test", new Version("1.0.0"), true, 0,
+				getResource("dependencies/config1.js"));
+
+		jsLoaderModulesTracker.addingService(serviceReference);
+
+		serviceReference = buildServiceReference(
+			"test", new Version("1.2.0"), true, 0,
+			getResource("dependencies/config1.js"));
+
+		jsLoaderModulesTracker.addingService(serviceReference);
+
+		MockHttpServletRequest mockHttpServletRequest =
+			new MockHttpServletRequest();
+		MockHttpServletResponse mockHttpServletResponse =
+			new MockHttpServletResponse();
+
+		jsLoaderModulesServlet.service(
+			mockHttpServletRequest, mockHttpServletResponse);
+
+		String content = mockHttpServletResponse.getContentAsString();
+
+		content = content.replace('"', '\'');
+
+		assertContains("'test':'/test-1.2.0'", content);
+		assertNotContains("'test@1.2.0':'/test-1.2.0'", content);
+		assertNotContains("'test@1.0.0':'/test-1.0.0'", content);
+		assertOccurrences(
+			"'test/some.es':{'dependencies':['exports','test/other.es']}",
+			content, 1);
+		assertNotContains(
+			"'test@1.2.0/some.es':{'dependencies':['exports'," +
+				"'test@1.2.0/other.es']}",
+			content);
+		assertNotContains(
+			"'test@1.0.0/some.es':{'dependencies':['exports'," +
+				"'test@1.0.0/other.es']}",
+			content);
+		assertNotContains("'test':'test@1.2.0'", content);
+	}
+
+	@Test
 	public void testMultipleVersionsModuleOutput() throws Exception {
 		JSLoaderModulesServlet jsLoaderModulesServlet =
 			buildJSLoaderModulesServlet();
@@ -213,6 +346,50 @@ public class JSLoaderModulesServletTest extends PowerMockito {
 				"'test@1.0.0/other.es']}",
 			content);
 		assertContains("'test':'test@1.2.0'", content);
+	}
+
+	@Test
+	public void testSingleModuleNoVersioningOutput() throws Exception {
+		JSLoaderModulesServlet jsLoaderModulesServlet =
+			buildJSLoaderModulesServlet(
+				Collections.<String, Object>singletonMap(
+					"disableVersioning", Boolean.TRUE));
+
+		JSLoaderModulesTracker jsLoaderModulesTracker =
+			jsLoaderModulesServlet.getJSLoaderModulesTracker();
+
+		ServiceReference<ServletContext> serviceReference =
+			buildServiceReference(
+				"test", new Version("1.0.0"), true, 0,
+				getResource("dependencies/config1.js"));
+
+		jsLoaderModulesTracker.addingService(serviceReference);
+
+		MockHttpServletRequest mockHttpServletRequest =
+			new MockHttpServletRequest();
+		MockHttpServletResponse mockHttpServletResponse =
+			new MockHttpServletResponse();
+
+		jsLoaderModulesServlet.service(
+			mockHttpServletRequest, mockHttpServletResponse);
+
+		String content = mockHttpServletResponse.getContentAsString();
+
+		content = content.replace('"', '\'');
+
+		assertContains("'test':'/test-1.0.0'", content);
+		assertNotContains("'test@1.0.0':'/test-1.0.0'", content);
+		assertContains(
+			"'test/some.es':{'dependencies':['exports','test/other.es']}",
+			content);
+		assertContains("'test/other.es':{'dependencies':['exports']}", content);
+		assertNotContains(
+			"'test@1.0.0/some.es':{'dependencies':['exports'," +
+				"'test@1.0.0/other.es']}",
+			content);
+		assertNotContains(
+			"'test@1.0.0/other.es':{'dependencies':['exports']}", content);
+		assertNotContains("'test':'test@1.0.0'", content);
 	}
 
 	@Test
