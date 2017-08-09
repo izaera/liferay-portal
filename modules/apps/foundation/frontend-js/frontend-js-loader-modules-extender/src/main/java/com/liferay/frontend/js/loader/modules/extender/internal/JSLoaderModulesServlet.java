@@ -142,24 +142,21 @@ public class JSLoaderModulesServlet extends HttpServlet {
 		String delimiter = "";
 		Set<String> processedNames = new HashSet<>();
 
-		if (!_details.disableVersioning()) {
-			Collection<JSLoaderModule> jsLoaderModules =
-				_jsLoaderModulesTracker.getJSLoaderModules();
+		Collection<JSLoaderModule> jsLoaderModules =
+			_jsLoaderModulesTracker.getJSLoaderModules();
 
-			for (JSLoaderModule jsLoaderModule : jsLoaderModules) {
-				if (!processedNames.contains(jsLoaderModule.getName())) {
-					processedNames.add(jsLoaderModule.getName());
+		for (JSLoaderModule jsLoaderModule : jsLoaderModules) {
+			if (!processedNames.contains(jsLoaderModule.getName())) {
+				processedNames.add(jsLoaderModule.getName());
 
-					String mapsConfiguration =
-						jsLoaderModule.getMapsConfiguration();
+				String mapsConfiguration =
+					jsLoaderModule.getMapsConfiguration();
 
-					if (!Validator.isBlank(mapsConfiguration)) {
-						printWriter.write(delimiter);
-						printWriter.write(
-							jsLoaderModule.getMapsConfiguration());
+				if (!Validator.isBlank(mapsConfiguration)) {
+					printWriter.write(delimiter);
+					printWriter.write(jsLoaderModule.getMapsConfiguration());
 
-						delimiter = ",\n";
-					}
+					delimiter = ",\n";
 				}
 			}
 		}

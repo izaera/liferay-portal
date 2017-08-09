@@ -522,6 +522,39 @@ public class JSLoaderModulesServletTest extends PowerMockito {
 	}
 
 	@Test
+	public void testSubmoduleMapping() throws Exception {
+		JSLoaderModulesServlet jsLoaderModulesServlet =
+			buildJSLoaderModulesServlet(
+				Collections.<String, Object>singletonMap(
+					"disableVersioning", Boolean.TRUE));
+
+		JSLoaderModulesTracker jsLoaderModulesTracker =
+			jsLoaderModulesServlet.getJSLoaderModulesTracker();
+
+		ServiceReference<ServletContext> serviceReference =
+			buildServiceReference(
+				"test", new Version("1.0.0"), true, 0,
+				getResource("dependencies/config3.js"),
+				Collections.singletonMap("Liferay-Export-JS-Submodules", "*"));
+
+		jsLoaderModulesTracker.addingService(serviceReference);
+
+		MockHttpServletRequest mockHttpServletRequest =
+			new MockHttpServletRequest();
+		MockHttpServletResponse mockHttpServletResponse =
+			new MockHttpServletResponse();
+
+		jsLoaderModulesServlet.service(
+			mockHttpServletRequest, mockHttpServletResponse);
+
+		String content = mockHttpServletResponse.getContentAsString();
+
+		content = content.replace('"', '\'');
+
+		assertContains("'folder':'test/folder'", content);
+	}
+
+	@Test
 	public void testUnversionedModuleOutput() throws Exception {
 		JSLoaderModulesServlet jsLoaderModulesServlet =
 			buildJSLoaderModulesServlet(
@@ -646,9 +679,18 @@ public class JSLoaderModulesServletTest extends PowerMockito {
 	protected ServiceReference<ServletContext> buildServiceReference(
 		String bsn, Version version, boolean capability, int ranking, URL url) {
 
+		return buildServiceReference(
+			bsn, version, capability, ranking, url,
+			Collections.<String, String>emptyMap());
+	}
+
+	protected ServiceReference<ServletContext> buildServiceReference(
+		String bsn, Version version, boolean capability, int ranking, URL url,
+		Map<String, String> headers) {
+
 		Bundle bundle = mock(Bundle.class);
 
-		mockBundle(bundle, bsn, version, url, capability);
+		mockBundle(bundle, bsn, version, url, capability, headers);
 
 		TestServiceReference mockServiceReference = new TestServiceReference(
 			bundle, new String[] {ServletContext.class.getName()},
@@ -668,8 +710,8 @@ public class JSLoaderModulesServletTest extends PowerMockito {
 	}
 
 	protected void mockBundle(
-		Bundle bundle, String bsn, Version version, URL url,
-		boolean capability) {
+		Bundle bundle, String bsn, Version version, URL url, boolean capability,
+		Map<String, String> headers) {
 
 		doReturn(
 			url
@@ -704,6 +746,12 @@ public class JSLoaderModulesServletTest extends PowerMockito {
 		).adapt(
 			BundleWiring.class
 		);
+
+		doReturn(
+			new Hashtable<>(headers)
+		).when(
+			bundle
+		).getHeaders();
 	}
 
 	protected BundleCapability mockBundleCapability(String bsn) {

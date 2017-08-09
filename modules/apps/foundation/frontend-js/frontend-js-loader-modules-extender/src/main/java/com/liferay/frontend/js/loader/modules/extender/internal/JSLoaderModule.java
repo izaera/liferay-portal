@@ -233,8 +233,10 @@ public class JSLoaderModule {
 
 		JSONObject mapsConfigurationJSONObject = new JSONObject();
 
-		mapsConfigurationJSONObject.put(
-			getName(), getName() + StringPool.AT + getVersion());
+		if (!_disableVersioning) {
+			mapsConfigurationJSONObject.put(
+				getName(), getName() + StringPool.AT + getVersion());
+		}
 
 		JSONObject configurationJSONObject = new JSONObject(
 			"{" + configuration + "}");
