@@ -18,8 +18,13 @@ import com.liferay.chart.taglib.internal.NPMResolverProvider;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSPackage;
 import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
 import com.liferay.frontend.taglib.soy.servlet.taglib.TemplateRendererTag;
+import com.liferay.portal.kernel.servlet.taglib.util.OutputData;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringPool;
+import com.liferay.portal.kernel.util.WebKeys;
+
+import javax.servlet.ServletRequest;
 
 /**
  * @author Chema Balsas
@@ -33,6 +38,8 @@ public abstract class BaseChartTag extends TemplateRendererTag {
 	@Override
 	public int doStartTag() {
 		setTemplateNamespace(_moduleBaseName + ".render");
+
+		_outputStylesheetLink();
 
 		return super.doStartTag();
 	}
@@ -60,6 +67,36 @@ public abstract class BaseChartTag extends TemplateRendererTag {
 	public void setId(String id) {
 		putValue("id", id);
 	}
+
+	private OutputData _getOutputData() {
+		ServletRequest servletRequest = getRequest();
+
+		OutputData outputData = (OutputData)servletRequest.getAttribute(
+			WebKeys.OUTPUT_DATA);
+
+		if (outputData == null) {
+			outputData = new OutputData();
+
+			servletRequest.setAttribute(WebKeys.OUTPUT_DATA, outputData);
+		}
+
+		return outputData;
+	}
+
+	private void _outputStylesheetLink() {
+		OutputData outputData = _getOutputData();
+
+		StringBundler sb = new StringBundler();
+
+		sb.append("<link rel=\"stylesheet\" href=\"");
+		sb.append(PortalUtil.getPathModule());
+		sb.append("/chart-taglib");
+		sb.append("/node_modules/billboard.js@1.1.0/dist/billboard.css\">");
+
+		outputData.addData(_OUTPUT_KEY, WebKeys.PAGE_TOP, sb);
+	}
+
+	private static final String _OUTPUT_KEY = BaseChartTag.class.getName();
 
 	private final String _moduleBaseName;
 
