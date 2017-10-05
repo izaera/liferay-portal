@@ -1110,10 +1110,6 @@ public class VerifyProperties extends VerifyProcess {
 			"com.liferay.journal.service"
 		},
 		new String[] {
-			"journal.error.template[vm]", "error.template[vm]",
-			"com.liferay.journal.service"
-		},
-		new String[] {
 			"journal.error.template[xsl]", "error.template[xsl]",
 			"com.liferay.journal.service"
 		},
@@ -1149,11 +1145,6 @@ public class VerifyProperties extends VerifyProcess {
 		new String[] {
 			"journal.template.language.content[ftl]",
 			"journal.article.template.language.content[ftl]",
-			"com.liferay.journal.web"
-		},
-		new String[] {
-			"journal.template.language.content[vm]",
-			"journal.article.template.language.content[vm]",
 			"com.liferay.journal.web"
 		},
 		new String[] {
@@ -1747,7 +1738,6 @@ public class VerifyProperties extends VerifyProcess {
 		"dockbar.add.portlets", "dockbar.administrative.links.show.in.pop.up",
 		"dynamic.data.lists.record.set.force.autogenerate.key",
 		"dynamic.data.lists.template.language.parser[ftl]",
-		"dynamic.data.lists.template.language.parser[vm]",
 		"dynamic.data.lists.template.language.parser[xsl]",
 		"dynamic.data.mapping.structure.index.with.thread",
 		"dynamic.data.mapping.structure.private.field.names",
@@ -1798,7 +1788,6 @@ public class VerifyProperties extends VerifyProcess {
 		"journal.image.extensions", "journal.image.small.max.size",
 		"journal.template.language.parser[css]",
 		"journal.template.language.parser[ftl]",
-		"journal.template.language.parser[vm]",
 		"journal.template.language.parser[xsl]",
 		"journal.template.language.types", "jpa.configs",
 		"jpa.database.platform", "jpa.database.type", "jpa.load.time.weaver",
@@ -2020,9 +2009,6 @@ public class VerifyProperties extends VerifyProcess {
 		new String[] {"icon.menu.max.display.items", "menu.max.display.items"},
 		new String[] {
 			"journal.error.template.freemarker", "journal.error.template[ftl]"
-		},
-		new String[] {
-			"journal.error.template.velocity", "journal.error.template[vm]"
 		},
 		new String[] {
 			"journal.error.template.xsl", "journal.error.template[xsl]"
