@@ -50,8 +50,6 @@ import com.liferay.portal.layoutconfiguration.util.xml.RenderURLLogic;
 import com.liferay.portal.servlet.ThreadLocalFacadeServletRequestWrapperUtil;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.taglib.servlet.PipingServletResponse;
-import com.liferay.taglib.util.DummyVelocityTaglib;
-import com.liferay.taglib.util.VelocityTaglib;
 
 import java.io.Closeable;
 
@@ -321,11 +319,6 @@ public class RuntimePageImpl implements RuntimePage {
 		template.prepare(request);
 
 		// liferay:include tag library
-
-		VelocityTaglib velocityTaglib = new DummyVelocityTaglib();
-
-		template.put("taglibLiferay", velocityTaglib);
-		template.put("theme", velocityTaglib);
 
 		try {
 			template.processTemplate(response.getWriter());
