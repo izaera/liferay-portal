@@ -422,9 +422,6 @@ public class JournalTransformer {
 			if (langType.equals(TemplateConstants.LANG_TYPE_FTL)) {
 				template = journalServiceConfiguration.errorTemplateFTL();
 			}
-			else if (langType.equals(TemplateConstants.LANG_TYPE_VM)) {
-				template = journalServiceConfiguration.errorTemplateVM();
-			}
 			else if (langType.equals(TemplateConstants.LANG_TYPE_XSL)) {
 				template = journalServiceConfiguration.errorTemplateXSL();
 			}

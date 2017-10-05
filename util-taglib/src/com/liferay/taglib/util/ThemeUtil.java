@@ -81,9 +81,6 @@ public class ThemeUtil {
 		if (extension.equals(ThemeHelper.TEMPLATE_EXTENSION_FTL)) {
 			includeFTL(servletContext, request, response, path, theme, true);
 		}
-		else if (extension.equals(ThemeHelper.TEMPLATE_EXTENSION_VM)) {
-			includeVM(servletContext, request, response, path, theme, true);
-		}
 		else {
 			path = theme.getTemplatesPath() + StringPool.SLASH + path;
 
@@ -110,17 +107,6 @@ public class ThemeUtil {
 		doDispatch(
 			servletContext, request, response, path, theme, true,
 			ThemeHelper.TEMPLATE_EXTENSION_JSP);
-	}
-
-	public static String includeVM(
-			ServletContext servletContext, HttpServletRequest request,
-			HttpServletResponse response, String path, Theme theme,
-			boolean write)
-		throws Exception {
-
-		return doDispatch(
-			servletContext, request, response, path, theme, write,
-			ThemeHelper.TEMPLATE_EXTENSION_VM);
 	}
 
 	protected static String doDispatch(
@@ -160,11 +146,6 @@ public class ThemeUtil {
 			}
 			else if (extension.equals(ThemeHelper.TEMPLATE_EXTENSION_JSP)) {
 				doIncludeJSP(servletContext, request, response, path, theme);
-			}
-			else if (extension.equals(ThemeHelper.TEMPLATE_EXTENSION_VM)) {
-				return doIncludeVM(
-					servletContext, request, response, path, theme, false,
-					write);
 			}
 
 			return null;
@@ -334,133 +315,6 @@ public class ThemeUtil {
 			else {
 				requestDispatcher.include(request, response);
 			}
-		}
-	}
-
-	protected static String doIncludeVM(
-			ServletContext servletContext, HttpServletRequest request,
-			HttpServletResponse response, String page, Theme theme,
-			boolean restricted, boolean write)
-		throws Exception {
-
-		// The servlet context name will be null when the theme is deployed to
-		// the root directory in Tomcat. See
-		// com.liferay.portal.servlet.MainServlet and
-		// com.liferay.portlet.PortletContextImpl for other cases where a null
-		// servlet context name is also converted to an empty string.
-
-		String servletContextName = GetterUtil.getString(
-			theme.getServletContextName());
-
-		if (ServletContextPool.get(servletContextName) == null) {
-
-			// This should only happen if the Velocity template is the first
-			// page to be accessed in the system
-
-			ServletContextPool.put(servletContextName, servletContext);
-		}
-
-		String portletId = getPortletId(request);
-
-		String resourcePath = theme.getResourcePath(
-			servletContext, portletId, page);
-
-		boolean checkResourceExists = true;
-
-		if (Validator.isNotNull(portletId)) {
-			if (PortletIdCodec.hasInstanceId(portletId) &&
-				(checkResourceExists !=
-					TemplateResourceLoaderUtil.hasTemplateResource(
-						TemplateConstants.LANG_TYPE_VM, resourcePath))) {
-
-				String rootPortletId = PortletIdCodec.decodePortletName(
-					portletId);
-
-				resourcePath = theme.getResourcePath(
-					servletContext, rootPortletId, page);
-			}
-
-			if (checkResourceExists &&
-				(checkResourceExists !=
-					TemplateResourceLoaderUtil.hasTemplateResource(
-						TemplateConstants.LANG_TYPE_VM, resourcePath))) {
-
-				resourcePath = theme.getResourcePath(
-					servletContext, null, page);
-			}
-		}
-
-		if (checkResourceExists &&
-			!TemplateResourceLoaderUtil.hasTemplateResource(
-				TemplateConstants.LANG_TYPE_VM, resourcePath)) {
-
-			_log.error(resourcePath + " does not exist");
-
-			return null;
-		}
-
-		TemplateResource templateResource =
-			TemplateResourceLoaderUtil.getTemplateResource(
-				TemplateConstants.LANG_TYPE_VM, resourcePath);
-
-		if (templateResource == null) {
-			throw new Exception(
-				"Unable to load template resource " + resourcePath);
-		}
-
-		TemplateManager templateManager =
-			TemplateManagerUtil.getTemplateManager(
-				TemplateConstants.LANG_TYPE_VM);
-
-		Template template = TemplateManagerUtil.getTemplate(
-			TemplateConstants.LANG_TYPE_VM, templateResource, restricted);
-
-		// Velocity variables
-
-		template.prepare(request);
-
-		// Custom theme variables
-
-		for (TemplateContextContributor templateContextContributor :
-				_templateContextContributors) {
-
-			templateContextContributor.prepare(template, request);
-		}
-
-		// Theme servlet context
-
-		ServletContext themeServletContext = ServletContextPool.get(
-			servletContextName);
-
-		template.put("themeServletContext", themeServletContext);
-
-		// Tag libraries
-
-		Writer writer = null;
-
-		if (write) {
-			writer = response.getWriter();
-		}
-		else {
-			writer = new UnsyncStringWriter();
-
-			response = new PipingServletResponse(response, writer);
-		}
-
-		templateManager.addTaglibTheme(
-			template, "taglibLiferay", request, response);
-
-		template.put(TemplateConstants.WRITER, writer);
-
-		// Merge templates
-
-		template.processTemplate(writer);
-
-		if (write) {
-			return null;
-		}
-		else {
-			return writer.toString();
 		}
 	}
 

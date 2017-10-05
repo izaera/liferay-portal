@@ -24,8 +24,8 @@ public interface TemplateConstants {
 	public static final String[] ALLOWED_LANG_TYPES = {
 		TemplateConstants.LANG_TYPE_CSS, TemplateConstants.LANG_TYPE_FTL,
 		TemplateConstants.LANG_TYPE_JSON, TemplateConstants.LANG_TYPE_SOY,
-		TemplateConstants.LANG_TYPE_TPL, TemplateConstants.LANG_TYPE_VM,
-		TemplateConstants.LANG_TYPE_XML, TemplateConstants.LANG_TYPE_XSL
+		TemplateConstants.LANG_TYPE_TPL, TemplateConstants.LANG_TYPE_XML, 
+		TemplateConstants.LANG_TYPE_XSL
 	};
 
 	public static final String BUNDLE_SEPARATOR = "_BUNDLE_CONTEXT_";
@@ -49,8 +49,6 @@ public interface TemplateConstants {
 	public static final String LANG_TYPE_SOY = "soy";
 
 	public static final String LANG_TYPE_TPL = "tpl";
-
-	public static final String LANG_TYPE_VM = "vm";
 
 	public static final String LANG_TYPE_XML = "xml";
 

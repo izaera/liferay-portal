@@ -847,7 +847,7 @@ public abstract class BaseDB implements DB {
 				new StringTemplateResource(templateId, templateContent);
 
 			Template template = TemplateManagerUtil.getTemplate(
-				TemplateConstants.LANG_TYPE_VM, stringTemplateResource, false);
+				TemplateConstants.LANG_TYPE_FTL, stringTemplateResource, false);
 
 			template.put("counter", new SimpleCounter());
 			template.put("portalUUIDUtil", PortalUUIDUtil.class);

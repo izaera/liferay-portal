@@ -158,12 +158,7 @@ public class StagingBarPortlet extends MVCPortlet {
 		boolean privateLayout = false;
 
 		if (selLayout != null) {
-			try {
-				group = selLayout.getGroup();
-			}
-			catch (PortalException pe) {
-				throw new PortletException(pe);
-			}
+			group = selLayout.getGroup();
 
 			privateLayout = selLayout.isPrivateLayout();
 		}

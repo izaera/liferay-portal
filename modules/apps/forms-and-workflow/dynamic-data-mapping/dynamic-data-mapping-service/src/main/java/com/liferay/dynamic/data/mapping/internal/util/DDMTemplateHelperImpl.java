@@ -114,8 +114,7 @@ public class DDMTemplateHelperImpl implements DDMTemplateHelper {
 
 	@Override
 	public boolean isAutocompleteEnabled(String language) {
-		if (language.equals(TemplateConstants.LANG_TYPE_FTL) ||
-			language.equals(TemplateConstants.LANG_TYPE_VM)) {
+		if (language.equals(TemplateConstants.LANG_TYPE_FTL)) {
 
 			return true;
 		}

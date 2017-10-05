@@ -399,18 +399,12 @@ public class LayoutTemplateLocalServiceImpl
 					"null" + LayoutTemplateConstants.STANDARD_SEPARATOR +
 						layoutTemplateId;
 
-				TemplateResourceLoaderUtil.clearCache(
-					TemplateConstants.LANG_TYPE_VM, templateId);
-
 				_warStandard.remove(layoutTemplateId);
 			}
 			else {
 				templateId =
 					"null" + LayoutTemplateConstants.CUSTOM_SEPARATOR +
 						layoutTemplateId;
-
-				TemplateResourceLoaderUtil.clearCache(
-					TemplateConstants.LANG_TYPE_VM, templateId);
 
 				_warCustom.remove(layoutTemplateId);
 			}
@@ -426,51 +420,9 @@ public class LayoutTemplateLocalServiceImpl
 		Map<String, LayoutTemplate> themesStandard = _getThemesStandard(
 			themeId);
 
-		for (Map.Entry<String, LayoutTemplate> entry :
-				themesStandard.entrySet()) {
-
-			LayoutTemplate layoutTemplate = entry.getValue();
-
-			String templateId =
-				themeId + LayoutTemplateConstants.STANDARD_SEPARATOR +
-					layoutTemplate.getLayoutTemplateId();
-
-			try {
-				TemplateResourceLoaderUtil.clearCache(
-					TemplateConstants.LANG_TYPE_VM, templateId);
-			}
-			catch (Exception e) {
-				_log.error(
-					"Unable to uninstall layout template " +
-						layoutTemplate.getLayoutTemplateId(),
-					e);
-			}
-		}
-
 		themesStandard.clear();
 
 		Map<String, LayoutTemplate> themesCustom = _getThemesCustom(themeId);
-
-		for (Map.Entry<String, LayoutTemplate> entry :
-				themesCustom.entrySet()) {
-
-			LayoutTemplate layoutTemplate = entry.getValue();
-
-			String templateId =
-				themeId + LayoutTemplateConstants.CUSTOM_SEPARATOR +
-					layoutTemplate.getLayoutTemplateId();
-
-			try {
-				TemplateResourceLoaderUtil.clearCache(
-					TemplateConstants.LANG_TYPE_VM, templateId);
-			}
-			catch (Exception e) {
-				_log.error(
-					"Unable to uninstall layout template " +
-						layoutTemplate.getLayoutTemplateId(),
-					e);
-			}
-		}
 
 		themesCustom.clear();
 	}
@@ -482,7 +434,7 @@ public class LayoutTemplateLocalServiceImpl
 			InitColumnProcessor processor = new InitColumnProcessor();
 
 			Template template = TemplateManagerUtil.getTemplate(
-				TemplateConstants.LANG_TYPE_VM,
+				TemplateConstants.LANG_TYPE_FTL,
 				new StringTemplateResource(
 					velocityTemplateId, velocityTemplateContent),
 				false);

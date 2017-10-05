@@ -314,9 +314,6 @@ if (Validator.isNotNull(scriptContent)) {
 			<c:when test="<%= language.equals(TemplateConstants.LANG_TYPE_FTL) %>">
 				AutoComplete = A.AceEditor.AutoCompleteFreemarker;
 			</c:when>
-			<c:when test="<%= language.equals(TemplateConstants.LANG_TYPE_VM) %>">
-				AutoComplete = A.AceEditor.AutoCompleteVelocity;
-			</c:when>
 		</c:choose>
 
 		if (AutoComplete) {

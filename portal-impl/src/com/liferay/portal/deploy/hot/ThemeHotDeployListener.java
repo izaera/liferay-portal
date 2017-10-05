@@ -116,22 +116,6 @@ public class ThemeHotDeployListener extends BaseHotDeployListener {
 						" are available for use");
 			}
 		}
-
-		if (_log.isWarnEnabled()) {
-			for (Theme theme : themes) {
-				if (!Objects.equals(
-						theme.getTemplateExtension(),
-						ThemeHelper.TEMPLATE_EXTENSION_VM)) {
-
-					continue;
-				}
-
-				_log.warn(
-					"Support of Velocity is deprecated. Update theme " +
-						theme.getName() +
-							" to use FreeMarker for forward compatibility.");
-			}
-		}
 	}
 
 	protected void doInvokeUndeploy(HotDeployEvent hotDeployEvent)
@@ -164,20 +148,6 @@ public class ThemeHotDeployListener extends BaseHotDeployListener {
 		}
 
 		// LEP-2057
-
-		ClassLoader contextClassLoader =
-			ClassLoaderUtil.getContextClassLoader();
-
-		try {
-			ClassLoaderUtil.setContextClassLoader(
-				ClassLoaderUtil.getPortalClassLoader());
-
-			TemplateResourceLoaderUtil.clearCache(
-				TemplateConstants.LANG_TYPE_VM);
-		}
-		finally {
-			ClassLoaderUtil.setContextClassLoader(contextClassLoader);
-		}
 
 		if (_log.isInfoEnabled()) {
 			if (themes.size() == 1) {
