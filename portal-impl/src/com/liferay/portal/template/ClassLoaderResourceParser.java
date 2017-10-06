@@ -27,8 +27,7 @@ import java.net.URL;
 @OSGiBeanProperties(
 	property = {
 		"lang.type=" + TemplateConstants.LANG_TYPE_FTL,
-		"lang.type=" + TemplateConstants.LANG_TYPE_SOY,
-		"lang.type=" + TemplateConstants.LANG_TYPE_VM
+		"lang.type=" + TemplateConstants.LANG_TYPE_SOY
 	},
 	service = TemplateResourceParser.class
 )
