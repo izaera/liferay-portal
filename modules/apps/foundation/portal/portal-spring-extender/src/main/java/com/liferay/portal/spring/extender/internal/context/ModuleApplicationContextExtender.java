@@ -308,7 +308,7 @@ public class ModuleApplicationContextExtender extends AbstractExtender {
 
 						if (tablesSQL != null) {
 							try {
-								db.runSQLTemplateString(tablesSQL, true, true);
+								db.runSQLTemplateString(tablesSQL, true);
 							}
 							catch (Exception e) {
 								throw new UpgradeException(
@@ -321,8 +321,7 @@ public class ModuleApplicationContextExtender extends AbstractExtender {
 
 						if (sequencesSQL != null) {
 							try {
-								db.runSQLTemplateString(
-									sequencesSQL, true, true);
+								db.runSQLTemplateString(sequencesSQL, true);
 							}
 							catch (Exception e) {
 								throw new UpgradeException(
@@ -335,7 +334,7 @@ public class ModuleApplicationContextExtender extends AbstractExtender {
 
 						if (indexesSQL != null) {
 							try {
-								db.runSQLTemplateString(indexesSQL, true, true);
+								db.runSQLTemplateString(indexesSQL, true);
 							}
 							catch (Exception e) {
 								throw new UpgradeException(
