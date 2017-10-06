@@ -37,8 +37,7 @@ import com.liferay.portal.kernel.util.StringPool;
  */
 @OSGiBeanProperties(
 	property = {
-		"lang.type=" + TemplateConstants.LANG_TYPE_FTL,
-		"lang.type=" + TemplateConstants.LANG_TYPE_VM
+		"lang.type=" + TemplateConstants.LANG_TYPE_FTL
 	},
 	service = TemplateResourceParser.class
 )
