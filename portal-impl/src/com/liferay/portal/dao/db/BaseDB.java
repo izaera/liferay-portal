@@ -352,27 +352,15 @@ public abstract class BaseDB implements DB {
 
 		String template = StringUtil.read(is);
 
-		boolean evaluate = path.endsWith(".vm");
-
-		runSQLTemplateString(template, evaluate, failOnError);
+		runSQLTemplateString(template, failOnError);
 	}
 
 	@Override
 	public void runSQLTemplateString(
-			Connection connection, String template, boolean evaluate,
-			boolean failOnError)
+			Connection connection, String template, boolean failOnError)
 		throws IOException, NamingException, SQLException {
 
 		template = applyMaxStringIndexLengthLimitation(template);
-
-		if (evaluate) {
-			try {
-				template = evaluateVM(template.hashCode() + "", template);
-			}
-			catch (Exception e) {
-				_log.error(e, e);
-			}
-		}
 
 		try (UnsyncBufferedReader unsyncBufferedReader =
 				new UnsyncBufferedReader(new UnsyncStringReader(template))) {
@@ -404,19 +392,10 @@ public abstract class BaseDB implements DB {
 
 					String include = StringUtil.read(is);
 
-					if (includeFileName.endsWith(".vm")) {
-						try {
-							include = evaluateVM(includeFileName, include);
-						}
-						catch (Exception e) {
-							_log.error(e, e);
-						}
-					}
-
 					include = convertTimestamp(include);
 					include = replaceTemplate(include, getTemplate());
 
-					runSQLTemplateString(include, false, true);
+					runSQLTemplateString(include, true);
 				}
 				else {
 					sb.append(line);
@@ -482,11 +461,11 @@ public abstract class BaseDB implements DB {
 
 	@Override
 	public void runSQLTemplateString(
-			String template, boolean evaluate, boolean failOnError)
+			String template, boolean failOnError)
 		throws IOException, NamingException, SQLException {
 
 		try (Connection connection = DataAccess.getConnection()) {
-			runSQLTemplateString(connection, template, evaluate, failOnError);
+			runSQLTemplateString(connection, template, failOnError);
 		}
 	}
 
@@ -691,15 +670,6 @@ public abstract class BaseDB implements DB {
 
 						String include = FileUtil.read(includeFile);
 
-						if (includeFileName.endsWith(".vm")) {
-							try {
-								include = evaluateVM(includeFileName, include);
-							}
-							catch (Exception e) {
-								_log.error(e, e);
-							}
-						}
-
 						include = convertTimestamp(include);
 						include = replaceTemplate(include, getTemplate());
 
@@ -826,61 +796,6 @@ public abstract class BaseDB implements DB {
 		}
 
 		return validIndexNames;
-	}
-
-	protected String evaluateVM(String templateId, String templateContent)
-		throws Exception {
-
-		if (Validator.isNull(templateContent)) {
-			return StringPool.BLANK;
-		}
-
-		ClassLoader classLoader = ClassLoaderUtil.getContextClassLoader();
-
-		UnsyncStringWriter unsyncStringWriter = new UnsyncStringWriter();
-
-		try {
-			ClassLoaderUtil.setContextClassLoader(
-				ClassLoaderUtil.getPortalClassLoader());
-
-			StringTemplateResource stringTemplateResource =
-				new StringTemplateResource(templateId, templateContent);
-
-			Template template = TemplateManagerUtil.getTemplate(
-				TemplateConstants.LANG_TYPE_VM, stringTemplateResource, false);
-
-			template.put("counter", new SimpleCounter());
-			template.put("portalUUIDUtil", PortalUUIDUtil.class);
-
-			template.processTemplate(unsyncStringWriter);
-		}
-		finally {
-			ClassLoaderUtil.setContextClassLoader(classLoader);
-		}
-
-		// Trim insert statements because it breaks MySQL Query Browser
-
-		StringBundler sb = new StringBundler();
-
-		try (UnsyncBufferedReader unsyncBufferedReader =
-				new UnsyncBufferedReader(
-					new UnsyncStringReader(unsyncStringWriter.toString()))) {
-
-			String line = null;
-
-			while ((line = unsyncBufferedReader.readLine()) != null) {
-				line = line.trim();
-
-				sb.append(line);
-
-				sb.append("\n");
-			}
-		}
-
-		templateContent = sb.toString();
-		templateContent = StringUtil.replace(templateContent, "\n\n\n", "\n\n");
-
-		return templateContent;
 	}
 
 	protected String getCreateTablesContent(String sqlDir, String suffix)
