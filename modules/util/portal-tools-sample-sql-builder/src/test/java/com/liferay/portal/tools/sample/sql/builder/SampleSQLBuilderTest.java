@@ -193,7 +193,7 @@ public class SampleSQLBuilderTest {
 
 		String sql = StringUtil.read(url.openStream());
 
-		db.runSQLTemplateString(connection, sql, false, true);
+		db.runSQLTemplateString(connection, sql, true);
 	}
 
 }
