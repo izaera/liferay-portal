@@ -424,7 +424,7 @@ public abstract class UpgradeProcess
 									indexMetadata.getColumnNames()))) {
 
 							runSQLTemplateString(
-								objectValuePair.getKey(), false, true);
+								objectValuePair.getKey(), true);
 						}
 					}
 				}
