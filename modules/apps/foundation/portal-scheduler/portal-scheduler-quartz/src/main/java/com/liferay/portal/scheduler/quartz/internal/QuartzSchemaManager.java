@@ -108,7 +108,7 @@ public class QuartzSchemaManager {
 		try {
 			con.setAutoCommit(false);
 
-			db.runSQLTemplateString(con, template, false, false);
+			db.runSQLTemplateString(con, template, false);
 
 			con.commit();
 		}

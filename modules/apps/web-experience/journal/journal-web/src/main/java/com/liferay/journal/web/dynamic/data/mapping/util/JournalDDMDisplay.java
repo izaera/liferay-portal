@@ -236,8 +236,7 @@ public class JournalDDMDisplay extends BaseDDMDisplay {
 
 	private static final Set<String> _templateLanguageTypes = SetUtil.fromArray(
 		new String[] {
-			TemplateConstants.LANG_TYPE_FTL, TemplateConstants.LANG_TYPE_VM,
-			TemplateConstants.LANG_TYPE_XSL
+			TemplateConstants.LANG_TYPE_FTL, TemplateConstants.LANG_TYPE_XSL
 		});
 	private static final Set<String> _viewTemplateExcludedColumnNames =
 		SetUtil.fromArray(new String[] {"mode"});

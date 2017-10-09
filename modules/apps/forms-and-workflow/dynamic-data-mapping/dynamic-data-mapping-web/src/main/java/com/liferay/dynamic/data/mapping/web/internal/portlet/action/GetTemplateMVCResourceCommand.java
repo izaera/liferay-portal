@@ -61,7 +61,7 @@ public class GetTemplateMVCResourceCommand extends BaseMVCResourceCommand {
 		String type = template.getType();
 
 		String language = GetterUtil.getString(
-			template.getLanguage(), TemplateConstants.LANG_TYPE_VM);
+			template.getLanguage(), TemplateConstants.LANG_TYPE_FTL);
 
 		if (type.equals(DDMTemplateConstants.TEMPLATE_TYPE_FORM)) {
 			contentType = ContentTypes.APPLICATION_JSON;

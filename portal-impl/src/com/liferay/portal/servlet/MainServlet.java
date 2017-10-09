@@ -880,12 +880,8 @@ public class MainServlet extends ActionServlet {
 		Filter freeMarkerFilter = registry.getFilter(
 			"(&(language.type=" + TemplateConstants.LANG_TYPE_FTL +
 				")(objectClass=" + TemplateManager.class.getName() + "))");
-		Filter velocityFilter = registry.getFilter(
-			"(&(language.type=" + TemplateConstants.LANG_TYPE_VM +
-				")(objectClass=" + TemplateManager.class.getName() + "))");
 
-		serviceDependencyManager.registerDependencies(
-			freeMarkerFilter, velocityFilter);
+		serviceDependencyManager.registerDependencies(freeMarkerFilter);
 	}
 
 	protected PluginPackage initPluginPackage() throws Exception {

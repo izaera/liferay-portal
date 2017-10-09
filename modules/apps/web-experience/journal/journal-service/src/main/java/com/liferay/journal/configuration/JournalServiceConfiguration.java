@@ -51,12 +51,6 @@ public interface JournalServiceConfiguration {
 	public String errorTemplateFTL();
 
 	@Meta.AD(
-		deflt = "${resource:com/liferay/journal/dependencies/error.vm}",
-		required = false
-	)
-	public String errorTemplateVM();
-
-	@Meta.AD(
 		deflt = "${resource:com/liferay/journal/dependencies/error.xsl}",
 		required = false
 	)

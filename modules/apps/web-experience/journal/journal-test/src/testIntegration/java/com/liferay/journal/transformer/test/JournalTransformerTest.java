@@ -93,12 +93,12 @@ public class JournalTransformerTest {
 		_ddmStructure = DDMStructureTestUtil.addStructure(
 			JournalArticle.class.getName(), ddmForm);
 
-		String xsl = "$name.getData()";
+		String xsl = "${name.getData()}";
 
 		_ddmTemplate = DDMTemplateTestUtil.addTemplate(
 			_ddmStructure.getStructureId(),
 			PortalUtil.getClassNameId(JournalArticle.class),
-			TemplateConstants.LANG_TYPE_VM, xsl);
+			TemplateConstants.LANG_TYPE_FTL, xsl);
 
 		String xml = DDMStructureTestUtil.getSampleStructuredContent(
 			"Joe Bloggs");
@@ -112,7 +112,7 @@ public class JournalTransformerTest {
 		String content = JournalUtil.transform(
 			null, tokens, Constants.VIEW, "en_US",
 			UnsecureSAXReaderUtil.read(xml), null, xsl,
-			TemplateConstants.LANG_TYPE_VM);
+			TemplateConstants.LANG_TYPE_FTL);
 
 		Assert.assertEquals("Joe Bloggs", content);
 
@@ -125,7 +125,7 @@ public class JournalTransformerTest {
 
 		content = JournalUtil.transform(
 			null, tokens, Constants.VIEW, "en_US", document, null, xsl,
-			TemplateConstants.LANG_TYPE_VM);
+			TemplateConstants.LANG_TYPE_FTL);
 
 		Assert.assertEquals("Joe Bloggs", content);
 	}
@@ -159,26 +159,26 @@ public class JournalTransformerTest {
 		String xml = DDMStructureTestUtil.getSampleStructuredContent(
 			contents, LanguageUtil.getLanguageId(LocaleUtil.US));
 
-		String script = "$name.getData()";
+		String script = "${name.getData()}";
 
 		String content = JournalUtil.transform(
 			null, tokens, Constants.VIEW, "en_US",
 			UnsecureSAXReaderUtil.read(xml), null, script,
-			TemplateConstants.LANG_TYPE_VM);
+			TemplateConstants.LANG_TYPE_FTL);
 
 		Assert.assertEquals("Joe Bloggs", content);
 
 		content = JournalUtil.transform(
 			null, tokens, Constants.VIEW, "pt_BR",
 			UnsecureSAXReaderUtil.read(xml), null, script,
-			TemplateConstants.LANG_TYPE_VM);
+			TemplateConstants.LANG_TYPE_FTL);
 
 		Assert.assertEquals("Joao da Silva", content);
 
 		content = JournalUtil.transform(
 			null, tokens, Constants.VIEW, "fr_CA",
 			UnsecureSAXReaderUtil.read(xml), null, script,
-			TemplateConstants.LANG_TYPE_VM);
+			TemplateConstants.LANG_TYPE_FTL);
 
 		Assert.assertEquals("Joe Bloggs", content);
 	}
@@ -210,17 +210,17 @@ public class JournalTransformerTest {
 
 		dynamicElement.addElement("nestedElement");
 
-		String script = "$name.getData()";
+		String script = "${name.getData()}";
 
 		String content = JournalUtil.transform(
 			null, tokens, Constants.VIEW, "en_US", document, null, script,
-			TemplateConstants.LANG_TYPE_VM);
+			TemplateConstants.LANG_TYPE_FTL);
 
 		Assert.assertEquals("Joe Bloggs", content);
 
 		content = JournalUtil.transform(
 			null, tokens, Constants.VIEW, "pt_BR", document, null, script,
-			TemplateConstants.LANG_TYPE_VM);
+			TemplateConstants.LANG_TYPE_FTL);
 
 		Assert.assertEquals("Joe Bloggs", content);
 	}
@@ -234,12 +234,12 @@ public class JournalTransformerTest {
 		String xml = DDMStructureTestUtil.getSampleStructuredContent(
 			"name", "Joe Bloggs");
 
-		String script = "Hello $name.getData(), Welcome to beta.sample.com.";
+		String script = "Hello ${name.getData()}, Welcome to beta.sample.com.";
 
 		String content = JournalUtil.transform(
 			null, tokens, Constants.VIEW, "en_US",
 			UnsecureSAXReaderUtil.read(xml), null, script,
-			TemplateConstants.LANG_TYPE_VM);
+			TemplateConstants.LANG_TYPE_FTL);
 
 		Assert.assertEquals(
 			"Hello Joe Bloggs, Welcome to production.sample.com.", content);
@@ -256,7 +256,7 @@ public class JournalTransformerTest {
 		String content = JournalUtil.transform(
 			null, tokens, Constants.VIEW, "en_US",
 			UnsecureSAXReaderUtil.read(xml), null, script,
-			TemplateConstants.LANG_TYPE_VM);
+			TemplateConstants.LANG_TYPE_FTL);
 
 		Assert.assertEquals(
 			String.valueOf(TestPropsValues.getCompanyId()), content);
@@ -266,7 +266,7 @@ public class JournalTransformerTest {
 		content = JournalUtil.transform(
 			null, tokens, Constants.VIEW, "en_US",
 			UnsecureSAXReaderUtil.read(xml), null, script,
-			TemplateConstants.LANG_TYPE_VM);
+			TemplateConstants.LANG_TYPE_FTL);
 
 		Assert.assertEquals(
 			String.valueOf(TestPropsValues.getCompanyId()), content);
@@ -285,7 +285,7 @@ public class JournalTransformerTest {
 		String content = JournalUtil.transform(
 			null, tokens, Constants.VIEW, "en_US",
 			UnsecureSAXReaderUtil.read(xml), null, script,
-			TemplateConstants.LANG_TYPE_VM);
+			TemplateConstants.LANG_TYPE_FTL);
 
 		StringBundler sb = new StringBundler(5);
 
@@ -308,7 +308,7 @@ public class JournalTransformerTest {
 		_ddmTemplate = DDMTemplateTestUtil.addTemplate(
 			_ddmStructure.getStructureId(),
 			PortalUtil.getClassNameId(JournalArticle.class),
-			TemplateConstants.LANG_TYPE_VM, "$name.getData()");
+			TemplateConstants.LANG_TYPE_FTL, "${name.getData()}");
 
 		String xml = DDMStructureTestUtil.getSampleStructuredContent(
 			"name", "Joe Bloggs");
@@ -316,18 +316,18 @@ public class JournalTransformerTest {
 		String content = JournalUtil.transform(
 			null, tokens, Constants.VIEW, "en_US",
 			UnsecureSAXReaderUtil.read(xml), null,
-			"#parse(\"$templatesPath/" + _ddmTemplate.getTemplateKey() +
-				"\")",
-			TemplateConstants.LANG_TYPE_VM);
+			"<#include \"$templatesPath/" + _ddmTemplate.getTemplateKey() +
+				"\">",
+			TemplateConstants.LANG_TYPE_FTL);
 
 		Assert.assertEquals("Joe Bloggs", content);
 
 		content = JournalUtil.transform(
 			null, tokens, Constants.VIEW, "en_US",
 			UnsecureSAXReaderUtil.read(xml), null,
-			"#parse(\"$journalTemplatesPath/" + _ddmTemplate.getTemplateKey() +
-				"\")",
-			TemplateConstants.LANG_TYPE_VM);
+			"<#include \"$journalTemplatesPath/" + 
+				_ddmTemplate.getTemplateKey() + "\">",
+			TemplateConstants.LANG_TYPE_FTL);
 
 		Assert.assertEquals("Joe Bloggs", content);
 	}
