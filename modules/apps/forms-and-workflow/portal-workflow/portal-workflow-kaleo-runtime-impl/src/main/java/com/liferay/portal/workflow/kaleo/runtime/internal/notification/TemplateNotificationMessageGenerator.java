@@ -104,7 +104,6 @@ public class TemplateNotificationMessageGenerator
 		_templateManagerNames.put(
 			"freemarker", TemplateConstants.LANG_TYPE_FTL);
 		_templateManagerNames.put("soy", TemplateConstants.LANG_TYPE_SOY);
-		_templateManagerNames.put("velocity", TemplateConstants.LANG_TYPE_VM);
 	}
 
 	protected void populateContextVariables(
