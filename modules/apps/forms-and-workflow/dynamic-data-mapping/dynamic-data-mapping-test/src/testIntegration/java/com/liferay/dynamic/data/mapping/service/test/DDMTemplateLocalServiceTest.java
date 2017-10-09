@@ -69,7 +69,7 @@ public class DDMTemplateLocalServiceTest extends BaseDDMServiceTestCase {
 	@Test
 	public void testAddTemplateWithDuplicateKey() throws Exception {
 		String templateKey = RandomTestUtil.randomString();
-		String language = TemplateConstants.LANG_TYPE_VM;
+		String language = TemplateConstants.LANG_TYPE_FTL;
 
 		try {
 			addTemplate(
@@ -93,7 +93,7 @@ public class DDMTemplateLocalServiceTest extends BaseDDMServiceTestCase {
 
 	@Test
 	public void testAddTemplateWithoutName() throws Exception {
-		String language = TemplateConstants.LANG_TYPE_VM;
+		String language = TemplateConstants.LANG_TYPE_FTL;
 
 		try {
 			addTemplate(
@@ -485,17 +485,17 @@ public class DDMTemplateLocalServiceTest extends BaseDDMServiceTestCase {
 
 	@Test
 	public void testSearchCountByLanguage() throws Exception {
-		String velocityLanguage = TemplateConstants.LANG_TYPE_VM;
+		String xsdLanguage = "xsd";
 
 		addTemplate(
 			RandomTestUtil.randomLong(), RandomTestUtil.randomLong(),
 			StringUtil.randomString(), StringPool.BLANK, StringPool.BLANK,
-			velocityLanguage, getTestTemplateScript(velocityLanguage),
+			xsdLanguage, getTestTemplateScript(xsdLanguage),
 			WorkflowConstants.STATUS_APPROVED);
 		addTemplate(
 			RandomTestUtil.randomLong(), RandomTestUtil.randomLong(),
 			StringUtil.randomString(), StringPool.BLANK, StringPool.BLANK,
-			velocityLanguage, getTestTemplateScript(velocityLanguage),
+			xsdLanguage, getTestTemplateScript(xsdLanguage),
 			WorkflowConstants.STATUS_APPROVED);
 
 		String freeMarkerLanguage = TemplateConstants.LANG_TYPE_FTL;
@@ -509,8 +509,7 @@ public class DDMTemplateLocalServiceTest extends BaseDDMServiceTestCase {
 		int count = DDMTemplateLocalServiceUtil.searchCount(
 			TestPropsValues.getCompanyId(), new long[] {group.getGroupId()},
 			null, null, _resourceClassNameId, null, null, null, null,
-			TemplateConstants.LANG_TYPE_VM, WorkflowConstants.STATUS_APPROVED,
-			true);
+			xsdLanguage, WorkflowConstants.STATUS_APPROVED, true);
 
 		Assert.assertEquals(2, count);
 	}
