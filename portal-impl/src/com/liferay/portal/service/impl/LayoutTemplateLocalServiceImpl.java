@@ -400,7 +400,7 @@ public class LayoutTemplateLocalServiceImpl
 						layoutTemplateId;
 
 				TemplateResourceLoaderUtil.clearCache(
-					TemplateConstants.LANG_TYPE_VM, templateId);
+					TemplateConstants.LANG_TYPE_FTL, templateId);
 
 				_warStandard.remove(layoutTemplateId);
 			}
@@ -410,7 +410,7 @@ public class LayoutTemplateLocalServiceImpl
 						layoutTemplateId;
 
 				TemplateResourceLoaderUtil.clearCache(
-					TemplateConstants.LANG_TYPE_VM, templateId);
+					TemplateConstants.LANG_TYPE_FTL, templateId);
 
 				_warCustom.remove(layoutTemplateId);
 			}
@@ -437,7 +437,7 @@ public class LayoutTemplateLocalServiceImpl
 
 			try {
 				TemplateResourceLoaderUtil.clearCache(
-					TemplateConstants.LANG_TYPE_VM, templateId);
+					TemplateConstants.LANG_TYPE_FTL, templateId);
 			}
 			catch (Exception e) {
 				_log.error(
@@ -462,7 +462,7 @@ public class LayoutTemplateLocalServiceImpl
 
 			try {
 				TemplateResourceLoaderUtil.clearCache(
-					TemplateConstants.LANG_TYPE_VM, templateId);
+					TemplateConstants.LANG_TYPE_FTL, templateId);
 			}
 			catch (Exception e) {
 				_log.error(
@@ -482,7 +482,7 @@ public class LayoutTemplateLocalServiceImpl
 			InitColumnProcessor processor = new InitColumnProcessor();
 
 			Template template = TemplateManagerUtil.getTemplate(
-				TemplateConstants.LANG_TYPE_VM,
+				TemplateConstants.LANG_TYPE_FTL,
 				new StringTemplateResource(
 					velocityTemplateId, velocityTemplateContent),
 				false);
