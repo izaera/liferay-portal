@@ -312,7 +312,7 @@ public class RuntimePageImpl implements RuntimePage {
 			new CustomizationSettingsProcessor(request, response);
 
 		Template template = TemplateManagerUtil.getTemplate(
-			TemplateConstants.LANG_TYPE_VM, templateResource, restricted);
+			TemplateConstants.LANG_TYPE_FTL, templateResource, restricted);
 
 		template.put("processor", processor);
 
@@ -348,10 +348,10 @@ public class RuntimePageImpl implements RuntimePage {
 
 		TemplateManager templateManager =
 			TemplateManagerUtil.getTemplateManager(
-				TemplateConstants.LANG_TYPE_VM);
+				TemplateConstants.LANG_TYPE_FTL);
 
 		Template template = TemplateManagerUtil.getTemplate(
-			TemplateConstants.LANG_TYPE_VM, templateResource, restricted);
+			TemplateConstants.LANG_TYPE_FTL, templateResource, restricted);
 
 		template.put("processor", processor);
 
