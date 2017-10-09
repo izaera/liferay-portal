@@ -109,7 +109,7 @@ if (Validator.isNotNull(scriptContent)) {
 	</liferay-ui:panel>
 </liferay-ui:panel-container>
 
-<aui:script use="aui-ace-autocomplete-freemarker,aui-ace-autocomplete-plugin,aui-ace-autocomplete-velocity,aui-toggler,aui-tooltip,autocomplete-base,autocomplete-filters,event-mouseenter,event-outside,liferay-util-window,resize,transition">
+<aui:script use="aui-ace-autocomplete-freemarker,aui-ace-autocomplete-plugin,aui-toggler,aui-tooltip,autocomplete-base,autocomplete-filters,event-mouseenter,event-outside,liferay-util-window,resize,transition">
 	var ACPlugin = A.Plugin.AceAutoComplete;
 	var AObject = A.Object;
 	var Util = Liferay.Util;
@@ -313,9 +313,6 @@ if (Validator.isNotNull(scriptContent)) {
 		<c:choose>
 			<c:when test="<%= language.equals(TemplateConstants.LANG_TYPE_FTL) %>">
 				AutoComplete = A.AceEditor.AutoCompleteFreemarker;
-			</c:when>
-			<c:when test="<%= language.equals(TemplateConstants.LANG_TYPE_VM) %>">
-				AutoComplete = A.AceEditor.AutoCompleteVelocity;
 			</c:when>
 		</c:choose>
 
