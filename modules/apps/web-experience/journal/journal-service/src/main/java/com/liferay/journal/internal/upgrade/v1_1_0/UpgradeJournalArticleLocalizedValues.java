@@ -179,7 +179,7 @@ public class UpgradeJournalArticleLocalizedValues extends UpgradeProcess {
 			UpgradeJournalArticleLocalizedValues.class.getResourceAsStream(
 				"dependencies/update.sql"));
 
-		runSQLTemplateString(template, false, false);
+		runSQLTemplateString(template, false);
 	}
 
 	private static long _increment() {

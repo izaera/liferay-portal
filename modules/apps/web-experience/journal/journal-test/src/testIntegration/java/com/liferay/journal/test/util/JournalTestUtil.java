@@ -707,7 +707,7 @@ public class JournalTestUtil {
 	}
 
 	public static String getSampleTemplateXSL() {
-		return "$name.getData()";
+		return "${name.getData()}";
 	}
 
 	public static Hits getSearchArticles(long companyId, long groupId)

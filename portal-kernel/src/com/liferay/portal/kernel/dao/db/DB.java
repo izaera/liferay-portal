@@ -120,12 +120,11 @@ public interface DB {
 		throws IOException, NamingException, SQLException;
 
 	public void runSQLTemplateString(
-			Connection connection, String template, boolean evaluate,
-			boolean failOnError)
+			Connection connection, String template, boolean failOnError)
 		throws IOException, NamingException, SQLException;
 
 	public void runSQLTemplateString(
-			String template, boolean evaluate, boolean failOnError)
+			String template, boolean failOnError)
 		throws IOException, NamingException, SQLException;
 
 	public void setSupportsStringCaseSensitiveQuery(

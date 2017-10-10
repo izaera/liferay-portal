@@ -77,7 +77,7 @@ public abstract class BaseDDMServiceTestCase {
 			String name, String description, int status)
 		throws Exception {
 
-		String language = TemplateConstants.LANG_TYPE_VM;
+		String language = TemplateConstants.LANG_TYPE_FTL;
 
 		return addTemplate(
 			classNameId, classPK, resourceClassNameId, StringPool.BLANK, name,
@@ -90,7 +90,7 @@ public abstract class BaseDDMServiceTestCase {
 			long classNameId, long classPK, String name, int status)
 		throws Exception {
 
-		String language = TemplateConstants.LANG_TYPE_VM;
+		String language = TemplateConstants.LANG_TYPE_FTL;
 
 		return addTemplate(
 			classNameId, classPK, name,
@@ -255,9 +255,6 @@ public abstract class BaseDDMServiceTestCase {
 
 		if (language.equals(TemplateConstants.LANG_TYPE_FTL)) {
 			text = "${variable}";
-		}
-		else if (language.equals(TemplateConstants.LANG_TYPE_VM)) {
-			text = "#set ($preferences = $renderRequest.getPreferences())";
 		}
 		else if (language.equals("xsd")) {
 			text = read("test-template.xsd");

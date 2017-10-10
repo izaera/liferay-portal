@@ -39,7 +39,7 @@ public class DDMTemplateTestUtil {
 
 		return addTemplate(
 			groupId, classNameId, classPK, resourceClassNameId,
-			TemplateConstants.LANG_TYPE_VM, getSampleTemplateXSL(),
+			TemplateConstants.LANG_TYPE_FTL, getSampleTemplateXSL(),
 			LocaleUtil.getSiteDefault());
 	}
 
@@ -66,7 +66,7 @@ public class DDMTemplateTestUtil {
 	}
 
 	public static String getSampleTemplateXSL() {
-		return "$name.getData()";
+		return "${name.getData()}";
 	}
 
 }

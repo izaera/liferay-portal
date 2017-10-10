@@ -46,7 +46,6 @@ import com.liferay.portal.templateparser.Transformer;
 import com.liferay.portlet.display.template.PortletDisplayTemplate;
 import com.liferay.portlet.display.template.PortletDisplayTemplateConstants;
 import com.liferay.taglib.servlet.PipingServletResponse;
-import com.liferay.taglib.util.VelocityTaglib;
 
 import java.lang.reflect.InvocationHandler;
 
@@ -349,12 +348,6 @@ public class PortletDisplayTemplateImpl implements PortletDisplayTemplate {
 		utilTemplateVariableGroup.addVariable(
 			"http-request", HttpServletRequest.class,
 			PortletDisplayTemplateConstants.REQUEST);
-
-		if (language.equals(TemplateConstants.LANG_TYPE_VM)) {
-			utilTemplateVariableGroup.addVariable(
-				"liferay-taglib", VelocityTaglib.class,
-				PortletDisplayTemplateConstants.TAGLIB_LIFERAY);
-		}
 
 		utilTemplateVariableGroup.addVariable(
 			"render-request", RenderRequest.class,

@@ -1458,13 +1458,12 @@ public class FileSystemImporter extends BaseImporter {
 
 		if (extension.equals(TemplateConstants.LANG_TYPE_CSS) ||
 			extension.equals(TemplateConstants.LANG_TYPE_FTL) ||
-			extension.equals(TemplateConstants.LANG_TYPE_VM) ||
 			extension.equals(TemplateConstants.LANG_TYPE_XSL)) {
 
 			return extension;
 		}
 
-		return TemplateConstants.LANG_TYPE_VM;
+		return TemplateConstants.LANG_TYPE_FTL;
 	}
 
 	protected JSONObject getDefaultPortletJSONObject(String journalArticleId) {
