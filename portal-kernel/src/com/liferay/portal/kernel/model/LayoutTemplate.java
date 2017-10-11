@@ -14,6 +14,8 @@
 
 package com.liferay.portal.kernel.model;
 
+import aQute.bnd.annotation.ProviderType;
+
 import java.io.IOException;
 import java.io.Serializable;
 
@@ -25,6 +27,7 @@ import javax.servlet.ServletContext;
 /**
  * @author Brian Wing Shun Chan
  */
+@ProviderType
 public interface LayoutTemplate
 	extends Comparable<LayoutTemplate>, Plugin, Serializable {
 

@@ -14,6 +14,8 @@
 
 package com.liferay.portal.kernel.layoutconfiguration.util;
 
+import aQute.bnd.annotation.ProviderType;
+
 import com.liferay.portal.kernel.layoutconfiguration.util.xml.RuntimeLogic;
 import com.liferay.portal.kernel.security.pacl.permission.PortalRuntimePermission;
 import com.liferay.portal.kernel.template.TemplateResource;
@@ -27,6 +29,7 @@ import javax.servlet.http.HttpServletResponse;
  * @author Raymond Augé
  * @author Shuyang Zhou
  */
+@ProviderType
 public class RuntimePageUtil {
 
 	public static StringBundler getProcessedTemplate(
