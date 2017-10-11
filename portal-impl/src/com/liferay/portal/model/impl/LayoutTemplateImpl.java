@@ -109,6 +109,11 @@ public class LayoutTemplateImpl
 	}
 
 	@Override
+	public String getLangType() {
+		return _langType;
+	}
+
+	@Override
 	public String getLayoutTemplateId() {
 		return _layoutTemplateId;
 	}
@@ -267,6 +272,12 @@ public class LayoutTemplateImpl
 	@Override
 	public void setTemplatePath(String templatePath) {
 		_templatePath = templatePath;
+
+		int index = templatePath.lastIndexOf(StringPool.PERIOD);
+
+		if (index != -1) {
+			_langType = templatePath.substring(index + 1);
+		}
 	}
 
 	@Override
@@ -284,6 +295,7 @@ public class LayoutTemplateImpl
 
 	private List<String> _columns = new ArrayList<>();
 	private String _content;
+	private String _langType;
 	private final String _layoutTemplateId;
 	private String _name;
 	private transient ServletContext _servletContext;

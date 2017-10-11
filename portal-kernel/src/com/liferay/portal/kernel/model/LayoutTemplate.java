@@ -34,6 +34,8 @@ public interface LayoutTemplate
 
 	public String getContextPath();
 
+	public String getLangType();
+
 	public String getLayoutTemplateId();
 
 	public String getName();
