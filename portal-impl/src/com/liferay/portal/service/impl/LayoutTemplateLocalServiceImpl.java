@@ -69,33 +69,8 @@ public class LayoutTemplateLocalServiceImpl
 	public static final String DEFAULT_LANG_TYPE =
 		TemplateConstants.LANG_TYPE_VM;
 
-	public static final Set<String> SUPPORTED_LANG_TYPES = new HashSet<>(
-		Arrays.asList(
-			DEFAULT_LANG_TYPE, TemplateConstants.LANG_TYPE_FTL));
-
-	@Override
-	public String getLangType(
-		String layoutTemplateId, boolean standard, String themeId) {
-
-		LayoutTemplate layoutTemplate = getLayoutTemplate(
-			layoutTemplateId, standard, themeId);
-
-		if (layoutTemplate == null) {
-			return DEFAULT_LANG_TYPE;
-		}
-
-		return _getSupportedLangType(layoutTemplate);
-	}
-
-	private String _getSupportedLangType(LayoutTemplate layoutTemplate) {
-		String langType = layoutTemplate.getLangType();
-
-		if(!SUPPORTED_LANG_TYPES.contains(langType)) {
-			return DEFAULT_LANG_TYPE;
-		}
-
-		return langType;
-	}
+	public static final Set<String> supportedLangTypes = new HashSet<>(
+		Arrays.asList(DEFAULT_LANG_TYPE, TemplateConstants.LANG_TYPE_FTL));
 
 	@Override
 	public String getContent(
@@ -138,6 +113,20 @@ public class LayoutTemplateLocalServiceImpl
 		catch (IOException ioe) {
 			throw new SystemException(ioe);
 		}
+	}
+
+	@Override
+	public String getLangType(
+		String layoutTemplateId, boolean standard, String themeId) {
+
+		LayoutTemplate layoutTemplate = getLayoutTemplate(
+			layoutTemplateId, standard, themeId);
+
+		if (layoutTemplate == null) {
+			return DEFAULT_LANG_TYPE;
+		}
+
+		return _getSupportedLangType(layoutTemplate);
 	}
 
 	@Override
@@ -521,8 +510,7 @@ public class LayoutTemplateLocalServiceImpl
 
 			Template template = TemplateManagerUtil.getTemplate(
 				langType,
-				new StringTemplateResource(templateId, templateContent),
-				false);
+				new StringTemplateResource(templateId, templateContent), false);
 
 			template.put("processor", processor);
 
@@ -535,6 +523,16 @@ public class LayoutTemplateLocalServiceImpl
 
 			return new ArrayList<>();
 		}
+	}
+
+	private String _getSupportedLangType(LayoutTemplate layoutTemplate) {
+		String langType = layoutTemplate.getLangType();
+
+		if (!supportedLangTypes.contains(langType)) {
+			return DEFAULT_LANG_TYPE;
+		}
+
+		return langType;
 	}
 
 	private Map<String, LayoutTemplate> _getThemesCustom(String themeId) {

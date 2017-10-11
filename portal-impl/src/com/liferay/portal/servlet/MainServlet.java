@@ -56,7 +56,6 @@ import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.servlet.DynamicServletRequest;
 import com.liferay.portal.kernel.servlet.InactiveRequestHandler;
 import com.liferay.portal.kernel.servlet.PortalSessionThreadLocal;
-import com.liferay.portal.kernel.template.TemplateConstants;
 import com.liferay.portal.kernel.template.TemplateManager;
 import com.liferay.portal.kernel.util.ClassLoaderUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -882,18 +881,18 @@ public class MainServlet extends ActionServlet {
 
 		Collection<Filter> filters = new ArrayList<>();
 
-		for(String langType :
-				LayoutTemplateLocalServiceImpl.SUPPORTED_LANG_TYPES ) {
+		for (String langType :
+				LayoutTemplateLocalServiceImpl.supportedLangTypes) {
 
 			Filter filter = registry.getFilter(
-				"(&(language.type=" + langType +
-				")(objectClass=" + TemplateManager.class.getName() + "))");
+				"(&(language.type=" + langType + ")(objectClass=" +
+					TemplateManager.class.getName() + "))");
 
 			filters.add(filter);
 		}
 
 		serviceDependencyManager.registerDependencies(
-			filters.toArray(new Filter[]{}));
+			filters.toArray(new Filter[0]));
 	}
 
 	protected PluginPackage initPluginPackage() throws Exception {
