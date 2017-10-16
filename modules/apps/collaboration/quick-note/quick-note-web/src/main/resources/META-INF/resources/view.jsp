@@ -16,88 +16,160 @@
 
 <%@ include file="/init.jsp" %>
 
-<div id="<portlet:namespace />pad" style="background: <%= HtmlUtil.escapeAttribute(color) %>;">
-	<c:if test="<%= portletDisplay.isShowConfigurationIcon() %>">
-		<table width="100%">
-			<tr>
-				<td width="60%">
-					<div class="portlet-title-default">&nbsp;</div>
-				</td>
-				<td>
-					<c:if test="<%= portletDisplay.isShowCloseIcon() %>">
-						<liferay-ui:icon
-							cssClass="close-note"
-							iconCssClass="icon-remove"
-							message="close"
-							url="<%= portletDisplay.getURLClose() %>"
-						/>
-					</c:if>
+<h1>Metal-Charts</h1>
 
-					<span class="note-color yellow"></span>
-					<span class="green note-color"></span>
-					<span class="blue note-color"></span>
-					<span class="note-color red"></span>
-				</td>
-			</tr>
-		</table>
-	</c:if>
+<%
+// Combination Data
+Map<String, Object> combinationDataCol1 = new HashMap<>();
+int[] combinationDataCol1Data = {30, 20, 50, 40, 60, 50};
 
-	<div class="note-content" id="<portlet:namespace />note"><%= StringUtil.replace(HtmlUtil.escape(data), "&lt;br /&gt;", "<br />") %></div>
+combinationDataCol1.put("id", "data1");
+combinationDataCol1.put("data", combinationDataCol1Data);
+combinationDataCol1.put("type", "bar");
+
+Map<String, Object> combinationDataCol2 = new HashMap<>();
+int[] combinationDataCol2Data = {200, 130, 90, 240, 130, 220};
+
+combinationDataCol2.put("id", "data2");
+combinationDataCol2.put("data", combinationDataCol2Data);
+combinationDataCol2.put("type", "bar");
+
+Map<String, Object> combinationDataCol3 = new HashMap<>();
+int[] combinationDataCol3Data = {300, 200, 160, 400, 250, 250};
+
+combinationDataCol3.put("id", "data3");
+combinationDataCol3.put("data", combinationDataCol3Data);
+combinationDataCol3.put("type", "spline");
+
+Map<String, Object> combinationDataCol4 = new HashMap<>();
+int[] combinationDataCol4Data = {200, 130, 90, 240, 130, 220};
+
+combinationDataCol4.put("id", "data4");
+combinationDataCol4.put("data", combinationDataCol4Data);
+combinationDataCol4.put("type", "line");
+
+Map<String, Object> combinationDataCol5 = new HashMap<>();
+int[] combinationDataCol5Data = {130, 120, 150, 140, 160, 150};
+
+combinationDataCol5.put("id", "data5");
+combinationDataCol5.put("data", combinationDataCol5Data);
+combinationDataCol5.put("type", "bar");
+
+Map<String, Object> combinationDataCol6 = new HashMap<>();
+int[] combinationDataCol6Data = {90, 70, 20, 50, 60, 120};
+
+combinationDataCol6.put("id", "data6");
+combinationDataCol6.put("data", combinationDataCol6Data);
+combinationDataCol6.put("type", "area");
+
+List<Map<String, Object>> combinationData = new ArrayList<>();
+combinationData.add(combinationDataCol1);
+combinationData.add(combinationDataCol2);
+combinationData.add(combinationDataCol3);
+combinationData.add(combinationDataCol4);
+combinationData.add(combinationDataCol5);
+combinationData.add(combinationDataCol6);
+
+String[] combinationGroup = {"data1", "data2"};
+
+List<String[]> combinationGroups = new ArrayList<>();
+combinationGroups.add(combinationGroup);
+
+// Gauge Data 
+Map<String, Object> gaugeDataCol1 = new HashMap<>();
+double[] gaugeDataCol1Data = {85.4};
+
+gaugeDataCol1.put("id", "data1");
+gaugeDataCol1.put("data", gaugeDataCol1Data);
+
+List<Map<String, Object>> gaugeData = new ArrayList<>();
+gaugeData.add(gaugeDataCol1);
+
+// Linear Data
+
+Map<String, Object> linearDataCol1 = new HashMap<>();
+int[] linearDataCol1Data = {100, 20, 30};
+
+linearDataCol1.put("id", "data1");
+linearDataCol1.put("data", linearDataCol1Data);
+
+Map<String, Object> linearDataCol2 = new HashMap<>();
+int[] linearDataCol2Data = {20, 70, 100};
+
+linearDataCol2.put("id", "data2");
+linearDataCol2.put("data", linearDataCol2Data);
+
+List<Map<String, Object>> linearData = new ArrayList<>();
+linearData.add(linearDataCol1);
+linearData.add(linearDataCol2);
+
+// Percentage Data
+
+Map<String, Object> percentageDataCol1 = new HashMap<>();
+int[] percentageDataCol1Data = {30};
+
+percentageDataCol1.put("id", "data1");
+percentageDataCol1.put("data", percentageDataCol1Data);
+
+Map<String, Object> percentageDataCol2 = new HashMap<>();
+int[] percentageDataCol2Data = {70};
+
+percentageDataCol2.put("id", "data2");
+percentageDataCol2.put("data", percentageDataCol2Data);
+
+List<Map<String, Object>> percentageData = new ArrayList<>();
+percentageData.add(percentageDataCol1);
+percentageData.add(percentageDataCol2);
+%>
+
+<liferay-util:html-top>
+    <link rel="stylesheet" href="/o/chart-taglib/node_modules/billboard.js@1.1.0/dist/billboard.css">
+</liferay-util:html-top>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <chart:donut columns="<%= percentageData %>" id="donut" />
+        </div>
+
+        <div class="col">
+            <chart:gauge columns="<%= gaugeData %>" id="gauge" />
+        </div>
+
+        <div class="col">
+            <chart:pie columns="<%= percentageData %>" id="pie" />
+        </div>
+    </div>
 </div>
 
-<c:if test="<%= portletDisplay.isShowConfigurationIcon() %>">
-	<aui:script use="aui-editable-deprecated,aui-io-request">
-		var quickNotePad = A.one('#<portlet:namespace />pad');
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <chart:line columns="<%= linearData %>" id="line" />
+        </div>
 
-		if (quickNotePad) {
-			quickNotePad.all('.note-color').on(
-				'click',
-				function(event) {
-					var box = event.currentTarget;
+        <div class="col">
+            <chart:scatter columns="<%= linearData %>" id="scatter" />
+        </div>
 
-					var bgColor = box.getStyle('backgroundColor');
+        <div class="col">
+            <chart:spline columns="<%= linearData %>" id="spline" />
+        </div>
 
-					quickNotePad.setStyle('backgroundColor', bgColor);
+        <div class="col">
+            <chart:step columns="<%= linearData %>" id="step" />
+        </div>
+    </div>
+</div>
 
-					<portlet:actionURL name="save" var="saveURL" />
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <chart:bar columns="<%= linearData %>" id="bar" />
+        </div>
 
-					A.io.request(
-						'<%= saveURL %>',
-						{
-							data: {
-								<portlet:namespace />color: bgColor
-							}
-						}
-					);
-				}
-			);
-		}
-
-		new A.Editable(
-			{
-				inputType: 'textarea',
-				node: '#<portlet:namespace />note',
-				on: {
-					contentTextChange: function(event) {
-						var instance = this;
-
-						if (!event.initial) {
-							var newValue = event.newVal.replace(/\n/gi, '<br />');
-
-							event.newVal = instance._toText(event.newVal);
-
-							A.io.request(
-								'<%= saveURL %>',
-								{
-									data: {
-										<portlet:namespace />data: newValue
-									}
-								}
-							);
-						}
-					}
-				}
-			}
-		);
-	</aui:script>
-</c:if>
+        <div class="col">
+            <chart:combination columns="<%= combinationData %>" groups="<%= combinationGroups %>" id="bar" />   
+        </div>
+    </div>
+</div>
