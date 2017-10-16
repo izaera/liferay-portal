@@ -14,18 +14,41 @@
 
 package com.liferay.chart.taglib.servlet.taglib.soy.base;
 
+import com.liferay.chart.taglib.internal.NPMResolverProvider;
+import com.liferay.frontend.js.loader.modules.extender.npm.JSPackage;
+import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
 import com.liferay.frontend.taglib.soy.servlet.taglib.TemplateRendererTag;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.util.Validator;
-import com.liferay.portal.kernel.util.WebKeys;
-
-import java.util.Map;
+import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringPool;
 
 /**
  * @author Chema Balsas
  */
-public class BaseChartTag extends TemplateRendererTag {
-    
+public abstract class BaseChartTag extends TemplateRendererTag {
+
+	public BaseChartTag(String moduleBaseName) {
+		_moduleBaseName = moduleBaseName;
+	}
+
+	@Override
+	public int doStartTag() {
+		setTemplateNamespace(_moduleBaseName + ".render");
+
+		return super.doStartTag();
+	}
+
+	@Override
+	public String getModule() {
+		NPMResolver npmResolver = NPMResolverProvider.getNPMResolver();
+
+		if (npmResolver == null) {
+			return StringPool.BLANK;
+		}
+
+		return npmResolver.resolveModuleName(
+			"metal-charts/lib/" + _moduleBaseName);
+	}
+
 	public void setColumns(Object columns) {
 		putValue("columns", columns);
 	}
@@ -37,4 +60,7 @@ public class BaseChartTag extends TemplateRendererTag {
 	public void setId(String id) {
 		putValue("id", id);
 	}
+
+	private final String _moduleBaseName;
+
 }
