@@ -81,9 +81,6 @@ public class ThemeUtil {
 		if (extension.equals(ThemeHelper.TEMPLATE_EXTENSION_FTL)) {
 			includeFTL(servletContext, request, response, path, theme, true);
 		}
-		else if (extension.equals(ThemeHelper.TEMPLATE_EXTENSION_VM)) {
-			includeVM(servletContext, request, response, path, theme, true);
-		}
 		else {
 			path = theme.getTemplatesPath() + StringPool.SLASH + path;
 
@@ -112,6 +109,10 @@ public class ThemeUtil {
 			ThemeHelper.TEMPLATE_EXTENSION_JSP);
 	}
 
+	/**
+	 * @deprecated As of 7.1.0, with no direct replacement
+	 */
+	@Deprecated
 	public static String includeVM(
 			ServletContext servletContext, HttpServletRequest request,
 			HttpServletResponse response, String path, Theme theme,
@@ -160,11 +161,6 @@ public class ThemeUtil {
 			}
 			else if (extension.equals(ThemeHelper.TEMPLATE_EXTENSION_JSP)) {
 				doIncludeJSP(servletContext, request, response, path, theme);
-			}
-			else if (extension.equals(ThemeHelper.TEMPLATE_EXTENSION_VM)) {
-				return doIncludeVM(
-					servletContext, request, response, path, theme, false,
-					write);
 			}
 
 			return null;
@@ -337,6 +333,10 @@ public class ThemeUtil {
 		}
 	}
 
+	/**
+	 * @deprecated As of 7.1.0, with no direct replacement
+	 */
+	@Deprecated
 	protected static String doIncludeVM(
 			ServletContext servletContext, HttpServletRequest request,
 			HttpServletResponse response, String page, Theme theme,
