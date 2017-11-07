@@ -16,15 +16,37 @@ package com.liferay.portal.configuration.settings.internal.util;
 
 import aQute.bnd.annotation.metatype.Meta;
 
+import java.lang.annotation.Annotation;
+import java.lang.reflect.Method;
+
 /**
  * @author Iván Zaera
  */
 public class ConfigurationPidUtil {
 
 	public static String getConfigurationPid(Class<?> configurationBeanClass) {
-		Meta.OCD ocd = configurationBeanClass.getAnnotation(Meta.OCD.class);
+		String configurationPid = null;
 
-		return ocd.id();
+		for (Annotation annotation : configurationBeanClass.getAnnotations()) {
+			Class<? extends Annotation> annotationType =
+				annotation.annotationType();
+
+			String name = annotationType.getName();
+
+			if (name.equals(Meta.OCD.class.getName())) {
+				try {
+					Method method = annotationType.getMethod("id");
+
+					method.setAccessible(true);
+
+					configurationPid = (String)method.invoke(annotation);
+				}
+				catch (ReflectiveOperationException roe) {
+				}
+			}
+		}
+
+		return configurationPid;
 	}
 
 }
