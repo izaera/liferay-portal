@@ -16,27 +16,20 @@
 
 <%@ include file="/init.jsp" %>
 
-<liferay-ui:tabs
-	names="Alerts,Badges,Buttons,Cards,Dropdowns,Form Elements,Icons,Labels,Links,Navigation Bars,Progress Bars,Stickers"
-	refresh="<%= false %>"
-	type="tabs nav-tabs-default"
->
+<clay:button label="Perico" componentId="perico" />
+<clay:button label="Pepito" componentId="pepito" />
 
-	<%
-	String[] sections = {"alerts", "badges", "buttons", "cards", "dropdowns", "formelements", "icons", "labels", "links", "navigationbars", "progressbars", "stickers"};
 
-	for (int i = 0; i < sections.length; i++) {
-		String partial ="/partials/" + sections[i] + ".jsp";
-	%>
+<script>
+	Liferay.componentReady('perico').then(function(perico) {
+		console.log('1>>>', perico);
+	});
 
-		<liferay-ui:section>
-			<div class="container-fluid-1280">
-				<liferay-util:include page="<%= partial %>" servletContext="<%= application %>" />
-			</div>
-		</liferay-ui:section>
+	Liferay.componentReady('perico', 'pepito').then(function(components) {
+		console.log('2>>>', components);
+	});
 
-	<%
-	}
-	%>
-
-</liferay-ui:tabs>
+	Liferay.componentReady(['perico', 'pepito']).then(function(components) {
+		console.log('3>>>', components);
+	});
+</script>
