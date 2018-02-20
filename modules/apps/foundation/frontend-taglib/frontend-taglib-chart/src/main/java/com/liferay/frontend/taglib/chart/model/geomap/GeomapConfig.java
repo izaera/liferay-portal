@@ -33,8 +33,24 @@ public class GeomapConfig extends ChartObject {
 		set("color", color);
 	}
 
-	public void setData(Object data) {
-		set("data", data);
+	public void setDataUrl(String url) {
+		Object data = get("data", Object.class, false);
+
+		if (data != null) {
+			throw new IllegalStateException("data has already been set");
+		}
+
+		set("data", url);
+	}
+
+	public void setJson(Object jsonObj) {
+		Object data = get("data", String.class, false);
+
+		if (data != null) {
+			throw new IllegalStateException("data has already been set");
+		}
+
+		set("data", jsonObj);
 	}
 
 }

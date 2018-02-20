@@ -23,6 +23,7 @@ import com.liferay.frontend.taglib.chart.model.area.step.AreaStepChartConfig;
 import com.liferay.frontend.taglib.chart.model.combination.CombinationChartConfig;
 import com.liferay.frontend.taglib.chart.model.gauge.GaugeChartConfig;
 import com.liferay.frontend.taglib.chart.model.geomap.GeomapColor;
+import com.liferay.frontend.taglib.chart.model.geomap.GeomapColorRange;
 import com.liferay.frontend.taglib.chart.model.geomap.GeomapConfig;
 import com.liferay.frontend.taglib.chart.model.percentage.donut.DonutChartConfig;
 import com.liferay.frontend.taglib.chart.model.percentage.pie.PieChartConfig;
@@ -32,9 +33,6 @@ import com.liferay.frontend.taglib.chart.model.point.scatter.ScatterChartConfig;
 import com.liferay.frontend.taglib.chart.model.point.spline.SplineChartConfig;
 import com.liferay.frontend.taglib.chart.model.point.step.StepChartConfig;
 import com.liferay.portal.kernel.util.StringPool;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.portlet.PortletRequest;
 
@@ -158,12 +156,12 @@ public class ChartSampleDisplayContext {
 	}
 
 	private void _initGeomapConfig() {
-		Map<String, String> range = new HashMap<>();
-
-		range.put("max", "#b2150a");
-		range.put("min", "#ee3e32");
-
 		GeomapColor color = new GeomapColor();
+
+		GeomapColorRange range = new GeomapColorRange();
+
+		range.setMax("#b2150a");
+		range.setMin("#ee3e32");
 
 		color.setRange(range);
 		color.setSelected("#a9615c");
@@ -184,8 +182,8 @@ public class ChartSampleDisplayContext {
 		sb.append(StringPool.SLASH);
 		sb.append("geomap.geo.json");
 
-		_geomapConfig1.setData(sb.toString());
-		_geomapConfig2.setData(sb.toString());
+		_geomapConfig1.setDataUrl(sb.toString());
+		_geomapConfig2.setDataUrl(sb.toString());
 	}
 
 	private void _initLineChartConfig() {

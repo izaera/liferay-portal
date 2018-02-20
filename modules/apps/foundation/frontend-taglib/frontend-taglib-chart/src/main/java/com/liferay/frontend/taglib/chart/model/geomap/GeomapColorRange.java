@@ -19,30 +19,22 @@ import com.liferay.frontend.taglib.chart.model.ChartObject;
 /**
  * @author Julien Castelain
  */
-public class GeomapColor extends ChartObject {
+public class GeomapColorRange extends ChartObject {
 
-	public GeomapColorRange getRange() {
-		return get("range", GeomapColorRange.class);
+	public String getMax() {
+		return get("max", String.class);
 	}
 
-	public String getSelected() {
-		return get("selected", String.class);
+	public String getMin() {
+		return get("min", String.class);
 	}
 
-	public String getValue() {
-		return get("value", String.class);
+	public void setMax(String max) {
+		set("max", max);
 	}
 
-	public void setRange(GeomapColorRange range) {
-		set("range", range);
-	}
-
-	public void setSelected(String selected) {
-		set("selected", selected);
-	}
-
-	public void setValue(String value) {
-		set("value", value);
+	public void setMin(String min) {
+		set("min", min);
 	}
 
 }
