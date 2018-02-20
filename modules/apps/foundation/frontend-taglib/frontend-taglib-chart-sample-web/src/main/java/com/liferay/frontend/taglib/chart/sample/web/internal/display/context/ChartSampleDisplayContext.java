@@ -22,6 +22,8 @@ import com.liferay.frontend.taglib.chart.model.area.spline.AreaSplineChartConfig
 import com.liferay.frontend.taglib.chart.model.area.step.AreaStepChartConfig;
 import com.liferay.frontend.taglib.chart.model.combination.CombinationChartConfig;
 import com.liferay.frontend.taglib.chart.model.gauge.GaugeChartConfig;
+import com.liferay.frontend.taglib.chart.model.geomap.GeomapColor;
+import com.liferay.frontend.taglib.chart.model.geomap.GeomapConfig;
 import com.liferay.frontend.taglib.chart.model.percentage.donut.DonutChartConfig;
 import com.liferay.frontend.taglib.chart.model.percentage.pie.PieChartConfig;
 import com.liferay.frontend.taglib.chart.model.point.bar.BarChartConfig;
@@ -29,19 +31,27 @@ import com.liferay.frontend.taglib.chart.model.point.line.LineChartConfig;
 import com.liferay.frontend.taglib.chart.model.point.scatter.ScatterChartConfig;
 import com.liferay.frontend.taglib.chart.model.point.spline.SplineChartConfig;
 import com.liferay.frontend.taglib.chart.model.point.step.StepChartConfig;
+import com.liferay.portal.kernel.util.StringPool;
+
+import java.util.HashMap;
+import java.util.Map;
+
+import javax.portlet.PortletRequest;
 
 /**
  * @author Iván Zaera Avellón
  */
 public class ChartSampleDisplayContext {
 
-	public ChartSampleDisplayContext() {
+	public ChartSampleDisplayContext(PortletRequest portletRequest) {
+		_portletRequest = portletRequest;
 		_initAreaSplineChartConfig();
 		_initAreaStepChartConfig();
 		_initBarChartConfig();
 		_initCombinationChartConfig();
 		_initDonutChartConfig();
 		_initGaugeChartConfig();
+		_initGeomapConfig();
 		_initLineChartConfig();
 		_initPieChartConfig();
 		_initScatterChartConfig();
@@ -71,6 +81,14 @@ public class ChartSampleDisplayContext {
 
 	public GaugeChartConfig getGaugeChartConfig() {
 		return _gaugeChartConfig;
+	}
+
+	public GeomapConfig getGeomapConfig1() {
+		return _geomapConfig1;
+	}
+
+	public GeomapConfig getGeomapConfig2() {
+		return _geomapConfig2;
 	}
 
 	public LineChartConfig getLineChartConfig() {
@@ -139,6 +157,37 @@ public class ChartSampleDisplayContext {
 		_gaugeChartConfig.addColumn(new SingleValueColumn("data1", 85.4));
 	}
 
+	private void _initGeomapConfig() {
+		Map<String, String> range = new HashMap<>();
+
+		range.put("max", "#b2150a");
+		range.put("min", "#ee3e32");
+
+		GeomapColor color = new GeomapColor();
+
+		color.setRange(range);
+		color.setSelected("#a9615c");
+		color.setValue("name_len");
+
+		_geomapConfig2.setColor(color);
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append(_portletRequest.getScheme());
+		sb.append(StringPool.COLON);
+		sb.append(StringPool.SLASH);
+		sb.append(StringPool.SLASH);
+		sb.append(_portletRequest.getServerName());
+		sb.append(StringPool.COLON);
+		sb.append(_portletRequest.getServerPort());
+		sb.append(_portletRequest.getContextPath());
+		sb.append(StringPool.SLASH);
+		sb.append("geomap.geo.json");
+
+		_geomapConfig1.setData(sb.toString());
+		_geomapConfig2.setData(sb.toString());
+	}
+
 	private void _initLineChartConfig() {
 		_lineChartConfig.addColumns(
 			new MultiValueColumn("data1", 100, 20, 30),
@@ -178,8 +227,11 @@ public class ChartSampleDisplayContext {
 		new CombinationChartConfig();
 	private DonutChartConfig _donutChartConfig = new DonutChartConfig();
 	private GaugeChartConfig _gaugeChartConfig = new GaugeChartConfig();
+	private GeomapConfig _geomapConfig1 = new GeomapConfig();
+	private GeomapConfig _geomapConfig2 = new GeomapConfig();
 	private LineChartConfig _lineChartConfig = new LineChartConfig();
 	private PieChartConfig _pieChartConfig = new PieChartConfig();
+	private final PortletRequest _portletRequest;
 	private ScatterChartConfig _scatterChartConfig = new ScatterChartConfig();
 	private SplineChartConfig _splineChartConfig = new SplineChartConfig();
 	private StepChartConfig _stepChartConfig = new StepChartConfig();
