@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.frontend.js.minifier.internal;
+package com.frontend.js.minifier;
 
 import com.frontend.js.minifier.configuration.YahooJavaScriptMinifierConfiguration;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
