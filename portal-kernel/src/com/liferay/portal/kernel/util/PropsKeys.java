@@ -1520,8 +1520,6 @@ public interface PropsKeys {
 
 	public static final String MINIFIER_INLINE_CONTENT_CACHE_SKIP_JAVASCRIPT = "minifier.inline.content.cache.skip.javascript";
 
-	public static final String MINIFIER_JAVASCRIPT_IMPL = "minifier.javascript.impl";
-
 	public static final String MOBILE_DEVICE_RULES_PUBLISH_TO_LIVE_BY_DEFAULT = "mobile.device.rules.publish.to.live.by.default";
 
 	public static final String MOBILE_DEVICE_RULES_RULE_GROUP_COPY_POSTFIX = "mobile.device.rules.rule.group.copy.postfix";
@@ -2686,16 +2684,6 @@ public interface PropsKeys {
 	public static final String XUGGLER_JAR_URL = "xuggler.jar.url";
 
 	public static final String YUI_COMPRESSOR_CSS_LINE_BREAK = "yui.compressor.css.line.break";
-
-	public static final String YUI_COMPRESSOR_JS_DISABLE_OPTIMIZATIONS = "yui.compressor.js.disable.optimizations";
-
-	public static final String YUI_COMPRESSOR_JS_LINE_BREAK = "yui.compressor.js.line.break";
-
-	public static final String YUI_COMPRESSOR_JS_MUNGE = "yui.compressor.js.munge";
-
-	public static final String YUI_COMPRESSOR_JS_PRESERVE_ALL_SEMICOLONS = "yui.compressor.js.preserve.all.semicolons";
-
-	public static final String YUI_COMPRESSOR_JS_VERBOSE = "yui.compressor.js.verbose";
 
 	public static final String ZIP_FILE_NAME_ENCODING = "zip.file.name.encoding";
 
