@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.frontend.js.minifier.internal;
+package com.frontend.js.minifier;
 
 import com.google.javascript.jscomp.BasicErrorManager;
 import com.google.javascript.jscomp.CheckLevel;
