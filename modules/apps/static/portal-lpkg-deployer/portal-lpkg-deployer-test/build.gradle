@@ -7,8 +7,8 @@ dependencies {
 
 	testCompile group: "com.liferay", name: "com.liferay.petra.lang", version: "1.0.0"
 	testCompile group: "com.liferay", name: "com.liferay.petra.string", version: "1.0.0"
-	testCompile group: "com.liferay.portal", name: "com.liferay.portal.impl", version: "2.6.0"
-	testCompile group: "com.liferay.portal", name: "com.liferay.portal.kernel", version: "2.6.0"
+	testCompile group: "com.liferay.portal", name: "com.liferay.portal.impl", version: "default"
+	testCompile group: "com.liferay.portal", name: "com.liferay.portal.kernel", version: "default"
 	testCompile group: "com.liferay.portal", name: "com.liferay.util.java", version: "2.0.0"
 	testCompile group: "commons-io", name: "commons-io", version: "2.5"
 	testCompile group: "easyconf", name: "easyconf", version: "0.9.5"
