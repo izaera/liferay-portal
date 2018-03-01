@@ -42,5 +42,6 @@ dependencies {
 	provided project(":apps:web-experience:layout:layout-page-template-api")
 	provided project(":apps:web-experience:layout:layout-page-template-service")
 
+	soyCompile project(":apps:foundation:frontend-js:frontend-js-web")
 	soyCompile project(":apps:foundation:frontend-taglib:frontend-taglib")
 }
