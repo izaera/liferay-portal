@@ -23,4 +23,6 @@ dependencies {
 	provided project(":apps:foundation:frontend-taglib:frontend-taglib-clay")
 	provided project(":apps:foundation:portal-background-task:portal-background-task-api")
 	provided project(":apps:static:portal-configuration:portal-configuration-metatype-api")
+
+	soyCompile project(":apps:foundation:frontend-js:frontend-js-web")
 }
