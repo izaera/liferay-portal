@@ -21,7 +21,9 @@ import com.liferay.dynamic.data.mapping.form.web.configuration.DDMFormWebConfigu
 import com.liferay.dynamic.data.mapping.form.web.internal.instance.lifecycle.AddDefaultSharedFormLayoutPortalInstanceLifecycleListener;
 import com.liferay.dynamic.data.mapping.form.web.internal.search.FieldSetSearch;
 import com.liferay.dynamic.data.mapping.form.web.internal.search.FieldSetSearchTerms;
+import com.liferay.dynamic.data.mapping.form.web.internal.security.permission.resource.DDMFormPermission;
 import com.liferay.dynamic.data.mapping.io.DDMFormFieldTypesJSONSerializer;
+import com.liferay.dynamic.data.mapping.io.exporter.DDMExporterFactory;
 import com.liferay.dynamic.data.mapping.model.DDMFormInstance;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.model.DDMStructureConstants;
@@ -29,7 +31,6 @@ import com.liferay.dynamic.data.mapping.service.DDMFormInstanceRecordLocalServic
 import com.liferay.dynamic.data.mapping.service.DDMFormInstanceService;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLocalService;
 import com.liferay.dynamic.data.mapping.service.DDMStructureService;
-import com.liferay.dynamic.data.mapping.service.permission.DDMFormPermission;
 import com.liferay.dynamic.data.mapping.storage.StorageEngine;
 import com.liferay.dynamic.data.mapping.storage.StorageType;
 import com.liferay.dynamic.data.mapping.util.DDMFormValuesMerger;
@@ -68,6 +69,7 @@ public class DDMFormAdminFieldSetDisplayContext
 		RenderRequest renderRequest, RenderResponse renderResponse,
 		AddDefaultSharedFormLayoutPortalInstanceLifecycleListener
 			addDefaultSharedFormLayoutPortalInstanceLifecycleListener,
+		DDMExporterFactory ddmExporterFactory,
 		DDMFormWebConfiguration ddmFormWebConfiguration,
 		DDMFormInstanceRecordLocalService formInstanceRecordLocalService,
 		DDMFormInstanceService formInstanceService,
@@ -83,11 +85,12 @@ public class DDMFormAdminFieldSetDisplayContext
 		super(
 			renderRequest, renderResponse,
 			addDefaultSharedFormLayoutPortalInstanceLifecycleListener,
-			ddmFormWebConfiguration, formInstanceRecordLocalService,
-			formInstanceService, formFieldTypeServicesTracker,
-			formFieldTypesJSONSerializer, formRenderer, formValuesFactory,
-			formValuesMerger, structureLocalService, structureService,
-			jsonFactory, storageEngine, workflowEngineManager);
+			ddmExporterFactory, ddmFormWebConfiguration,
+			formInstanceRecordLocalService, formInstanceService,
+			formFieldTypeServicesTracker, formFieldTypesJSONSerializer,
+			formRenderer, formValuesFactory, formValuesMerger,
+			structureLocalService, structureService, jsonFactory, storageEngine,
+			workflowEngineManager);
 	}
 
 	@Override
