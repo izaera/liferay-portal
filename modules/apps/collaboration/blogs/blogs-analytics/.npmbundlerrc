@@ -1,4 +1,10 @@
 {
-    "output": "classes/META-INF/resources/",
-    "preset": "liferay-npm-bundler-preset-standard"
+    "config": {
+    	"imports": {
+			"frontend-js-metal-web": {
+				"metal-debounce": "^2.0.0"
+			}
+    	}
+    },
+    "output": "classes/META-INF/resources/"
 }
