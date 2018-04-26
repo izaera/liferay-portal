@@ -6,9 +6,6 @@
 				"metal-dom": "^2.0.0",
 				"metal-events": "^2.0.0",
 				"metal-state": "^2.0.0"
-			},
-			"": {
-				"map-common": "^3.0.0"
 			}
     	}
     },
