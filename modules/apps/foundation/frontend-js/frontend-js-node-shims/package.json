@@ -19,8 +19,7 @@
 		"vm-browserify": "0.0.4"
 	},
 	"devDependencies": {
-		"liferay-npm-bundler": "^1.1.0",
-		"liferay-npm-bundler-preset-standard": "^1.1.0"
+		"liferay-npm-bundler": "1.7.0-alpha.6d6b0c8b"
 	},
 	"name": "frontend-js-node-shims",
 	"scripts": {
