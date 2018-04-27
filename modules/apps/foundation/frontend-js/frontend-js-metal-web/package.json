@@ -39,7 +39,7 @@
 	},
 	"name": "frontend-js-metal-web",
 	"scripts": {
-		"build": "liferay-npm-bundler && liferay-npm-bridge-generator"
+		"build": "liferay-npm-bundler && node ./patch-metal-uri.js && liferay-npm-bridge-generator"
 	},
 	"version": "2.0.0"
 }
