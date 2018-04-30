@@ -14,7 +14,9 @@
 
 package com.liferay.frontend.taglib.clay.servlet.taglib.util;
 
+import com.liferay.frontend.taglib.clay.internal.SoyHTMLSanitizerProvider;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.template.soy.utils.SoyHTMLSanitizer;
 
 import java.util.HashMap;
 
@@ -57,7 +59,13 @@ public class NavigationItem extends HashMap<String, Object> {
 	}
 
 	public void setHref(String href) {
-		put("href", href);
+		SoyHTMLSanitizer soyHTMLSanitizer =
+			SoyHTMLSanitizerProvider.getSoyHTMLSanitizer();
+
+		put(
+			"href",
+			soyHTMLSanitizer.sanitize(
+				href, SoyHTMLSanitizer.ContentKind.TRUSTED_RESOURCE_URI));
 	}
 
 	public void setLabel(String label) {

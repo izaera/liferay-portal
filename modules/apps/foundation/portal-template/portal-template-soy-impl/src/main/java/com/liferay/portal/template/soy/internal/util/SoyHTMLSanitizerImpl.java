@@ -21,6 +21,10 @@ import com.liferay.portal.template.soy.utils.SoyHTMLSanitizer;
 
 import org.osgi.service.component.annotations.Component;
 
+import java.util.EnumMap;
+import java.util.HashMap;
+import java.util.Map;
+
 /**
  * @author Shuyang Zhou
  */
@@ -31,6 +35,30 @@ public class SoyHTMLSanitizerImpl implements SoyHTMLSanitizer {
 	public Object sanitize(String value) {
 		return UnsafeSanitizedContentOrdainer.ordainAsSafe(
 			value, SanitizedContent.ContentKind.HTML);
+	}
+
+	@Override
+	public Object sanitize(String value, ContentKind contentKind) {
+		return UnsafeSanitizedContentOrdainer.ordainAsSafe(
+			value, _contentKindMap.get(contentKind));
+	}
+
+	private static final Map<ContentKind, SanitizedContent.ContentKind>
+		_contentKindMap = new EnumMap<>(ContentKind.class);
+
+	static {
+		_contentKindMap.put(
+			ContentKind.ATTRIBUTES, SanitizedContent.ContentKind.ATTRIBUTES);
+		_contentKindMap.put(ContentKind.CSS, SanitizedContent.ContentKind.CSS);
+		_contentKindMap.put(
+			ContentKind.HTML, SanitizedContent.ContentKind.HTML);
+		_contentKindMap.put(ContentKind.JS, SanitizedContent.ContentKind.JS);
+		_contentKindMap.put(
+			ContentKind.TEXT, SanitizedContent.ContentKind.TEXT);
+		_contentKindMap.put(
+			ContentKind.TRUSTED_RESOURCE_URI,
+			SanitizedContent.ContentKind.TRUSTED_RESOURCE_URI);
+		_contentKindMap.put(ContentKind.URI, SanitizedContent.ContentKind.URI);
 	}
 
 }

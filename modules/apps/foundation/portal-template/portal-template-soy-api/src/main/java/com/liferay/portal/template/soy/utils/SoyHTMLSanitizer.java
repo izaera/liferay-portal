@@ -19,6 +19,12 @@ package com.liferay.portal.template.soy.utils;
  */
 public interface SoyHTMLSanitizer {
 
+	public enum ContentKind {
+		ATTRIBUTES, CSS, HTML, JS, TEXT, TRUSTED_RESOURCE_URI, URI
+	}
+
 	public Object sanitize(String value);
+
+	public Object sanitize(String value, ContentKind contentKind);
 
 }
