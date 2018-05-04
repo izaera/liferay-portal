@@ -106,7 +106,7 @@
 
 			<soy:template-renderer
 				context="<%= context %>"
-				module="layout-admin-web/js/miller_columns/Layout.es"
+				module="layout-admin-web@2.0.0/js/miller_columns/Layout.es"
 				templateNamespace="com.liferay.layout.admin.web.Layout.render"
 			/>
 		</c:when>

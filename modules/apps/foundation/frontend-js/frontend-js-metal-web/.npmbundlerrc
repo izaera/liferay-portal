@@ -1,0 +1,14 @@
+{
+	"output": "classes/META-INF/resources",
+	"exclude": {
+		"*": ["**/*.soy", "src/**", "test/**"],
+		"senna": true
+	},
+	"config": {
+		"imports": {
+			"frontend-js-spa-web": {
+				"senna": "2.5.4"
+			}
+		}
+	}
+}
