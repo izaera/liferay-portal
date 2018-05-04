@@ -265,7 +265,7 @@ DisplayPageDisplayContext displayPageDisplayContext = new DisplayPageDisplayCont
 	<portlet:param name="type" value="<%= String.valueOf(LayoutPageTemplateEntryTypeConstants.TYPE_DISPLAY_PAGE) %>" />
 </portlet:actionURL>
 
-<aui:script require="metal-dom/src/all/dom as dom,frontend-js-web/liferay/modal/commands/OpenSimpleInputModal.es as modalCommands">
+<aui:script require="metal-dom/src/all/dom as dom,frontend-js-web@2.0.0/liferay/modal/commands/OpenSimpleInputModal.es as modalCommands">
 	function handleAddDisplayPageMenuItemClick(event) {
 		event.preventDefault();
 

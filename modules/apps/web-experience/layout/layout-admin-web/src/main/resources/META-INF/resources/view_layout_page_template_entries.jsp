@@ -180,7 +180,7 @@ PortalUtil.addPortletBreadcrumbEntry(request, layoutPageTemplateDisplayContext.g
 	<portlet:param name="layoutPageTemplateCollectionId" value="<%= String.valueOf(layoutPageTemplateDisplayContext.getLayoutPageTemplateCollectionId()) %>" />
 </portlet:actionURL>
 
-<aui:script require="metal-dom/src/all/dom as dom,frontend-js-web/liferay/modal/commands/OpenSimpleInputModal.es as modalCommands">
+<aui:script require="metal-dom/src/all/dom as dom,frontend-js-web@2.0.0/liferay/modal/commands/OpenSimpleInputModal.es as modalCommands">
 	function handleAddLayoutPageTemplateEntryMenuItemClick(event) {
 		event.preventDefault();
 

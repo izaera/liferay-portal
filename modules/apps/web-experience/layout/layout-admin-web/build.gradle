@@ -1,10 +1,6 @@
 sourceCompatibility = "1.8"
 targetCompatibility = "1.8"
 
-configJSModules {
-	include "**/*.js*"
-}
-
 dependencies {
 	compileOnly group: "biz.aQute.bnd", name: "biz.aQute.bndlib", version: "3.1.0"
 	compileOnly group: "com.liferay.portal", name: "com.liferay.portal.impl", version: "default"
@@ -45,6 +41,6 @@ dependencies {
 	compileOnly project(":core:petra:petra-reflect")
 	compileOnly project(":core:petra:petra-string")
 
-	soyCompile project(":apps:foundation:frontend-js:frontend-js-web")
-	soyCompile project(":apps:foundation:frontend-taglib:frontend-taglib")
+	jsCompile project(":apps:foundation:frontend-js:frontend-js-web")
+	jsCompile project(":apps:foundation:frontend-taglib:frontend-taglib")
 }
