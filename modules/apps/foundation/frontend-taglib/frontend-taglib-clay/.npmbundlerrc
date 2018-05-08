@@ -1,9 +1,26 @@
-{
-    "exclude": {
-        "*": [
-            "src/__tests__/**/*"
-        ]
+ {
+    "config": {
+    	"imports": {
+			"frontend-js-metal-web": {
+				"metal": "^2.0.0",
+				"metal-anim": "^2.0.0",
+				"metal-component": "^2.0.0",
+				"metal-dom": "^2.0.0",
+				"metal-events": "^2.0.0",
+				"metal-incremental-dom": "^2.0.0",
+				"metal-jsx": "^2.0.0",
+				"metal-position": "^2.0.0",
+				"metal-soy": "^2.0.0",
+				"metal-soy-bundle": "^2.0.0",
+				"metal-state": "^2.0.0",
+				"metal-web-component": "^2.0.0"
+			}
+    	}
     },
-    "output": "classes/META-INF/resources/",
-    "preset": "liferay-npm-bundler-preset-standard"
+    "exclude": {
+         "*": ["src/__tests__/**/*"],
+         "incremental-dom": true,
+         "incremental-dom-string": true
+    },
+    "output": "classes/META-INF/resources/"
 }

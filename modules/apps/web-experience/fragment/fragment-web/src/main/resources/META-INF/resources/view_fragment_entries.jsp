@@ -145,7 +145,7 @@ PortalUtil.addPortletBreadcrumbEntry(request, fragmentDisplayContext.getFragment
 </aui:form>
 
 <c:if test="<%= fragmentDisplayContext.isShowAddButton(FragmentActionKeys.ADD_FRAGMENT_ENTRY) %>">
-	<aui:script require="metal-dom/src/all/dom as dom,frontend-js-web/liferay/modal/commands/OpenSimpleInputModal.es as modalCommands">
+	<aui:script require="metal-dom/src/all/dom as dom,frontend-js-web@2.0.0/liferay/modal/commands/OpenSimpleInputModal.es as modalCommands">
 		function handleAddFragmentEntryMenuItemClick(event) {
 			event.preventDefault();
 
