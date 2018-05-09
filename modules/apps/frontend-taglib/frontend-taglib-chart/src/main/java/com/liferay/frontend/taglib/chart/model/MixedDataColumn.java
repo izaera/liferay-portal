@@ -12,17 +12,35 @@
  * details.
  */
 
-package com.liferay.frontend.taglib.chart.servlet.taglib.soy;
+package com.liferay.frontend.taglib.chart.model;
 
-import com.liferay.frontend.taglib.chart.servlet.taglib.soy.base.BaseChartTag;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 /**
- * @author Iván Zaera Avellón
+ * @author Julien Castelain
  */
-public class AreaStepChartTag extends BaseChartTag {
+public class MixedDataColumn extends Column {
 
-	public AreaStepChartTag() {
-		super("AreaStepChart", "ClayAreaStepChart.render");
+	public MixedDataColumn(String id, Object... values) {
+		super(id);
+
+		for (Object value : values) {
+			addValues(value);
+		}
+	}
+
+	public void addValues(Map<String, Object> value) {
+		List<Object> data = get("data", ArrayList.class);
+
+		data.add(value);
+	}
+
+	public void addValues(Object value) {
+		List<Object> data = get("data", ArrayList.class);
+
+		data.add(value);
 	}
 
 }
