@@ -26,12 +26,15 @@
 		"metal-uri": "^3.1.0"
 	},
 	"devDependencies": {
+		"babel-cli": "6.26.0",
+		"babel-preset-env": "^1.6.1",
 		"check-source-formatting": "^2.0.4",
-		"liferay-module-config-generator": "^1.1.10",
-		"metal-cli": "^4.3.3"
+		"liferay-npm-bundler": "2.0.0-rc.4",
+		"metal-tools-soy": "^4.2.1"
 	},
 	"name": "layout-admin-web",
 	"scripts": {
+		"build": "metalsoy --soyDeps 'node_modules/com.liferay.*/**/*.soy' && babel -d classes/META-INF/resources src/main/resources/META-INF/resources && liferay-npm-bundler",
 		"checkFormat": "npm run csf",
 		"csf": "csf src/**/*.js src/**/*.scss src/**/*.soy",
 		"format": "npm run csf -- -i"

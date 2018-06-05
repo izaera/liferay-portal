@@ -71,7 +71,7 @@
 
 			<soy:component-renderer
 				context="<%= context %>"
-				module="layout-admin-web/js/miller_columns/Layout.es"
+				module='<%= npmResolver.resolveModuleName("layout-admin-web/js/miller_columns/Layout.es") %>'
 				templateNamespace="com.liferay.layout.admin.web.Layout.render"
 			/>
 		</c:when>

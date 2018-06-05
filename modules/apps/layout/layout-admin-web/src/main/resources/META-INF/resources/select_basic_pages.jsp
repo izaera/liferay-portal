@@ -134,9 +134,10 @@ SelectLayoutPageTemplateEntryDisplayContext selectLayoutPageTemplateEntryDisplay
 
 <%
 String autoSiteNavigationMenuNames = layoutsAdminDisplayContext.getAutoSiteNavigationMenuNames();
+String require = "metal-dom/src/all/dom as dom," + npmResolver.resolveModuleName("frontend-js-web/liferay/modal/commands/OpenSimpleInputModal.es") + " as modalCommands";
 %>
 
-<aui:script require="metal-dom/src/all/dom as dom,frontend-js-web/liferay/modal/commands/OpenSimpleInputModal.es as modalCommands">
+<aui:script require="<%= require %>">
 	var addLayoutActionOptionQueryClickHandler = dom.delegate(
 		document.body,
 		'click',

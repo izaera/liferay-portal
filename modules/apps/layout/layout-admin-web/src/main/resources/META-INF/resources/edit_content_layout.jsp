@@ -41,6 +41,6 @@ renderResponse.setTitle(selLayout.getName(locale));
 
 <soy:component-renderer
 	context="<%= fragmentsEditorDisplayContext.getEditorContext() %>"
-	module="layout-admin-web/js/fragments_editor/FragmentsEditor.es"
+	module='<%= npmResolver.resolveModuleName("layout-admin-web/js/fragments_editor/FragmentsEditor.es") %>'
 	templateNamespace="com.liferay.layout.admin.web.FragmentsEditor.render"
 />

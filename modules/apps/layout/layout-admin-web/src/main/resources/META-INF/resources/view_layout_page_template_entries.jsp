@@ -142,7 +142,11 @@ request.setAttribute(LayoutAdminWebKeys.LAYOUT_PAGE_TEMPLATE_DISPLAY_CONTEXT, la
 	</liferay-ui:search-container>
 </aui:form>
 
-<aui:script require="metal-dom/src/all/dom as dom,frontend-js-web/liferay/modal/commands/OpenSimpleInputModal.es as modalCommands">
+<%
+String require = "metal-dom/src/all/dom as dom," + npmResolver.resolveModuleName("frontend-js-web/liferay/modal/commands/OpenSimpleInputModal.es") + " as modalCommands";
+%>
+
+<aui:script require="<%= require %>">
 	function addLayoutPageTemplateEntry(event) {
 		event.preventDefault();
 
