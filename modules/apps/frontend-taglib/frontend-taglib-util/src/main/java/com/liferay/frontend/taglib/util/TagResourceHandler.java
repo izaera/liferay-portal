@@ -48,18 +48,12 @@ import org.osgi.framework.FrameworkUtil;
  */
 public class TagResourceHandler {
 
-	public TagResourceHandler(TagAccessor tag) {
-		this(tag, tag.getClass());
-	}
-
-	public TagResourceHandler(
-		TagAccessor tagAccessor, Class<? extends TagAccessor> bundleClass) {
-
+	public TagResourceHandler(Class<?> tagClass, TagAccessor tagAccessor) {
 		_tagAccessor = tagAccessor;
 
-		_log = LogFactoryUtil.getLog(tagAccessor.getClass());
+		_log = LogFactoryUtil.getLog(tagClass);
 
-		_bundle = FrameworkUtil.getBundle(bundleClass);
+		_bundle = FrameworkUtil.getBundle(tagClass);
 
 		Dictionary<String, String> headers = _bundle.getHeaders(
 			StringPool.BLANK);

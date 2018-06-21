@@ -42,13 +42,13 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
 
 /**
  * @author Eudaldo Alonso
  */
-public class SelectLayoutTag
-	extends ComponentRendererTag implements TagAccessor {
+public class SelectLayoutTag extends ComponentRendererTag {
 
 	@Override
 	public int doStartTag() {
@@ -90,11 +90,6 @@ public class SelectLayoutTag
 	@Override
 	public String getModule() {
 		return "layout-taglib/select_layout/js/SelectLayout.es";
-	}
-
-	@Override
-	public PageContext getPageContext() {
-		return pageContext;
 	}
 
 	public void setCheckDisplayPage(boolean checkDisplayPage) {
@@ -249,6 +244,10 @@ public class SelectLayoutTag
 		return jsonArray;
 	}
 
+	private PageContext _getPageContext() {
+		return pageContext;
+	}
+
 	private boolean _getPrivateLayout() {
 		Map<String, Object> context = getContext();
 
@@ -276,6 +275,20 @@ public class SelectLayoutTag
 		SelectLayoutTag.class);
 
 	private final TagResourceHandler _tagResourceHandler =
-		new TagResourceHandler(this);
+		new TagResourceHandler(
+			SelectLayoutTag.class,
+			new TagAccessor() {
+
+				@Override
+				public PageContext getPageContext() {
+					return SelectLayoutTag.this._getPageContext();
+				}
+
+				@Override
+				public HttpServletRequest getRequest() {
+					return SelectLayoutTag.this.getRequest();
+				}
+
+			});
 
 }

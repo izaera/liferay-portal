@@ -24,13 +24,13 @@ import com.liferay.petra.string.StringPool;
 
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.PageContext;
 
 /**
  * @author Chema Balsas
  */
-public abstract class BaseChartTag
-	extends TemplateRendererTag implements TagAccessor {
+public abstract class BaseChartTag extends TemplateRendererTag {
 
 	public BaseChartTag(String moduleBaseName, String templateNamespace) {
 		_moduleBaseName = moduleBaseName;
@@ -64,11 +64,6 @@ public abstract class BaseChartTag
 			"clay-charts/lib/" + _moduleBaseName);
 	}
 
-	@Override
-	public PageContext getPageContext() {
-		return pageContext;
-	}
-
 	public void setConfig(ChartConfig chartConfig) {
 		for (Map.Entry<String, Object> entry : chartConfig.entrySet()) {
 			putValue(entry.getKey(), entry.getValue());
@@ -79,9 +74,29 @@ public abstract class BaseChartTag
 		putValue("id", id);
 	}
 
+	private PageContext _getPageContext() {
+		return pageContext;
+	}
+
 	private final String _moduleBaseName;
+
 	private final TagResourceHandler _tagResourceHandler =
-		new TagResourceHandler(this);
+		new TagResourceHandler(
+			BaseChartTag.class,
+			new TagAccessor() {
+
+				@Override
+				public PageContext getPageContext() {
+					return BaseChartTag.this._getPageContext();
+				}
+
+				@Override
+				public HttpServletRequest getRequest() {
+					return BaseChartTag.this.getRequest();
+				}
+
+			});
+
 	private final String _templateNamespace;
 
 }

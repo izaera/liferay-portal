@@ -21,13 +21,14 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.taglib.util.IncludeTag;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;
 
 /**
  * @author Peter Borkuti
  */
-public abstract class BaseCssTag extends IncludeTag implements TagAccessor {
+public abstract class BaseCssTag extends IncludeTag {
 
 	@Override
 	public int doStartTag() throws JspException {
@@ -36,12 +37,11 @@ public abstract class BaseCssTag extends IncludeTag implements TagAccessor {
 		return super.doStartTag();
 	}
 
-	@Override
-	public PageContext getPageContext() {
+	public abstract String getTagNameForCssPath();
+
+	private PageContext _getPageContext() {
 		return pageContext;
 	}
-
-	public abstract String getTagNameForCssPath();
 
 	private void _outputStylesheetLink() {
 		StringBundler sb = new StringBundler(2);
@@ -55,6 +55,20 @@ public abstract class BaseCssTag extends IncludeTag implements TagAccessor {
 	private static final Log _log = LogFactoryUtil.getLog(BaseCssTag.class);
 
 	private final TagResourceHandler _tagResourceHandler =
-		new TagResourceHandler(this, BaseCssTag.class);
+		new TagResourceHandler(
+			BaseCssTag.class,
+			new TagAccessor() {
+
+				@Override
+				public PageContext getPageContext() {
+					return BaseCssTag.this._getPageContext();
+				}
+
+				@Override
+				public HttpServletRequest getRequest() {
+					return BaseCssTag.this.getRequest();
+				}
+
+			});
 
 }
