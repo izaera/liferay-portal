@@ -23,6 +23,7 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.servlet.filters.gzip.GZipResponse;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -93,6 +94,10 @@ public class JSLoaderModulesServlet extends HttpServlet {
 	protected void service(
 			HttpServletRequest request, HttpServletResponse response)
 		throws IOException {
+
+		if (!_details.disableLoaderConfigCompression()) {
+			response = new GZipResponse(response);
+		}
 
 		response.setContentType(Details.CONTENT_TYPE);
 

@@ -45,4 +45,10 @@ public @interface Details {
 	@Meta.AD(deflt = "false", name = "expose-global", required = false)
 	public boolean exposeGlobal();
 
+	@Meta.AD(
+		deflt = "false", name = "disable-loader-config-compression",
+		required = false
+	)
+	public boolean disableLoaderConfigCompression();
+
 }
