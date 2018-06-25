@@ -29,6 +29,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import java.util.Collection;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
@@ -63,6 +64,12 @@ import org.osgi.service.component.annotations.Reference;
 	service = {JSLoaderModulesServlet.class, Servlet.class}
 )
 public class JSLoaderModulesServlet extends HttpServlet {
+
+	public JSLoaderModulesServlet() {
+		_dependencyAliases.put("exports", "E");
+		_dependencyAliases.put("module", "M");
+		_dependencyAliases.put("require", "R");
+	}
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
@@ -105,8 +112,15 @@ public class JSLoaderModulesServlet extends HttpServlet {
 
 		PrintWriter printWriter = new PrintWriter(servletOutputStream, true);
 
-		printWriter.println("(function() {");
-		printWriter.println("Liferay.PATHS = {");
+		printWriter.write("(function(){\n");
+
+		printWriter.write("var O=\"");
+		printWriter.write(_portal.getPathProxy());
+		printWriter.write(_portal.getPathModule());
+		printWriter.write("/js/resolved-module/");
+		printWriter.write("\";\n");
+
+		printWriter.write("Liferay.PATHS={\n");
 
 		String delimiter = "";
 		String delimiter2 = "";
@@ -121,7 +135,7 @@ public class JSLoaderModulesServlet extends HttpServlet {
 			printWriter.write(jsLoaderModule.getName());
 			printWriter.write("@");
 			printWriter.write(jsLoaderModule.getVersion());
-			printWriter.write("\": \"");
+			printWriter.write("\":\"");
 			printWriter.write(_portal.getPathProxy());
 			printWriter.write(jsLoaderModule.getContextPath());
 			printWriter.write("\"");
@@ -129,35 +143,37 @@ public class JSLoaderModulesServlet extends HttpServlet {
 			if (!processedNames.contains(jsLoaderModule.getName())) {
 				processedNames.add(jsLoaderModule.getName());
 
-				printWriter.println(",");
+				printWriter.write(",");
 				printWriter.write("\"");
 				printWriter.write(jsLoaderModule.getName());
-				printWriter.write("\": \"");
+				printWriter.write("\":\"");
 				printWriter.write(_portal.getPathProxy());
 				printWriter.write(jsLoaderModule.getContextPath());
 				printWriter.write("\"");
 			}
 
-			delimiter = ",\n";
+			delimiter = ",";
 		}
 
-		Collection<JSModule> resolvedJSModules =
-			_npmRegistry.getResolvedJSModules();
+		Collection<JSPackage> resolvedJSPackages =
+			_npmRegistry.getResolvedJSPackages();
 
-		for (JSModule resolvedJSModule : resolvedJSModules) {
+		for (JSPackage resolvedJSPackage : resolvedJSPackages) {
 			printWriter.write(delimiter);
 			printWriter.write("\"");
-			printWriter.write(resolvedJSModule.getResolvedId());
-			printWriter.write("\": \"");
-			printWriter.write(_portal.getPathProxy());
-			printWriter.write(resolvedJSModule.getResolvedURL());
+			printWriter.write(resolvedJSPackage.getResolvedId());
+			printWriter.write("\":O+\"");
+			printWriter.write(resolvedJSPackage.getResolvedId());
 			printWriter.write("\"");
 
-			delimiter = ",\n";
+			delimiter = ",";
 		}
 
-		printWriter.println("\n};");
-		printWriter.println("Liferay.MODULES = {");
+		printWriter.write("\n};\n");
+
+		_writeDependencyAliases(printWriter);
+
+		printWriter.write("Liferay.MODULES={\n");
 
 		delimiter = "";
 		processedNames.clear();
@@ -176,7 +192,7 @@ public class JSLoaderModulesServlet extends HttpServlet {
 				printWriter.write(delimiter);
 				printWriter.write(unversionedConfiguration);
 
-				delimiter = ",\n";
+				delimiter = ",";
 			}
 
 			String versionedConfiguration =
@@ -186,34 +202,37 @@ public class JSLoaderModulesServlet extends HttpServlet {
 				printWriter.write(delimiter);
 				printWriter.write(versionedConfiguration);
 
-				delimiter = ",\n";
+				delimiter = ",";
 			}
 		}
+
+		Collection<JSModule> resolvedJSModules =
+			_npmRegistry.getResolvedJSModules();
 
 		for (JSModule resolvedJSModule : resolvedJSModules) {
 			printWriter.write(delimiter);
 			printWriter.write("\"");
 			printWriter.write(resolvedJSModule.getResolvedId());
-			printWriter.write("\": {\n");
+			printWriter.write("\":{");
 
 			delimiter2 = "";
 
-			printWriter.write("  \"dependencies\": [");
+			printWriter.write("\"dependencies\":[");
 
 			for (String dependency : resolvedJSModule.getDependencies()) {
 				printWriter.write(delimiter2);
-				printWriter.write("\"" + dependency + "\"");
+				printWriter.write(_encodeDependency(dependency));
 
-				delimiter2 = ", ";
+				delimiter2 = ",";
 			}
 
-			printWriter.write("],\n");
+			printWriter.write("],");
 
 			JSPackage jsPackage = resolvedJSModule.getJSPackage();
 
 			delimiter2 = "";
 
-			printWriter.write("  \"map\": {");
+			printWriter.write("\"map\":{");
 
 			for (String dependencyPackageName :
 					resolvedJSModule.getDependencyPackageNames()) {
@@ -271,22 +290,22 @@ public class JSLoaderModulesServlet extends HttpServlet {
 
 				printWriter.write("\"");
 				printWriter.write(aliasSB.toString());
-				printWriter.write("\": \"");
+				printWriter.write("\":\"");
 				printWriter.write(aliasValueSB.toString());
 				printWriter.write("\"");
 
-				delimiter2 = ", ";
+				delimiter2 = ",";
 			}
-
-			printWriter.write("}\n");
 
 			printWriter.write("}");
 
-			delimiter = ",\n";
+			printWriter.write("}");
+
+			delimiter = ",";
 		}
 
-		printWriter.println("\n};");
-		printWriter.println("Liferay.MAPS = {");
+		printWriter.write("\n};\n");
+		printWriter.write("Liferay.MAPS={\n");
 
 		delimiter = "";
 		processedNames.clear();
@@ -301,13 +320,13 @@ public class JSLoaderModulesServlet extends HttpServlet {
 			printWriter.write(delimiter);
 			printWriter.write("\"");
 			printWriter.write(jsLoaderModule.getName());
-			printWriter.write("\": \"");
+			printWriter.write("\":\"");
 			printWriter.write(jsLoaderModule.getName());
 			printWriter.write("@");
 			printWriter.write(jsLoaderModule.getVersion());
 			printWriter.write("\"");
 
-			delimiter = ",\n";
+			delimiter = ",";
 
 			String unversionedMapsConfiguration =
 				jsLoaderModule.getUnversionedMapsConfiguration();
@@ -322,13 +341,13 @@ public class JSLoaderModulesServlet extends HttpServlet {
 			printWriter.write(delimiter);
 			printWriter.write("\"");
 			printWriter.write(jsPackage.getResolvedId());
-			printWriter.write("\": {exactMatch: true, value: \"");
+			printWriter.write("\":{exactMatch:true,value:\"");
 			printWriter.write(jsPackage.getResolvedId());
 			printWriter.write(StringPool.SLASH);
 			printWriter.write(jsPackage.getMainModuleName());
 			printWriter.write("\"}");
 
-			delimiter = ",\n";
+			delimiter = ",";
 
 			for (JSModuleAlias jsModuleAlias : jsPackage.getJSModuleAliases()) {
 				printWriter.write(delimiter);
@@ -336,7 +355,7 @@ public class JSLoaderModulesServlet extends HttpServlet {
 				printWriter.write(jsPackage.getResolvedId());
 				printWriter.write(StringPool.SLASH);
 				printWriter.write(jsModuleAlias.getAlias());
-				printWriter.write("\": {exactMatch: true, value: \"");
+				printWriter.write("\":{exactMatch:true,value:\"");
 				printWriter.write(jsPackage.getResolvedId());
 				printWriter.write(StringPool.SLASH);
 				printWriter.write(jsModuleAlias.getModuleName());
@@ -356,17 +375,17 @@ public class JSLoaderModulesServlet extends HttpServlet {
 			printWriter.write(alias.getValue());
 			printWriter.write(StringPool.QUOTE);
 
-			delimiter = ",\n";
+			delimiter = ",";
 		}
 
-		printWriter.println("\n};");
+		printWriter.write("\n};\n");
 
-		printWriter.println(
-			"Liferay.EXPLAIN_RESOLUTIONS = " + _details.explainResolutions() +
+		printWriter.write(
+			"Liferay.EXPLAIN_RESOLUTIONS=" + _details.explainResolutions() +
 				";\n");
 
-		printWriter.println(
-			"Liferay.EXPOSE_GLOBAL = " + _details.exposeGlobal() + ";\n");
+		printWriter.write(
+			"Liferay.EXPOSE_GLOBAL=" + _details.exposeGlobal() + ";\n");
 
 		printWriter.println("}());");
 
@@ -389,7 +408,36 @@ public class JSLoaderModulesServlet extends HttpServlet {
 		_npmRegistry = npmRegistry;
 	}
 
+	private String _encodeDependency(String dependency) {
+		String dependencyAlias = _dependencyAliases.get(dependency);
+
+		if (dependencyAlias == null) {
+			return "\"" + dependency + "\"";
+		}
+
+		return dependencyAlias;
+	}
+
+	private void _writeDependencyAliases(PrintWriter printWriter) {
+		printWriter.write("var ");
+
+		String delimiter = "";
+
+		for (Map.Entry<String, String> entry : _dependencyAliases.entrySet()) {
+			printWriter.write(delimiter);
+			printWriter.write(entry.getValue());
+			printWriter.write("=\"");
+			printWriter.write(entry.getKey());
+			printWriter.write("\"");
+
+			delimiter = ",";
+		}
+
+		printWriter.write(";\n");
+	}
+
 	private ComponentContext _componentContext;
+	private final Map<String, String> _dependencyAliases = new HashMap<>();
 	private volatile Details _details;
 	private JSLoaderModulesTracker _jsLoaderModulesTracker;
 	private Logger _logger;
