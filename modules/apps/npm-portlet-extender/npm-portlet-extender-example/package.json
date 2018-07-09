@@ -1,0 +1,24 @@
+{
+	"dependencies": {
+		"isarray": "2.0.2"
+	},
+	"description": "npm Portlet Extender Example",
+	"devDependencies": {
+		"babel-cli": "6.26.0",
+		"babel-preset-env": "^1.7.0",
+		"liferay-npm-bundler": "^2.0.0"
+	},
+	"main": "lib/index.es.js",
+	"name": "npm-portlet-extender-example",
+	"portlet": {
+		"com.liferay.portlet.display-category": "category.sample",
+		"com.liferay.portlet.instanceable": "true",
+		"javax.portlet.display-name": "npm Portlet Extender Example",
+		"javax.portlet.security-role-ref": "power-user,user"
+	},
+	"private": true,
+	"scripts": {
+		"build": "babel --source-maps -d classes/META-INF/resources classes/META-INF/resources && liferay-npm-bundler"
+	},
+	"version": "1.0.0"
+}

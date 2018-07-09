@@ -1,0 +1,7 @@
+Bundle-Name: Liferay npm Portlet Extender Example
+Bundle-SymbolicName: com.liferay.npm.portlet.extender.example
+Bundle-Version: 1.0.0
+Require-Capability:\
+	osgi.extender;\
+		filter:="(osgi.extender=liferay.npm.portlet)"
+Web-ContextPath: /npm-portlet-extender-example
