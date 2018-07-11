@@ -16,13 +16,13 @@ package com.liferay.frontend.taglib.util;
 
 import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
 import com.liferay.frontend.taglib.util.internal.NPMResolverRef;
+import com.liferay.frontend.taglib.util.internal.PartialRequestUtil;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.servlet.taglib.util.OutputData;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -113,15 +113,7 @@ public class TagResourceHandler {
 	}
 
 	public void outputResource(Position position, String html) {
-		HttpServletRequest request = _getRequest();
-
-		boolean xPjax = GetterUtil.getBoolean(request.getHeader("X-PJAX"));
-
-		ThemeDisplay themeDisplay = _getThemeDisplay();
-
-		if (themeDisplay.isIsolated() || themeDisplay.isLifecycleResource() ||
-			themeDisplay.isStateExclusive() || xPjax) {
-
+		if (PartialRequestUtil.isPartialRequest(_getRequest())) {
 			try {
 				PageContext pageContext = _tagAccessor.getPageContext();
 
