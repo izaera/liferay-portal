@@ -14,14 +14,14 @@
 
 package com.liferay.npm.portlet.extender.internal;
 
+import com.liferay.frontend.taglib.util.PortletScriptHandler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
-import com.liferay.taglib.aui.ScriptTag;
 import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.portal.kernel.util.StringUtil;
 
-import java.io.InputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 
 import javax.portlet.RenderRequest;
@@ -58,11 +58,17 @@ public class NPMPortlet extends MVCPortlet {
 			sb.append(" as module");
 
 			String componentJavaScript = StringUtil.replace(
-				_JAVA_SCRIPT_TPL, new String[] {"$CONTEXT_PATH", "$PORTLET_ELEMENT_ID", "$PORTLET_NAMESPACE"},
-				new String[] {request.getContextPath(), portletElementId, response.getNamespace()});
+				_JAVA_SCRIPT_TPL,
+				new String[] {
+					"$CONTEXT_PATH", "$PORTLET_ELEMENT_ID", "$PORTLET_NAMESPACE"
+				},
+				new String[] {
+					request.getContextPath(), portletElementId,
+					response.getNamespace()
+				});
 
-			ScriptTag.doTag(
-				null, sb.toString(), null, componentJavaScript, null, pageContext);
+			_portletScriptHandler.outputES6Script(
+				request, response, sb.toString(), componentJavaScript);
 
 			writer.flush();
 		}
@@ -86,10 +92,10 @@ public class NPMPortlet extends MVCPortlet {
 		writer.print("></div>");
 	}
 
+	private static final String _JAVA_SCRIPT_TPL;
+
 	private static final Logger _logger = LoggerFactory.getLogger(
 		NPMPortlet.class);
-
-	private static final String _JAVA_SCRIPT_TPL;
 
 	static {
 		InputStream inputStream = NPMPortlet.class.getResourceAsStream(
@@ -108,6 +114,8 @@ public class NPMPortlet extends MVCPortlet {
 	}
 
 	private final String _name;
+	private final PortletScriptHandler _portletScriptHandler =
+		new PortletScriptHandler(NPMPortlet.class);
 	private final String _version;
 
 }
