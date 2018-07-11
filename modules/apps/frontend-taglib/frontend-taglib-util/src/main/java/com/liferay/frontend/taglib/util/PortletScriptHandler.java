@@ -39,7 +39,7 @@ public class PortletScriptHandler {
 		_log = LogFactoryUtil.getLog(portletClass);
 	}
 
-	public void outputES6Script(
+	public void outputJavascript(
 		RenderRequest renderRequest, RenderResponse renderResponse,
 		String require, String script) {
 

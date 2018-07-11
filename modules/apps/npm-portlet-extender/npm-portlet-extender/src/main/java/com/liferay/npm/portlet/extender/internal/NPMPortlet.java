@@ -48,7 +48,11 @@ public class NPMPortlet extends MVCPortlet {
 
 			String portletElementId = "npm-portlet-" + response.getNamespace();
 
-			_writeContainerDiv(writer, portletElementId);
+			String contentHtml = StringUtil.replace(
+				_HTML_TPL, new String[] {"$PORTLET_ELEMENT_ID"},
+				new String[] {portletElementId});
+
+			writer.write(contentHtml);
 
 			StringBundler sb = new StringBundler(4);
 
@@ -67,7 +71,7 @@ public class NPMPortlet extends MVCPortlet {
 					response.getNamespace()
 				});
 
-			_portletScriptHandler.outputES6Script(
+			_portletScriptHandler.outputJavascript(
 				request, response, sb.toString(), componentJavaScript);
 
 			writer.flush();
@@ -77,20 +81,23 @@ public class NPMPortlet extends MVCPortlet {
 		}
 	}
 
-	private void _writeContainerDiv(
-		PrintWriter writer, String portletElementId) {
+	private static String _loadTemplate(String name) {
+		InputStream inputStream = NPMPortlet.class.getResourceAsStream(
+			"dependencies/" + name);
 
-		writer.print("<div");
+		String template = StringPool.BLANK;
 
-		writer.print(" ");
+		try {
+			template = StringUtil.read(inputStream);
+		}
+		catch (Exception e) {
+			_logger.error("Unable to read template " + name, e);
+		}
 
-		writer.print("id=");
-		writer.print("\"");
-		writer.print(portletElementId);
-		writer.print("\"");
-
-		writer.print("></div>");
+		return template;
 	}
+
+	private static final String _HTML_TPL;
 
 	private static final String _JAVA_SCRIPT_TPL;
 
@@ -98,19 +105,8 @@ public class NPMPortlet extends MVCPortlet {
 		NPMPortlet.class);
 
 	static {
-		InputStream inputStream = NPMPortlet.class.getResourceAsStream(
-			"dependencies/bootstrap.js.tpl");
-
-		String js = StringPool.BLANK;
-
-		try {
-			js = StringUtil.read(inputStream);
-		}
-		catch (Exception e) {
-			_logger.error("Unable to read template", e);
-		}
-
-		_JAVA_SCRIPT_TPL = js;
+		_JAVA_SCRIPT_TPL = _loadTemplate("bootstrap.js.tpl");
+		_HTML_TPL = _loadTemplate("content.html.tpl");
 	}
 
 	private final String _name;
