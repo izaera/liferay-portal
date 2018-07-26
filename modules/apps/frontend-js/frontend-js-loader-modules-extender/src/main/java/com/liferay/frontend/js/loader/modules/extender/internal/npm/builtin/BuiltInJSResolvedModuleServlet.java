@@ -53,9 +53,9 @@ public class BuiltInJSResolvedModuleServlet extends BaseBuiltInJSModuleServlet {
 	protected URL getURL(String pathInfo) {
 		String identifier = pathInfo.substring(1);
 
-		String resolvedJSPackageId = ModuleNameUtil.getPackageName(identifier);
+		String packageName = ModuleNameUtil.getPackageName(identifier);
 
-		JSPackage jsPackage = _getResolvedJSPackage(resolvedJSPackageId);
+		JSPackage jsPackage = _getResolvedJSPackage(packageName);
 
 		if (jsPackage == null) {
 			return null;
@@ -66,9 +66,8 @@ public class BuiltInJSResolvedModuleServlet extends BaseBuiltInJSModuleServlet {
 		return jsPackage.getResourceURL(packagePath);
 	}
 
-	private JSPackage _getResolvedJSPackage(String resolvedJSPackageId) {
-		String packageId = _resolvedPackageIdentifiersCache.get(
-			resolvedJSPackageId);
+	private JSPackage _getResolvedJSPackage(String packageName) {
+		String packageId = _resolvedJSPackageIdsCache.get(packageName);
 
 		if (packageId != null) {
 			JSPackage jsPackage = _npmRegistry.getJSPackage(packageId);
@@ -77,16 +76,16 @@ public class BuiltInJSResolvedModuleServlet extends BaseBuiltInJSModuleServlet {
 				return jsPackage;
 			}
 
-			_resolvedPackageIdentifiersCache.remove(resolvedJSPackageId);
+			_resolvedJSPackageIdsCache.remove(packageName);
 		}
 
 		Collection<JSPackage> resolvedJSPackages =
 			_npmRegistry.getResolvedJSPackages();
 
 		for (JSPackage resolvedJSPackage : resolvedJSPackages) {
-			if (resolvedJSPackageId.equals(resolvedJSPackage.getResolvedId())) {
-				_resolvedPackageIdentifiersCache.put(
-					resolvedJSPackageId, resolvedJSPackage.getId());
+			if (packageName.equals(resolvedJSPackage.getResolvedId())) {
+				_resolvedJSPackageIdsCache.put(
+					packageName, resolvedJSPackage.getId());
 
 				return resolvedJSPackage;
 			}
@@ -103,7 +102,7 @@ public class BuiltInJSResolvedModuleServlet extends BaseBuiltInJSModuleServlet {
 	@Reference
 	private NPMRegistry _npmRegistry;
 
-	private LinkedHashMap<String, String> _resolvedPackageIdentifiersCache =
+	private LinkedHashMap<String, String> _resolvedJSPackageIdsCache =
 		new LinkedHashMap<String, String>() {
 
 			@Override
