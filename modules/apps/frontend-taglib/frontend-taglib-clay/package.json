@@ -78,7 +78,7 @@
 	"name": "frontend-taglib-clay",
 	"private": true,
 	"scripts": {
-		"build": "metalsoy --soyDeps \"node_modules/clay-+(button|checkbox|dropdown|icon|label|link|portal|radio|management-toolbar)/src/**/*.soy\" && cross-env NODE_ENV=production babel --source-maps -d classes/META-INF/resources src/main/resources/META-INF/resources && liferay-npm-bundler && liferay-npm-bridge-generator && npm run cleanSoy",
+		"build": "metalsoy --soyDeps \"node_modules/clay-+(badge|button|checkbox|dropdown|icon|label|link|portal|radio|management-toolbar)/src/**/*.soy\" && cross-env NODE_ENV=production babel --source-maps -d classes/META-INF/resources src/main/resources/META-INF/resources && liferay-npm-bundler && liferay-npm-bridge-generator && npm run cleanSoy",
 		"checkFormat": "npm run csf",
 		"cleanSoy": "rimraf src/**/*.soy.js",
 		"csf": "csf src/**/*.es.js test/**/*.es.js",

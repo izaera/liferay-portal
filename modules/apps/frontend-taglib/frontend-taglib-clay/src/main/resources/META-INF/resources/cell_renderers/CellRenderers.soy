@@ -1,0 +1,27 @@
+{namespace CellRenderers}
+
+/**
+ * This renders a variant of a cell of type customnumber
+ */
+{deltemplate ClayTable.Cell variant="'editable'"}
+	{@param fieldSchema: ?}
+	{@param item: ?}
+	{@param value: ?}
+	{@param? _handleCellContentClick: any}
+	{@param? spritemap: string}
+
+    {call ClayTableCellEditable.render data="all" /}
+{/deltemplate}
+
+/**
+ * This renders a variant of a cell of type timer
+ */
+{deltemplate ClayTable.Cell variant="'timer'"}
+	{@param fieldSchema: ?}
+	{@param item: ?}
+	{@param value: ?}
+	{@param? _handleCellContentClick: any}
+	{@param? spritemap: string}
+
+    {call ClayTableCellTimer.render data="all" /}
+{/deltemplate}

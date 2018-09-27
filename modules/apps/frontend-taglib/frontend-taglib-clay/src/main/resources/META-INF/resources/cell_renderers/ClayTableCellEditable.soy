@@ -1,0 +1,55 @@
+{namespace ClayTableCellEditable}
+
+/**
+ * This renders a variant of a cell of type customlabel
+ */
+{template .render}
+	{@param fieldSchema: ?}
+	{@param value: ?}
+    {@param? editing: bool}
+    {@param? saving: bool}
+	{@param? spritemap: string}
+
+	<td data-onclick="_handleClick">
+		{let $fieldsetAttributes kind="attributes"}
+			{if $saving}
+				disabled="disabled"
+			{/if}
+        {/let}
+
+        <fieldset {$fieldsetAttributes}>
+            {if $editing}
+                {if $fieldSchema.type == 'number'}
+                    <input type="number" value="{$value}" />
+                {elseif $fieldSchema.type == 'bool'}
+                    <input type="checkbox" checked="{$value}" />
+                {elseif $fieldSchema.type == 'image'}
+                    <button data-onclick="_handleSelectURL" type="button">Choose URL</button>
+                {else}
+                    <input type="text" value="{$value}" />
+                {/if}
+
+                <button data-onclick="_handleInputSave" type="button">Save</button>
+                <button data-onclick="_handleInputCancel" type="button">Cancel</button>
+            {else}
+                {if $fieldSchema.type == 'image'}
+                    {if $value != ''}
+                        <img src="{$value}" style="max-width:100px;"/>
+                    {else}
+                        <svg class="lexicon-icon">
+                            <use xlink:href="{$spritemap}#question-circle" />
+                        </svg>
+                    {/if}
+                {else}
+                    {$value}
+                {/if}
+            {/if}
+
+            {if $saving}
+                <span class="inline-item inline-item-before">
+                    <span aria-hidden="true" class="loading-animation loading-animation-sm"></span>
+                </span>
+            {/if}
+        </fieldset>
+	</td>
+{/template}
