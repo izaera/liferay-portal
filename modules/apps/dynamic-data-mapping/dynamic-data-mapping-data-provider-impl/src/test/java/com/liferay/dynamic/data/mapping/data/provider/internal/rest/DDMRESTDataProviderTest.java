@@ -17,6 +17,7 @@ package com.liferay.dynamic.data.mapping.data.provider.internal.rest;
 import com.jayway.jsonpath.DocumentContext;
 
 import com.liferay.dynamic.data.mapping.data.provider.DDMDataProviderException;
+import com.liferay.dynamic.data.mapping.data.provider.DDMDataProviderInputParametersSettings;
 import com.liferay.dynamic.data.mapping.data.provider.DDMDataProviderInstanceSettings;
 import com.liferay.dynamic.data.mapping.data.provider.DDMDataProviderRequest;
 import com.liferay.dynamic.data.mapping.data.provider.DDMDataProviderResponse;
@@ -280,7 +281,7 @@ public class DDMRESTDataProviderTest extends PowerMockito {
 		DDMDataProviderResponse ddmDataProviderResponse =
 			_ddmRESTDataProvider.doGetData(ddmDataProviderRequest);
 
-		Optional<String> optional = ddmDataProviderResponse.getOutput(
+		Optional<String> optional = ddmDataProviderResponse.getOutputOptional(
 			"output", String.class);
 
 		Assert.assertTrue(optional.isPresent());
@@ -587,7 +588,8 @@ public class DDMRESTDataProviderTest extends PowerMockito {
 				ddmRESTDataProviderSettings);
 
 		Optional<List<KeyValuePair>> optional =
-			ddmDataProviderResponse.getOutput("list output", List.class);
+			ddmDataProviderResponse.getOutputOptional(
+				"list output", List.class);
 
 		List<KeyValuePair> keyValuePairs = new ArrayList() {
 			{
@@ -652,7 +654,8 @@ public class DDMRESTDataProviderTest extends PowerMockito {
 				ddmRESTDataProviderSettings);
 
 		Optional<List<KeyValuePair>> optional =
-			ddmDataProviderResponse.getOutput("list output", List.class);
+			ddmDataProviderResponse.getOutputOptional(
+				"list output", List.class);
 
 		List<KeyValuePair> keyValuePairs = new ArrayList() {
 			{
@@ -711,7 +714,7 @@ public class DDMRESTDataProviderTest extends PowerMockito {
 				documentContext, ddmDataProviderRequest,
 				ddmRESTDataProviderSettings);
 
-		Optional<Number> optional = ddmDataProviderResponse.getOutput(
+		Optional<Number> optional = ddmDataProviderResponse.getOutputOptional(
 			"number output", Number.class);
 
 		Assert.assertEquals(1, optional.get());
@@ -753,6 +756,12 @@ public class DDMRESTDataProviderTest extends PowerMockito {
 			ddmRESTDataProviderSettings.filterable()
 		).thenReturn(
 			true
+		);
+
+		when(
+			ddmRESTDataProviderSettings.inputParameters()
+		).thenReturn(
+			new DDMDataProviderInputParametersSettings[0]
 		);
 
 		when(
@@ -851,7 +860,7 @@ public class DDMRESTDataProviderTest extends PowerMockito {
 				documentContext, ddmDataProviderRequest,
 				ddmRESTDataProviderSettings);
 
-		Optional<String> optional = ddmDataProviderResponse.getOutput(
+		Optional<String> optional = ddmDataProviderResponse.getOutputOptional(
 			"text output", String.class);
 
 		Assert.assertEquals("brazil", optional.get());
@@ -903,11 +912,11 @@ public class DDMRESTDataProviderTest extends PowerMockito {
 
 		inputParameters.addNestedDDMFormFieldValue(
 			DDMFormValuesTestUtil.createUnlocalizedDDMFormFieldValue(
-				"inputParameterName", "Country Id"));
+				"inputParameterLabel", "Country Id"));
 
 		inputParameters.addNestedDDMFormFieldValue(
 			DDMFormValuesTestUtil.createUnlocalizedDDMFormFieldValue(
-				"inputParameterPath", "countryId"));
+				"inputParameterName", "countryId"));
 
 		inputParameters.addNestedDDMFormFieldValue(
 			DDMFormValuesTestUtil.createUnlocalizedDDMFormFieldValue(
@@ -921,11 +930,11 @@ public class DDMRESTDataProviderTest extends PowerMockito {
 
 		inputParameters.addNestedDDMFormFieldValue(
 			DDMFormValuesTestUtil.createUnlocalizedDDMFormFieldValue(
-				"inputParameterName", "Region Name"));
+				"inputParameterLabel", "Region Name"));
 
 		inputParameters.addNestedDDMFormFieldValue(
 			DDMFormValuesTestUtil.createUnlocalizedDDMFormFieldValue(
-				"inputParameterPath", "regionName"));
+				"inputParameterName", "regionName"));
 
 		inputParameters.addNestedDDMFormFieldValue(
 			DDMFormValuesTestUtil.createUnlocalizedDDMFormFieldValue(

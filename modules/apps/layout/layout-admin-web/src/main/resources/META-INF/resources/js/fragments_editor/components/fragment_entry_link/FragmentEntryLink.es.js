@@ -126,6 +126,21 @@ class FragmentEntryLink extends Component {
 	}
 
 	/**
+	 * Propagate store to editables when it's loaded
+	 * @review
+	 */
+
+	syncStore() {
+		if (this._editables) {
+			this._editables.forEach(
+				editable => {
+					editable.store = this.store;
+				}
+			);
+		}
+	}
+
+	/**
 	 * Create instances of FragmentEditableField for each editable.
 	 */
 
@@ -436,17 +451,6 @@ FragmentEntryLink.STATE = {
 	 */
 
 	defaultLanguageId: Config.string().required(),
-
-	/**
-	 * CSS class for the fragments drop target.
-	 * @default undefined
-	 * @instance
-	 * @memberOf FragmentEntryLink
-	 * @review
-	 * @type {!string}
-	 */
-
-	dropTargetClass: Config.string(),
 
 	/**
 	 * Editable values that should be used instead of the default ones

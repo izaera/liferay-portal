@@ -66,10 +66,12 @@ import java.rmi.RemoteException;
 @ProviderType
 public class AssetListEntryServiceSoap {
 	public static void addAssetEntrySelection(long assetListEntryId,
-		long assetEntryId) throws RemoteException {
+		long assetEntryId,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws RemoteException {
 		try {
 			AssetListEntryServiceUtil.addAssetEntrySelection(assetListEntryId,
-				assetEntryId);
+				assetEntryId, serviceContext);
 		}
 		catch (Exception e) {
 			_log.error(e, e);
@@ -85,6 +87,40 @@ public class AssetListEntryServiceSoap {
 		try {
 			com.liferay.asset.list.model.AssetListEntry returnValue = AssetListEntryServiceUtil.addAssetListEntry(groupId,
 					title, type, serviceContext);
+
+			return com.liferay.asset.list.model.AssetListEntrySoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static com.liferay.asset.list.model.AssetListEntrySoap addDynamicAssetListEntry(
+		long userId, long groupId, String title, String typeSettings,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws RemoteException {
+		try {
+			com.liferay.asset.list.model.AssetListEntry returnValue = AssetListEntryServiceUtil.addDynamicAssetListEntry(userId,
+					groupId, title, typeSettings, serviceContext);
+
+			return com.liferay.asset.list.model.AssetListEntrySoap.toSoapModel(returnValue);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+
+			throw new RemoteException(e.getMessage());
+		}
+	}
+
+	public static com.liferay.asset.list.model.AssetListEntrySoap addManualAssetListEntry(
+		long userId, long groupId, String title, long[] assetEntryIds,
+		com.liferay.portal.kernel.service.ServiceContext serviceContext)
+		throws RemoteException {
+		try {
+			com.liferay.asset.list.model.AssetListEntry returnValue = AssetListEntryServiceUtil.addManualAssetListEntry(userId,
+					groupId, title, assetEntryIds, serviceContext);
 
 			return com.liferay.asset.list.model.AssetListEntrySoap.toSoapModel(returnValue);
 		}

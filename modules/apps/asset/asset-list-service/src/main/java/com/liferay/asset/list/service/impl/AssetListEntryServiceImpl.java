@@ -38,7 +38,9 @@ import java.util.List;
 public class AssetListEntryServiceImpl extends AssetListEntryServiceBaseImpl {
 
 	@Override
-	public void addAssetEntrySelection(long assetListEntryId, long assetEntryId)
+	public void addAssetEntrySelection(
+			long assetListEntryId, long assetEntryId,
+			ServiceContext serviceContext)
 		throws PortalException {
 
 		AssetListEntry assetListEntry =
@@ -48,7 +50,7 @@ public class AssetListEntryServiceImpl extends AssetListEntryServiceBaseImpl {
 			getPermissionChecker(), assetListEntry, ActionKeys.UPDATE);
 
 		assetListEntryLocalService.addAssetEntrySelection(
-			assetListEntryId, assetEntryId);
+			assetListEntryId, assetEntryId, serviceContext);
 	}
 
 	@Override
@@ -62,6 +64,34 @@ public class AssetListEntryServiceImpl extends AssetListEntryServiceBaseImpl {
 
 		return assetListEntryLocalService.addAssetListEntry(
 			getUserId(), groupId, title, type, serviceContext);
+	}
+
+	@Override
+	public AssetListEntry addDynamicAssetListEntry(
+			long userId, long groupId, String title, String typeSettings,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		_portletResourcePermission.check(
+			getPermissionChecker(), groupId,
+			AssetListActionKeys.ADD_ASSET_LIST_ENTRY);
+
+		return assetListEntryLocalService.addDynamicAssetListEntry(
+			getUserId(), groupId, title, typeSettings, serviceContext);
+	}
+
+	@Override
+	public AssetListEntry addManualAssetListEntry(
+			long userId, long groupId, String title, long[] assetEntryIds,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		_portletResourcePermission.check(
+			getPermissionChecker(), groupId,
+			AssetListActionKeys.ADD_ASSET_LIST_ENTRY);
+
+		return assetListEntryLocalService.addManualAssetListEntry(
+			getUserId(), groupId, title, assetEntryIds, serviceContext);
 	}
 
 	@Override

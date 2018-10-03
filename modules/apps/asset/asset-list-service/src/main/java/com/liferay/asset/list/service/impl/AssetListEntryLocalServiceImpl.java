@@ -38,7 +38,9 @@ public class AssetListEntryLocalServiceImpl
 	extends AssetListEntryLocalServiceBaseImpl {
 
 	@Override
-	public void addAssetEntrySelection(long assetListEntryId, long assetEntryId)
+	public void addAssetEntrySelection(
+			long assetListEntryId, long assetEntryId,
+			ServiceContext serviceContext)
 		throws PortalException {
 
 		AssetListEntry assetListEntry =
@@ -52,7 +54,7 @@ public class AssetListEntryLocalServiceImpl
 		}
 
 		assetListEntryAssetEntryRelLocalService.addAssetListEntryAssetEntryRel(
-			assetListEntryId, assetEntryId);
+			assetListEntryId, assetEntryId, serviceContext);
 	}
 
 	@Override
@@ -72,6 +74,7 @@ public class AssetListEntryLocalServiceImpl
 		AssetListEntry assetListEntry = assetListEntryPersistence.create(
 			assetListEntryId);
 
+		assetListEntry.setUuid(serviceContext.getUuid());
 		assetListEntry.setGroupId(groupId);
 		assetListEntry.setCompanyId(user.getCompanyId());
 		assetListEntry.setUserId(user.getUserId());
@@ -90,6 +93,40 @@ public class AssetListEntryLocalServiceImpl
 		serviceContext.setAddGuestPermissions(true);
 
 		resourceLocalService.addModelResources(assetListEntry, serviceContext);
+
+		return assetListEntry;
+	}
+
+	@Override
+	public AssetListEntry addDynamicAssetListEntry(
+			long userId, long groupId, String title, String typeSettings,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		AssetListEntry assetListEntry = addAssetListEntry(
+			userId, groupId, title, AssetListEntryTypeConstants.TYPE_DYNAMIC,
+			serviceContext);
+
+		assetListEntry.setTypeSettings(typeSettings);
+
+		return assetListEntryPersistence.update(assetListEntry);
+	}
+
+	@Override
+	public AssetListEntry addManualAssetListEntry(
+			long userId, long groupId, String title, long[] assetEntryIds,
+			ServiceContext serviceContext)
+		throws PortalException {
+
+		AssetListEntry assetListEntry = addAssetListEntry(
+			userId, groupId, title, AssetListEntryTypeConstants.TYPE_MANUAL,
+			serviceContext);
+
+		for (long assetEntryId : assetEntryIds) {
+			addAssetEntrySelection(
+				assetListEntry.getAssetListEntryId(), assetEntryId,
+				serviceContext);
+		}
 
 		return assetListEntry;
 	}

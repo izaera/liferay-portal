@@ -15,13 +15,14 @@
 package com.liferay.document.library.opener.google.drive.web.internal.portlet.action;
 
 import com.liferay.document.library.constants.DLPortletKeys;
+import com.liferay.document.library.kernel.model.DLVersionNumberIncrease;
 import com.liferay.document.library.kernel.service.DLAppService;
 import com.liferay.document.library.opener.google.drive.DLOpenerGoogleDriveFileReference;
 import com.liferay.document.library.opener.google.drive.DLOpenerGoogleDriveManager;
 import com.liferay.document.library.opener.google.drive.constants.DLOpenerGoogleDriveMimeTypes;
+import com.liferay.document.library.opener.google.drive.upload.UniqueFileEntryTitleProvider;
 import com.liferay.document.library.opener.google.drive.web.internal.constants.DLOpenerGoogleDriveWebConstants;
 import com.liferay.document.library.opener.google.drive.web.internal.constants.DLOpenerGoogleDriveWebKeys;
-import com.liferay.document.library.opener.google.drive.web.internal.upload.UniqueFileEntryTitleProvider;
 import com.liferay.document.library.opener.google.drive.web.internal.util.OAuth2Helper;
 import com.liferay.document.library.opener.google.drive.web.internal.util.State;
 import com.liferay.petra.string.StringPool;
@@ -173,7 +174,9 @@ public class EditInGoogleDriveMVCActionCommand extends BaseMVCActionCommand {
 				actionRequest);
 
 			_dlAppService.checkInFileEntry(
-				fileEntryId, majorVersion, changeLog, serviceContext);
+				fileEntryId,
+				DLVersionNumberIncrease.fromMajorVersion(majorVersion),
+				changeLog, serviceContext);
 		}
 		else if (cmd.equals(
 					DLOpenerGoogleDriveWebConstants.GOOGLE_DRIVE_CHECKOUT)) {

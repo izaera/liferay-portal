@@ -45,8 +45,8 @@ public class AnnotatedApplicationPrefixHandlerClientTest
 	extends BaseClientTestCase {
 
 	@Deployment
-	public static Archive<?> getDeployment() throws Exception {
-		return BaseClientTestCase.getDeployment(
+	public static Archive<?> getArchive() throws Exception {
+		return BaseClientTestCase.getArchive(
 			AnnotatedApplicationPrefixHandlerTestPreparatorBundleActivator.
 				class);
 	}

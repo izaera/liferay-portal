@@ -16,6 +16,25 @@ body:not(.has-contextual-sidebar) .contextual-sidebar-content {
 	top: $controlMenuHeight + $managementBarHeight;
 	z-index: $sidebarZIndex;
 
+	.sidebar-body {
+		padding: 0;
+	}
+
+	.sidebar-body > .sidebar-section:first-child {
+		border-bottom: solid thin #CDCED9;
+	}
+
+	@media (min-width: 768px) {
+		& {
+			height: calc(100vh - #{$desktopControlMenuHeight} - #{$managementBarHeight});
+			top: $desktopControlMenuHeight + $managementBarHeight;
+		}
+	}
+}
+
+.fragments-editor-sidebar-content {
+	padding: 0 1.5rem 1.5rem 1.5rem;
+
 	.btn-link {
 		z-index: $sidebarCardPlusButtonZIndex;
 	}
@@ -37,20 +56,5 @@ body:not(.has-contextual-sidebar) .contextual-sidebar-content {
 
 	button.component-action {
 		cursor: pointer;
-	}
-
-	.sidebar-body {
-		padding-top: 0;
-	}
-
-	.sidebar-body > .sidebar-section:first-child {
-		border-bottom: solid thin #CDCED9;
-	}
-
-	@media (min-width: 768px) {
-		& {
-			height: calc(100vh - #{$desktopControlMenuHeight} - #{$managementBarHeight});
-			top: $desktopControlMenuHeight + $managementBarHeight;
-		}
 	}
 }

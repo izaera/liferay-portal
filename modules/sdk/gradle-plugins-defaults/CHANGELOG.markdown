@@ -4604,6 +4604,76 @@ manifest header for the deployed JAR does not contain a period.
 - [LPS-71117]: Update the [Liferay Gradle Plugins] dependency to version
 3.12.142.
 
+## 5.5.54 - 2018-09-24
+
+### Changed
+- [LPS-85609]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.143.
+
+## 5.5.55 - 2018-09-24
+
+### Changed
+- [LPS-85677]: Update the [Liferay Gradle Plugins Baseline] dependency to
+version 1.3.3.
+
+## 5.5.56 - 2018-09-24
+
+### Changed
+- [LPS-85678]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.144.
+- [LPS-85678]: Update the [Liferay Gradle Plugins Baseline] dependency to
+version 1.3.4.
+
+## 5.5.57 - 2018-09-24
+
+### Changed
+- [LPS-84119]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.145.
+
+## 5.5.58 - 2018-09-25
+
+### Changed
+- [LPS-84119]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.146.
+
+## 5.5.59 - 2018-09-25
+
+### Changed
+- [LPS-85556]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.147.
+
+## 5.5.60 - 2018-09-25
+
+### Changed
+- [LPS-84119]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.148.
+
+## 5.5.61 - 2018-09-27
+
+### Fixed
+- [LPS-85771]: Set `test.outputs.upToDateWhen`to `false` to always run `test`
+and `testIntegration` for OSGi modules.
+
+## 5.5.62 - 2018-09-30
+
+### Changed
+- [LPS-84119]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.149.
+
+## 5.5.63 - 2018-10-01
+
+### Changed
+- [LPS-85905]: When on Jenkins, fail the `testIntegration` task if any dependent
+projects defined in the `testIntegrationCompile` configuration do not have a
+`lfrbuild-ci`, `lfrbuild-ci-skip-test-integration-check`, or a
+`.lfrbuild-portal` marker file.
+
+## 5.5.64 - 2018-10-01
+
+### Changed
+- [LPS-84138]: Update the [Liferay Gradle Plugins] dependency to version
+3.12.150.
+
 [Find Security Bugs]: https://github.com/liferay/liferay-portal/tree/master/modules/third-party/com-h3xstream-findsecbugs
 [Gradle Dependency Management]: https://github.com/spring-gradle-plugins/dependency-management-plugin
 [Gradle License Report]: https://github.com/jk1/Gradle-License-Report
@@ -5064,6 +5134,7 @@ manifest header for the deployed JAR does not contain a period.
 [LPS-84055]: https://issues.liferay.com/browse/LPS-84055
 [LPS-84094]: https://issues.liferay.com/browse/LPS-84094
 [LPS-84119]: https://issues.liferay.com/browse/LPS-84119
+[LPS-84138]: https://issues.liferay.com/browse/LPS-84138
 [LPS-84213]: https://issues.liferay.com/browse/LPS-84213
 [LPS-84218]: https://issues.liferay.com/browse/LPS-84218
 [LPS-84307]: https://issues.liferay.com/browse/LPS-84307
@@ -5077,6 +5148,12 @@ manifest header for the deployed JAR does not contain a period.
 [LPS-85035]: https://issues.liferay.com/browse/LPS-85035
 [LPS-85092]: https://issues.liferay.com/browse/LPS-85092
 [LPS-85296]: https://issues.liferay.com/browse/LPS-85296
+[LPS-85556]: https://issues.liferay.com/browse/LPS-85556
+[LPS-85609]: https://issues.liferay.com/browse/LPS-85609
+[LPS-85677]: https://issues.liferay.com/browse/LPS-85677
+[LPS-85678]: https://issues.liferay.com/browse/LPS-85678
+[LPS-85771]: https://issues.liferay.com/browse/LPS-85771
+[LPS-85905]: https://issues.liferay.com/browse/LPS-85905
 [LRDOCS-2594]: https://issues.liferay.com/browse/LRDOCS-2594
 [LRDOCS-2841]: https://issues.liferay.com/browse/LRDOCS-2841
 [LRDOCS-2981]: https://issues.liferay.com/browse/LRDOCS-2981

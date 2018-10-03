@@ -14,14 +14,11 @@
 
 package com.liferay.forms.apio.internal.architect.resource;
 
-import static java.util.function.Function.identity;
-
 import com.liferay.apio.architect.credentials.Credentials;
 import com.liferay.apio.architect.functional.Try;
 import com.liferay.apio.architect.language.AcceptLanguage;
 import com.liferay.apio.architect.pagination.PageItems;
 import com.liferay.apio.architect.pagination.Pagination;
-import com.liferay.apio.architect.representor.NestedRepresentor;
 import com.liferay.apio.architect.representor.Representor;
 import com.liferay.apio.architect.resource.NestedCollectionResource;
 import com.liferay.apio.architect.routes.ItemRoutes;
@@ -30,9 +27,10 @@ import com.liferay.content.space.apio.architect.identifier.ContentSpaceIdentifie
 import com.liferay.dynamic.data.mapping.form.renderer.DDMFormRenderingContext;
 import com.liferay.dynamic.data.mapping.model.DDMFormInstance;
 import com.liferay.dynamic.data.mapping.model.DDMFormInstanceRecord;
-import com.liferay.dynamic.data.mapping.model.DDMFormInstanceSettings;
 import com.liferay.dynamic.data.mapping.model.DDMFormInstanceVersion;
+import com.liferay.dynamic.data.mapping.model.DDMStructureVersion;
 import com.liferay.dynamic.data.mapping.service.DDMFormInstanceService;
+import com.liferay.dynamic.data.mapping.service.DDMFormInstanceVersionService;
 import com.liferay.forms.apio.architect.identifier.FormContextIdentifier;
 import com.liferay.forms.apio.architect.identifier.FormInstanceIdentifier;
 import com.liferay.forms.apio.architect.identifier.FormInstanceRecordIdentifier;
@@ -47,14 +45,17 @@ import com.liferay.forms.apio.internal.helper.EvaluateContextHelper;
 import com.liferay.forms.apio.internal.helper.FetchLatestRecordHelper;
 import com.liferay.forms.apio.internal.helper.UploadFileHelper;
 import com.liferay.forms.apio.internal.model.FormContextWrapper;
-import com.liferay.forms.apio.internal.util.FormInstanceRepresentorUtil;
 import com.liferay.media.object.apio.architect.identifier.MediaObjectIdentifier;
 import com.liferay.person.apio.architect.identifier.PersonIdentifier;
 import com.liferay.portal.apio.permission.HasPermission;
 import com.liferay.portal.apio.user.CurrentUser;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.repository.model.FileEntry;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
+import java.util.Arrays;
 import java.util.List;
 
 import org.osgi.service.component.annotations.Component;
@@ -84,7 +85,7 @@ public class FormInstanceNestedCollectionResource
 
 	@Override
 	public String getName() {
-		return "form-instance";
+		return "form";
 	}
 
 	@Override
@@ -95,9 +96,9 @@ public class FormInstanceNestedCollectionResource
 			_ddmFormInstanceService::getFormInstance
 		).addCustomRoute(
 			new EvaluateContextRoute(), this::_evaluateContext,
-			DDMFormRenderingContext.class, AcceptLanguage.class,
-			FormContextIdentifier.class, this::_hasPermission,
-			FormContextForm::buildForm
+			AcceptLanguage.class, DDMFormRenderingContext.class,
+			ThemeDisplay.class, FormContextIdentifier.class,
+			this::_hasPermission, FormContextForm::buildForm
 		).addCustomRoute(
 			new FetchLatestDraftRoute(), this::_fetchDDMFormInstanceRecord,
 			CurrentUser.class, FormInstanceRecordIdentifier.class,
@@ -114,11 +115,11 @@ public class FormInstanceNestedCollectionResource
 		Representor.Builder<DDMFormInstance, Long> builder) {
 
 		return builder.types(
-			"FormInstance"
+			"Form"
 		).identifier(
 			DDMFormInstance::getFormInstanceId
 		).addBidirectionalModel(
-			"contentSpace", "formInstances", ContentSpaceIdentifier.class,
+			"contentSpace", "forms", ContentSpaceIdentifier.class,
 			DDMFormInstance::getGroupId
 		).addDate(
 			"dateCreated", DDMFormInstance::getCreateDate
@@ -129,21 +130,7 @@ public class FormInstanceNestedCollectionResource
 		).addLinkedModel(
 			"creator", PersonIdentifier.class, DDMFormInstance::getUserId
 		).addLinkedModel(
-			"structure", StructureIdentifier.class,
-			DDMFormInstance::getStructureId
-		).addNested(
-			"settings", FormInstanceRepresentorUtil::getSettings,
-			FormInstanceNestedCollectionResource::_buildSettings
-		).addNested(
-			"version", FormInstanceRepresentorUtil::getVersion,
-			nestedBuilder -> nestedBuilder.types(
-				"FormInstanceVersion"
-			).addLinkedModel(
-				"creator", PersonIdentifier.class,
-				DDMFormInstanceVersion::getUserId
-			).addString(
-				"name", DDMFormInstanceVersion::getVersion
-			).build()
+			"structure", StructureIdentifier.class, this::_getStructureId
 		).addLocalizedStringByLocale(
 			"description", DDMFormInstance::getDescription
 		).addLocalizedStringByLocale(
@@ -152,60 +139,17 @@ public class FormInstanceNestedCollectionResource
 			"defaultLanguage", DDMFormInstance::getDefaultLanguageId
 		).addStringList(
 			"availableLanguages",
-			FormInstanceRepresentorUtil::getAvailableLanguages
-		).build();
-	}
-
-	private static NestedRepresentor<DDMFormInstanceSettings> _buildSettings(
-		NestedRepresentor.Builder<DDMFormInstanceSettings> builder) {
-
-		return builder.types(
-			"FormInstanceSettings"
-		).addBoolean(
-			"isPublished", DDMFormInstanceSettings::published
-		).addBoolean(
-			"isRequireAuthentication",
-			DDMFormInstanceSettings::requireAuthentication
-		).addBoolean(
-			"isRequireCaptcha", DDMFormInstanceSettings::requireCaptcha
-		).addNested(
-			"emailNotification", identity(),
-			emailSettingsBuilder -> emailSettingsBuilder.types(
-				"EmailMessage"
-			).addBoolean(
-				"isEnabled", DDMFormInstanceSettings::sendEmailNotification
-			).addNested(
-				"sender", identity(),
-				senderBuilder -> senderBuilder.types(
-					"ContactPoint"
-				).addString(
-					"email", DDMFormInstanceSettings::emailFromAddress
-				).addString(
-					"name", DDMFormInstanceSettings::emailFromName
-				).build()
-			).addNested(
-				"toRecipient", identity(),
-				toRecipientBuilder -> toRecipientBuilder.types(
-					"ContactPoint"
-				).addString(
-					"email", DDMFormInstanceSettings::emailToAddress
-				).build()
-			).addString(
-				"about", DDMFormInstanceSettings::emailSubject
-			).build()
-		).addString(
-			"redirectURL", DDMFormInstanceSettings::redirectURL
-		).addString(
-			"storageType", DDMFormInstanceSettings::storageType
-		).addString(
-			"workflowDefinition", DDMFormInstanceSettings::workflowDefinition
+			formInstance -> Arrays.asList(
+				LocaleUtil.toW3cLanguageIds(
+					formInstance.getAvailableLanguageIds()))
 		).build();
 	}
 
 	private FormContextWrapper _evaluateContext(
 		Long ddmFormInstanceId, FormContextForm formContextForm,
+		AcceptLanguage acceptLanguage,
 		DDMFormRenderingContext ddmFormRenderingContext,
-		AcceptLanguage language) {
+		ThemeDisplay themeDisplay) {
 
 		return Try.fromFallible(
 			() -> _ddmFormInstanceService.getFormInstance(ddmFormInstanceId)
@@ -214,7 +158,7 @@ public class FormInstanceNestedCollectionResource
 		).map(
 			ddmStructure -> _evaluateContextHelper.evaluateContext(
 				formContextForm.getFieldValues(), ddmStructure,
-				ddmFormRenderingContext, language.getPreferredLocale())
+				ddmFormRenderingContext, acceptLanguage.getPreferredLocale())
 		).orElse(
 			null
 		);
@@ -248,6 +192,20 @@ public class FormInstanceNestedCollectionResource
 		return new PageItems<>(ddmFormInstances, count);
 	}
 
+	private Long _getStructureId(DDMFormInstance ddmFormInstance) {
+		return Try.fromFallible(
+			() -> _ddmFormInstanceVersionService.getLatestFormInstanceVersion(
+				ddmFormInstance.getFormInstanceId(),
+				WorkflowConstants.STATUS_APPROVED)
+		).map(
+			DDMFormInstanceVersion::getStructureVersion
+		).map(
+			DDMStructureVersion::getStructureId
+		).orElse(
+			null
+		);
+	}
+
 	private Boolean _hasPermission(
 		Credentials credentials, Long formInstanceId) {
 
@@ -277,6 +235,9 @@ public class FormInstanceNestedCollectionResource
 
 	@Reference
 	private DDMFormInstanceService _ddmFormInstanceService;
+
+	@Reference
+	private DDMFormInstanceVersionService _ddmFormInstanceVersionService;
 
 	@Reference
 	private EvaluateContextHelper _evaluateContextHelper;

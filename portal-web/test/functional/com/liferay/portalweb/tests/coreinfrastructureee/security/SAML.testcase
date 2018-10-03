@@ -1,11 +1,11 @@
-<definition component-name="portal-authentication-ee" ignore="true">
+<definition component-name="portal-authentication-ee">
 	<property name="portal.release" value="true" />
 	<property name="portal.upstream" value="true" />
 	<property name="app.server.bundles.size" value="1" />
 	<property name="databases.size" value="1" />
+	<property name="dummy.socket.proxy.disabled" value="true" />
 	<property name="osgi.app.includes" value="saml" />
 	<property name="plugins.deployment.type" value="osgi" />
-	<property name="test.run.environment" value="EE" />
 	<property name="testray.main.component.name" value="SAML" />
 
 	<!-- All test cases are currently configured to run Liferay SAML as the IdP and Liferay SAML as the SP. This will change as more SAML implmentations are added to this test suite (ie Shibboleth) -->
@@ -362,7 +362,7 @@
 		</execute>
 
 		<execute macro="ServerAdministration#addCategoryLogLevels">
-			<var name="catagoryName" value="com.liferay.saml.opensaml.integration" />
+			<var name="categoryName" value="com.liferay.saml.opensaml.integration" />
 			<var name="categoryPriority" value="DEBUG" />
 		</execute>
 
@@ -440,9 +440,6 @@
 			<var name="url" value="${maliciousURL}" />
 		</execute>
 
-		<execute function="AssertConsoleTextNotPresent" value1="java.lang.OutOfMemoryError" />
-		<execute function="AssertConsoleTextNotPresent" value1="GC overhead limit exceeded" />
-
 		<execute macro="WebContent#addCP">
 			<var name="webContentContent" value="Web Content Content" />
 			<var name="webContentTitle" value="Web Content Title" />
@@ -472,9 +469,6 @@
 		<execute macro="Navigator#openSpecificURL">
 			<var name="url" value="${maliciousURL}" />
 		</execute>
-
-		<execute function="AssertConsoleTextNotPresent" value1="java.lang.OutOfMemoryError" />
-		<execute function="AssertConsoleTextNotPresent" value1="GC overhead limit exceeded" />
 
 		<execute macro="WebContent#addCP">
 			<var name="webContentContent" value="Web Content Content 2" />
@@ -626,7 +620,7 @@
 		</execute>
 
 		<execute macro="ServerAdministration#addCategoryLogLevels">
-			<var name="catagoryName" value="com.liferay.saml" />
+			<var name="categoryName" value="com.liferay.saml" />
 			<var name="categoryPriority" value="DEBUG" />
 		</execute>
 

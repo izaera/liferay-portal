@@ -14,6 +14,8 @@
 
 package com.liferay.structured.content.apio.internal.architect.filter;
 
+import com.fasterxml.jackson.databind.util.ISO8601Utils;
+
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.search.BooleanClauseOccur;
 import com.liferay.portal.kernel.search.filter.BooleanFilter;
@@ -22,11 +24,18 @@ import com.liferay.portal.kernel.search.filter.RangeTermFilter;
 import com.liferay.portal.kernel.search.filter.TermFilter;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.structured.content.apio.architect.entity.EntityField;
+import com.liferay.structured.content.apio.architect.entity.EntityModel;
+import com.liferay.structured.content.apio.architect.filter.InvalidFilterException;
 import com.liferay.structured.content.apio.architect.filter.expression.BinaryExpression;
 import com.liferay.structured.content.apio.architect.filter.expression.ExpressionVisitor;
 import com.liferay.structured.content.apio.architect.filter.expression.LiteralExpression;
 import com.liferay.structured.content.apio.architect.filter.expression.MemberExpression;
 
+import java.text.Format;
+import java.text.ParseException;
+import java.text.ParsePosition;
+
+import java.util.Date;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -39,13 +48,11 @@ import java.util.Optional;
 public class ExpressionVisitorImpl implements ExpressionVisitor<Object> {
 
 	public ExpressionVisitorImpl(
-		Locale locale,
-		StructuredContentSingleEntitySchemaBasedEdmProvider
-			structuredContentSingleEntitySchemaBasedEdmProvider) {
+		Format format, Locale locale, EntityModel entityModel) {
 
+		_format = format;
 		_locale = locale;
-		_structuredContentSingleEntitySchemaBasedEdmProvider =
-			structuredContentSingleEntitySchemaBasedEdmProvider;
+		_entityModel = entityModel;
 	}
 
 	@Override
@@ -64,9 +71,15 @@ public class ExpressionVisitorImpl implements ExpressionVisitor<Object> {
 	@Override
 	public Object visitLiteralExpression(LiteralExpression literalExpression) {
 		if (Objects.equals(
-				LiteralExpression.Type.STRING, literalExpression.getType())) {
+				LiteralExpression.Type.DATE, literalExpression.getType())) {
 
-			return _normalizeLiteral(literalExpression.getText());
+			return _normalizeDateLiteral(literalExpression.getText());
+		}
+		else if (Objects.equals(
+					LiteralExpression.Type.STRING,
+					literalExpression.getType())) {
+
+			return _normalizeStringLiteral(literalExpression.getText());
 		}
 
 		return literalExpression.getText();
@@ -77,8 +90,7 @@ public class ExpressionVisitorImpl implements ExpressionVisitor<Object> {
 		List<String> resourcePath = memberExpression.getResourcePath();
 
 		Map<String, EntityField> entityFieldsMap =
-			_structuredContentSingleEntitySchemaBasedEdmProvider.
-				getEntityFieldsMap();
+			_entityModel.getEntityFieldsMap();
 
 		return entityFieldsMap.get(resourcePath.get(0));
 	}
@@ -96,7 +108,7 @@ public class ExpressionVisitorImpl implements ExpressionVisitor<Object> {
 		EntityField entityField, Object fieldValue, Locale locale) {
 
 		return new TermFilter(
-			entityField.getSortableName(locale), String.valueOf(fieldValue));
+			entityField.getFilterableName(locale), String.valueOf(fieldValue));
 	}
 
 	private Optional<Filter> _getFilterOptional(
@@ -114,8 +126,14 @@ public class ExpressionVisitorImpl implements ExpressionVisitor<Object> {
 		else if (Objects.equals(BinaryExpression.Operation.GE, operation)) {
 			filter = _getGEFilter((EntityField)left, right, locale);
 		}
+		else if (Objects.equals(BinaryExpression.Operation.GT, operation)) {
+			filter = _getGTFilter((EntityField)left, right, locale);
+		}
 		else if (Objects.equals(BinaryExpression.Operation.LE, operation)) {
 			filter = _getLEFilter((EntityField)left, right, locale);
+		}
+		else if (Objects.equals(BinaryExpression.Operation.LT, operation)) {
+			filter = _getLTFilter((EntityField)left, right, locale);
 		}
 		else if (Objects.equals(BinaryExpression.Operation.OR, operation)) {
 			filter = _getORFilter((Filter)left, (Filter)right);
@@ -130,17 +148,65 @@ public class ExpressionVisitorImpl implements ExpressionVisitor<Object> {
 	private Filter _getGEFilter(
 		EntityField entityField, Object fieldValue, Locale locale) {
 
-		return new RangeTermFilter(
-			entityField.getSortableName(locale), true, true,
-			String.valueOf(fieldValue), null);
+		if (Objects.equals(entityField.getType(), EntityField.Type.DATE) ||
+			Objects.equals(entityField.getType(), EntityField.Type.STRING)) {
+
+			return new RangeTermFilter(
+				entityField.getFilterableName(locale), true, true,
+				String.valueOf(fieldValue), null);
+		}
+
+		throw new UnsupportedOperationException(
+			"Unsupported method _getGEFilter with entity field type " +
+				entityField.getType());
+	}
+
+	private Filter _getGTFilter(
+		EntityField entityField, Object fieldValue, Locale locale) {
+
+		if (Objects.equals(entityField.getType(), EntityField.Type.DATE) ||
+			Objects.equals(entityField.getType(), EntityField.Type.STRING)) {
+
+			return new RangeTermFilter(
+				entityField.getFilterableName(locale), false, true,
+				String.valueOf(fieldValue), null);
+		}
+
+		throw new UnsupportedOperationException(
+			"Unsupported method _getGTFilter with entity field type " +
+				entityField.getType());
 	}
 
 	private Filter _getLEFilter(
 		EntityField entityField, Object fieldValue, Locale locale) {
 
-		return new RangeTermFilter(
-			entityField.getSortableName(locale), false, true, null,
-			String.valueOf(fieldValue));
+		if (Objects.equals(entityField.getType(), EntityField.Type.DATE) ||
+			Objects.equals(entityField.getType(), EntityField.Type.STRING)) {
+
+			return new RangeTermFilter(
+				entityField.getFilterableName(locale), false, true, null,
+				String.valueOf(fieldValue));
+		}
+
+		throw new UnsupportedOperationException(
+			"Unsupported method _getLEFilter with entity field type " +
+				entityField.getType());
+	}
+
+	private Filter _getLTFilter(
+		EntityField entityField, Object fieldValue, Locale locale) {
+
+		if (Objects.equals(entityField.getType(), EntityField.Type.DATE) ||
+			Objects.equals(entityField.getType(), EntityField.Type.STRING)) {
+
+			return new RangeTermFilter(
+				entityField.getFilterableName(locale), false, false, null,
+				String.valueOf(fieldValue));
+		}
+
+		throw new UnsupportedOperationException(
+			"Unsupported method _getLTFilter with entity field type " +
+				entityField.getType());
 	}
 
 	private Filter _getORFilter(Filter leftFilter, Filter rightFilter) {
@@ -152,7 +218,19 @@ public class ExpressionVisitorImpl implements ExpressionVisitor<Object> {
 		return booleanFilter;
 	}
 
-	private Object _normalizeLiteral(String literal) {
+	private Object _normalizeDateLiteral(String literal) {
+		try {
+			Date date = ISO8601Utils.parse(literal, new ParsePosition(0));
+
+			return _format.format(date);
+		}
+		catch (ParseException pe) {
+			throw new InvalidFilterException(
+				"Invalid date format, use ISO 8601: " + pe.getMessage());
+		}
+	}
+
+	private Object _normalizeStringLiteral(String literal) {
 		literal = StringUtil.toLowerCase(literal);
 
 		literal = StringUtil.unquote(literal);
@@ -161,8 +239,8 @@ public class ExpressionVisitorImpl implements ExpressionVisitor<Object> {
 			literal, StringPool.DOUBLE_APOSTROPHE, StringPool.APOSTROPHE);
 	}
 
+	private final EntityModel _entityModel;
+	private final Format _format;
 	private final Locale _locale;
-	private final StructuredContentSingleEntitySchemaBasedEdmProvider
-		_structuredContentSingleEntitySchemaBasedEdmProvider;
 
 }

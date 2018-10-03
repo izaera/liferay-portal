@@ -214,6 +214,8 @@ public class AssetPublisherConfigurationAction
 					validateEmailFrom(actionRequest);
 				}
 
+				updateSelectionStyle(actionRequest);
+
 				updateDisplaySettings(actionRequest);
 
 				String selectionStyle = getParameter(
@@ -244,7 +246,18 @@ public class AssetPublisherConfigurationAction
 				addScope(actionRequest, preferences);
 			}
 			else if (cmd.equals("add-selection")) {
-				assetPublisherWebUtil.addSelection(actionRequest, preferences);
+				long[] assetEntryIds = ParamUtil.getLongValues(
+					actionRequest, "assetEntryIds");
+				int assetEntryOrder = ParamUtil.getInteger(
+					actionRequest, "assetEntryOrder");
+				String assetEntryType = ParamUtil.getString(
+					actionRequest, "assetEntryType");
+
+				for (long assetEntryId : assetEntryIds) {
+					assetPublisherWebUtil.addSelection(
+						preferences, assetEntryId, assetEntryOrder,
+						assetEntryType);
+				}
 			}
 			else if (cmd.equals("move-selection-down")) {
 				moveSelectionDown(actionRequest, preferences);
@@ -776,6 +789,14 @@ public class AssetPublisherConfigurationAction
 			i++;
 
 			values = preferences.getValues("queryValues" + i, new String[0]);
+		}
+	}
+
+	protected void updateSelectionStyle(ActionRequest actionRequest) {
+		String selectionStyle = getParameter(actionRequest, "selectionStyle");
+
+		if (Validator.isNull(selectionStyle)) {
+			setPreference(actionRequest, "selectionStyle", "dynamic");
 		}
 	}
 

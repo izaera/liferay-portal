@@ -193,8 +193,6 @@ AUI.add(
 					},
 
 					_getFieldTypes: function(fieldTypes) {
-						var instance = this;
-
 						var types = [];
 
 						fieldTypes.forEach(
@@ -211,7 +209,7 @@ AUI.add(
 							}
 						);
 
-						return _.groupBy(types, 'group');
+						return Liferay.Util.groupBy(types, 'group');
 					},
 
 					_getIcons: function() {

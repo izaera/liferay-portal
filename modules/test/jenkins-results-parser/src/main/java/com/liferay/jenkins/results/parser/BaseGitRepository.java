@@ -15,13 +15,18 @@
 package com.liferay.jenkins.results.parser;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.StringReader;
+
+import java.util.Properties;
 
 import org.json.JSONObject;
 
 /**
  * @author Peter Yoo
  */
-public abstract class BaseGitRepository implements GitRepository {
+public abstract class BaseGitRepository
+	extends JSONObject implements GitRepository {
 
 	@Override
 	public String getName() {
@@ -29,45 +34,64 @@ public abstract class BaseGitRepository implements GitRepository {
 	}
 
 	protected BaseGitRepository(String name) {
-		if ((name == null) || name.isEmpty()) {
-			throw new IllegalArgumentException("Name is null");
-		}
+		super("{}");
 
-		put("name", name);
+		_setName(name);
 
-		validateJSONObject(_REQUIRED_KEYS);
-	}
-
-	protected Object get(String key) {
-		return _jsonObject.opt(key);
+		validateKeys(_REQUIRED_KEYS);
 	}
 
 	protected File getFile(String key) {
 		return new File(getString(key));
 	}
 
-	protected String getString(String key) {
-		return (String)get(key);
-	}
-
-	protected void put(String key, Object o) {
-		if (_jsonObject.has(key)) {
-			throw new RuntimeException("JSON object already contains " + key);
+	protected Properties getRepositoryProperties() {
+		if (_repositoryProperties != null) {
+			return _repositoryProperties;
 		}
 
-		_jsonObject.put(key, o);
+		_repositoryProperties = new Properties();
+
+		try {
+			_repositoryProperties.load(
+				new StringReader(
+					JenkinsResultsParserUtil.toString(
+						_REPOSITORY_PROPERTIES_URL, false)));
+		}
+		catch (IOException ioe) {
+			System.out.println(
+				"Skipped downloading " + _REPOSITORY_PROPERTIES_URL);
+		}
+
+		_repositoryProperties.putAll(
+			JenkinsResultsParserUtil.getProperties(
+				new File("repository.properties")));
+
+		return _repositoryProperties;
 	}
 
-	protected void validateJSONObject(String[] requiredKeys) {
+	protected void validateKeys(String[] requiredKeys) {
 		for (String requiredKey : requiredKeys) {
-			if (!_jsonObject.has(requiredKey)) {
+			if (!has(requiredKey)) {
 				throw new RuntimeException("Missing " + requiredKey);
 			}
 		}
 	}
 
+	private void _setName(String name) {
+		if ((name == null) || name.isEmpty()) {
+			throw new IllegalArgumentException("Name is null");
+		}
+
+		put("name", name);
+	}
+
+	private static final String _REPOSITORY_PROPERTIES_URL =
+		"http://mirrors-no-cache.lax.liferay.com/github.com/liferay" +
+			"/liferay-jenkins-ee/commands/repository.properties";
+
 	private static final String[] _REQUIRED_KEYS = {"name"};
 
-	private final JSONObject _jsonObject = new JSONObject();
+	private static Properties _repositoryProperties;
 
 }

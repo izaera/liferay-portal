@@ -35,8 +35,8 @@ import org.junit.runner.RunWith;
 public class TokenCompanyTest extends BaseClientTestCase {
 
 	@Deployment
-	public static Archive<?> getDeployment() throws Exception {
-		return BaseClientTestCase.getDeployment(
+	public static Archive<?> getArchive() throws Exception {
+		return BaseClientTestCase.getArchive(
 			AnnotatedApplicationTestPreparatorBundleActivator.class);
 	}
 

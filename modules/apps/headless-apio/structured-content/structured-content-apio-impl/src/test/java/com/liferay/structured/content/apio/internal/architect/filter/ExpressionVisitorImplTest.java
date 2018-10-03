@@ -22,9 +22,12 @@ import com.liferay.portal.kernel.search.filter.RangeTermFilter;
 import com.liferay.portal.kernel.search.filter.TermFilter;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.structured.content.apio.architect.entity.EntityField;
+import com.liferay.structured.content.apio.architect.entity.EntityModel;
 import com.liferay.structured.content.apio.architect.filter.expression.BinaryExpression;
 import com.liferay.structured.content.apio.architect.filter.expression.LiteralExpression;
 import com.liferay.structured.content.apio.internal.architect.filter.expression.LiteralExpressionImpl;
+
+import java.text.SimpleDateFormat;
 
 import java.util.List;
 import java.util.Map;
@@ -79,8 +82,7 @@ public class ExpressionVisitorImplTest {
 	@Test
 	public void testVisitBinaryExpressionOperationWithEqualOperation() {
 		Map<String, EntityField> entityFieldsMap =
-			_structuredContentSingleEntitySchemaBasedEdmProvider.
-				getEntityFieldsMap();
+			_entityModel.getEntityFieldsMap();
 
 		EntityField entityField = entityFieldsMap.get("title");
 
@@ -98,8 +100,7 @@ public class ExpressionVisitorImplTest {
 	@Test
 	public void testVisitBinaryExpressionOperationWithGreaterEqualOperation() {
 		Map<String, EntityField> entityFieldsMap =
-			_structuredContentSingleEntitySchemaBasedEdmProvider.
-				getEntityFieldsMap();
+			_entityModel.getEntityFieldsMap();
 
 		EntityField entityField = entityFieldsMap.get("title");
 
@@ -112,15 +113,38 @@ public class ExpressionVisitorImplTest {
 
 		Assert.assertEquals(entityField.getName(), rangeTermFilter.getField());
 		Assert.assertEquals(value, rangeTermFilter.getLowerBound());
+		Assert.assertTrue(rangeTermFilter.isIncludesLower());
 		Assert.assertNull(rangeTermFilter.getUpperBound());
+		Assert.assertTrue(rangeTermFilter.isIncludesUpper());
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testVisitBinaryExpressionOperationWithGreaterOperation() {
+		Map<String, EntityField> entityFieldsMap =
+			_entityModel.getEntityFieldsMap();
+
+		EntityField entityField = entityFieldsMap.get("title");
+
+		String value = "title1";
+
+		RangeTermFilter rangeTermFilter =
+			(RangeTermFilter)_expressionVisitorImpl.
+				visitBinaryExpressionOperation(
+					BinaryExpression.Operation.GT, entityField, value);
+
+		Assert.assertEquals(entityField.getName(), rangeTermFilter.getField());
+		Assert.assertEquals(value, rangeTermFilter.getLowerBound());
+		Assert.assertFalse(rangeTermFilter.isIncludesLower());
+		Assert.assertNull(rangeTermFilter.getUpperBound());
+		Assert.assertTrue(rangeTermFilter.isIncludesUpper());
 	}
 
 	@SuppressWarnings("unchecked")
 	@Test
 	public void testVisitBinaryExpressionOperationWithLowerEqualOperation() {
 		Map<String, EntityField> entityFieldsMap =
-			_structuredContentSingleEntitySchemaBasedEdmProvider.
-				getEntityFieldsMap();
+			_entityModel.getEntityFieldsMap();
 
 		EntityField entityField = entityFieldsMap.get("title");
 
@@ -130,6 +154,28 @@ public class ExpressionVisitorImplTest {
 			(RangeTermFilter)_expressionVisitorImpl.
 				visitBinaryExpressionOperation(
 					BinaryExpression.Operation.LE, entityField, value);
+
+		Assert.assertEquals(entityField.getName(), rangeTermFilter.getField());
+		Assert.assertNull(rangeTermFilter.getLowerBound());
+		Assert.assertFalse(rangeTermFilter.isIncludesLower());
+		Assert.assertEquals(value, rangeTermFilter.getUpperBound());
+		Assert.assertTrue(rangeTermFilter.isIncludesUpper());
+	}
+
+	@SuppressWarnings("unchecked")
+	@Test
+	public void testVisitBinaryExpressionOperationWithLowerOperation() {
+		Map<String, EntityField> entityFieldsMap =
+			_entityModel.getEntityFieldsMap();
+
+		EntityField entityField = entityFieldsMap.get("title");
+
+		String value = "title1";
+
+		RangeTermFilter rangeTermFilter =
+			(RangeTermFilter)_expressionVisitorImpl.
+				visitBinaryExpressionOperation(
+					BinaryExpression.Operation.LT, entityField, value);
 
 		Assert.assertEquals(entityField.getName(), rangeTermFilter.getField());
 		Assert.assertEquals(value, rangeTermFilter.getUpperBound());
@@ -172,7 +218,37 @@ public class ExpressionVisitorImplTest {
 	}
 
 	@Test
-	public void testVisitLiteralExpressionWithDoubleSingleQuotes() {
+	public void testVisitDateISO8601LiteralExpression() {
+		LiteralExpression literalExpression = new LiteralExpressionImpl(
+			"2012-05-29T09:13:28Z", LiteralExpression.Type.DATE);
+
+		Assert.assertEquals(
+			"20120529091328",
+			_expressionVisitorImpl.visitLiteralExpression(literalExpression));
+	}
+
+	@Test
+	public void testVisitDateISOLiteralExpression() {
+		LiteralExpression literalExpression = new LiteralExpressionImpl(
+			"2012-05-29T11:58:16+00:00", LiteralExpression.Type.DATE);
+
+		Assert.assertEquals(
+			"20120529115816",
+			_expressionVisitorImpl.visitLiteralExpression(literalExpression));
+	}
+
+	@Test
+	public void testVisitDateUTCLiteralExpression() {
+		LiteralExpression literalExpression = new LiteralExpressionImpl(
+			"2012-05-29", LiteralExpression.Type.DATE);
+
+		Assert.assertEquals(
+			"20120529000000",
+			_expressionVisitorImpl.visitLiteralExpression(literalExpression));
+	}
+
+	@Test
+	public void testVisitStringLiteralExpressionWithDoubleSingleQuotes() {
 		LiteralExpression literalExpression = new LiteralExpressionImpl(
 			"'L''Oreal'", LiteralExpression.Type.STRING);
 
@@ -182,7 +258,7 @@ public class ExpressionVisitorImplTest {
 	}
 
 	@Test
-	public void testVisitLiteralExpressionWithMultipleDoubleSingleQuotes() {
+	public void testVisitStringLiteralExpressionWithMultipleDoubleSingleQuotes() {
 		LiteralExpression literalExpression = new LiteralExpressionImpl(
 			"'L''Oreal and L''Oreal'", LiteralExpression.Type.STRING);
 
@@ -192,7 +268,7 @@ public class ExpressionVisitorImplTest {
 	}
 
 	@Test
-	public void testVisitLiteralExpressionWithOneSingleQuote() {
+	public void testVisitStringLiteralExpressionWithOneSingleQuote() {
 		LiteralExpression literalExpression = new LiteralExpressionImpl(
 			"'L'Oreal'", LiteralExpression.Type.STRING);
 
@@ -202,7 +278,7 @@ public class ExpressionVisitorImplTest {
 	}
 
 	@Test
-	public void testVisitLiteralExpressionWithSurroundingSingleQuotes() {
+	public void testVisitStringLiteralExpressionWithSurroundingSingleQuotes() {
 		LiteralExpression literalExpression = new LiteralExpressionImpl(
 			"'LOreal'", LiteralExpression.Type.STRING);
 
@@ -211,32 +287,28 @@ public class ExpressionVisitorImplTest {
 			_expressionVisitorImpl.visitLiteralExpression(literalExpression));
 	}
 
+	private static final EntityModel _entityModel = new EntityModel() {
+
+		@Override
+		public Map<String, EntityField> getEntityFieldsMap() {
+			return Stream.of(
+				new EntityField(
+					"title", EntityField.Type.STRING, locale -> "title")
+			).collect(
+				Collectors.toMap(EntityField::getName, Function.identity())
+			);
+		}
+
+		@Override
+		public String getName() {
+			return "SomeEntityName";
+		}
+
+	};
+
 	private static final ExpressionVisitorImpl _expressionVisitorImpl =
 		new ExpressionVisitorImpl(
-			LocaleUtil.getDefault(),
-			ExpressionVisitorImplTest.
-				_structuredContentSingleEntitySchemaBasedEdmProvider);
-
-	private static final StructuredContentSingleEntitySchemaBasedEdmProvider
-		_structuredContentSingleEntitySchemaBasedEdmProvider =
-			new StructuredContentSingleEntitySchemaBasedEdmProvider() {
-
-				@Override
-				public Map<String, EntityField> getEntityFieldsMap() {
-					return Stream.of(
-						new EntityField(
-							"title", EntityField.Type.STRING, locale -> "title")
-					).collect(
-						Collectors.toMap(
-							EntityField::getName, Function.identity())
-					);
-				}
-
-				@Override
-				public String getName() {
-					return "SomeEntityName";
-				}
-
-			};
+			new SimpleDateFormat("yyyyMMddHHmmss"), LocaleUtil.getDefault(),
+			_entityModel);
 
 }

@@ -5673,6 +5673,62 @@ to version 2.3.265.
 - [LPS-71117]: Update the [Liferay Source Formatter] dependency to version
 1.0.738.
 
+## 3.12.143 - 2018-09-24
+
+### Changed
+- [LPS-85609]: Remove deprecated API calls from IDE tasks.
+
+## 3.12.144 - 2018-09-24
+
+### Changed
+- [LPS-85678]: Update the [Liferay Ant BND] dependency to version 2.0.56.
+
+## 3.12.145 - 2018-09-24
+
+### Changed
+- [LPS-84119]: Update the [Liferay Gradle Plugins Source Formatter] dependency
+to version 2.3.266.
+- [LPS-84119]: Update the [Liferay Source Formatter] dependency to version
+1.0.739.
+
+## 3.12.146 - 2018-09-25
+
+### Changed
+- [LPS-84119]: Update the [Liferay Gradle Plugins Source Formatter] dependency
+to version 2.3.267.
+- [LPS-84119]: Update the [Liferay Source Formatter] dependency to version
+1.0.740.
+
+## 3.12.147 - 2018-09-25
+
+### Changed
+- [LPS-85556]: Update the [Liferay Gradle Plugins Service Builder] dependency to
+version 2.1.57.
+- [LPS-85556]: Update the [Liferay Portal Tools Service Builder] dependency to
+version 1.0.240.
+
+## 3.12.148 - 2018-09-25
+
+### Changed
+- [LPS-84119]: Update the [Liferay Gradle Plugins Source Formatter] dependency
+to version 2.3.268.
+- [LPS-84119]: Update the [Liferay Source Formatter] dependency to version
+1.0.741.
+
+## 3.12.149 - 2018-09-30
+
+### Changed
+- [LPS-84119]: Update the [Liferay Source Formatter] dependency to version
+1.0.742.
+
+## 3.12.150 - 2018-10-01
+
+### Changed
+- [LPS-84138]: Update the [Liferay Gradle Plugins Service Builder] dependency to
+version 2.1.58.
+- [LPS-84138]: Update the [Liferay Portal Tools Service Builder] dependency to
+version 1.0.241.
+
 [Gradle Bundle Plugin]: https://github.com/TomDmitriev/gradle-bundle-plugin
 [Liferay Alloy Taglib]: https://github.com/liferay/alloy-taglibs
 [Liferay Ant BND]: https://github.com/liferay/liferay-portal/tree/master/modules/sdk/ant-bnd
@@ -6104,6 +6160,7 @@ to version 2.3.265.
 [LPS-84039]: https://issues.liferay.com/browse/LPS-84039
 [LPS-84094]: https://issues.liferay.com/browse/LPS-84094
 [LPS-84119]: https://issues.liferay.com/browse/LPS-84119
+[LPS-84138]: https://issues.liferay.com/browse/LPS-84138
 [LPS-84213]: https://issues.liferay.com/browse/LPS-84213
 [LPS-84218]: https://issues.liferay.com/browse/LPS-84218
 [LPS-84307]: https://issues.liferay.com/browse/LPS-84307
@@ -6115,4 +6172,7 @@ to version 2.3.265.
 [LPS-85035]: https://issues.liferay.com/browse/LPS-85035
 [LPS-85092]: https://issues.liferay.com/browse/LPS-85092
 [LPS-85296]: https://issues.liferay.com/browse/LPS-85296
+[LPS-85556]: https://issues.liferay.com/browse/LPS-85556
+[LPS-85609]: https://issues.liferay.com/browse/LPS-85609
+[LPS-85678]: https://issues.liferay.com/browse/LPS-85678
 [LRDOCS-3023]: https://issues.liferay.com/browse/LRDOCS-3023

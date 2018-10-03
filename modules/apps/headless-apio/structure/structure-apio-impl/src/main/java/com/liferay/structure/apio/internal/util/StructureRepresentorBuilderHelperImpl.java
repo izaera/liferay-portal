@@ -29,6 +29,7 @@ import com.liferay.dynamic.data.mapping.model.DDMFormLayoutRow;
 import com.liferay.dynamic.data.mapping.model.DDMStructure;
 import com.liferay.dynamic.data.mapping.model.LocalizedValue;
 import com.liferay.person.apio.architect.identifier.PersonIdentifier;
+import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.structure.apio.architect.model.FormLayoutPage;
 import com.liferay.structure.apio.architect.util.StructureRepresentorBuilderHelper;
 import com.liferay.structure.apio.internal.model.FormLayoutPageImpl;
@@ -96,7 +97,7 @@ public class StructureRepresentorBuilderHelperImpl
 		).addLocalizedStringByLocale(
 			"style", getLocalizedString(DDMFormField::getStyle)
 		).addLocalizedStringByLocale(
-			"tip", getLocalizedString(DDMFormField::getTip)
+			"tooltip", getLocalizedString(DDMFormField::getTip)
 		).addNested(
 			"validation", DDMFormField::getDDMFormFieldValidation,
 			StructureRepresentorBuilderHelperImpl::_buildValidationProperties
@@ -144,7 +145,8 @@ public class StructureRepresentorBuilderHelperImpl
 		).addStringList(
 			"availableLanguages",
 			ddmStructure -> Arrays.asList(
-				ddmStructure.getAvailableLanguageIds())
+				LocaleUtil.toW3cLanguageIds(
+					ddmStructure.getAvailableLanguageIds()))
 		);
 	}
 
@@ -233,7 +235,7 @@ public class StructureRepresentorBuilderHelperImpl
 		return builder.types(
 			"FormFieldProperties"
 		).addString(
-			"error", DDMFormFieldValidation::getErrorMessage
+			"errorMessage", DDMFormFieldValidation::getErrorMessage
 		).addString(
 			"expression", DDMFormFieldValidation::getExpression
 		).build();

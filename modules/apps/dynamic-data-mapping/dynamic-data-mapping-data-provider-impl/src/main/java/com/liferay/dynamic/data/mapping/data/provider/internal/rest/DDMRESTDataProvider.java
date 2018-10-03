@@ -19,6 +19,7 @@ import com.jayway.jsonpath.JsonPath;
 
 import com.liferay.dynamic.data.mapping.data.provider.DDMDataProvider;
 import com.liferay.dynamic.data.mapping.data.provider.DDMDataProviderException;
+import com.liferay.dynamic.data.mapping.data.provider.DDMDataProviderInputParametersSettings;
 import com.liferay.dynamic.data.mapping.data.provider.DDMDataProviderInstanceSettings;
 import com.liferay.dynamic.data.mapping.data.provider.DDMDataProviderOutputParametersSettings;
 import com.liferay.dynamic.data.mapping.data.provider.DDMDataProviderRequest;
@@ -31,10 +32,6 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.cache.MultiVMPool;
 import com.liferay.portal.kernel.cache.PortalCache;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.security.permission.PermissionChecker;
-import com.liferay.portal.kernel.security.permission.PermissionCheckerFactoryUtil;
-import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Http;
@@ -48,6 +45,7 @@ import com.liferay.portal.kernel.util.Validator;
 import java.net.ConnectException;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -56,9 +54,8 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
-
-import javax.servlet.http.HttpServletRequest;
 
 import jodd.http.HttpException;
 import jodd.http.HttpRequest;
@@ -196,14 +193,14 @@ public class DDMRESTDataProvider implements DDMDataProvider {
 
 				if (ddmRESTDataProviderSettings.pagination()) {
 					Optional<String> paginationStartOptional =
-						ddmDataProviderRequest.getParameter(
+						ddmDataProviderRequest.getParameterOptional(
 							"paginationStart", String.class);
 
 					int start = Integer.valueOf(
 						paginationStartOptional.orElse("1"));
 
 					Optional<String> paginationEndOptional =
-						ddmDataProviderRequest.getParameter(
+						ddmDataProviderRequest.getParameterOptional(
 							"paginationEnd", String.class);
 
 					int end = Integer.valueOf(
@@ -228,8 +225,6 @@ public class DDMRESTDataProvider implements DDMDataProvider {
 	protected DDMDataProviderResponse doGetData(
 			DDMDataProviderRequest ddmDataProviderRequest)
 		throws Exception {
-
-		preparePermissionThreadLocal(ddmDataProviderRequest);
 
 		Optional<DDMDataProviderInstance> ddmDataProviderInstance =
 			fetchDDMDataProviderInstance(
@@ -317,11 +312,33 @@ public class DDMRESTDataProvider implements DDMDataProvider {
 		return httpRequest.url();
 	}
 
-	protected Map<String, String> getPathParameters(
+	protected Map<String, Object> getParameters(
 		DDMDataProviderRequest ddmDataProviderRequest,
 		DDMRESTDataProviderSettings ddmRESTDataProviderSettings) {
 
 		Map<String, Object> parameters = ddmDataProviderRequest.getParameters();
+
+		Stream<DDMDataProviderInputParametersSettings> stream = Arrays.stream(
+			ddmRESTDataProviderSettings.inputParameters());
+
+		return stream.filter(
+			inputParameter -> {
+				return parameters.containsKey(
+					inputParameter.inputParameterName());
+			}
+		).collect(
+			Collectors.toMap(
+				DDMDataProviderInputParametersSettings::inputParameterName,
+				value -> parameters.get(value.inputParameterName()))
+		);
+	}
+
+	protected Map<String, String> getPathParameters(
+		DDMDataProviderRequest ddmDataProviderRequest,
+		DDMRESTDataProviderSettings ddmRESTDataProviderSettings) {
+
+		Map<String, Object> parameters = getParameters(
+			ddmDataProviderRequest, ddmRESTDataProviderSettings);
 
 		Map<String, String> pathParameters = new HashMap<>();
 
@@ -348,8 +365,8 @@ public class DDMRESTDataProvider implements DDMDataProvider {
 		Map<String, String> pathParameters = getPathParameters(
 			ddmDataProviderRequest, ddmRESTDataProviderSettings);
 
-		Map<String, Object> parametersMap =
-			ddmDataProviderRequest.getParameters();
+		Map<String, Object> parametersMap = getParameters(
+			ddmDataProviderRequest, ddmRESTDataProviderSettings);
 
 		Set<Map.Entry<String, Object>> entrySet = parametersMap.entrySet();
 
@@ -377,34 +394,6 @@ public class DDMRESTDataProvider implements DDMDataProvider {
 		return StringPool.PERIOD.concat(path);
 	}
 
-	protected void preparePermissionThreadLocal(
-			DDMDataProviderRequest ddmDataProviderRequest)
-		throws Exception {
-
-		if (PermissionThreadLocal.getPermissionChecker() == null) {
-			Optional<HttpServletRequest> httpServletRequestOptional =
-				ddmDataProviderRequest.getParameter(
-					"httpServletRequest", HttpServletRequest.class);
-
-			if (httpServletRequestOptional.isPresent()) {
-				HttpServletRequest httpServletRequest =
-					httpServletRequestOptional.get();
-
-				User user = portal.getUser(httpServletRequest);
-
-				if (user == null) {
-					user = userLocalService.getDefaultUser(
-						portal.getCompanyId(httpServletRequest));
-				}
-
-				PermissionChecker permissionChecker =
-					PermissionCheckerFactoryUtil.create(user);
-
-				PermissionThreadLocal.setPermissionChecker(permissionChecker);
-			}
-		}
-	}
-
 	@Reference(unbind = "-")
 	protected void setMultiVMPool(MultiVMPool multiVMPool) {
 		_portalCache =
@@ -419,7 +408,7 @@ public class DDMRESTDataProvider implements DDMDataProvider {
 
 		if (ddmRESTDataProviderSettings.filterable()) {
 			Optional<String> filterParameterValue =
-				ddmDataProviderRequest.getParameter(
+				ddmDataProviderRequest.getParameterOptional(
 					"filterParameterValue", String.class);
 
 			if (filterParameterValue.isPresent()) {
@@ -431,7 +420,7 @@ public class DDMRESTDataProvider implements DDMDataProvider {
 
 		if (ddmRESTDataProviderSettings.pagination()) {
 			Optional<String> paginationStart =
-				ddmDataProviderRequest.getParameter(
+				ddmDataProviderRequest.getParameterOptional(
 					"paginationStart", String.class);
 
 			if (paginationStart.isPresent()) {
@@ -441,7 +430,7 @@ public class DDMRESTDataProvider implements DDMDataProvider {
 			}
 
 			Optional<String> paginationEnd =
-				ddmDataProviderRequest.getParameter(
+				ddmDataProviderRequest.getParameterOptional(
 					"paginationEnd", String.class);
 
 			if (paginationEnd.isPresent()) {

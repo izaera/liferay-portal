@@ -42,8 +42,8 @@ import org.junit.runner.RunWith;
 public class GrantAuthorizationCodeKillSwitchTest extends BaseClientTestCase {
 
 	@Deployment
-	public static Archive<?> getDeployment() throws Exception {
-		return BaseClientTestCase.getDeployment(
+	public static Archive<?> getArchive() throws Exception {
+		return BaseClientTestCase.getArchive(
 			GrantKillClientCredentialsSwitchTestPreparatorBundleActivator.
 				class);
 	}

@@ -16,6 +16,7 @@ package com.liferay.asset.browser.web.internal.display.context;
 
 import com.liferay.asset.browser.web.internal.configuration.AssetBrowserWebConfigurationValues;
 import com.liferay.asset.browser.web.internal.constants.AssetBrowserPortletKeys;
+import com.liferay.asset.browser.web.internal.search.AddAssetEntryChecker;
 import com.liferay.asset.browser.web.internal.search.AssetBrowserSearch;
 import com.liferay.asset.constants.AssetWebKeys;
 import com.liferay.asset.kernel.AssetRendererFactoryRegistryUtil;
@@ -26,8 +27,6 @@ import com.liferay.asset.util.AssetHelper;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.CreationMenu;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemList;
-import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItem;
-import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItemList;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.SafeConsumer;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.ViewTypeItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.ViewTypeItemList;
@@ -137,6 +136,12 @@ public class AssetBrowserDisplayContext {
 
 		AssetBrowserSearch assetBrowserSearch = new AssetBrowserSearch(
 			_renderRequest, getPortletURL());
+
+		if (isMultipleSelection()) {
+			assetBrowserSearch.setRowChecker(
+				new AddAssetEntryChecker(
+					_renderResponse, getRefererAssetEntryId()));
+		}
 
 		AssetRendererFactory assetRendererFactory = getAssetRendererFactory();
 
@@ -276,20 +281,6 @@ public class AssetBrowserDisplayContext {
 		};
 	}
 
-	public List<NavigationItem> getNavigationItems() {
-		return new NavigationItemList() {
-			{
-				add(
-					navigationItem -> {
-						navigationItem.setActive(true);
-						navigationItem.setHref(getPortletURL());
-						navigationItem.setLabel(
-							LanguageUtil.get(_request, "entries"));
-					});
-			}
-		};
-	}
-
 	public String getOrderByType() {
 		if (Validator.isNotNull(_orderByType)) {
 			return _orderByType;
@@ -377,6 +368,17 @@ public class AssetBrowserDisplayContext {
 		}
 
 		return true;
+	}
+
+	public boolean isMultipleSelection() {
+		if (_multipleSelection != null) {
+			return _multipleSelection;
+		}
+
+		_multipleSelection = ParamUtil.getBoolean(
+			_request, "multipleSelection");
+
+		return _multipleSelection;
 	}
 
 	private String _getAddButtonLabel() {
@@ -646,6 +648,7 @@ public class AssetBrowserDisplayContext {
 	private String _eventName;
 	private Long _groupId;
 	private String _keywords;
+	private Boolean _multipleSelection;
 	private String _orderByCol;
 	private String _orderByType;
 	private Long _refererAssetEntryId;

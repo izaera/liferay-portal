@@ -27,15 +27,14 @@ import com.liferay.person.apio.architect.identifier.PersonIdentifier;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Group;
-import com.liferay.portal.kernel.model.GroupConstants;
-import com.liferay.portal.kernel.security.permission.ActionKeys;
-import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.service.GroupLocalService;
-import com.liferay.portal.kernel.service.permission.GroupPermissionUtil;
+import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.comparator.GroupNameComparator;
 import com.liferay.site.apio.architect.identifier.WebSiteIdentifier;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Locale;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -55,7 +54,7 @@ public class ContentSpaceCollectionResource
 		CollectionRoutes.Builder<Group, Long> builder) {
 
 		return builder.addGetter(
-			this::_getPageItems, Company.class, PermissionChecker.class
+			this::_getPageItems, Company.class, Locale.class
 		).build();
 	}
 
@@ -81,8 +80,6 @@ public class ContentSpaceCollectionResource
 			"ContentSpace"
 		).identifier(
 			Group::getGroupId
-		).addBoolean(
-			"active", Group::isActive
 		).addLinkedModel(
 			"creator", PersonIdentifier.class, Group::getCreatorUserId
 		).addLinkedModel(
@@ -95,7 +92,8 @@ public class ContentSpaceCollectionResource
 			"name", ContentSpaceUtil::getName
 		).addStringList(
 			"availableLanguages",
-			group -> Arrays.asList(group.getAvailableLanguageIds())
+			group -> Arrays.asList(
+				LocaleUtil.toW3cLanguageIds(group.getAvailableLanguageIds()))
 		).build();
 	}
 
@@ -104,17 +102,13 @@ public class ContentSpaceCollectionResource
 	}
 
 	private PageItems<Group> _getPageItems(
-			Pagination pagination, Company company,
-			PermissionChecker permissionChecker)
-		throws PortalException {
+		Pagination pagination, Company company, Locale locale) {
 
-		GroupPermissionUtil.check(permissionChecker, ActionKeys.VIEW);
-
-		List<Group> groups = _groupLocalService.getGroups(
-			company.getCompanyId(), GroupConstants.ANY_PARENT_GROUP_ID, true,
-			pagination.getStartPosition(), pagination.getEndPosition());
-		int count = _groupLocalService.getGroupsCount(
-			company.getCompanyId(), GroupConstants.ANY_PARENT_GROUP_ID, true);
+		List<Group> groups = _groupLocalService.getActiveGroups(
+			company.getCompanyId(), true, pagination.getStartPosition(),
+			pagination.getEndPosition(), new GroupNameComparator(true, locale));
+		int count = _groupLocalService.getActiveGroupsCount(
+			company.getCompanyId(), true);
 
 		return new PageItems<>(groups, count);
 	}
