@@ -14,6 +14,7 @@
 
 package com.liferay.frontend.js.loader.modules.extender.internal;
 
+import com.liferay.frontend.js.loader.modules.extender.npm.JSBundle;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSModule;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSModuleAlias;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSPackage;
@@ -22,12 +23,18 @@ import com.liferay.frontend.js.loader.modules.extender.npm.NPMRegistry;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
+import com.liferay.portal.kernel.json.JSONException;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.util.Portal;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 
+import java.net.URL;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -41,6 +48,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.liferay.portal.kernel.util.StringUtil;
 import org.apache.felix.utils.log.Logger;
 
 import org.osgi.service.component.ComponentContext;
@@ -384,6 +392,47 @@ public class JSLoaderModulesServlet extends HttpServlet {
 			printWriter.write("}");
 
 			delimiter = ",\n";
+		}
+
+		Set<JSBundle> jsBundles = new HashSet<>();
+
+		for (JSPackage jsPackage:_npmRegistry.getResolvedJSPackages()) {
+			jsBundles.add(jsPackage.getJSBundle());
+		}
+
+		for (JSBundle jsBundle : jsBundles) {
+			URL url = jsBundle.getResourceURL(
+				"META-INF/resources/package.json");
+
+			try(InputStream is = url.openStream() ) {
+				JSONObject packageJson = JSONFactoryUtil.createJSONObject(
+					StringUtil.read(is));
+
+				String rootPackageName = packageJson.getString("name");
+
+				for(JSPackage jsPackage : jsBundle.getJSPackages()) {
+					String jsPackageName = jsPackage.getName();
+
+					if (jsPackageName.equals(rootPackageName)) {
+						printWriter.write(delimiter);
+						printWriter.write("\"");
+						printWriter.write(jsPackage.getResolvedId());
+						printWriter.write("/content/Language.properties");
+						printWriter.write("\": {\n");
+
+						printWriter.write("  \"dependencies\": [],\n");
+						printWriter.write("  \"map\": {}\n");
+
+						printWriter.write("}\n");
+
+						break;
+					}
+				}
+			} catch(IOException|JSONException e) {
+				_logger.log(
+					Logger.LOG_ERROR,
+					"Unable to parse package.json of " + jsBundle.getName(), e);
+			}
 		}
 
 		printWriter.println("\n};");

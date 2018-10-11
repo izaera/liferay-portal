@@ -47,7 +47,7 @@ public abstract class BaseBuiltInJSModuleServlet extends HttpServlet {
 	 * @param  pathInfo the request's pathInfo
 	 * @return the {@link JSModule} object describing the module
 	 */
-	protected abstract URL getURL(String pathInfo);
+	protected abstract InputStream getResource(String pathInfo);
 
 	@Override
 	protected void service(
@@ -56,38 +56,35 @@ public abstract class BaseBuiltInJSModuleServlet extends HttpServlet {
 
 		String pathInfo = request.getPathInfo();
 
-		URL url = getURL(pathInfo);
+		InputStream inputStream = getResource(pathInfo);
 
-		if (url == null) {
+		if (inputStream == null) {
 			response.sendError(HttpServletResponse.SC_NOT_FOUND);
 
 			return;
 		}
 
-		_setContentType(response, url);
+		_setContentType(response, pathInfo);
 
-		_sendResource(response, url);
+		_sendResource(response, inputStream);
 	}
 
-	private void _sendResource(HttpServletResponse response, URL url)
+	private void _sendResource(
+			HttpServletResponse response, InputStream inputStream)
 		throws IOException {
 
 		ServletOutputStream servletOutputStream = response.getOutputStream();
 
-		try (InputStream inputStream = url.openStream()) {
+		try {
 			StreamUtil.transfer(inputStream, servletOutputStream, false);
 		}
-		catch (Exception e) {
-			response.sendError(
-				HttpServletResponse.SC_INTERNAL_SERVER_ERROR,
-				"Unable to read file");
+		finally {
+			inputStream.close();
 		}
 	}
 
-	private void _setContentType(HttpServletResponse response, URL url) {
-		String file = url.getFile();
-
-		String extension = FileUtil.getExtension(file);
+	private void _setContentType(HttpServletResponse response, String pathInfo) {
+		String extension = FileUtil.getExtension(pathInfo);
 
 		if (extension.equals(".js")) {
 			response.setContentType(ContentTypes.TEXT_JAVASCRIPT_UTF8);
@@ -98,7 +95,7 @@ public abstract class BaseBuiltInJSModuleServlet extends HttpServlet {
 		else {
 			MimeTypes mimeTypes = getMimeTypes();
 
-			response.setContentType(mimeTypes.getContentType(file));
+			response.setContentType(mimeTypes.getContentType(pathInfo));
 		}
 	}
 
