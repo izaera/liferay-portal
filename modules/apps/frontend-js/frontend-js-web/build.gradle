@@ -4,7 +4,6 @@ task buildClay(type: Copy)
 task buildJQuery(type: Copy)
 task buildJQueryPluginsForm
 task buildLiferayAMDLoader(type: Copy)
-task buildLodash(type: Copy)
 task buildSvg4everybody(type: Copy)
 
 File jsDestinationDir = file("tmp/META-INF/resources")
@@ -75,29 +74,6 @@ buildLiferayAMDLoader {
 	into new File(jsDestinationDir, "loader")
 }
 
-buildLodash {
-	File lodashDestinationDir = new File(jsDestinationDir, "lodash")
-
-	dependsOn npmInstall
-
-	doFirst {
-		delete lodashDestinationDir
-	}
-
-	eachFile new StripPathSegmentsAction(1)
-
-	filter {
-		String line ->
-
-		line.replace "typeof define == 'function'", "false && typeof define == 'function'"
-	}
-
-	from npmInstall.nodeModulesDir
-	include "lodash/lodash.js"
-	includeEmptyDirs = false
-	into lodashDestinationDir
-}
-
 buildSvg4everybody {
 	dependsOn npmInstall
 	eachFile new StripPathSegmentsAction(2)
@@ -119,7 +95,6 @@ classes {
 	dependsOn buildJQuery
 	dependsOn buildJQueryPluginsForm
 	dependsOn buildLiferayAMDLoader
-	dependsOn buildLodash
 	dependsOn buildSvg4everybody
 	dependsOn npmRunWebpack
 }
