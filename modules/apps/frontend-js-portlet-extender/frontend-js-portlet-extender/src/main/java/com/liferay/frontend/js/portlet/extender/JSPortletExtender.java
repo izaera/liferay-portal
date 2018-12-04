@@ -14,7 +14,10 @@
 
 package com.liferay.frontend.js.portlet.extender;
 
+import aQute.bnd.annotation.component.Modified;
+import com.liferay.frontend.js.portlet.extender.configuration.PortletExtenderConfiguration;
 import com.liferay.frontend.js.portlet.extender.internal.portlet.JSPortlet;
+import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.json.JSONObject;
@@ -55,14 +58,13 @@ import org.osgi.util.tracker.BundleTrackerCustomizer;
  * @author Ray Augé
  * @author Iván Zaera Avellón
  */
-@Component(immediate = true, service = JSPortletExtender.class)
+@Component(immediate = true, service = JSPortletExtender.class, configurationPid = "PortletExtenderConfiguration")
 public class JSPortletExtender {
 
 	@Activate
 	public void activate(BundleContext context) {
 		_bundleTracker = new BundleTracker<>(
 			context, Bundle.ACTIVE, _bundleTrackerCustomizer);
-
 		_bundleTracker.open();
 	}
 
@@ -172,11 +174,17 @@ public class JSPortletExtender {
 						Dictionary<String, Object> properties =
 							new Hashtable<>();
 
+						Dictionary<String, Object> configurationProperty =
+								new Hashtable<>();
+
 						properties.put("javax.portlet.name", name);
 						properties.put("service.pid", name);
 
 						_addServiceProperties(
 							properties, jsonObject.getJSONObject("portlet"));
+
+						_addServiceProperties(
+								configurationProperty, jsonObject.getJSONObject("configuration"));
 
 						ServiceRegistration<?> serviceRegistration =
 							bundleContext.registerService(
@@ -184,10 +192,12 @@ public class JSPortletExtender {
 									ManagedService.class.getName(),
 									Portlet.class.getName()
 								},
-								new JSPortlet(name, version), properties);
+								new JSPortlet(name, version, configurationProperty), properties);
 
 						return serviceRegistration;
 					}
+
+
 					catch (Exception e) {
 						_log.error(
 							"Unable to process package.json of " +

@@ -14,29 +14,30 @@
 
 package com.liferay.frontend.js.portlet.extender.internal.portlet;
 
+import aQute.configurable.Configurable;
+import com.liferay.frontend.js.portlet.extender.configuration.PortletExtenderConfiguration;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.util.StringUtil;
-
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
-
 import java.util.Collections;
 import java.util.Dictionary;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
-
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
-
 import org.osgi.service.cm.ConfigurationException;
 import org.osgi.service.cm.ManagedService;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Modified;
 
 /**
  * @author Ray Augé
@@ -44,9 +45,11 @@ import org.osgi.service.cm.ManagedService;
  */
 public class JSPortlet extends MVCPortlet implements ManagedService {
 
-	public JSPortlet(String name, String version) {
+	public JSPortlet(String name, String version, Dictionary<String, Object> configuration) {
 		_name = name;
 		_version = version;
+		_configuration = configuration;
+
 	}
 
 	@Override
@@ -54,6 +57,7 @@ public class JSPortlet extends MVCPortlet implements ManagedService {
 		RenderRequest renderRequest, RenderResponse renderResponse) {
 
 		try {
+
 			PrintWriter printWriter = renderResponse.getWriter();
 
 			String portletElementId =
@@ -89,27 +93,28 @@ public class JSPortlet extends MVCPortlet implements ManagedService {
 	public void updated(Dictionary<String, ?> properties)
 		throws ConfigurationException {
 
-		if (properties == null) {
-			_configuration.set(Collections.emptyMap());
-
-			return;
-		}
-
-		Map<String, String> configuration = new HashMap<>();
-
-		Enumeration<String> keys = properties.keys();
-
-		while (keys.hasMoreElements()) {
-			String key = keys.nextElement();
-
-			if (key.equals("service.pid")) {
-				continue;
-			}
-
-			configuration.put(key, String.valueOf(properties.get(key)));
-		}
-
-		_configuration.set(configuration);
+//
+//		if (properties == null) {
+//			_configuration.set(Collections.emptyMap());
+//
+//			return;
+//		}
+//
+//		Map<String, String> configuration = new HashMap<>();
+//
+//		Enumeration<String> keys = properties.keys();
+//
+//		while (keys.hasMoreElements()) {
+//			String key = keys.nextElement();
+//
+//			if (key.equals("service.pid")) {
+//				continue;
+//			}
+//
+//			configuration.put(key, String.valueOf(properties.get(key)));
+//		}
+//
+//		_configuration.set(configuration);
 	}
 
 	private static String _loadTemplate(String name) {
@@ -131,20 +136,21 @@ public class JSPortlet extends MVCPortlet implements ManagedService {
 	}
 
 	private String _getConfiguration() {
-		Map<String, String> configuration = _configuration.get();
+		Enumeration<String> keys = _configuration.keys();
+		Enumeration<Object> values = _configuration.elements();
 
 		StringBundler sb = new StringBundler();
 
 		sb.append("{");
-
 		String delimiter = "";
 
-		for (Map.Entry<String, String> entry : configuration.entrySet()) {
+		while (keys.hasMoreElements()){
+			String key = keys.nextElement();
 			sb.append(delimiter);
 			sb.append("'");
-			sb.append(_escapeQuotes(entry.getKey()));
+			sb.append(_escapeQuotes(key));
 			sb.append("':'");
-			sb.append(_escapeQuotes(entry.getValue()));
+			sb.append(_escapeQuotes(values.nextElement().toString()));
 			sb.append("'");
 
 			delimiter = ", ";
@@ -166,9 +172,11 @@ public class JSPortlet extends MVCPortlet implements ManagedService {
 		_JAVA_SCRIPT_TPL = _loadTemplate("bootstrap.js.tpl");
 	}
 
-	private final AtomicReference<Map<String, String>> _configuration =
-		new AtomicReference<>();
+	private volatile PortletExtenderConfiguration _portletExtenderConfiguration;
+	private final Dictionary<String, Object> _configuration;
 	private final String _name;
 	private final String _version;
+
+
 
 }
