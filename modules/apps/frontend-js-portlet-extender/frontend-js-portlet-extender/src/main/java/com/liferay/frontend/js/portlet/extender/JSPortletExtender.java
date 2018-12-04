@@ -25,6 +25,8 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.InputStream;
 
 import java.net.URL;
@@ -156,6 +158,8 @@ public class JSPortletExtender {
 					URL jsonURL = bundle.getEntry(
 						"META-INF/resources/package.json");
 
+					File file = new File(bundle.getEntry("META-INF/resources/").getPath() + "configuration.jsp");
+
 					if (jsonURL == null) {
 						return null;
 					}
@@ -193,6 +197,8 @@ public class JSPortletExtender {
 									Portlet.class.getName()
 								},
 								new JSPortlet(name, version, configurationProperty), properties);
+
+						bundleContext.ungetService(serviceRegistration.getReference());
 
 						return serviceRegistration;
 					}

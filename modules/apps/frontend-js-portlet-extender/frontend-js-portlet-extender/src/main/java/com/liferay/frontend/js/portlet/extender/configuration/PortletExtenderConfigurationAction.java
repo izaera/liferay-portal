@@ -49,14 +49,19 @@ public class PortletExtenderConfigurationAction
 			PortletExtenderConfiguration.class.getName(),
 				_portletExtenderConfiguration);
 
-		Dictionary<String, Object> properties = new HashMapDictionary<>();
-		properties.put("config-jsp", "meu-grande-ovo.jsp");
+//		Dictionary<String, Object> properties = new HashMapDictionary<>();
+//		properties.put("config-jsp", "meu-grande-ovo.jsp");
+//		PortletConfigFactory portletConfigFactory = PortletConfigFactoryUtil.getPortletConfigFactory();
+//		String id = PortalUtil.getPortletId(httpServletRequest);
+//		Long longid = PortalUtil.getPlidFromPortletId(PortalUtil.getScopeGroupId(httpServletRequest), id);
+//		PortletConfig pf = portletConfigFactory.create(PortletLocalServiceUtil.getPortlet(longid),httpServletRequest.getServletContext());
 
-		PortletConfigFactory portletConfigFactory = PortletConfigFactoryUtil.getPortletConfigFactory();
-		String id = PortalUtil.getPortletId(httpServletRequest);
-		Long longid = PortalUtil.getPlidFromPortletId(PortalUtil.getScopeGroupId(httpServletRequest), id);
-		PortletConfig pf = portletConfigFactory.create(PortletLocalServiceUtil.getPortlet(longid),httpServletRequest.getServletContext());
-		this.init();
+
+//		httpServletRequest.getParameterMap().put("config-jsp", );
+//		AddaptableHttpServletRequest request = new AddaptableHttpServletRequest(httpServletRequest);
+
+//		request.addParameter("config-jsp","test");
+
 
 		super.include(portletConfig, httpServletRequest, httpServletResponse);
 	}
