@@ -185,10 +185,12 @@ public class JSPortletExtender {
 						properties.put("service.pid", name);
 
 						_addServiceProperties(
-							properties, jsonObject.getJSONObject("portlet"));
+								properties, jsonObject.getJSONObject("portlet").getJSONObject("configuration")
+						);
 
 						_addServiceProperties(
-								configurationProperty, jsonObject.getJSONObject("configuration"));
+								configurationProperty, jsonObject.getJSONObject("portlet").getJSONObject("configuration")
+						);
 
 						ServiceRegistration<?> serviceRegistration =
 							bundleContext.registerService(
