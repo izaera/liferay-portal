@@ -40,44 +40,56 @@ public class PortletExtenderConfigurationAction
 	extends DefaultConfigurationAction {
 
 	@Override
-	public void include(
-			PortletConfig portletConfig, HttpServletRequest httpServletRequest,
-			HttpServletResponse httpServletResponse)
-		throws Exception {
+	  public void include(
+	      PortletConfig portletConfig, HttpServletRequest request,
+	      HttpServletResponse response)
+	      throws Exception {
 
-		httpServletRequest.setAttribute(
-			PortletExtenderConfiguration.class.getName(),
-				_portletExtenderConfiguration);
+	    PortletContext portletContext = portletConfig.getPortletContext();
 
-//		Dictionary<String, Object> properties = new HashMapDictionary<>();
-//		properties.put("config-jsp", "meu-grande-ovo.jsp");
-//		PortletConfigFactory portletConfigFactory = PortletConfigFactoryUtil.getPortletConfigFactory();
-//		String id = PortalUtil.getPortletId(httpServletRequest);
-//		Long longid = PortalUtil.getPlidFromPortletId(PortalUtil.getScopeGroupId(httpServletRequest), id);
-//		PortletConfig pf = portletConfigFactory.create(PortletLocalServiceUtil.getPortlet(longid),httpServletRequest.getServletContext());
+	    ServletContext servletContext = getServletContext(request);
 
+	    ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
 
-//		httpServletRequest.getParameterMap().put("config-jsp", );
-//		AddaptableHttpServletRequest request = new AddaptableHttpServletRequest(httpServletRequest);
+	    PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
 
-//		request.addParameter("config-jsp","test");
+	    PortletConfig ReactPortletConfig = PortalUtil.getPortletConfig(themeDisplay.getCompanyId(), portletDisplay.getPortletResource(), servletContext);
 
+	    RequestDispatcher requestDispatcher2 =
+		servletContext.getRequestDispatcher(getJspPath(request));
 
-		super.include(portletConfig, httpServletRequest, httpServletResponse);
-	}
+	    request.setAttribute(
+		PortletExtenderConfiguration.class.getName(),
+		_portletExtenderConfiguration);
 
-	@Override
-	public void processAction(
-			PortletConfig portletConfig, ActionRequest actionRequest,
-			ActionResponse actionResponse)
-		throws Exception {
+	    //Set Inputs attributes
+	    request.setAttribute("configuration","test");
 
-		String favoriteColor = ParamUtil.getString(actionRequest, "favoriteColor");
+	    RequestDispatcher requestDispatcher = (RequestDispatcher) portletContext
+		.getRequestDispatcher(getJspPath(request));
 
-		setPreference(actionRequest, "favoriteColor", favoriteColor);
+	    try {
+	      requestDispatcher.include(request, response);
+	    } catch (ServletException se) {
+	      throw new IOException(
+		  "Unable to include " + getJspPath(request), se);
+	    }
+	  }
 
-		super.processAction(portletConfig, actionRequest, actionResponse);
-	}
+	 @Override
+	 public void processAction(
+	      PortletConfig portletConfig, ActionRequest actionRequest,
+	      ActionResponse actionResponse)
+	      throws Exception {
+
+	    String favoriteColor = ParamUtil.getString(actionRequest, "favoriteColor");
+	    String favoriteColor3 = ParamUtil.getString(actionRequest, "favoriteColor3");
+
+	    setPreference(actionRequest, "favoriteColor", favoriteColor);
+	    setPreference(actionRequest, "favoriteColor3", favoriteColor3);
+
+	    super.processAction(portletConfig, actionRequest, actionResponse);
+  	}
 
 	@Activate
 	@Modified
