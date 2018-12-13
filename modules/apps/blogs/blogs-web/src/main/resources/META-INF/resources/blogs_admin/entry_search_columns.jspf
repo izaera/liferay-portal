@@ -155,6 +155,7 @@
 </c:choose>
 
 <aui:script>
+
 	<%
 	AssetEntry assetEntry = AssetEntryLocalServiceUtil.getEntry(BlogsEntry.class.getName(), entry.getEntryId());
 	JSONSerializer jsonSerializer = JSONFactoryUtil.createJSONSerializer();

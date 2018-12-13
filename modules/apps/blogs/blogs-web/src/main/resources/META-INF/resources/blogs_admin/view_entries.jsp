@@ -105,15 +105,15 @@ String displayStyle = blogEntriesManagementToolbarDisplayContext.getDisplayStyle
 		<div class="sheet-section" style="background-color:#fff; padding:1rem; margin-bottom: 1rem;">
 			<aui:fieldset id="tableColumns" label="Table Filter and Columns" markupView="lexicon">
 				<div class="form-group-autofit">
-					<aui:input wrapperCssClass="form-group-item" checked="<%= true %>" data="<%= editableTextCellData %>" name="title" type="checkbox" value="title" />
-					<aui:input wrapperCssClass="form-group-item" checked="<%= true %>" name="author" type="checkbox" value="author" />
-					<aui:input wrapperCssClass="form-group-item" checked="<%= true %>" data="<%= editableImageCellData %>" name="coverImageURL" type="checkbox" value="coverImageURL" />
-					<aui:input wrapperCssClass="form-group-item" checked="<%= true %>" data="<%= editableBooleanCellData %>" name="allowPingbacks" type="checkbox" value="allowPingbacks" />
-					<aui:input wrapperCssClass="form-group-item" checked="<%= true %>" data="<%= editableBooleanCellData %>" name="allowTrackbacks" type="checkbox" value="allowTrackbacks" />
+					<aui:input checked="<%= true %>" data="<%= editableTextCellData %>" name="title" type="checkbox" value="title" wrapperCssClass="form-group-item" />
+					<aui:input checked="<%= true %>" name="author" type="checkbox" value="author" wrapperCssClass="form-group-item" />
+					<aui:input checked="<%= true %>" data="<%= editableImageCellData %>" name="coverImageURL" type="checkbox" value="coverImageURL" wrapperCssClass="form-group-item" />
+					<aui:input checked="<%= true %>" data="<%= editableBooleanCellData %>" name="allowPingbacks" type="checkbox" value="allowPingbacks" wrapperCssClass="form-group-item" />
+					<aui:input checked="<%= true %>" data="<%= editableBooleanCellData %>" name="allowTrackbacks" type="checkbox" value="allowTrackbacks" wrapperCssClass="form-group-item" />
 				</div>
 
 				<div class="form-group-autofit">
-					<aui:input wrapperCssClass="form-group-item" name="filter" id="filterInput" />
+					<aui:input id="filterInput" name="filter" wrapperCssClass="form-group-item" />
 				</div>
 			</aui:fieldset>
 		</div>
@@ -148,17 +148,12 @@ String displayStyle = blogEntriesManagementToolbarDisplayContext.getDisplayStyle
 
 			<c:choose>
 				<c:when test='<%= displayStyle.equals("list") %>'>
+
 					<%
 					JSONDeserializer jsonDeserializer = JSONFactoryUtil.createJSONDeserializer();
 					JSONSerializer jsonSerializer = JSONFactoryUtil.createJSONSerializer();
 
-					String emptyResultsMessage = entriesSearchContainer.getEmptyResultsMessage();
-					String emptyResultsMessageCssClass = entriesSearchContainer.getEmptyResultsMessageCssClass();
-					List<String> headerNames = entriesSearchContainer.getHeaderNames();
-					List<String> normalizedHeaderNames = entriesSearchContainer.getNormalizedHeaderNames();
-					Map orderableHeaders = entriesSearchContainer.getOrderableHeaders();
 					List resultRows = entriesSearchContainer.getResultRows();
-					String summary = entriesSearchContainer.getSummary();
 
 					List<ResultRowSplitterEntry> resultRowSplitterEntries = new ArrayList<ResultRowSplitterEntry>();
 
@@ -228,15 +223,15 @@ String displayStyle = blogEntriesManagementToolbarDisplayContext.getDisplayStyle
 					%>
 
 					<soy:component-renderer
-						context="<%= context %>"
 						componentId="myTable"
+						context="<%= context %>"
 						dependencies="<%= customCellRenderers %>"
 						module="clay-table/src/ClayTable"
 						templateNamespace="ClayTable.render"
 					/>
 
 					<liferay-ui:search-paginator
-						id='myTableIteratorBottom'
+						id="myTableIteratorBottom"
 						markupView="lexicon"
 						searchContainer="<%= entriesSearchContainer %>"
 					/>
@@ -311,11 +306,18 @@ String displayStyle = blogEntriesManagementToolbarDisplayContext.getDisplayStyle
 								}
 							);
 					</aui:script>
+
+					<hr>
+					<clay:table
+						tableDisplayContext='<%= (TableDisplayContext)request.getAttribute("tableDisplayContext") %>'
+					/>
+
+					<hr>
 				</c:when>
 				<c:otherwise>
 					<liferay-ui:search-iterator
 						displayStyle="<%= displayStyle %>"
-						markupView="lexicon"
+						markupView="lexicodn"
 					/>
 				</c:otherwise>
 			</c:choose>
