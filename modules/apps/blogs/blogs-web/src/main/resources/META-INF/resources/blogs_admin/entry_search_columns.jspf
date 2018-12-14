@@ -153,3 +153,17 @@
 		/>
 	</c:otherwise>
 </c:choose>
+
+<aui:script>
+	<%
+	AssetEntry assetEntry = AssetEntryLocalServiceUtil.getEntry(BlogsEntry.class.getName(), entry.getEntryId());
+	JSONSerializer jsonSerializer = JSONFactoryUtil.createJSONSerializer();
+	%>
+
+	var entry = <%= jsonSerializer.serialize(entry) %>;
+	entry.views = <%= assetEntry.getViewCount() %>;
+
+	window.items = window.items || [];
+
+	window.items.push(entry);
+</aui:script>
