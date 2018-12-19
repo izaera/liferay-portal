@@ -72,6 +72,7 @@ import com.liferay.journal.util.JournalConverter;
 import com.liferay.journal.util.JournalHelper;
 import com.liferay.journal.web.asset.JournalArticleAssetRenderer;
 import com.liferay.journal.web.configuration.JournalWebConfiguration;
+import com.liferay.journal.web.internal.display.context.JournalTableDisplayContext;
 import com.liferay.journal.web.internal.portlet.action.ActionUtil;
 import com.liferay.journal.web.util.JournalPortletUtil;
 import com.liferay.journal.web.util.JournalUtil;
@@ -500,6 +501,10 @@ public class JournalPortlet extends MVCPortlet {
 
 		renderRequest.setAttribute(
 			JournalWebKeys.JOURNAL_CONVERTER, _journalConverter);
+
+		renderRequest.setAttribute(
+			"tableDisplayContext",
+			new JournalTableDisplayContext(renderRequest));
 
 		super.render(renderRequest, renderResponse);
 	}
