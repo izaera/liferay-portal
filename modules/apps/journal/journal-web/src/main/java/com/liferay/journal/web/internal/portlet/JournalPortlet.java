@@ -32,10 +32,10 @@ import com.liferay.dynamic.data.mapping.storage.Fields;
 import com.liferay.dynamic.data.mapping.util.DDMTemplateHelper;
 import com.liferay.dynamic.data.mapping.util.DDMUtil;
 import com.liferay.exportimport.kernel.exception.ExportImportContentValidationException;
+import com.liferay.frontend.taglib.soy.servlet.taglib.util.SoyRenderer;
 import com.liferay.item.selector.ItemSelector;
 import com.liferay.journal.configuration.JournalFileUploadsConfiguration;
 import com.liferay.journal.constants.JournalPortletKeys;
-import com.liferay.journal.constants.JournalWebKeys;
 import com.liferay.journal.exception.ArticleContentException;
 import com.liferay.journal.exception.ArticleContentSizeException;
 import com.liferay.journal.exception.ArticleDisplayDateException;
@@ -101,6 +101,7 @@ import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.servlet.SessionMessages;
+import com.liferay.portal.kernel.template.TemplateException;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.upload.LiferayFileItemException;
 import com.liferay.portal.kernel.upload.UploadException;
@@ -109,10 +110,12 @@ import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.Http;
+import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -143,6 +146,7 @@ import javax.portlet.PortletException;
 import javax.portlet.PortletPreferences;
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletRequestDispatcher;
+import javax.portlet.PortletResponse;
 import javax.portlet.PortletSession;
 import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
@@ -474,7 +478,34 @@ public class JournalPortlet extends MVCPortlet {
 			RenderRequest renderRequest, RenderResponse renderResponse)
 		throws IOException, PortletException {
 
-		renderRequest.setAttribute(TrashWebKeys.TRASH_HELPER, _trashHelper);
+		PortletRequest portletRequest =
+			(PortletRequest)renderRequest.getAttribute(
+				JavaConstants.JAVAX_PORTLET_REQUEST);
+
+		HttpServletRequest request = PortalUtil.getHttpServletRequest(
+			portletRequest);
+
+		PortletResponse portletResponse =
+			(PortletResponse)renderRequest.getAttribute(
+				JavaConstants.JAVAX_PORTLET_RESPONSE);
+
+		HttpServletResponse response = PortalUtil.getHttpServletResponse(
+			portletResponse);
+
+		Map<String, Object> context = new HashMap<>();
+
+		context.put("body", "Perico alert!");
+		context.put("dismissible", true);
+
+		try {
+			_soyRenderer.renderSoy(
+				request, response, "liferay.frontend.Alert.render", context);
+		}
+		catch (TemplateException te) {
+			throw new IOException(te);
+		}
+
+		/*renderRequest.setAttribute(TrashWebKeys.TRASH_HELPER, _trashHelper);
 
 		String path = getPath(renderRequest, renderResponse);
 
@@ -502,6 +533,8 @@ public class JournalPortlet extends MVCPortlet {
 			JournalWebKeys.JOURNAL_CONVERTER, _journalConverter);
 
 		super.render(renderRequest, renderResponse);
+
+*/
 	}
 
 	public void restoreTrashEntries(
@@ -1596,6 +1629,9 @@ public class JournalPortlet extends MVCPortlet {
 
 	@Reference
 	private Portal _portal;
+
+	@Reference
+	private SoyRenderer _soyRenderer;
 
 	@Reference
 	private TrashEntryService _trashEntryService;
