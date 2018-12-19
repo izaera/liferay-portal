@@ -26,6 +26,21 @@ String displayStyle = journalDisplayContext.getDisplayStyle();
 String searchContainerId = ParamUtil.getString(request, "searchContainerId");
 %>
 
+<%
+if (displayStyle.equals("list")) {
+%>
+
+	<hr>
+	<clay:table
+		tableDisplayContext='<%= (TableDisplayContext)request.getAttribute("tableDisplayContext") %>'
+	/>
+
+	<hr>
+
+<%
+}
+%>
+
 <liferay-ui:search-container
 	emptyResultsMessage="no-web-content-was-found"
 	id="<%= searchContainerId %>"

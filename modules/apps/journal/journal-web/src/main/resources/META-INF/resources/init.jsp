@@ -67,6 +67,7 @@ page import="com.liferay.dynamic.data.mapping.service.DDMTemplateServiceUtil" %>
 page import="com.liferay.dynamic.data.mapping.validator.DDMFormLayoutValidationException" %><%@
 page import="com.liferay.dynamic.data.mapping.validator.DDMFormValidationException" %><%@
 page import="com.liferay.exportimport.kernel.exception.ExportImportContentValidationException" %><%@
+page import="com.liferay.frontend.taglib.clay.servlet.taglib.display.context.TableDisplayContext" %><%@
 page import="com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem" %><%@
 page import="com.liferay.frontend.taglib.clay.servlet.taglib.util.JSPDropdownItemList" %><%@
 page import="com.liferay.frontend.taglib.clay.servlet.taglib.util.JSPNavigationItemList" %><%@
