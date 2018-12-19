@@ -14,11 +14,9 @@
 
 package com.liferay.frontend.js.portlet.extender.internal.portlet;
 
-import aQute.configurable.Configurable;
-import com.liferay.frontend.js.portlet.extender.configuration.PortletExtenderConfiguration;
-import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
@@ -32,151 +30,132 @@ import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
+import javax.portlet.PortletPreferences;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 import org.osgi.service.cm.ConfigurationException;
 import org.osgi.service.cm.ManagedService;
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Modified;
 
 /**
  * @author Ray Augé
  * @author Iván Zaera Avellón
+ * @author Gustavo Mantuan
  */
 public class JSPortlet extends MVCPortlet implements ManagedService {
 
-	public JSPortlet(String name, String version, Dictionary<String, Object> configuration) {
-		_name = name;
-		_version = version;
-		_configuration = configuration;
+  public JSPortlet(String name, String version) {
+    _name = name;
+    _version = version;
+  }
 
-	}
+  @Override
+  public void render(
+      RenderRequest renderRequest, RenderResponse renderResponse) {
 
-	@Override
-	public void render(
-		RenderRequest renderRequest, RenderResponse renderResponse) {
+    try {
+      PrintWriter printWriter = renderResponse.getWriter();
 
-		try {
+      String portletElementId =
+          "js-portlet-" + renderResponse.getNamespace();
 
-			PrintWriter printWriter = renderResponse.getWriter();
+      printWriter.print(
+          StringUtil.replace(
+              _HTML_TPL, new String[]{"[$PORTLET_ELEMENT_ID$]"},
+              new String[]{portletElementId}));
 
-			String portletElementId =
-				"js-portlet-" + renderResponse.getNamespace();
+      printWriter.print(
+          StringUtil.replace(
+              _JAVA_SCRIPT_TPL,
+              new String[]{
+                  "[$CONFIGURATION]", "[$CONTEXT_PATH$]",
+                  "[$PORTLET_ELEMENT_ID$]", "[$PORTLET_NAMESPACE$]",
+                  "[$PACKAGE_NAME$]", "[$PACKAGE_VERSION$]"
+              },
+              new String[]{
+                  _getConfiguration(renderRequest.getPreferences()), renderRequest.getContextPath(),
+                  portletElementId, renderResponse.getNamespace(), _name,
+                  _version
+              }));
 
-			printWriter.print(
-				StringUtil.replace(
-					_HTML_TPL, new String[] {"[$PORTLET_ELEMENT_ID$]"},
-					new String[] {portletElementId}));
+      printWriter.flush();
+    } catch (IOException ioe) {
+      _log.error("Unable to render HTML output", ioe);
+    }
+  }
 
-			printWriter.print(
-				StringUtil.replace(
-					_JAVA_SCRIPT_TPL,
-					new String[] {
-						"[$CONFIGURATION]", "[$CONTEXT_PATH$]",
-						"[$PORTLET_ELEMENT_ID$]", "[$PORTLET_NAMESPACE$]",
-						"[$PACKAGE_NAME$]", "[$PACKAGE_VERSION$]"
-					},
-					new String[] {
-						_getConfiguration(), renderRequest.getContextPath(),
-						portletElementId, renderResponse.getNamespace(), _name,
-						_version
-					}));
+  @Override
+  public void updated(Dictionary<String, ?> properties)
+      throws ConfigurationException {
 
-			printWriter.flush();
-		}
-		catch (IOException ioe) {
-			_log.error("Unable to render HTML output", ioe);
-		}
-	}
+    if (properties == null) {
+      _configuration.set(Collections.emptyMap());
 
-	@Override
-	public void updated(Dictionary<String, ?> properties)
-		throws ConfigurationException {
+      return;
+    }
 
-//
-//		if (properties == null) {
-//			_configuration.set(Collections.emptyMap());
-//
-//			return;
-//		}
-//
-//		Map<String, String> configuration = new HashMap<>();
-//
-//		Enumeration<String> keys = properties.keys();
-//
-//		while (keys.hasMoreElements()) {
-//			String key = keys.nextElement();
-//
-//			if (key.equals("service.pid")) {
-//				continue;
-//			}
-//
-//			configuration.put(key, String.valueOf(properties.get(key)));
-//		}
-//
-//		_configuration.set(configuration);
-	}
+    Map<String, String> configuration = new HashMap<>();
 
-	private static String _loadTemplate(String name) {
-		InputStream inputStream = JSPortlet.class.getResourceAsStream(
-			"dependencies/" + name);
+    Enumeration<String> keys = properties.keys();
 
-		try {
-			return StringUtil.read(inputStream);
-		}
-		catch (Exception e) {
-			_log.error("Unable to read template " + name, e);
-		}
+    while (keys.hasMoreElements()) {
+      String key = keys.nextElement();
 
-		return StringPool.BLANK;
-	}
+      if (key.equals("service.pid")) {
+        continue;
+      }
 
-	private String _escapeQuotes(String value) {
-		return value.replaceAll("'", "\\'");
-	}
+      configuration.put(key, String.valueOf(properties.get(key)));
+    }
+  }
 
-	private String _getConfiguration() {
-		Enumeration<String> keys = _configuration.keys();
-		Enumeration<Object> values = _configuration.elements();
+  private String _escapeQuotes(String value) {
+    return value.replaceAll("'", "\\'");
+  }
 
-		StringBundler sb = new StringBundler();
+  private String _getConfiguration(PortletPreferences portletPreferences) {
+    Enumeration<String> preferencesNames = portletPreferences.getNames();
+    JSONObject jsonPreferences = JSONFactoryUtil.createJSONObject();
 
-		sb.append("{");
-		String delimiter = "";
+    while (preferencesNames.hasMoreElements()) {
+      String key = preferencesNames.nextElement();
+      if (portletPreferences.getValues(key, new String[]{""}).length != 1){
+        jsonPreferences.put(key, portletPreferences.getValues(key, new String[]{""}));
+      } else {
+        jsonPreferences.put(key, portletPreferences.getValue(key, ""));
+      }
+    }
 
-		while (keys.hasMoreElements()){
-			String key = keys.nextElement();
-			sb.append(delimiter);
-			sb.append("'");
-			sb.append(_escapeQuotes(key));
-			sb.append("':'");
-			sb.append(_escapeQuotes(values.nextElement().toString()));
-			sb.append("'");
+    return jsonPreferences.toJSONString();
+  }
 
-			delimiter = ", ";
-		}
+  private static String _loadTemplate(String name) {
+    InputStream inputStream = JSPortlet.class.getResourceAsStream(
+        "dependencies/" + name);
 
-		sb.append("}");
+    try {
+      return StringUtil.read(inputStream);
+    } catch (Exception e) {
+      _log.error("Unable to read template " + name, e);
+    }
 
-		return sb.toString();
-	}
+    return StringPool.BLANK;
+  }
 
-	private static final String _HTML_TPL;
+  static {
+    _HTML_TPL = _loadTemplate("bootstrap.html.tpl");
+    _JAVA_SCRIPT_TPL = _loadTemplate("bootstrap.js.tpl");
+  }
 
-	private static final String _JAVA_SCRIPT_TPL;
+  private static final String _HTML_TPL;
 
-	private static final Log _log = LogFactoryUtil.getLog(JSPortlet.class);
+  private static final String _JAVA_SCRIPT_TPL;
 
-	static {
-		_HTML_TPL = _loadTemplate("bootstrap.html.tpl");
-		_JAVA_SCRIPT_TPL = _loadTemplate("bootstrap.js.tpl");
-	}
+  private static final Log _log = LogFactoryUtil.getLog(JSPortlet.class);
 
-	private volatile PortletExtenderConfiguration _portletExtenderConfiguration;
-	private final Dictionary<String, Object> _configuration;
-	private final String _name;
-	private final String _version;
+  private final AtomicReference<Map<String, String[]>> _configuration =
+      new AtomicReference<>();
 
+  private final String _name;
 
-
+  private final String _version;
 }
