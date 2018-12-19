@@ -1,101 +1,192 @@
 package com.liferay.frontend.js.portlet.extender.configuration;
 
-import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
-import com.liferay.portal.kernel.portlet.ConfigurationAction;
+import com.liferay.frontend.js.portlet.extender.internal.portlet.JSPortlet;
+import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.DefaultConfigurationAction;
+import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.theme.PortletDisplay;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
-import java.io.IOException;
-import java.util.Map;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.Collection;
+import java.util.Dictionary;
+import java.util.Iterator;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletConfig;
 import javax.portlet.PortletContext;
-import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
+import javax.portlet.PortletMode;
+import javax.portlet.PortletPreferences;
+import javax.portlet.RenderRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.ConfigurationPolicy;
-import org.osgi.service.component.annotations.Modified;
+import org.osgi.service.cm.ConfigurationException;
+import org.osgi.service.cm.ManagedService;
 
 /**
- * @author Douglas Prandini
+ * @author Gustavo Mantuan
  */
-@Component(
-	configurationPid = "PortletExtenderConfiguration",
-	configurationPolicy = ConfigurationPolicy.OPTIONAL, immediate = true,
-	property = {"javax.portlet.name=" + "ReactPortlet"},
-	service = ConfigurationAction.class
-)
+
 public class PortletExtenderConfigurationAction
-	extends DefaultConfigurationAction {
+    extends DefaultConfigurationAction
+    implements ManagedService
+{
 
-	@Override
-	  public void include(
-	      PortletConfig portletConfig, HttpServletRequest request,
-	      HttpServletResponse response)
-	      throws Exception {
+  public PortletExtenderConfigurationAction(String name) {
+    _name = name;
+  }
 
-	    PortletContext portletContext = portletConfig.getPortletContext();
+  @Override
+  public void include(
+      PortletConfig portletConfig, HttpServletRequest request,
+      HttpServletResponse response)
+      throws Exception {
 
-	    ServletContext servletContext = getServletContext(request);
+    ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+    PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
 
-	    ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+    JSONObject jsonValues = JSONFactoryUtil.createJSONObject();
 
-	    PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
+    try (InputStream configurationStream = getServletContext(request)
+        .getResourceAsStream("META-INF/resources/configuration.json")) {
 
-	    PortletConfig ReactPortletConfig = PortalUtil.getPortletConfig(themeDisplay.getCompanyId(), portletDisplay.getPortletResource(), servletContext);
+      String configurationString = StringUtil.read(configurationStream);
+      JSONObject jsonObject = JSONFactoryUtil.createJSONObject(configurationString);
 
-	    RequestDispatcher requestDispatcher2 =
-		servletContext.getRequestDispatcher(getJspPath(request));
+      request.setAttribute(_CONFIGURATION, jsonObject);
 
-	    request.setAttribute(
-		PortletExtenderConfiguration.class.getName(),
-		_portletExtenderConfiguration);
+      PortletPreferences portletPreferences = PortletPreferencesFactoryUtil
+          .getExistingPortletSetup(themeDisplay.getLayout(), portletDisplay.getPortletResource());
+      portletPreferences.getMap().forEach((key, value) -> {
+        jsonValues.put(key, value);
+      });
 
-	    //Set Inputs attributes
-	    request.setAttribute("configuration","test");
+      generateConfigurationFormFieldsByJson(portletDisplay, jsonObject, jsonValues, portletDisplay.getNamespace(),
+          response.getWriter(), portletDisplay.getURLConfiguration().split("=")[0]);
 
-	    RequestDispatcher requestDispatcher = (RequestDispatcher) portletContext
-		.getRequestDispatcher(getJspPath(request));
+    } catch (Exception e) {
+      _log.error(
+          "Unable to process configuration.json of " +
+              portletDisplay.getPortletResource(),
+          e);
+    }
+  }
 
-	    try {
-	      requestDispatcher.include(request, response);
-	    } catch (ServletException se) {
-	      throw new IOException(
-		  "Unable to include " + getJspPath(request), se);
-	    }
-	  }
+  @Override
+  public void processAction(
+      PortletConfig portletConfig, ActionRequest actionRequest,
+      ActionResponse actionResponse)
+      throws Exception {
 
-	 @Override
-	 public void processAction(
-	      PortletConfig portletConfig, ActionRequest actionRequest,
-	      ActionResponse actionResponse)
-	      throws Exception {
+    String configuration = ParamUtil.getString(actionRequest, _CONFIGURATION);
 
-	    String favoriteColor = ParamUtil.getString(actionRequest, "favoriteColor");
-	    String favoriteColor3 = ParamUtil.getString(actionRequest, "favoriteColor3");
+    JSONObject jsonObject = JSONFactoryUtil
+        .createJSONObject(configuration.substring(1, configuration.length()));
 
-	    setPreference(actionRequest, "favoriteColor", favoriteColor);
-	    setPreference(actionRequest, "favoriteColor3", favoriteColor3);
+    Iterator<String> keys = jsonObject.keys();
 
-	    super.processAction(portletConfig, actionRequest, actionResponse);
-  	}
+    while (keys.hasNext()) {
+      String key = keys.next();
+      Object value = jsonObject.get(key);
 
-	@Activate
-	@Modified
-	protected void activate(Map<Object, Object> properties) {
-		_portletExtenderConfiguration = ConfigurableUtil.createConfigurable(
-				PortletExtenderConfiguration.class, properties);
-	}
+      if (value instanceof JSONObject) {
+        String type = ((JSONObject) value).getString("type", "text");
 
-	private volatile PortletExtenderConfiguration
-			_portletExtenderConfiguration;
+        if ("select".equals(type) || "radio".equals(type) || "checkbox".equals(type)) {
+          String[] parameterValues = ParamUtil.getParameterValues(actionRequest, key);
+          setPreference(actionRequest, key, parameterValues);
+        } else {
+          setPreference(actionRequest, key, ParamUtil.getString(actionRequest, key));
+        }
 
+      }
+    }
+
+    super.processAction(portletConfig, actionRequest, actionResponse);
+  }
+
+  @Override
+  public void updated(Dictionary<String, ?> dictionary) throws ConfigurationException {}
+
+  @Override
+  protected Collection<PortletMode> getNextPossiblePortletModes(RenderRequest request) {
+    return super.getNextPossiblePortletModes(request);
+  }
+
+  private static String _loadTemplate(String name) {
+    InputStream inputStream = JSPortlet.class.getResourceAsStream(
+        "dependencies/" + name);
+
+    try {
+      return StringUtil.read(inputStream);
+    } catch (Exception e) {
+      _log.error("Unable to read template " + name, e);
+    }
+
+    return StringPool.BLANK;
+  }
+
+  private String appendPortletName(String portletName, String whatToAppend) {
+    return portletName + whatToAppend;
+  }
+
+  private void generateConfigurationFormFieldsByJson(PortletDisplay portletDisplay, JSONObject jsonObject,
+      JSONObject jsonValues, String portletName, PrintWriter printWriter, String urlConfiguration) {
+    printWriter.println(String.format("<form class='form' method='post' id=\"%s\" name=\"%s\" "
+            + "data-fm-namespace=\"%s\">",
+        appendPortletName(portletName, "fm"),
+        appendPortletName(portletName, "fm"),
+        portletName));
+
+    printWriter.println(String.format("<input class=\"field form-control\" "
+            + "id=\"%s\" name=\"%s\" type=\"hidden\" value=\"%s\"/>",
+        appendPortletName(portletName, _FORM_DATA),
+        appendPortletName(portletName, _FORM_DATA),
+        System.currentTimeMillis()
+    ));
+
+    printWriter.println(String.format("<input class=\"field form-control\" "
+            + "id=\"%s\" name=\"%s\" type=\"hidden\" value='\"%s\"'/>",
+        appendPortletName(portletName, _CONFIGURATION),
+        appendPortletName(portletName, _CONFIGURATION),
+        jsonObject.toString()
+    ));
+
+    printWriter.println(String.format("<input class=\"field form-control\" "
+            + "id=\"%s\" name=\"%s\" type=\"hidden\" value=\"%s\"/>",
+        appendPortletName(portletName, Constants.CMD),
+        appendPortletName(portletName, Constants.CMD),
+        Constants.UPDATE
+    ));
+
+    printWriter.println(
+        StringUtil.replace(
+            _CONFIGURATION_TPL,
+            new String[]{"$PORTLET_ID", "$OBJECT_CONFIGURATION", "$OBJECT_VALUES", "$INSTANCE", "$URL_CONFIGURATION"},
+            new String[]{portletName, jsonObject.toJSONString(), jsonValues.toJSONString(),
+                portletDisplay.getPortletResource(), urlConfiguration}));
+
+    printWriter.println("</form>");
+    printWriter.flush();
+  }
+
+  static {
+    _CONFIGURATION_TPL = _loadTemplate("configuration.html.tpl");
+  }
+
+  private static final String _CONFIGURATION = "configurationObject";
+  private static final String _FORM_DATA = "formDate";
+  private static final String _CONFIGURATION_TPL;
+
+  private static final Log _log = LogFactoryUtil.getLog(PortletExtenderConfigurationAction.class);
+
+  private final String _name;
 }
