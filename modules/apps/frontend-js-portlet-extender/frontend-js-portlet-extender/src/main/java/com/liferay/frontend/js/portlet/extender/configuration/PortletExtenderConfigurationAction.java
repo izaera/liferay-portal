@@ -139,12 +139,13 @@ public class PortletExtenderConfigurationAction
   }
 
   private void generateConfigurationFormFieldsByJson(PortletDisplay portletDisplay, JSONObject jsonObject,
-      JSONObject jsonValues, String portletName, PrintWriter printWriter, String urlConfiguration) {
-    printWriter.println(String.format("<form class='form' method='post' id=\"%s\" name=\"%s\" "
-            + "data-fm-namespace=\"%s\">",
-        appendPortletName(portletName, "fm"),
-        appendPortletName(portletName, "fm"),
-        portletName));
+    JSONObject jsonValues, String portletName, PrintWriter printWriter, String urlConfiguration) {
+    printWriter.println(String.format("<form class='form container container-no-gutters-sm-down container-view' "
+             + "method='post' id=\"%s\" name=\"%s\" "
+             + "data-fm-namespace=\"%s\">",
+         appendPortletName(portletName, "fm"),
+         appendPortletName(portletName, "fm"),
+         portletName));
 
     printWriter.println(String.format("<input class=\"field form-control\" "
             + "id=\"%s\" name=\"%s\" type=\"hidden\" value=\"%s\"/>",
