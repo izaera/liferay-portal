@@ -1,8 +1,0 @@
-{
-	"create-jar": {
-		"auto-deploy-portlet": true,
-		"web-context-path": "/ReactPortlet",
-		"output-dir": "dist"
-	},
-	"dump-report": true
-}
