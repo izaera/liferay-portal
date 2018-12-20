@@ -14,180 +14,208 @@ import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
-import java.io.InputStream;
-import java.io.PrintWriter;
-import java.util.Collection;
-import java.util.Dictionary;
-import java.util.Iterator;
+import org.osgi.service.cm.ConfigurationException;
+import org.osgi.service.cm.ManagedService;
+
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 import javax.portlet.PortletConfig;
-import javax.portlet.PortletContext;
 import javax.portlet.PortletMode;
 import javax.portlet.PortletPreferences;
 import javax.portlet.RenderRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import org.osgi.service.cm.ConfigurationException;
-import org.osgi.service.cm.ManagedService;
+import java.io.InputStream;
+import java.io.PrintWriter;
+import java.util.Collection;
+import java.util.Dictionary;
+import java.util.Iterator;
 
 /**
  * @author Gustavo Mantuan
  */
 
 public class PortletExtenderConfigurationAction
-    extends DefaultConfigurationAction
-    implements ManagedService
-{
+	extends DefaultConfigurationAction
+	implements ManagedService {
 
-  public PortletExtenderConfigurationAction(String name) {
-    _name = name;
-  }
+	private static final String _CONFIGURATION = "configurationObject";
+	private static final String _FORM_DATA = "formDate";
+	private static final String _CONFIGURATION_TPL;
+	private static final Log _log =
+		LogFactoryUtil.getLog(PortletExtenderConfigurationAction.class);
 
-  @Override
-  public void include(
-      PortletConfig portletConfig, HttpServletRequest request,
-      HttpServletResponse response)
-      throws Exception {
+	static {
+		_CONFIGURATION_TPL = _loadTemplate("configuration.html.tpl");
+	}
 
-    ThemeDisplay themeDisplay = (ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
-    PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
+	private final String _name;
 
-    JSONObject jsonValues = JSONFactoryUtil.createJSONObject();
+	public PortletExtenderConfigurationAction(String name) {
+		_name = name;
+	}
 
-    try (InputStream configurationStream = getServletContext(request)
-        .getResourceAsStream("META-INF/resources/configuration.json")) {
+	private static String _loadTemplate(String name) {
+		InputStream inputStream = JSPortlet.class.getResourceAsStream(
+			"dependencies/" + name);
 
-      String configurationString = StringUtil.read(configurationStream);
-      JSONObject jsonObject = JSONFactoryUtil.createJSONObject(configurationString);
+		try {
+			return StringUtil.read(inputStream);
+		}
+		catch (Exception e) {
+			_log.error("Unable to read template " + name, e);
+		}
 
-      request.setAttribute(_CONFIGURATION, jsonObject);
+		return StringPool.BLANK;
+	}
 
-      PortletPreferences portletPreferences = PortletPreferencesFactoryUtil
-          .getExistingPortletSetup(themeDisplay.getLayout(), portletDisplay.getPortletResource());
-      portletPreferences.getMap().forEach((key, value) -> {
-        jsonValues.put(key, value);
-      });
+	@Override
+	public void include(
+		PortletConfig portletConfig, HttpServletRequest request,
+		HttpServletResponse response)
+		throws Exception {
 
-      generateConfigurationFormFieldsByJson(portletDisplay, jsonObject, jsonValues, portletDisplay.getNamespace(),
-          response.getWriter(), portletDisplay.getURLConfiguration().split("=")[0]);
+		ThemeDisplay themeDisplay =
+			(ThemeDisplay) request.getAttribute(WebKeys.THEME_DISPLAY);
+		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
 
-    } catch (Exception e) {
-      _log.error(
-          "Unable to process configuration.json of " +
-              portletDisplay.getPortletResource(),
-          e);
-    }
-  }
+		JSONObject jsonValues = JSONFactoryUtil.createJSONObject();
 
-  @Override
-  public void processAction(
-      PortletConfig portletConfig, ActionRequest actionRequest,
-      ActionResponse actionResponse)
-      throws Exception {
+		try (InputStream configurationStream = getServletContext(request)
+			.getResourceAsStream("META-INF/resources/configuration.json")) {
 
-    String configuration = ParamUtil.getString(actionRequest, _CONFIGURATION);
+			String configurationString = StringUtil.read(configurationStream);
+			JSONObject jsonObject =
+				JSONFactoryUtil.createJSONObject(configurationString);
 
-    JSONObject jsonObject = JSONFactoryUtil
-        .createJSONObject(configuration.substring(1, configuration.length()));
+			request.setAttribute(_CONFIGURATION, jsonObject);
 
-    Iterator<String> keys = jsonObject.keys();
+			PortletPreferences portletPreferences =
+				PortletPreferencesFactoryUtil
+					.getExistingPortletSetup(
+						themeDisplay.getLayout(),
+						portletDisplay.getPortletResource());
+			portletPreferences.getMap().forEach((key, value) -> {
+				jsonValues.put(key, value);
+			});
 
-    while (keys.hasNext()) {
-      String key = keys.next();
-      Object value = jsonObject.get(key);
+			generateConfigurationFormFieldsByJson(portletDisplay, jsonObject,
+				jsonValues, portletDisplay.getNamespace(),
+				response.getWriter(),
+				portletDisplay.getURLConfiguration().split("=")[0]);
 
-      if (value instanceof JSONObject) {
-        String type = ((JSONObject) value).getString("type", "text");
+		}
+		catch (Exception e) {
+			_log.error(
+				"Unable to process configuration.json of " +
+				portletDisplay.getPortletResource(),
+				e);
+		}
+	}
 
-        if ("select".equals(type) || "radio".equals(type) || "checkbox".equals(type)) {
-          String[] parameterValues = ParamUtil.getParameterValues(actionRequest, key);
-          setPreference(actionRequest, key, parameterValues);
-        } else {
-          setPreference(actionRequest, key, ParamUtil.getString(actionRequest, key));
-        }
+	@Override
+	public void processAction(
+		PortletConfig portletConfig, ActionRequest actionRequest,
+		ActionResponse actionResponse)
+		throws Exception {
 
-      }
-    }
+		String configuration =
+			ParamUtil.getString(actionRequest, _CONFIGURATION);
 
-    super.processAction(portletConfig, actionRequest, actionResponse);
-  }
+		JSONObject jsonObject = JSONFactoryUtil
+			.createJSONObject(
+				configuration.substring(1, configuration.length()));
 
-  @Override
-  public void updated(Dictionary<String, ?> dictionary) throws ConfigurationException {}
+		Iterator<String> keys = jsonObject.keys();
 
-  @Override
-  protected Collection<PortletMode> getNextPossiblePortletModes(RenderRequest request) {
-    return super.getNextPossiblePortletModes(request);
-  }
+		while (keys.hasNext()) {
+			String key = keys.next();
+			Object value = jsonObject.get(key);
 
-  private static String _loadTemplate(String name) {
-    InputStream inputStream = JSPortlet.class.getResourceAsStream(
-        "dependencies/" + name);
+			if (value instanceof JSONObject) {
+				String type = ((JSONObject) value).getString("type", "text");
 
-    try {
-      return StringUtil.read(inputStream);
-    } catch (Exception e) {
-      _log.error("Unable to read template " + name, e);
-    }
+				if ("select".equals(type) || "radio".equals(type) ||
+					"checkbox".equals(type)) {
+					String[] parameterValues =
+						ParamUtil.getParameterValues(actionRequest, key);
+					setPreference(actionRequest, key, parameterValues);
+				}
+				else {
+					setPreference(
+						actionRequest, key,
+						ParamUtil.getString(actionRequest, key));
+				}
 
-    return StringPool.BLANK;
-  }
+			}
+		}
 
-  private String appendPortletName(String portletName, String whatToAppend) {
-    return portletName + whatToAppend;
-  }
+		super.processAction(portletConfig, actionRequest, actionResponse);
+	}
 
-  private void generateConfigurationFormFieldsByJson(PortletDisplay portletDisplay, JSONObject jsonObject,
-    JSONObject jsonValues, String portletName, PrintWriter printWriter, String urlConfiguration) {
-    printWriter.println(String.format("<form class='form container container-no-gutters-sm-down container-view' "
-             + "method='post' id=\"%s\" name=\"%s\" "
-             + "data-fm-namespace=\"%s\">",
-         appendPortletName(portletName, "fm"),
-         appendPortletName(portletName, "fm"),
-         portletName));
+	@Override
+	public void updated(Dictionary<String, ?> dictionary)
+		throws ConfigurationException {
+	}
 
-    printWriter.println(String.format("<input class=\"field form-control\" "
-            + "id=\"%s\" name=\"%s\" type=\"hidden\" value=\"%s\"/>",
-        appendPortletName(portletName, _FORM_DATA),
-        appendPortletName(portletName, _FORM_DATA),
-        System.currentTimeMillis()
-    ));
+	@Override
+	protected Collection<PortletMode> getNextPossiblePortletModes(
+		RenderRequest request) {
+		return super.getNextPossiblePortletModes(request);
+	}
 
-    printWriter.println(String.format("<input class=\"field form-control\" "
-            + "id=\"%s\" name=\"%s\" type=\"hidden\" value='\"%s\"'/>",
-        appendPortletName(portletName, _CONFIGURATION),
-        appendPortletName(portletName, _CONFIGURATION),
-        jsonObject.toString()
-    ));
+	private String appendPortletName(String portletName, String whatToAppend) {
+		return portletName + whatToAppend;
+	}
 
-    printWriter.println(String.format("<input class=\"field form-control\" "
-            + "id=\"%s\" name=\"%s\" type=\"hidden\" value=\"%s\"/>",
-        appendPortletName(portletName, Constants.CMD),
-        appendPortletName(portletName, Constants.CMD),
-        Constants.UPDATE
-    ));
+	private void generateConfigurationFormFieldsByJson(
+		PortletDisplay portletDisplay, JSONObject jsonObject,
+		JSONObject jsonValues, String portletName, PrintWriter printWriter,
+		String urlConfiguration) {
+		printWriter.println(String.format(
+			"<form class='form container container-no-gutters-sm-down container-view' "
+			+ "method='post' id=\"%s\" name=\"%s\" "
+			+ "data-fm-namespace=\"%s\">",
+			appendPortletName(portletName, "fm"),
+			appendPortletName(portletName, "fm"),
+			portletName));
 
-    printWriter.println(
-        StringUtil.replace(
-            _CONFIGURATION_TPL,
-            new String[]{"$PORTLET_ID", "$OBJECT_CONFIGURATION", "$OBJECT_VALUES", "$INSTANCE", "$URL_CONFIGURATION"},
-            new String[]{portletName, jsonObject.toJSONString(), jsonValues.toJSONString(),
-                portletDisplay.getPortletResource(), urlConfiguration}));
+		printWriter.println(String.format(
+			"<input class=\"field form-control\" "
+			+ "id=\"%s\" name=\"%s\" type=\"hidden\" value=\"%s\"/>",
+			appendPortletName(portletName, _FORM_DATA),
+			appendPortletName(portletName, _FORM_DATA),
+			System.currentTimeMillis()
+		));
 
-    printWriter.println("</form>");
-    printWriter.flush();
-  }
+		printWriter.println(String.format(
+			"<input class=\"field form-control\" "
+			+ "id=\"%s\" name=\"%s\" type=\"hidden\" value='\"%s\"'/>",
+			appendPortletName(portletName, _CONFIGURATION),
+			appendPortletName(portletName, _CONFIGURATION),
+			jsonObject.toString()
+		));
 
-  static {
-    _CONFIGURATION_TPL = _loadTemplate("configuration.html.tpl");
-  }
+		printWriter.println(String.format(
+			"<input class=\"field form-control\" "
+			+ "id=\"%s\" name=\"%s\" type=\"hidden\" value=\"%s\"/>",
+			appendPortletName(portletName, Constants.CMD),
+			appendPortletName(portletName, Constants.CMD),
+			Constants.UPDATE
+		));
 
-  private static final String _CONFIGURATION = "configurationObject";
-  private static final String _FORM_DATA = "formDate";
-  private static final String _CONFIGURATION_TPL;
+		printWriter.println(
+			StringUtil.replace(
+				_CONFIGURATION_TPL,
+				new String[]{
+					"$PORTLET_ID", "$OBJECT_CONFIGURATION", "$OBJECT_VALUES",
+					"$INSTANCE", "$URL_CONFIGURATION"},
+				new String[]{
+					portletName, jsonObject.toJSONString(),
+					jsonValues.toJSONString(),
+					portletDisplay.getPortletResource(), urlConfiguration}));
 
-  private static final Log _log = LogFactoryUtil.getLog(PortletExtenderConfigurationAction.class);
-
-  private final String _name;
+		printWriter.println("</form>");
+		printWriter.flush();
+	}
 }
