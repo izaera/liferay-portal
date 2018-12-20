@@ -1,7 +1,8 @@
 <div class="lfr-form-content" id="portlet-configuration">
-  <div class="sheet sheet-lg">
+  <div class="sheet sheet-lg" style="visibility: hidden" id="sheet-portlet">
     <div class="panel-group" aria-multiselectable="true" role="tablist">
-      <div id="$PORTLET_ID" data-instance="$INSTANCE"></div>
+      <div id="$PORTLET_ID" data-instance="$INSTANCE">
+      </div>
     </div>
   </div>
 </div>
@@ -51,7 +52,7 @@
       return `
              <fieldset aria-labelledby="Title" class="" role="group">
                <div aria-labelledby="Header" class="in" id="Content" role="presentation">
-                 <div class="panel-body">
+                 <div class="panel-body" style="margin-bottom: 0">
                    <div class="form-group input-text-wrapper ${inlineField ? 'form-inline form-group-inline' : ''}">
                    <label class="control-label" for="${PORTLET_NAME}${key}"> ${label}
                    ${ required ? requiredDivContent : '' }
@@ -89,7 +90,7 @@
         return `
         <fieldset aria-labelledby="Title" class=" " role="group">
           <div aria-labelledby="Header" class="in " id="Content" role="presentation">
-            <div class="panel-body">
+            <div class="panel-body" style="margin-bottom: 0">
               <div class="form-group input-checkbox-wrapper ${inlineField ? 'form-inline form-group-inline' : ''}">
                 <label class="control-label" for="${PORTLET_NAME}${key}"> ${label}
                   ${ required ? requiredDivContent : '' }
@@ -112,7 +113,7 @@
          return `
          <fieldset aria-labelledby="Title" class=" " role="group">
            <div aria-labelledby="Header" class="in " id="Content" role="presentation">
-             <div class="panel-body">
+             <div class="panel-body" style="margin-bottom: 0">
                <div class="form-group input-select-wrapper">
                  <label class="control-label" for="${PORTLET_NAME}${key}"> ${label}
                   ${ required ? requiredDivContent : '' }
@@ -132,7 +133,7 @@
         return `
           <fieldset aria-labelledby="Title" class="" role="group">
             <div aria-labelledby="Header" class="in " id="Content" role="presentation">
-              <div class="panel-body">
+              <div class="panel-body" style="margin-bottom: 0">
                 <div class="form-group form-inline input-checkbox-wrapper">
                   <label for="${PORTLET_NAME}${key}">
                   <input ${configurationValues[key] ? configurationValues[key][0] === 'on' ? 'checked' : '' : '' } class="field toggle-switch" id="${PORTLET_NAME}${key}" name="${PORTLET_NAME}${key}" onclick="" type="checkbox">
@@ -165,6 +166,8 @@
       Object.entries(configuration).map(([key, values]) => {
         wrapperAll.innerHTML += (wrapperSimpleField(PORTLET_NAME, key, values));
       });
+      
+      document.getElementById("sheet-portlet").style.visibility = 'visible';
 
       // Apend a footer with the action button to the FORM
       wrapperPanel.innerHTML +=
