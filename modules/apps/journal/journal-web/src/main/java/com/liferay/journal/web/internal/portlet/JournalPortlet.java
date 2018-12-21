@@ -32,10 +32,14 @@ import com.liferay.dynamic.data.mapping.storage.Fields;
 import com.liferay.dynamic.data.mapping.util.DDMTemplateHelper;
 import com.liferay.dynamic.data.mapping.util.DDMUtil;
 import com.liferay.exportimport.kernel.exception.ExportImportContentValidationException;
+import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
+import com.liferay.frontend.taglib.soy.servlet.taglib.util.ComponentDescriptor;
+import com.liferay.frontend.taglib.soy.servlet.taglib.util.SoyComponentRenderer;
 import com.liferay.frontend.taglib.soy.servlet.taglib.util.SoyRenderer;
 import com.liferay.item.selector.ItemSelector;
 import com.liferay.journal.configuration.JournalFileUploadsConfiguration;
 import com.liferay.journal.constants.JournalPortletKeys;
+import com.liferay.journal.constants.JournalWebKeys;
 import com.liferay.journal.exception.ArticleContentException;
 import com.liferay.journal.exception.ArticleContentSizeException;
 import com.liferay.journal.exception.ArticleDisplayDateException;
@@ -94,6 +98,7 @@ import com.liferay.portal.kernel.portlet.PortalPreferences;
 import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.portlet.PortletRequestModel;
 import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
+import com.liferay.portal.kernel.portlet.ThemeDisplayModel;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.security.auth.PrincipalException;
 import com.liferay.portal.kernel.service.LayoutLocalService;
@@ -129,8 +134,11 @@ import com.liferay.trash.util.TrashWebKeys;
 import java.io.File;
 import java.io.IOException;
 
+import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -158,6 +166,7 @@ import javax.portlet.WindowState;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.sound.sampled.Port;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -478,34 +487,7 @@ public class JournalPortlet extends MVCPortlet {
 			RenderRequest renderRequest, RenderResponse renderResponse)
 		throws IOException, PortletException {
 
-		PortletRequest portletRequest =
-			(PortletRequest)renderRequest.getAttribute(
-				JavaConstants.JAVAX_PORTLET_REQUEST);
-
-		HttpServletRequest request = PortalUtil.getHttpServletRequest(
-			portletRequest);
-
-		PortletResponse portletResponse =
-			(PortletResponse)renderRequest.getAttribute(
-				JavaConstants.JAVAX_PORTLET_RESPONSE);
-
-		HttpServletResponse response = PortalUtil.getHttpServletResponse(
-			portletResponse);
-
-		Map<String, Object> context = new HashMap<>();
-
-		context.put("body", "Perico alert!");
-		context.put("dismissible", true);
-
-		try {
-			_soyRenderer.renderSoy(
-				request, response, "liferay.frontend.Alert.render", context);
-		}
-		catch (TemplateException te) {
-			throw new IOException(te);
-		}
-
-		/*renderRequest.setAttribute(TrashWebKeys.TRASH_HELPER, _trashHelper);
+		renderRequest.setAttribute(TrashWebKeys.TRASH_HELPER, _trashHelper);
 
 		String path = getPath(renderRequest, renderResponse);
 
@@ -532,9 +514,11 @@ public class JournalPortlet extends MVCPortlet {
 		renderRequest.setAttribute(
 			JournalWebKeys.JOURNAL_CONVERTER, _journalConverter);
 
-		super.render(renderRequest, renderResponse);
+		renderRequest.setAttribute("soyRenderer", _soyRenderer);
+		renderRequest.setAttribute(
+			"soyComponentRenderer", _soyComponentRenderer);
 
-*/
+		super.render(renderRequest, renderResponse);
 	}
 
 	public void restoreTrashEntries(
@@ -1629,6 +1613,9 @@ public class JournalPortlet extends MVCPortlet {
 
 	@Reference
 	private Portal _portal;
+
+	@Reference
+	private SoyComponentRenderer _soyComponentRenderer;
 
 	@Reference
 	private SoyRenderer _soyRenderer;
