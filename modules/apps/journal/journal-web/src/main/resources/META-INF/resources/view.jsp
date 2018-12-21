@@ -53,8 +53,8 @@ XXXXXXXX
 	ComponentDescriptor componentDescriptor =
 		new ComponentDescriptor(
 			"ClayDropdown.render",
-			"frontend-taglib-clay$clay-dropdown@2.5.0/lib/ClayDropdown",
-			null, "pedrin", null, null, null);
+			"frontend-taglib-clay$clay-dropdown@2.5.1/lib/ClayDropdown",
+			null, null, "pedrin", null, null);
 
 	try {
 		Map<String, Object> context = new HashMap<>();
@@ -86,18 +86,29 @@ XXXXXXXX
 	}
 %>
 
-<clay:dropdown-menu dropdownItems="<%= items %>"
-	id="<%= "perico" %>"
-	componentId="<%= null %>"
+<clay:dropdown-menu
+	componentId="perico"
+	dropdownItems="<%= items %>"
 />
 
 <script>
-	Liferay.componentReady('pedrin', function(c) {
-		window.alert('lili pedrin');
-	});
-	Liferay.componentReady('perico', function(c) {
-		window.alert('lili perico');
-	});
+	Liferay.componentReady('pedrin').then(
+		c => {
+			setInterval(() => {
+				c.expanded = !c.expanded;
+			}, 1000);
+		}
+	);
+
+	Liferay.componentReady('perico').then(
+		c => {
+			setTimeout(() => {
+				setInterval(() => {
+					c.expanded = !c.expanded;
+				}, 1000);
+			}, 500);
+		}
+	);
 </script>
 
 
