@@ -1,4 +1,16 @@
-<%--
+<%@ page import="com.liferay.portal.kernel.util.JavaConstants" %>
+<%@ page import="javax.portlet.PortletResponse" %>
+<%@ page import="com.liferay.portal.kernel.template.TemplateException" %>
+<%@ page import="java.io.IOException" %>
+<%@ page
+	import="com.liferay.frontend.taglib.soy.servlet.taglib.util.ComponentDescriptor" %>
+<%@ page import="java.util.Arrays" %>
+<%@ page import="com.liferay.portal.kernel.theme.ThemeDisplay" %>
+<%@ page import="java.io.PrintWriter" %>
+<%@ page
+	import="com.liferay.frontend.taglib.soy.servlet.taglib.util.SoyRenderer" %>
+<%@ page
+	import="com.liferay.frontend.taglib.soy.servlet.taglib.util.SoyComponentRenderer" %><%--
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
@@ -16,6 +28,84 @@
 
 <%@ include file="/init.jsp" %>
 
+XXXXXXXX
+
+<%!
+	private DropdownItem createItem(String label) {
+		DropdownItem item = new DropdownItem();
+
+		item.setLabel(label);
+
+		return item;
+	}
+%>
+
+<%
+	SoyRenderer soyRenderer = (SoyRenderer)renderRequest.getAttribute("soyRenderer");
+	SoyComponentRenderer soyComponentRenderer = (SoyComponentRenderer)renderRequest.getAttribute("soyComponentRenderer");
+
+	List<DropdownItem> items = Arrays.asList(
+		createItem("naranjas"),
+		createItem("manzanas"),
+		createItem("cerezas")
+	);
+
+	ComponentDescriptor componentDescriptor =
+		new ComponentDescriptor(
+			"ClayDropdown.render",
+			"frontend-taglib-clay$clay-dropdown@2.5.1/lib/ClayDropdown",
+			null, "pedrin");
+
+	try {
+		Map<String, Object> context = new HashMap<>();
+
+		context.put("body", "Perico alert!");
+		context.put("dismissible", true);
+
+		soyRenderer.renderSoy(
+			request, response, "liferay.frontend.Alert.render", context);
+	}
+	catch (TemplateException te) {
+		throw new IOException(te);
+	}
+
+	try {
+		Map<String, Object> context = new HashMap<>();
+
+		context.put("items", items);
+
+		context.put(
+			"spritemap",
+			themeDisplay.getPathThemeImages().concat("/clay/icons.svg"));
+
+		soyComponentRenderer.renderSoyComponent(
+			request, response, componentDescriptor, context);
+	}
+	catch (TemplateException te) {
+		throw new IOException(te);
+	}
+%>
+
+<clay:dropdown-menu dropdownItems="<%= items %>"
+	id="<%= "perico" %>"
+	componentId="<%= null %>"
+/>
+
+<script>
+	Liferay.componentReady('pedrin').then(
+		function(c) {
+			window.alert('lili pedrin');
+		}
+	);
+	Liferay.componentReady('perico').then(
+		function(c) {
+			window.alert('lili perico');
+		}
+	);
+</script>
+
+
+<%--
 <%
 String title = journalDisplayContext.getFolderTitle();
 
@@ -167,3 +257,4 @@ if (Validator.isNotNull(title)) {
 
 	Liferay.on('destroyPortlet', clearJournalNavigationHandles);
 </aui:script>
+--%>
