@@ -14,6 +14,7 @@
 
 package com.liferay.portal.portlet.bridge.soy.internal;
 
+import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
@@ -50,6 +51,7 @@ import com.liferay.portal.kernel.util.UnsyncPrintWriterPool;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.portlet.bridge.soy.SoyPortletRegister;
+import com.liferay.portal.portlet.bridge.soy.internal.js.loader.modules.extender.npm.NPMResolverProvider;
 import com.liferay.portal.portlet.bridge.soy.internal.util.SoyContextFactoryUtil;
 import com.liferay.portal.portlet.bridge.soy.internal.util.SoyTemplateResourcesProviderUtil;
 import com.liferay.portal.template.soy.constants.SoyTemplateConstants;
@@ -457,6 +459,16 @@ public class SoyPortlet extends MVCPortlet {
 		return portlet.getFriendlyURLMapperInstance();
 	}
 
+	private String _getModuleName() {
+		NPMResolver npmResolver = NPMResolverProvider.getNPMResolver();
+
+		if (npmResolver == null) {
+			return StringPool.BLANK;
+		}
+
+		return npmResolver.resolveModuleName("portal-portlet-bridge-soy-impl");
+	}
+
 	private MVCRenderCommand _getMVCRenderCommand(String mvcRenderCommandName) {
 		MVCCommandCache<MVCRenderCommand> mvcRenderCommandCache =
 			getRenderMVCCommandCache();
@@ -625,7 +637,7 @@ public class SoyPortlet extends MVCPortlet {
 		Set<String> requiredModules = new HashSet<>();
 
 		requiredModules.add(
-			"portal-portlet-bridge-soy-impl/router/SoyPortletRouter");
+			_getModuleName() + "/router/SoyPortletRouter as SoyPortletRouter");
 
 		String path = getPath(portletRequest, portletResponse);
 
