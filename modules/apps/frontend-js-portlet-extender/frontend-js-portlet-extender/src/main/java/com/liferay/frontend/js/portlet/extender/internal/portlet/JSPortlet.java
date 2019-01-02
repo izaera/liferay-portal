@@ -14,6 +14,7 @@
 
 package com.liferay.frontend.js.portlet.extender.internal.portlet;
 
+import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
@@ -53,7 +54,7 @@ public class JSPortlet extends MVCPortlet implements ManagedService {
 		_JAVA_SCRIPT_TPL = _loadTemplate("bootstrap.js.tpl");
 	}
 
-	private final AtomicReference<Map<String, String[]>> _configuration =
+	private final AtomicReference<Map<String, String>> _configuration =
 		new AtomicReference<>();
 	private final String _name;
 	private final String _version;
@@ -98,13 +99,15 @@ public class JSPortlet extends MVCPortlet implements ManagedService {
 					new String[]{
 						"[$CONFIGURATION]", "[$CONTEXT_PATH$]",
 						"[$PORTLET_ELEMENT_ID$]", "[$PORTLET_NAMESPACE$]",
-						"[$PACKAGE_NAME$]", "[$PACKAGE_VERSION$]"
+						"[$PACKAGE_NAME$]", "[$PACKAGE_VERSION$]",
+						"[$PREFERENCES$]"
 					},
 					new String[]{
-						_getConfiguration(renderRequest.getPreferences()),
+						_getConfiguration(),
 						renderRequest.getContextPath(),
 						portletElementId, renderResponse.getNamespace(), _name,
-						_version
+						_version,
+						_getPortletPreferences(renderRequest.getPreferences())
 					}));
 
 			printWriter.flush();
@@ -137,13 +140,40 @@ public class JSPortlet extends MVCPortlet implements ManagedService {
 
 			configuration.put(key, String.valueOf(properties.get(key)));
 		}
+
+		_configuration.set(configuration);
+	}
+
+	private String _getConfiguration() {
+		Map<String, String> configuration = _configuration.get();
+
+		StringBundler sb = new StringBundler();
+
+		sb.append("{");
+
+		String delimiter = "";
+
+		for (Map.Entry<String, String> entry : configuration.entrySet()) {
+			sb.append(delimiter);
+			sb.append("'");
+			sb.append(_escapeQuotes(entry.getKey()));
+			sb.append("':'");
+			sb.append(_escapeQuotes(entry.getValue()));
+			sb.append("'");
+
+			delimiter = ", ";
+		}
+
+		sb.append("}");
+
+		return sb.toString();
 	}
 
 	private String _escapeQuotes(String value) {
 		return value.replaceAll("'", "\\'");
 	}
 
-	private String _getConfiguration(PortletPreferences portletPreferences) {
+	private String _getPortletPreferences(PortletPreferences portletPreferences) {
 		Enumeration<String> preferencesNames = portletPreferences.getNames();
 		JSONObject jsonPreferences = JSONFactoryUtil.createJSONObject();
 
