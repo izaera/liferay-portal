@@ -459,16 +459,6 @@ public class SoyPortlet extends MVCPortlet {
 		return portlet.getFriendlyURLMapperInstance();
 	}
 
-	private String _getModuleName() {
-		NPMResolver npmResolver = NPMResolverProvider.getNPMResolver();
-
-		if (npmResolver == null) {
-			return StringPool.BLANK;
-		}
-
-		return npmResolver.resolveModuleName("portal-portlet-bridge-soy-impl");
-	}
-
 	private MVCRenderCommand _getMVCRenderCommand(String mvcRenderCommandName) {
 		MVCCommandCache<MVCRenderCommand> mvcRenderCommandCache =
 			getRenderMVCCommandCache();
@@ -495,6 +485,16 @@ public class SoyPortlet extends MVCPortlet {
 		sb.append("SoyWrapper");
 
 		return sb.toString();
+	}
+
+	private String _getResolvedModuleName() {
+		NPMResolver npmResolver = NPMResolverProvider.getNPMResolver();
+
+		if (npmResolver == null) {
+			return StringPool.BLANK;
+		}
+
+		return npmResolver.resolveModuleName("portal-portlet-bridge-soy-impl");
 	}
 
 	private List<TemplateResource> _getTemplateResources()
@@ -637,7 +637,7 @@ public class SoyPortlet extends MVCPortlet {
 		Set<String> requiredModules = new HashSet<>();
 
 		requiredModules.add(
-			_getModuleName() + "/router/SoyPortletRouter as SoyPortletRouter");
+			_getResolvedModuleName() + "/router/SoyPortletRouter.es as SoyPortletRouter");
 
 		String path = getPath(portletRequest, portletResponse);
 
