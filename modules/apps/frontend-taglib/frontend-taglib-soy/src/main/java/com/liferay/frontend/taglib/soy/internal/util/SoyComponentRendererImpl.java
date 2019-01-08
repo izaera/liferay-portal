@@ -119,7 +119,13 @@ public class SoyComponentRendererImpl implements SoyComponentRenderer {
 			wrapperId = componentDescriptor.getComponentId();
 
 			if (Validator.isNull(wrapperId)) {
-				wrapperId = StringUtil.randomId();
+				wrapperId = _randomWrapperId;
+
+				if (Validator.isNull(_randomWrapperId)) {
+					_randomWrapperId = StringUtil.randomId();
+
+					wrapperId = _randomWrapperId;
+				}
 			}
 		}
 
@@ -204,5 +210,7 @@ public class SoyComponentRendererImpl implements SoyComponentRenderer {
 
 	@Reference
 	private SoyRenderer _soyRenderer;
+
+	private String _randomWrapperId;
 
 }
