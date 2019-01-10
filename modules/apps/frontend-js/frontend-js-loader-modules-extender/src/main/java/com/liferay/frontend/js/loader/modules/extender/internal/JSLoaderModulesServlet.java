@@ -1,11 +1,11 @@
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
- * <p>
+ *
  * This library is free software; you can redistribute it and/or modify it under
  * the terms of the GNU Lesser General Public License as published by the Free
  * Software Foundation; either version 2.1 of the License, or (at your option)
  * any later version.
- * <p>
+ *
  * This library is distributed in the hope that it will be useful, but WITHOUT
  * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
@@ -15,11 +15,12 @@
 package com.liferay.frontend.js.loader.modules.extender.internal;
 
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
-import org.osgi.service.component.ComponentContext;
-import org.osgi.service.component.annotations.Activate;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Modified;
-import org.osgi.service.component.annotations.Reference;
+
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+
+import java.util.Map;
 
 import javax.servlet.Servlet;
 import javax.servlet.ServletConfig;
@@ -28,10 +29,12 @@ import javax.servlet.ServletOutputStream;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.Map;
+
+import org.osgi.service.component.ComponentContext;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Modified;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Raymond Augé
@@ -59,7 +62,7 @@ public class JSLoaderModulesServlet extends HttpServlet {
 	@Activate
 	@Modified
 	protected void activate(
-		ComponentContext componentContext, Map<String, Object> properties)
+			ComponentContext componentContext, Map<String, Object> properties)
 		throws Exception {
 
 		_details = ConfigurableUtil.createConfigurable(
@@ -72,16 +75,9 @@ public class JSLoaderModulesServlet extends HttpServlet {
 		return _jsLoaderModulesTracker;
 	}
 
-	@Reference(unbind = "-")
-	protected void setJSLoaderModulesTracker(
-		JSLoaderModulesTracker jsLoaderModulesTracker) {
-
-		_jsLoaderModulesTracker = jsLoaderModulesTracker;
-	}
-
 	@Override
 	protected void service(
-		HttpServletRequest request, HttpServletResponse response)
+			HttpServletRequest request, HttpServletResponse response)
 		throws IOException {
 
 		StringWriter stringWriter = new StringWriter();
@@ -92,14 +88,14 @@ public class JSLoaderModulesServlet extends HttpServlet {
 
 		printWriter.println(
 			"Liferay.EXPLAIN_RESOLUTIONS = " + _details.explainResolutions() +
-			";\n");
+				";\n");
 
 		printWriter.println(
 			"Liferay.EXPOSE_GLOBAL = " + _details.exposeGlobal() + ";\n");
 
 		printWriter.println(
 			"Liferay.WAIT_TIMEOUT = " + (_details.waitTimeout() * 1000) +
-			";\n");
+				";\n");
 
 		printWriter.println("}());");
 
@@ -110,6 +106,13 @@ public class JSLoaderModulesServlet extends HttpServlet {
 
 	protected void setDetails(Details details) {
 		_details = details;
+	}
+
+	@Reference(unbind = "-")
+	protected void setJSLoaderModulesTracker(
+		JSLoaderModulesTracker jsLoaderModulesTracker) {
+
+		_jsLoaderModulesTracker = jsLoaderModulesTracker;
 	}
 
 	private void _writeResponse(HttpServletResponse response, String content)

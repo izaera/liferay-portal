@@ -1,3 +1,17 @@
+/**
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
+
 package com.liferay.frontend.js.loader.modules.extender.internal;
 
 import com.liferay.frontend.js.loader.modules.extender.internal.adapter.JSLoaderModuleAdapter;
@@ -6,8 +20,6 @@ import com.liferay.frontend.js.loader.modules.extender.internal.adapter.NPMRegis
 import com.liferay.frontend.js.loader.modules.extender.npm.JSModule;
 import com.liferay.frontend.js.loader.modules.extender.npm.NPMRegistry;
 import com.liferay.portal.kernel.util.Portal;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -15,18 +27,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Rodolfo Roza Miranda
  */
-@Component(
-	immediate = true,
-	service = JSModulesContextResolver.class
-)
+@Component(immediate = true, service = JSModulesContextResolver.class)
 public class JSModulesContextResolver {
 
 	public JSModuleContext resolve(List<String> modules) {
-
 		JSModuleContext context = new JSModuleContext();
 
 		for (String module : modules) {
@@ -39,6 +51,7 @@ public class JSModulesContextResolver {
 	@Reference(unbind = "-")
 	public void setJsLoaderModulesTracker(
 		JSLoaderModulesTracker jsLoaderModulesTracker) {
+
 		_jsLoaderModulesTracker = jsLoaderModulesTracker;
 	}
 
@@ -58,16 +71,29 @@ public class JSModulesContextResolver {
 	}
 
 	private ArrayList<JSModuleAdapter> _getAllModules() {
+		Collection<JSLoaderModule> jsLoaderModules =
+			_jsLoaderModulesTracker.getJSLoaderModules();
+
+		Stream<JSLoaderModule> jsLoaderModuleStream = jsLoaderModules.stream();
+
 		List<JSLoaderModuleAdapter> jsLoaderModuleAdapters =
-			_jsLoaderModulesTracker.getJSLoaderModules().stream()
-				.map(m -> new JSLoaderModuleAdapter(m, _portal))
-				.collect(Collectors.toList());
+			jsLoaderModuleStream.map(
+				m -> new JSLoaderModuleAdapter(m, _portal)
+			).collect(
+				Collectors.toList()
+			);
+
+		Collection<JSModule> resolvedJSModules =
+			_npmRegistry.getResolvedJSModules();
+
+		Stream<JSModule> resolvedJSModulesStream = resolvedJSModules.stream();
 
 		List<NPMRegistryModuleAdapter> npmRegistryModules =
-			_npmRegistry.getResolvedJSModules().stream()
-				.map(
-					m -> new NPMRegistryModuleAdapter(m, _npmRegistry, _portal))
-				.collect(Collectors.toList());
+			resolvedJSModulesStream.map(
+				m -> new NPMRegistryModuleAdapter(m, _npmRegistry, _portal)
+			).collect(
+				Collectors.toList()
+			);
 
 		ArrayList<JSModuleAdapter> allModules = new ArrayList<>();
 
@@ -77,13 +103,14 @@ public class JSModulesContextResolver {
 		return allModules;
 	}
 
-	private String _mapModuleName(
-		String module, Map<String, String> contextMap) {
-		return _mapper.mapModule(module, contextMap);
-	}
-
 	private String _mapModuleName(String module) {
 		return _mapper.mapModule(module);
+	}
+
+	private String _mapModuleName(
+		String module, Map<String, String> contextMap) {
+
+		return _mapper.mapModule(module, contextMap);
 	}
 
 	private void _processModule(
@@ -100,22 +127,22 @@ public class JSModulesContextResolver {
 		Map<String, String> dependenciesMap = new ConcurrentHashMap<>();
 
 		for (String dependency : dependencies) {
-
 			if (!dependency.equals("require") &&
-				!dependency.equals("exports") &&
-				!dependency.equals("module")) {
+				!dependency.equals("exports") && !dependency.equals("module")) {
 
-				String resolvedPath =
-					PathResolver.resolvePath(alias, dependency);
+				String resolvedPath = PathResolver.resolvePath(
+					alias, dependency);
 
-				String mappedModuleName =
-					_mapModuleName(resolvedPath, adapter.getMap());
+				String mappedModuleName = _mapModuleName(
+					resolvedPath, adapter.getMap());
 
 				dependenciesMap.put(dependency, mappedModuleName);
 
 				if (!context.processedModule(mappedModuleName)) {
 					context.addProcessedModule(mappedModuleName);
+
 					_processModule(mappedModuleName, context);
+
 					context.addResolvedModule(mappedModuleName);
 				}
 			}
@@ -129,8 +156,9 @@ public class JSModulesContextResolver {
 		JSModule jsModule = _npmRegistry.getResolvedJSModule(module);
 
 		if (jsModule != null) {
-			_processModule(new NPMRegistryModuleAdapter(jsModule, _npmRegistry,
-				_portal), context);
+			_processModule(
+				new NPMRegistryModuleAdapter(jsModule, _npmRegistry, _portal),
+				context);
 		}
 	}
 
@@ -142,8 +170,11 @@ public class JSModulesContextResolver {
 		JSModuleAdapter adapter = null;
 
 		for (JSModuleAdapter m : allModules) {
-			if (m.getAlias().equals(mappedModule)) {
+			String alias = m.getAlias();
+
+			if (alias.equals(mappedModule)) {
 				adapter = m;
+
 				break;
 			}
 		}

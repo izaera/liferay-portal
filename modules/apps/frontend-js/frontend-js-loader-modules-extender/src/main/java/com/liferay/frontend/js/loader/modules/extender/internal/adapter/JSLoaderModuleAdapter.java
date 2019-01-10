@@ -1,5 +1,18 @@
-package com.liferay.frontend.js.loader.modules.extender.internal.adapter;
+/**
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
 
+package com.liferay.frontend.js.loader.modules.extender.internal.adapter;
 
 import com.liferay.frontend.js.loader.modules.extender.internal.JSLoaderModule;
 import com.liferay.petra.string.StringPool;
@@ -21,8 +34,7 @@ import java.util.Set;
  */
 public class JSLoaderModuleAdapter implements JSModuleAdapter {
 
-	public JSLoaderModuleAdapter(
-		JSLoaderModule module, Portal portal) {
+	public JSLoaderModuleAdapter(JSLoaderModule module, Portal portal) {
 		_module = module;
 		_portal = portal;
 
@@ -54,11 +66,11 @@ public class JSLoaderModuleAdapter implements JSModuleAdapter {
 
 		if (Validator.isNotNull(unversionedConfiguration)) {
 			try {
-				String jsonString =
-					String.format("{%s}", unversionedConfiguration);
+				String jsonString = String.format(
+					"{%s}", unversionedConfiguration);
 
-				JSONObject jsonObject =
-					JSONFactoryUtil.createJSONObject(jsonString);
+				JSONObject jsonObject = JSONFactoryUtil.createJSONObject(
+					jsonString);
 
 				Iterator<String> keys = jsonObject.keys();
 
@@ -66,18 +78,20 @@ public class JSLoaderModuleAdapter implements JSModuleAdapter {
 
 				JSONObject aliasConfig = jsonObject.getJSONObject(_alias);
 
-				JSONArray dependencies =
-					aliasConfig.getJSONArray("dependencies");
+				JSONArray dependencies = aliasConfig.getJSONArray(
+					"dependencies");
 
-				dependencies.forEach(d -> _dependencies.add((String) d));
+				dependencies.forEach(d -> _dependencies.add((String)d));
 			}
-			catch (JSONException e) {
-				e.printStackTrace();
+			catch (JSONException jsone) {
+				jsone.printStackTrace();
 			}
 		}
 	}
-	private final JSLoaderModule _module;
-	private final Portal _portal;
+
 	private String _alias = StringPool.BLANK;
 	private Set<String> _dependencies = new HashSet<>();
+	private final JSLoaderModule _module;
+	private final Portal _portal;
+
 }

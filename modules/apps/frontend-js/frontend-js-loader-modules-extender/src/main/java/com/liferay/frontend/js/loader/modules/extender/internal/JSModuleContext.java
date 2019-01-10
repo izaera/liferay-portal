@@ -1,3 +1,17 @@
+/**
+ * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
+ *
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
+ *
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
+ */
+
 package com.liferay.frontend.js.loader.modules.extender.internal;
 
 import java.util.ArrayList;
@@ -12,6 +26,10 @@ import java.util.concurrent.ConcurrentSkipListSet;
  * @author Rodolfo Roza Miranda
  */
 public class JSModuleContext {
+
+	public void addProcessedModule(String module) {
+		_processedModules.add(module);
+	}
 
 	public void addResolvedModule(String alias) {
 		_resolvedModules.add(0, alias);
@@ -31,8 +49,14 @@ public class JSModuleContext {
 
 	public List<String> getResolvedModules() {
 		ArrayList<String> copy = new ArrayList<>(_resolvedModules);
+
 		Collections.reverse(copy);
+
 		return copy;
+	}
+
+	public boolean processedModule(String module) {
+		return _processedModules.contains(module);
 	}
 
 	public void putConfig(String module, String mappedModule) {
@@ -41,6 +65,7 @@ public class JSModuleContext {
 
 	public void putModuleDependencyMap(
 		String alias, Map<String, String> dependenciesMap) {
+
 		_moduleMap.put(alias, dependenciesMap);
 	}
 
@@ -48,18 +73,11 @@ public class JSModuleContext {
 		_pathMap.put(alias, path);
 	}
 
-	public void addProcessedModule(String module) {
-		_processedModules.add(module);
-	}
-
-	public boolean processedModule(String module) {
-		return _processedModules.contains(module);
-	}
-
 	private final Map<String, String> _configMap = new ConcurrentHashMap<>();
-	private final Map<String, String> _pathMap = new ConcurrentHashMap<>();
 	private final Map<String, Map<String, String>> _moduleMap =
 		new ConcurrentHashMap<>();
+	private final Map<String, String> _pathMap = new ConcurrentHashMap<>();
 	private final Set<String> _processedModules = new ConcurrentSkipListSet<>();
 	private final List<String> _resolvedModules = new ArrayList<>();
+
 }

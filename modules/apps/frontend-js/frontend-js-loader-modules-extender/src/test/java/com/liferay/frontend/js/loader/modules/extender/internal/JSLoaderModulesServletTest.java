@@ -70,7 +70,7 @@ public class JSLoaderModulesServletTest extends PowerMockito {
 	@Test
 	public void testBasicOutput() throws Exception {
 		JSLoaderModulesServlet jsLoaderModulesServlet =
-			buildJSLoaderModulesServlet();
+			_buildJSLoaderModulesServlet();
 
 		MockHttpServletRequest mockHttpServletRequest =
 			new MockHttpServletRequest();
@@ -85,15 +85,14 @@ public class JSLoaderModulesServletTest extends PowerMockito {
 			Details.CONTENT_TYPE, mockHttpServletResponse.getContentType());
 	}
 
-	private JSLoaderModulesServlet buildJSLoaderModulesServlet()
+	private JSLoaderModulesServlet _buildJSLoaderModulesServlet()
 		throws Exception {
 
-		return buildJSLoaderModulesServlet(
-			Collections.emptyMap());
+		return _buildJSLoaderModulesServlet(Collections.emptyMap());
 	}
 
-	private JSLoaderModulesServlet buildJSLoaderModulesServlet(
-		Map<String, Object> properties)
+	private JSLoaderModulesServlet _buildJSLoaderModulesServlet(
+			Map<String, Object> properties)
 		throws Exception {
 
 		JSLoaderModulesServlet jsLoaderModulesServlet =
