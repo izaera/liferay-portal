@@ -15,7 +15,6 @@
 package com.liferay.flags.taglib.servlet.taglib.soy;
 
 import com.liferay.flags.configuration.FlagsGroupServiceConfiguration;
-import com.liferay.flags.taglib.internal.js.loader.modules.extender.npm.NPMResolverProvider;
 import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
 import com.liferay.frontend.taglib.soy.servlet.taglib.ComponentRendererTag;
 import com.liferay.petra.string.StringPool;
@@ -35,6 +34,7 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PortletKeys;
+import com.liferay.portal.kernel.util.ServiceProxyFactory;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 
@@ -116,13 +116,11 @@ public class FlagsTag extends ComponentRendererTag {
 
 	@Override
 	public String getModule() {
-		NPMResolver npmResolver = NPMResolverProvider.getNPMResolver();
-
-		if (npmResolver == null) {
+		if (_npmResolver == null) {
 			return StringPool.BLANK;
 		}
 
-		return npmResolver.resolveModuleName("flags-taglib/flags/Flags.es");
+		return _npmResolver.resolveModuleName("flags-taglib/flags/Flags.es");
 	}
 
 	public void setClassName(String className) {
@@ -235,4 +233,7 @@ public class FlagsTag extends ComponentRendererTag {
 
 	private static final Log _log = LogFactoryUtil.getLog(FlagsTag.class);
 
+	private static volatile NPMResolver _npmResolver =
+		ServiceProxyFactory.newServiceTrackedInstance(
+			NPMResolver.class, FlagsTag.class, "_npmResolver", false, true);
 }
