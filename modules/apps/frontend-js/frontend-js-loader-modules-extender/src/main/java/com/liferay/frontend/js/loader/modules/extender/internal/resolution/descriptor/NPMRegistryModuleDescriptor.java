@@ -12,8 +12,9 @@
  * details.
  */
 
-package com.liferay.frontend.js.loader.modules.extender.internal.resolution.adapter;
+package com.liferay.frontend.js.loader.modules.extender.internal.resolution.descriptor;
 
+import com.liferay.frontend.js.loader.modules.extender.internal.resolution.JSModuleDescriptor;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSModule;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSPackage;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSPackageDependency;
@@ -28,34 +29,34 @@ import java.util.concurrent.ConcurrentHashMap;
 /**
  * @author Rodolfo Roza Miranda
  */
-public class NPMRegistryModuleAdapter implements JSModuleAdapter {
+public class NPMRegistryModuleDescriptor implements JSModuleDescriptor {
 
-	public NPMRegistryModuleAdapter(
-		JSModule module, NPMRegistry npmRegistry, Portal portal) {
+	public NPMRegistryModuleDescriptor(
+		JSModule jsModule, NPMRegistry npmRegistry, Portal portal) {
 
-		_module = module;
+		_jsModule = jsModule;
 		_npmRegistry = npmRegistry;
 		_portal = portal;
 	}
 
 	@Override
 	public String getAlias() {
-		return _module.getResolvedId();
+		return _jsModule.getResolvedId();
 	}
 
 	@Override
 	public Collection<String> getDependencies() {
-		return _module.getDependencies();
+		return _jsModule.getDependencies();
 	}
 
 	@Override
 	public Map<String, String> getMap() {
-		JSPackage jsPackage = _module.getJSPackage();
+		JSPackage jsPackage = _jsModule.getJSPackage();
 
 		Map<String, String> contextMap = new ConcurrentHashMap<>();
 
 		for (String dependencyPackageName :
-				_module.getDependencyPackageNames()) {
+				_jsModule.getDependencyPackageNames()) {
 
 			if (dependencyPackageName == null) {
 				continue;
@@ -104,13 +105,11 @@ public class NPMRegistryModuleAdapter implements JSModuleAdapter {
 
 	@Override
 	public String getPath() {
-		String pathModule = _portal.getPathModule();
-		String resolvedPath = "/js/resolved-module/";
-
-		return pathModule + resolvedPath + _module.getResolvedId();
+		return _portal.getPathModule() + "/js/resolved-module/" +
+			_jsModule.getResolvedId();
 	}
 
-	private final JSModule _module;
+	private final JSModule _jsModule;
 	private final NPMRegistry _npmRegistry;
 	private final Portal _portal;
 

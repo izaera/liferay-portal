@@ -23,9 +23,11 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListSet;
 
 /**
+ * Object to hold the results of a resolution of a list of modules.
  * @author Rodolfo Roza Miranda
+ * @review
  */
-public class JSModuleContext {
+public class JSModulesResolution {
 
 	public void addProcessedModule(String module) {
 		_processedModules.add(module);
@@ -55,7 +57,7 @@ public class JSModuleContext {
 		return copy;
 	}
 
-	public boolean processedModule(String module) {
+	public boolean isProcessedModule(String module) {
 		return _processedModules.contains(module);
 	}
 

@@ -96,7 +96,7 @@ public class JSConfigGeneratorModulesTracker
 		return serviceReference;
 	}
 
-	public Collection<JSConfigGeneratorModule> getJSLoaderModules() {
+	public Collection<JSConfigGeneratorModule> getJSConfigGeneratorModules() {
 		return _jsLoaderModules.values();
 	}
 

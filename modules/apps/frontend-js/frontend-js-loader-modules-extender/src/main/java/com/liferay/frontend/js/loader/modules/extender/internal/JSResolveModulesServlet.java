@@ -14,15 +14,14 @@
 
 package com.liferay.frontend.js.loader.modules.extender.internal;
 
-import com.liferay.frontend.js.loader.modules.extender.internal.resolution.JSModuleContext;
-import com.liferay.frontend.js.loader.modules.extender.internal.resolution.JSModulesContextResolver;
+import com.liferay.frontend.js.loader.modules.extender.internal.resolution.JSModulesResolution;
+import com.liferay.frontend.js.loader.modules.extender.internal.resolution.JSModulesResolver;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.ParamUtil;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.StringWriter;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -53,31 +52,24 @@ import org.osgi.service.component.annotations.Reference;
 public class JSResolveModulesServlet extends HttpServlet {
 
 	@Override
-	protected void service(HttpServletRequest req, HttpServletResponse resp)
+	protected void service(
+			HttpServletRequest request, HttpServletResponse response)
 		throws IOException {
 
-		List<String> reqModules = _getRequestModules(req);
+		List<String> modules = _getModules(request);
 
-		JSModuleContext context = _jsModulesContextResolver.resolve(reqModules);
+		JSModulesResolution jsModulesResolution = _jsModulesResolver.resolve(
+			modules);
 
-		StringWriter stringWriter = new StringWriter();
-
-		PrintWriter printWriter = new PrintWriter(stringWriter);
-
-		printWriter.write(_jsonFactory.looseSerializeDeep(context));
-
-		printWriter.close();
-
-		String content = stringWriter.toString();
-
-		_writeResponse(resp, content);
+		_writeResponse(
+			response, _jsonFactory.looseSerializeDeep(jsModulesResolution));
 	}
 
-	private List<String> _getRequestModules(HttpServletRequest req) {
-		String[] modulesParam = ParamUtil.getStringValues(req, "modules");
+	private List<String> _getModules(HttpServletRequest request) {
+		String[] modules = ParamUtil.getStringValues(request, "modules");
 
-		if (modulesParam != null) {
-			return Arrays.asList(modulesParam);
+		if (modules != null) {
+			return Arrays.asList(modules);
 		}
 
 		return Collections.emptyList();
@@ -98,7 +90,7 @@ public class JSResolveModulesServlet extends HttpServlet {
 	}
 
 	@Reference
-	private JSModulesContextResolver _jsModulesContextResolver;
+	private JSModulesResolver _jsModulesResolver;
 
 	@Reference
 	private JSONFactory _jsonFactory;

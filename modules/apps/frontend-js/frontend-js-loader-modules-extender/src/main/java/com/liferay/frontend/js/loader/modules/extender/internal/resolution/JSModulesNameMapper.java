@@ -60,44 +60,32 @@ public class JSModulesNameMapper {
 		return resolved;
 	}
 
-	@Reference(unbind = "-")
-	protected void setJSLoaderModulesTracker(
-		JSConfigGeneratorModulesTracker jsConfigGeneratorModulesTracker) {
-
-		_jsConfigGeneratorModulesTracker = jsConfigGeneratorModulesTracker;
-	}
-
-	@Reference(unbind = "-")
-	protected void setNPMRegistry(NPMRegistry npmRegistry) {
-		_npmRegistry = npmRegistry;
-	}
-
 	private Map<String, String> _getExactMatchContextMap() {
-		Collection<JSPackage> npmRegistryModules =
-			_npmRegistry.getResolvedJSPackages();
+		Map<String, String> exactMatchContextMap = new HashMap<>();
 
-		Map<String, String> registryModules = new HashMap<>();
+		for (JSPackage jsPackage : _npmRegistry.getResolvedJSPackages()) {
+			String jsPackageResolvedId = jsPackage.getResolvedId();
 
-		for (JSPackage jsPackage : npmRegistryModules) {
-			String resolvedId = jsPackage.getResolvedId();
+			String mainModulePath =
+				jsPackageResolvedId + StringPool.SLASH +
+					jsPackage.getMainModuleName();
 
-			String jsPackageValue =
-				resolvedId + StringPool.SLASH + jsPackage.getMainModuleName();
-
-			registryModules.put(resolvedId, jsPackageValue);
+			exactMatchContextMap.put(jsPackageResolvedId, mainModulePath);
 
 			for (JSModuleAlias jsModuleAlias : jsPackage.getJSModuleAliases()) {
-				String key =
-					resolvedId + StringPool.SLASH + jsModuleAlias.getAlias();
-				String value =
-					resolvedId + StringPool.SLASH +
+				String aliasPath =
+					jsPackageResolvedId + StringPool.SLASH +
+						jsModuleAlias.getAlias();
+
+				String moduleNamePath =
+					jsPackageResolvedId + StringPool.SLASH +
 						jsModuleAlias.getModuleName();
 
-				registryModules.put(key, value);
+				exactMatchContextMap.put(aliasPath, moduleNamePath);
 			}
 		}
 
-		return registryModules;
+		return exactMatchContextMap;
 	}
 
 	private Map<String, String> _getPartialMatchContextMap() {
@@ -107,16 +95,16 @@ public class JSModulesNameMapper {
 			_partialMatchContextMap.clear();
 			_cache.clear();
 
-			Collection<JSConfigGeneratorModule> loaderModules =
-				_jsConfigGeneratorModulesTracker.getJSLoaderModules();
+			Collection<JSConfigGeneratorModule> jsConfigGeneratorModules =
+				_jsConfigGeneratorModulesTracker.getJSConfigGeneratorModules();
 
 			Function<JSConfigGeneratorModule, String> valueMapper =
 				m -> m.getName() + StringPool.AT + m.getVersion();
 
-			Stream<JSConfigGeneratorModule> loaderModulesStream =
-				loaderModules.stream();
+			Stream<JSConfigGeneratorModule> jsConfigGeneratorModulesStream =
+				jsConfigGeneratorModules.stream();
 
-			Map<String, String> map = loaderModulesStream.collect(
+			Map<String, String> map = jsConfigGeneratorModulesStream.collect(
 				Collectors.toMap(JSConfigGeneratorModule::getName, valueMapper)
 			);
 
@@ -132,10 +120,14 @@ public class JSModulesNameMapper {
 	}
 
 	private String _map(String module, Map<String, String> map) {
-		Map<String, String> exactMap = _getExactMatchContextMap();
-		Map<String, String> partialMap = _getPartialMatchContextMap();
+		Map<String, String> exactMap;
+		Map<String, String> partialMap;
 
-		if (map != null) {
+		if (map == null) {
+			exactMap = _getExactMatchContextMap();
+			partialMap = _getPartialMatchContextMap();
+		}
+		else {
 			exactMap = map;
 			partialMap = map;
 		}
@@ -164,9 +156,15 @@ public class JSModulesNameMapper {
 	}
 
 	private final Map<String, String> _cache = new ConcurrentHashMap<>();
+
+	@Reference
 	private JSConfigGeneratorModulesTracker _jsConfigGeneratorModulesTracker;
+
 	private long _jsLoaderModulesTrackerLastModified = 0L;
+
+	@Reference
 	private NPMRegistry _npmRegistry;
+
 	private final Map<String, String> _partialMatchContextMap =
 		new ConcurrentHashMap<>();
 

@@ -12,9 +12,10 @@
  * details.
  */
 
-package com.liferay.frontend.js.loader.modules.extender.internal.resolution.adapter;
+package com.liferay.frontend.js.loader.modules.extender.internal.resolution.descriptor;
 
 import com.liferay.frontend.js.loader.modules.extender.internal.cfggen.JSConfigGeneratorModule;
+import com.liferay.frontend.js.loader.modules.extender.internal.resolution.JSModuleDescriptor;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONException;
@@ -32,12 +33,12 @@ import java.util.Set;
 /**
  * @author Rodolfo Roza Miranda
  */
-public class JSLoaderModuleAdapter implements JSModuleAdapter {
+public class ConfigGeneratorModuleDescriptor implements JSModuleDescriptor {
 
-	public JSLoaderModuleAdapter(
-		JSConfigGeneratorModule module, Portal portal) {
+	public ConfigGeneratorModuleDescriptor(
+		JSConfigGeneratorModule jsConfigGeneratorModule, Portal portal) {
 
-		_module = module;
+		_jsConfigGeneratorModule = jsConfigGeneratorModule;
 		_portal = portal;
 
 		_initialize();
@@ -60,11 +61,13 @@ public class JSLoaderModuleAdapter implements JSModuleAdapter {
 
 	@Override
 	public String getPath() {
-		return _portal.getPathProxy() + _module.getContextPath();
+		return _portal.getPathProxy() +
+			_jsConfigGeneratorModule.getContextPath();
 	}
 
 	private void _initialize() {
-		String unversionedConfiguration = _module.getUnversionedConfiguration();
+		String unversionedConfiguration =
+			_jsConfigGeneratorModule.getUnversionedConfiguration();
 
 		if (Validator.isNotNull(unversionedConfiguration)) {
 			try {
@@ -83,17 +86,18 @@ public class JSLoaderModuleAdapter implements JSModuleAdapter {
 				JSONArray dependencies = aliasConfig.getJSONArray(
 					"dependencies");
 
-				dependencies.forEach(d -> _dependencies.add((String)d));
+				dependencies.forEach(
+					dependency -> _dependencies.add((String)dependency));
 			}
 			catch (JSONException jsone) {
-				jsone.printStackTrace();
+				throw new RuntimeException(jsone);
 			}
 		}
 	}
 
 	private String _alias = StringPool.BLANK;
 	private Set<String> _dependencies = new HashSet<>();
-	private final JSConfigGeneratorModule _module;
+	private final JSConfigGeneratorModule _jsConfigGeneratorModule;
 	private final Portal _portal;
 
 }
