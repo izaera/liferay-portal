@@ -14,6 +14,9 @@
 
 package com.liferay.frontend.js.loader.modules.extender.internal.resolution;
 
+import com.liferay.frontend.js.loader.modules.extender.npm.ModuleNameUtil;
+import com.liferay.petra.string.StringPool;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
@@ -23,32 +26,24 @@ import java.util.List;
  */
 public class PathResolver {
 
-	public static String resolvePath(String root, String dependency) {
-		if (dependency.equals("require") || dependency.equals("exports") ||
-			dependency.equals("module") ||
-			!(dependency.startsWith(".") || dependency.startsWith(".."))) {
+	/**
+	 * Resolve dependency path based on current module's path.
+	 * @param currentModulePath
+	 * @param dependency
+	 * @return the full path of the dependency if it is local, the dependency otherwise
+	 * @review
+	 */
+	public static String resolvePath(
+		String currentModulePath, String dependency) {
 
+		if (!ModuleNameUtil.isLocalModuleName(dependency)) {
 			return dependency;
 		}
 
-		// Split module directories
+		List<String> dependencyParts = _getDirNameParts(dependency);
 
-		List<String> moduleParts = new ArrayList<>(
-			Arrays.asList(root.split("/")));
-
-		// Remove module name
-
-		moduleParts.remove(moduleParts.size() - 1);
-
-		// Split dependency directories
-
-		List<String> dependencyParts = new ArrayList<>(
-			Arrays.asList(dependency.split("/")));
-
-		// Extract dependency name
-
-		String dependencyName = dependencyParts.remove(
-			dependencyParts.size() - 1);
+		List<String> currentModulePathParts = _getDirNameParts(
+			currentModulePath);
 
 		for (int i = 0; i < dependencyParts.size(); i++) {
 			String dependencyPart = dependencyParts.get(i);
@@ -58,24 +53,40 @@ public class PathResolver {
 			}
 
 			if (dependencyPart.equals("..")) {
-				if (!moduleParts.isEmpty()) {
-					moduleParts.remove(moduleParts.size() - 1);
+				if (!currentModulePathParts.isEmpty()) {
+					currentModulePathParts.remove(
+						currentModulePathParts.size() - 1);
 				}
 				else {
-					moduleParts.addAll(
+					currentModulePathParts.addAll(
 						dependencyParts.subList(i, dependencyParts.size()));
 
 					break;
 				}
 			}
 			else {
-				moduleParts.add(dependencyPart);
+				currentModulePathParts.add(dependencyPart);
 			}
 		}
 
-		moduleParts.add(dependencyName);
+		currentModulePathParts.add(_getBaseName(dependency));
 
-		return String.join("/", moduleParts);
+		return String.join(StringPool.SLASH, currentModulePathParts);
+	}
+
+	private static String _getBaseName(String dependency) {
+		int i = dependency.lastIndexOf(StringPool.SLASH);
+
+		return dependency.substring(i + 1);
+	}
+
+	private static List<String> _getDirNameParts(String modulePath) {
+		List<String> modulePathParts = new ArrayList<>(
+			Arrays.asList(modulePath.split(StringPool.SLASH)));
+
+		modulePathParts.remove(modulePathParts.size() - 1);
+
+		return modulePathParts;
 	}
 
 }

@@ -20,6 +20,7 @@ import com.liferay.frontend.js.loader.modules.extender.internal.resolution.adapt
 import com.liferay.frontend.js.loader.modules.extender.internal.resolution.adapter.JSModuleAdapter;
 import com.liferay.frontend.js.loader.modules.extender.internal.resolution.adapter.NPMRegistryModuleAdapter;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSModule;
+import com.liferay.frontend.js.loader.modules.extender.npm.ModuleNameUtil;
 import com.liferay.frontend.js.loader.modules.extender.npm.NPMRegistry;
 import com.liferay.portal.kernel.util.Portal;
 
@@ -130,9 +131,7 @@ public class JSModulesContextResolver {
 		Map<String, String> dependenciesMap = new ConcurrentHashMap<>();
 
 		for (String dependency : dependencies) {
-			if (!dependency.equals("require") &&
-				!dependency.equals("exports") && !dependency.equals("module")) {
-
+			if (!ModuleNameUtil.isReservedModuleName(dependency)) {
 				String resolvedPath = PathResolver.resolvePath(
 					alias, dependency);
 
