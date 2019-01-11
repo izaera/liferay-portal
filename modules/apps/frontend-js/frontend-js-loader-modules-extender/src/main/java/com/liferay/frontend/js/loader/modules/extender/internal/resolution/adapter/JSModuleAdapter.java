@@ -12,20 +12,22 @@
  * details.
  */
 
-package com.liferay.frontend.js.loader.modules.extender.internal;
+package com.liferay.frontend.js.loader.modules.extender.internal.resolution.adapter;
 
-import com.liferay.portal.minifier.MinifierUtil;
-
-import org.osgi.service.component.annotations.Component;
+import java.util.Collection;
+import java.util.Map;
 
 /**
- * @author Iván Zaera Avellón
+ * @author Rodolfo Roza Miranda
  */
-@Component(service = Minifier.class)
-public class Minifier {
+public interface JSModuleAdapter {
 
-	public String minify(String resourceName, String content) {
-		return MinifierUtil.minifyJavaScript(resourceName, content);
-	}
+	public String getAlias();
+
+	public Collection<String> getDependencies();
+
+	public Map<String, String> getMap();
+
+	public String getPath();
 
 }

@@ -12,10 +12,11 @@
  * details.
  */
 
-package com.liferay.frontend.js.loader.modules.extender.internal;
+package com.liferay.frontend.js.loader.modules.extender.internal.cfggen;
 
 import aQute.lib.converter.Converter;
 
+import com.liferay.frontend.js.loader.modules.extender.internal.Details;
 import com.liferay.osgi.util.ServiceTrackerFactory;
 
 import java.net.URL;
@@ -41,9 +42,9 @@ import org.osgi.util.tracker.ServiceTrackerCustomizer;
  */
 @Component(
 	configurationPid = "com.liferay.frontend.js.loader.modules.extender.internal.Details",
-	immediate = true, service = JSLoaderModulesTracker.class
+	immediate = true, service = JSConfigGeneratorModulesTracker.class
 )
-public class JSLoaderModulesTracker
+public class JSConfigGeneratorModulesTracker
 	implements ServiceTrackerCustomizer
 		<ServletContext, ServiceReference<ServletContext>> {
 
@@ -83,18 +84,19 @@ public class JSLoaderModulesTracker
 			return serviceReference;
 		}
 
-		JSLoaderModule jsLoaderModule = new JSLoaderModule(
-			_details.applyVersioning(), serviceReference.getBundle(),
-			contextPath);
+		JSConfigGeneratorModule jsConfigGeneratorModule =
+			new JSConfigGeneratorModule(
+				_details.applyVersioning(), serviceReference.getBundle(),
+				contextPath);
 
-		_jsLoaderModules.put(serviceReference, jsLoaderModule);
+		_jsLoaderModules.put(serviceReference, jsConfigGeneratorModule);
 
 		_lastModified = System.currentTimeMillis();
 
 		return serviceReference;
 	}
 
-	public Collection<JSLoaderModule> getJSLoaderModules() {
+	public Collection<JSConfigGeneratorModule> getJSLoaderModules() {
 		return _jsLoaderModules.values();
 	}
 
@@ -138,7 +140,7 @@ public class JSLoaderModulesTracker
 	}
 
 	private volatile Details _details;
-	private final Map<ServiceReference<ServletContext>, JSLoaderModule>
+	private final Map<ServiceReference<ServletContext>, JSConfigGeneratorModule>
 		_jsLoaderModules = new ConcurrentSkipListMap<>();
 	private volatile long _lastModified = System.currentTimeMillis();
 	private ServiceTracker<ServletContext, ServiceReference<ServletContext>>

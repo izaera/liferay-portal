@@ -12,9 +12,9 @@
  * details.
  */
 
-package com.liferay.frontend.js.loader.modules.extender.internal.adapter;
+package com.liferay.frontend.js.loader.modules.extender.internal.resolution.adapter;
 
-import com.liferay.frontend.js.loader.modules.extender.internal.JSLoaderModule;
+import com.liferay.frontend.js.loader.modules.extender.internal.cfggen.JSConfigGeneratorModule;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONException;
@@ -34,7 +34,9 @@ import java.util.Set;
  */
 public class JSLoaderModuleAdapter implements JSModuleAdapter {
 
-	public JSLoaderModuleAdapter(JSLoaderModule module, Portal portal) {
+	public JSLoaderModuleAdapter(
+		JSConfigGeneratorModule module, Portal portal) {
+
 		_module = module;
 		_portal = portal;
 
@@ -91,7 +93,7 @@ public class JSLoaderModuleAdapter implements JSModuleAdapter {
 
 	private String _alias = StringPool.BLANK;
 	private Set<String> _dependencies = new HashSet<>();
-	private final JSLoaderModule _module;
+	private final JSConfigGeneratorModule _module;
 	private final Portal _portal;
 
 }

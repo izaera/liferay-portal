@@ -34,7 +34,6 @@ import org.osgi.service.component.ComponentContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Modified;
-import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Raymond Augé
@@ -43,20 +42,20 @@ import org.osgi.service.component.annotations.Reference;
 	configurationPid = "com.liferay.frontend.js.loader.modules.extender.internal.Details",
 	immediate = true,
 	property = {
-		"osgi.http.whiteboard.servlet.name=com.liferay.frontend.js.loader.modules.extender.internal.JSLoaderModulesServlet",
-		"osgi.http.whiteboard.servlet.pattern=/js_loader_modules",
+		"osgi.http.whiteboard.servlet.name=com.liferay.frontend.js.loader.modules.extender.internal.JSLoaderConfigServlet",
+		"osgi.http.whiteboard.servlet.pattern=/js_loader_config",
 		"service.ranking:Integer=" + Details.MAX_VALUE_LESS_1K
 	},
-	service = {JSLoaderModulesServlet.class, Servlet.class}
+	service = {JSLoaderConfigServlet.class, Servlet.class}
 )
-public class JSLoaderModulesServlet extends HttpServlet {
+public class JSLoaderConfigServlet extends HttpServlet {
 
 	@Override
 	public void init(ServletConfig config) throws ServletException {
 		super.init(config);
 
 		_componentContext.enableComponent(
-			JSLoaderModulesPortalWebResources.class.getName());
+			JSLoaderConfigPortalWebResources.class.getName());
 	}
 
 	@Activate
@@ -69,10 +68,6 @@ public class JSLoaderModulesServlet extends HttpServlet {
 			Details.class, properties);
 
 		_componentContext = componentContext;
-	}
-
-	protected JSLoaderModulesTracker getJSLoaderModulesTracker() {
-		return _jsLoaderModulesTracker;
 	}
 
 	@Override
@@ -108,13 +103,6 @@ public class JSLoaderModulesServlet extends HttpServlet {
 		_details = details;
 	}
 
-	@Reference(unbind = "-")
-	protected void setJSLoaderModulesTracker(
-		JSLoaderModulesTracker jsLoaderModulesTracker) {
-
-		_jsLoaderModulesTracker = jsLoaderModulesTracker;
-	}
-
 	private void _writeResponse(HttpServletResponse response, String content)
 		throws IOException {
 
@@ -124,16 +112,12 @@ public class JSLoaderModulesServlet extends HttpServlet {
 
 		PrintWriter printWriter = new PrintWriter(servletOutputStream, true);
 
-		printWriter.write(_minifier.minify("/o/js_loader_modules", content));
+		printWriter.write(content);
 
 		printWriter.close();
 	}
 
 	private ComponentContext _componentContext;
 	private volatile Details _details;
-	private JSLoaderModulesTracker _jsLoaderModulesTracker;
-
-	@Reference
-	private Minifier _minifier;
 
 }

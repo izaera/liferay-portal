@@ -14,7 +14,10 @@
 
 package com.liferay.frontend.js.loader.modules.extender.internal;
 
+import com.liferay.frontend.js.loader.modules.extender.internal.resolution.JSModuleContext;
+import com.liferay.frontend.js.loader.modules.extender.internal.resolution.JSModulesContextResolver;
 import com.liferay.portal.kernel.json.JSONFactory;
+import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.ParamUtil;
 
 import java.io.IOException;
@@ -41,20 +44,13 @@ import org.osgi.service.component.annotations.Reference;
 	configurationPid = "com.liferay.frontend.js.loader.modules.extender.internal.Details",
 	immediate = true,
 	property = {
-		"osgi.http.whiteboard.servlet.name=com.liferay.frontend.js.loader.modules.extender.internal.JSModuleLoaderServlet",
-		"osgi.http.whiteboard.servlet.pattern=/js_module_loader",
+		"osgi.http.whiteboard.servlet.name=com.liferay.frontend.js.loader.modules.extender.internal.JSResolveModulesServlet",
+		"osgi.http.whiteboard.servlet.pattern=/js_resolve_modules",
 		"service.ranking:Integer=" + Details.MAX_VALUE_LESS_1K
 	},
-	service = {JSModuleLoaderServlet.class, Servlet.class}
+	service = {JSResolveModulesServlet.class, Servlet.class}
 )
-public class JSModuleLoaderServlet extends HttpServlet {
-
-	@Reference(unbind = "-")
-	public void setJsModulesContextResolver(
-		JSModulesContextResolver jsModulesContextResolver) {
-
-		_jsModulesContextResolver = jsModulesContextResolver;
-	}
+public class JSResolveModulesServlet extends HttpServlet {
 
 	@Override
 	protected void service(HttpServletRequest req, HttpServletResponse resp)
@@ -90,7 +86,7 @@ public class JSModuleLoaderServlet extends HttpServlet {
 	private void _writeResponse(HttpServletResponse response, String content)
 		throws IOException {
 
-		response.setContentType(Details.CONTENT_TYPE);
+		response.setContentType(ContentTypes.APPLICATION_JSON);
 
 		ServletOutputStream servletOutputStream = response.getOutputStream();
 

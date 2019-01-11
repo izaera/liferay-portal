@@ -12,11 +12,13 @@
  * details.
  */
 
-package com.liferay.frontend.js.loader.modules.extender.internal;
+package com.liferay.frontend.js.loader.modules.extender.internal.resolution;
 
-import com.liferay.frontend.js.loader.modules.extender.internal.adapter.JSLoaderModuleAdapter;
-import com.liferay.frontend.js.loader.modules.extender.internal.adapter.JSModuleAdapter;
-import com.liferay.frontend.js.loader.modules.extender.internal.adapter.NPMRegistryModuleAdapter;
+import com.liferay.frontend.js.loader.modules.extender.internal.cfggen.JSConfigGeneratorModule;
+import com.liferay.frontend.js.loader.modules.extender.internal.cfggen.JSConfigGeneratorModulesTracker;
+import com.liferay.frontend.js.loader.modules.extender.internal.resolution.adapter.JSLoaderModuleAdapter;
+import com.liferay.frontend.js.loader.modules.extender.internal.resolution.adapter.JSModuleAdapter;
+import com.liferay.frontend.js.loader.modules.extender.internal.resolution.adapter.NPMRegistryModuleAdapter;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSModule;
 import com.liferay.frontend.js.loader.modules.extender.npm.NPMRegistry;
 import com.liferay.portal.kernel.util.Portal;
@@ -49,10 +51,10 @@ public class JSModulesContextResolver {
 	}
 
 	@Reference(unbind = "-")
-	public void setJsLoaderModulesTracker(
-		JSLoaderModulesTracker jsLoaderModulesTracker) {
+	public void setJsConfigGeneratorModulesTracker(
+		JSConfigGeneratorModulesTracker jsConfigGeneratorModulesTracker) {
 
-		_jsLoaderModulesTracker = jsLoaderModulesTracker;
+		_jsConfigGeneratorModulesTracker = jsConfigGeneratorModulesTracker;
 	}
 
 	@Reference(unbind = "-")
@@ -71,10 +73,11 @@ public class JSModulesContextResolver {
 	}
 
 	private ArrayList<JSModuleAdapter> _getAllModules() {
-		Collection<JSLoaderModule> jsLoaderModules =
-			_jsLoaderModulesTracker.getJSLoaderModules();
+		Collection<JSConfigGeneratorModule> jsConfigGeneratorModules =
+			_jsConfigGeneratorModulesTracker.getJSLoaderModules();
 
-		Stream<JSLoaderModule> jsLoaderModuleStream = jsLoaderModules.stream();
+		Stream<JSConfigGeneratorModule> jsLoaderModuleStream =
+			jsConfigGeneratorModules.stream();
 
 		List<JSLoaderModuleAdapter> jsLoaderModuleAdapters =
 			jsLoaderModuleStream.map(
@@ -192,7 +195,7 @@ public class JSModulesContextResolver {
 		}
 	}
 
-	private JSLoaderModulesTracker _jsLoaderModulesTracker;
+	private JSConfigGeneratorModulesTracker _jsConfigGeneratorModulesTracker;
 	private JSModulesNameMapper _mapper;
 	private NPMRegistry _npmRegistry;
 	private Portal _portal;
