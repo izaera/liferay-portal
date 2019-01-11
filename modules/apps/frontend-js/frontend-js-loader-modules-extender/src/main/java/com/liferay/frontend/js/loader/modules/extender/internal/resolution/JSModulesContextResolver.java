@@ -132,7 +132,7 @@ public class JSModulesContextResolver {
 
 		for (String dependency : dependencies) {
 			if (!ModuleNameUtil.isReservedModuleName(dependency)) {
-				String resolvedPath = PathResolver.resolvePath(
+				String resolvedPath = ModuleNameUtil.resolvePath(
 					alias, dependency);
 
 				String mappedModuleName = _mapModuleName(
