@@ -60,7 +60,7 @@ public class JSConfigGeneratorModulesTracker
 
 		setDetails(Converter.cnv(Details.class, properties));
 
-		_jsLoaderModules.clear();
+		_jsConfigGeneratorModules.clear();
 
 		_serviceTracker = ServiceTrackerFactory.open(
 			componentContext.getBundleContext(),
@@ -89,7 +89,8 @@ public class JSConfigGeneratorModulesTracker
 				_details.applyVersioning(), serviceReference.getBundle(),
 				contextPath);
 
-		_jsLoaderModules.put(serviceReference, jsConfigGeneratorModule);
+		_jsConfigGeneratorModules.put(
+			serviceReference, jsConfigGeneratorModule);
 
 		_lastModified = System.currentTimeMillis();
 
@@ -97,7 +98,7 @@ public class JSConfigGeneratorModulesTracker
 	}
 
 	public Collection<JSConfigGeneratorModule> getJSConfigGeneratorModules() {
-		return _jsLoaderModules.values();
+		return _jsConfigGeneratorModules.values();
 	}
 
 	public long getLastModified() {
@@ -123,7 +124,7 @@ public class JSConfigGeneratorModulesTracker
 		ServiceReference<ServletContext> serviceReference,
 		ServiceReference<ServletContext> trackedServiceReference) {
 
-		_jsLoaderModules.remove(serviceReference);
+		_jsConfigGeneratorModules.remove(serviceReference);
 
 		_lastModified = System.currentTimeMillis();
 	}
@@ -141,7 +142,7 @@ public class JSConfigGeneratorModulesTracker
 
 	private volatile Details _details;
 	private final Map<ServiceReference<ServletContext>, JSConfigGeneratorModule>
-		_jsLoaderModules = new ConcurrentSkipListMap<>();
+		_jsConfigGeneratorModules = new ConcurrentSkipListMap<>();
 	private volatile long _lastModified = System.currentTimeMillis();
 	private ServiceTracker<ServletContext, ServiceReference<ServletContext>>
 		_serviceTracker;
