@@ -14,6 +14,8 @@
 
 package com.liferay.frontend.js.loader.modules.extender.internal;
 
+import com.liferay.frontend.js.loader.modules.extender.internal.cfggen.JSConfigGeneratorModule;
+import com.liferay.frontend.js.loader.modules.extender.internal.cfggen.JSConfigGeneratorModulesTracker;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSBundle;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSModule;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSPackage;
@@ -21,6 +23,7 @@ import com.liferay.frontend.js.loader.modules.extender.npm.JSPackageDependency;
 import com.liferay.frontend.js.loader.modules.extender.npm.ModuleNameUtil;
 import com.liferay.frontend.js.loader.modules.extender.npm.NPMRegistry;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.json.JSONException;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.util.ContentTypes;
 
@@ -49,13 +52,13 @@ import org.osgi.service.component.annotations.Reference;
 @Component(
 	immediate = true,
 	property = {
-		"osgi.http.whiteboard.servlet.name=com.liferay.frontend.js.loader.modules.extender.internal.JSNPMRegistryDebugServlet",
-		"osgi.http.whiteboard.servlet.pattern=/js_npm_registry_debug",
+		"osgi.http.whiteboard.servlet.name=com.liferay.frontend.js.loader.modules.extender.internal.JSResolutionInfoServlet",
+		"osgi.http.whiteboard.servlet.pattern=/js_resolution_info",
 		"service.ranking:Integer=" + Details.MAX_VALUE_LESS_1K
 	},
-	service = {JSNPMRegistryDebugServlet.class, Servlet.class}
+	service = {JSResolutionInfoServlet.class, Servlet.class}
 )
-public class JSNPMRegistryDebugServlet extends HttpServlet {
+public class JSResolutionInfoServlet extends HttpServlet {
 
 	@Override
 	protected void service(
@@ -68,10 +71,44 @@ public class JSNPMRegistryDebugServlet extends HttpServlet {
 
 		PrintWriter printWriter = new PrintWriter(servletOutputStream, true);
 
-		printWriter.write(
-			_jsonFactory.looseSerializeDeep(_getJSBundlesObject()));
+		Object jsBundlesObject = _getJSBundlesObject();
+
+		Object jsConfigGeneratorObject = _getJSConfigGeneratorObject();
+
+		Map<String, Object> resultMap = new HashMap<>();
+
+		resultMap.put("configGenerator", jsConfigGeneratorObject);
+		resultMap.put("npmRegistry", jsBundlesObject);
+
+		printWriter.write(_jsonFactory.looseSerializeDeep(resultMap));
 
 		printWriter.close();
+	}
+
+	private Object _geJSConfigGeneratorModuleObject(
+		JSConfigGeneratorModule jsConfigGeneratorModule) {
+
+		Map<String, Object> jsConfigGeneratorModuleObject = new HashMap<>();
+
+		jsConfigGeneratorModuleObject.put(
+			"contextPath", jsConfigGeneratorModule.getContextPath());
+
+		jsConfigGeneratorModuleObject.put(
+			"unversionedConfiguration",
+			_parse(
+				jsConfigGeneratorModule.getUnversionedConfiguration(), true));
+
+		jsConfigGeneratorModuleObject.put(
+			"unversionedMapsConfiguration",
+			_parse(
+				jsConfigGeneratorModule.getUnversionedMapsConfiguration(),
+				true));
+
+		jsConfigGeneratorModuleObject.put(
+			"versionedConfiguration",
+			_parse(jsConfigGeneratorModule.getVersionedConfiguration(), true));
+
+		return jsConfigGeneratorModuleObject;
 	}
 
 	private Object _getJSBundleObject(JSBundle jsBundle) {
@@ -106,6 +143,22 @@ public class JSNPMRegistryDebugServlet extends HttpServlet {
 		}
 
 		return jsBundlesMap;
+	}
+
+	private Object _getJSConfigGeneratorObject() {
+		Map<String, Object> jsConfigGeneratorObject = new HashMap<>();
+
+		for (JSConfigGeneratorModule jsConfigGeneratorModule :
+				_jsConfigGeneratorModulesTracker.
+					getJSConfigGeneratorModules()) {
+
+			jsConfigGeneratorObject.put(
+				jsConfigGeneratorModule.getName() + StringPool.AT +
+					jsConfigGeneratorModule.getVersion(),
+				_geJSConfigGeneratorModuleObject(jsConfigGeneratorModule));
+		}
+
+		return jsConfigGeneratorObject;
 	}
 
 	private Object _getJSModuleObject(JSModule jsModule) {
@@ -145,6 +198,24 @@ public class JSNPMRegistryDebugServlet extends HttpServlet {
 
 		return jsPackageMap;
 	}
+
+	private Object _parse(String json, boolean addBraces) {
+		if (addBraces) {
+			json =
+				StringPool.OPEN_CURLY_BRACE + json +
+					StringPool.CLOSE_CURLY_BRACE;
+		}
+
+		try {
+			return _jsonFactory.createJSONObject(json);
+		}
+		catch (JSONException jsone) {
+			return "Unable to parse JSON: " + json;
+		}
+	}
+
+	@Reference
+	private JSConfigGeneratorModulesTracker _jsConfigGeneratorModulesTracker;
 
 	@Reference
 	private JSONFactory _jsonFactory;
