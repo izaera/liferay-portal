@@ -14,14 +14,15 @@
 
 package com.liferay.frontend.js.loader.modules.extender.internal.resolution;
 
-import com.liferay.frontend.js.loader.modules.extender.internal.cfggen.JSConfigGeneratorModule;
-import com.liferay.frontend.js.loader.modules.extender.internal.cfggen.JSConfigGeneratorModulesTracker;
+import com.liferay.frontend.js.loader.modules.extender.internal.cfggen.JSConfigGeneratorPackage;
+import com.liferay.frontend.js.loader.modules.extender.internal.cfggen.JSConfigGeneratorPackageTracker;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSBundle;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSBundleTracker;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSModuleAlias;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSPackage;
 import com.liferay.frontend.js.loader.modules.extender.npm.NPMRegistry;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.util.Validator;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -66,7 +67,7 @@ public class JSModulesNameMapper implements JSBundleTracker {
 		CacheState cacheState = _cacheState.get();
 
 		if (cacheState.isOlderThan(
-				_jsConfigGeneratorModulesTracker.getLastModified())) {
+				_jsConfigGeneratorPackageTracker.getLastModified())) {
 
 			_clearCacheState();
 
@@ -109,23 +110,19 @@ public class JSModulesNameMapper implements JSBundleTracker {
 		String module, Map<String, String> exactMap,
 		Map<String, String> partialMap) {
 
-		for (Map.Entry<String, String> entry : exactMap.entrySet()) {
-			String alias = entry.getKey();
-			String aliasValue = entry.getValue();
+		String aliasValue = exactMap.get(module);
 
-			if (alias.equals(module)) {
-				return aliasValue;
-			}
+		if (Validator.isNotNull(aliasValue)) {
+			return aliasValue;
 		}
 
 		for (Map.Entry<String, String> entry : partialMap.entrySet()) {
 			String alias = entry.getKey();
-			String aliasValue = entry.getValue();
 
 			if (alias.equals(module) ||
 				module.startsWith(alias + StringPool.SLASH)) {
 
-				return aliasValue + module.substring(alias.length());
+				return entry.getValue() + module.substring(alias.length());
 			}
 		}
 
@@ -136,7 +133,7 @@ public class JSModulesNameMapper implements JSBundleTracker {
 		new AtomicReference<>();
 
 	@Reference
-	private JSConfigGeneratorModulesTracker _jsConfigGeneratorModulesTracker;
+	private JSConfigGeneratorPackageTracker _jsConfigGeneratorPackageTracker;
 
 	@Reference
 	private NPMRegistry _npmRegistry;
@@ -206,17 +203,17 @@ public class JSModulesNameMapper implements JSBundleTracker {
 		private Map<String, String> _getPartialMatchContextMap() {
 			Map<String, String> partialContextMatch = new HashMap<>();
 
-			Collection<JSConfigGeneratorModule> jsConfigGeneratorModules =
-				_jsConfigGeneratorModulesTracker.getJSConfigGeneratorModules();
+			Collection<JSConfigGeneratorPackage> jsConfigGeneratorPackages =
+				_jsConfigGeneratorPackageTracker.getJSConfigGeneratorPackages();
 
-			Function<JSConfigGeneratorModule, String> valueMapper =
+			Function<JSConfigGeneratorPackage, String> valueMapper =
 				m -> m.getName() + StringPool.AT + m.getVersion();
 
-			Stream<JSConfigGeneratorModule> jsConfigGeneratorModulesStream =
-				jsConfigGeneratorModules.stream();
+			Stream<JSConfigGeneratorPackage> jsConfigGeneratorPackageStream =
+				jsConfigGeneratorPackages.stream();
 
-			Map<String, String> map = jsConfigGeneratorModulesStream.collect(
-				Collectors.toMap(JSConfigGeneratorModule::getName, valueMapper)
+			Map<String, String> map = jsConfigGeneratorPackageStream.collect(
+				Collectors.toMap(JSConfigGeneratorPackage::getName, valueMapper)
 			);
 
 			partialContextMatch.putAll(map);

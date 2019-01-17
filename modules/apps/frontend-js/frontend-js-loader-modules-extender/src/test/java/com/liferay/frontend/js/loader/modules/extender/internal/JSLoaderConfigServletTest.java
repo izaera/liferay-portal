@@ -16,7 +16,7 @@ package com.liferay.frontend.js.loader.modules.extender.internal;
 
 import aQute.lib.converter.Converter;
 
-import com.liferay.frontend.js.loader.modules.extender.internal.cfggen.JSConfigGeneratorModulesTracker;
+import com.liferay.frontend.js.loader.modules.extender.internal.cfggen.JSConfigGeneratorPackageTracker;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PortalUtil;
@@ -110,14 +110,14 @@ public class JSLoaderConfigServletTest extends PowerMockito {
 		jsLoaderConfigServlet.setDetails(
 			Converter.cnv(Details.class, properties));
 
-		JSConfigGeneratorModulesTracker jsConfigGeneratorModulesTracker =
-			new JSConfigGeneratorModulesTracker();
+		JSConfigGeneratorPackageTracker jsConfigGeneratorPackageTracker =
+			new JSConfigGeneratorPackageTracker();
 
-		jsConfigGeneratorModulesTracker.setDetails(
+		jsConfigGeneratorPackageTracker.setDetails(
 			Converter.cnv(Details.class, properties));
 
 		jsLoaderConfigServlet.setJSLoaderModulesTracker(
-			jsConfigGeneratorModulesTracker);
+			jsConfigGeneratorPackageTracker);
 
 		return jsLoaderConfigServlet;
 	}

@@ -19,7 +19,6 @@ import com.liferay.frontend.js.loader.modules.extender.npm.JSModule;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSPackage;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSPackageDependency;
 import com.liferay.frontend.js.loader.modules.extender.npm.NPMRegistry;
-import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringBundler;
 
 import java.util.Collection;
@@ -32,11 +31,10 @@ import java.util.concurrent.ConcurrentHashMap;
 public class NPMRegistryModuleDescriptor implements JSModuleDescriptor {
 
 	public NPMRegistryModuleDescriptor(
-		JSModule jsModule, NPMRegistry npmRegistry, Portal portal) {
+		JSModule jsModule, NPMRegistry npmRegistry) {
 
 		_jsModule = jsModule;
 		_npmRegistry = npmRegistry;
-		_portal = portal;
 	}
 
 	@Override
@@ -105,12 +103,10 @@ public class NPMRegistryModuleDescriptor implements JSModuleDescriptor {
 
 	@Override
 	public String getPath() {
-		return _portal.getPathModule() + "/js/resolved-module/" +
-			_jsModule.getResolvedId();
+		return _jsModule.getResolvedURL();
 	}
 
 	private final JSModule _jsModule;
 	private final NPMRegistry _npmRegistry;
-	private final Portal _portal;
 
 }

@@ -15,20 +15,13 @@
 package com.liferay.frontend.js.loader.modules.extender.internal.resolution.descriptor;
 
 import com.liferay.frontend.js.loader.modules.extender.internal.cfggen.JSConfigGeneratorModule;
+import com.liferay.frontend.js.loader.modules.extender.internal.cfggen.JSConfigGeneratorPackage;
 import com.liferay.frontend.js.loader.modules.extender.internal.resolution.JSModuleDescriptor;
+import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.kernel.json.JSONArray;
-import com.liferay.portal.kernel.json.JSONException;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
-import com.liferay.portal.kernel.json.JSONObject;
-import com.liferay.portal.kernel.util.Portal;
-import com.liferay.portal.kernel.util.Validator;
 
 import java.util.Collection;
-import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author Rodolfo Roza Miranda
@@ -36,12 +29,17 @@ import java.util.Set;
 public class ConfigGeneratorModuleDescriptor implements JSModuleDescriptor {
 
 	public ConfigGeneratorModuleDescriptor(
-		JSConfigGeneratorModule jsConfigGeneratorModule, Portal portal) {
+		JSConfigGeneratorModule jsConfigGeneratorModule) {
 
 		_jsConfigGeneratorModule = jsConfigGeneratorModule;
-		_portal = portal;
 
-		_initialize();
+		JSConfigGeneratorPackage jsConfigGeneratorPackage =
+			_jsConfigGeneratorModule.getJSConfigGeneratorPackage();
+
+		_alias = StringBundler.concat(
+			jsConfigGeneratorPackage.getName(), StringPool.AT,
+			jsConfigGeneratorPackage.getVersion(), StringPool.SLASH,
+			_jsConfigGeneratorModule.getName());
 	}
 
 	@Override
@@ -51,7 +49,7 @@ public class ConfigGeneratorModuleDescriptor implements JSModuleDescriptor {
 
 	@Override
 	public Collection<String> getDependencies() {
-		return _dependencies;
+		return _jsConfigGeneratorModule.getDependencies();
 	}
 
 	@Override
@@ -61,43 +59,10 @@ public class ConfigGeneratorModuleDescriptor implements JSModuleDescriptor {
 
 	@Override
 	public String getPath() {
-		return _portal.getPathProxy() +
-			_jsConfigGeneratorModule.getContextPath();
+		return _jsConfigGeneratorModule.getResolvedURL();
 	}
 
-	private void _initialize() {
-		String unversionedConfiguration =
-			_jsConfigGeneratorModule.getUnversionedConfiguration();
-
-		if (Validator.isNotNull(unversionedConfiguration)) {
-			try {
-				String jsonString = String.format(
-					"{%s}", unversionedConfiguration);
-
-				JSONObject jsonObject = JSONFactoryUtil.createJSONObject(
-					jsonString);
-
-				Iterator<String> keys = jsonObject.keys();
-
-				_alias = keys.next();
-
-				JSONObject aliasConfig = jsonObject.getJSONObject(_alias);
-
-				JSONArray dependencies = aliasConfig.getJSONArray(
-					"dependencies");
-
-				dependencies.forEach(
-					dependency -> _dependencies.add((String)dependency));
-			}
-			catch (JSONException jsone) {
-				throw new RuntimeException(jsone);
-			}
-		}
-	}
-
-	private String _alias = StringPool.BLANK;
-	private Set<String> _dependencies = new HashSet<>();
+	private final String _alias;
 	private final JSConfigGeneratorModule _jsConfigGeneratorModule;
-	private final Portal _portal;
 
 }

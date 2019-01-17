@@ -15,13 +15,15 @@
 package com.liferay.frontend.js.loader.modules.extender.internal;
 
 import com.liferay.frontend.js.loader.modules.extender.internal.cfggen.JSConfigGeneratorModule;
-import com.liferay.frontend.js.loader.modules.extender.internal.cfggen.JSConfigGeneratorModulesTracker;
+import com.liferay.frontend.js.loader.modules.extender.internal.cfggen.JSConfigGeneratorPackage;
+import com.liferay.frontend.js.loader.modules.extender.internal.cfggen.JSConfigGeneratorPackageTracker;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSBundle;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSModule;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSPackage;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSPackageDependency;
 import com.liferay.frontend.js.loader.modules.extender.npm.ModuleNameUtil;
 import com.liferay.frontend.js.loader.modules.extender.npm.NPMRegistry;
+import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONException;
 import com.liferay.portal.kernel.json.JSONFactory;
@@ -86,27 +88,35 @@ public class JSResolutionInfoServlet extends HttpServlet {
 	}
 
 	private Object _geJSConfigGeneratorModuleObject(
-		JSConfigGeneratorModule jsConfigGeneratorModule) {
+		JSConfigGeneratorPackage jsConfigGeneratorPackage) {
 
 		Map<String, Object> jsConfigGeneratorModuleObject = new HashMap<>();
 
 		jsConfigGeneratorModuleObject.put(
-			"contextPath", jsConfigGeneratorModule.getContextPath());
+			"contextPath", jsConfigGeneratorPackage.getContextPath());
+
+		Map<String, List<String>> unversionedModulesObject = new HashMap<>();
+
+		for (JSConfigGeneratorModule jsConfigGeneratorModule :
+				jsConfigGeneratorPackage.getUnversionedModules()) {
+
+			unversionedModulesObject.put(
+				jsConfigGeneratorModule.getName(),
+				jsConfigGeneratorModule.getDependencies());
+		}
 
 		jsConfigGeneratorModuleObject.put(
-			"unversionedConfiguration",
-			_parse(
-				jsConfigGeneratorModule.getUnversionedConfiguration(), true));
+			"unversionedModules", unversionedModulesObject);
 
 		jsConfigGeneratorModuleObject.put(
 			"unversionedMapsConfiguration",
 			_parse(
-				jsConfigGeneratorModule.getUnversionedMapsConfiguration(),
+				jsConfigGeneratorPackage.getUnversionedMapsConfiguration(),
 				true));
 
 		jsConfigGeneratorModuleObject.put(
 			"versionedConfiguration",
-			_parse(jsConfigGeneratorModule.getVersionedConfiguration(), true));
+			_parse(jsConfigGeneratorPackage.getVersionedConfiguration(), true));
 
 		return jsConfigGeneratorModuleObject;
 	}
@@ -148,14 +158,15 @@ public class JSResolutionInfoServlet extends HttpServlet {
 	private Object _getJSConfigGeneratorObject() {
 		Map<String, Object> jsConfigGeneratorObject = new HashMap<>();
 
-		for (JSConfigGeneratorModule jsConfigGeneratorModule :
-				_jsConfigGeneratorModulesTracker.
-					getJSConfigGeneratorModules()) {
+		for (JSConfigGeneratorPackage jsConfigGeneratorPackage :
+				_jsConfigGeneratorPackageTracker.
+					getJSConfigGeneratorPackages()) {
 
 			jsConfigGeneratorObject.put(
-				jsConfigGeneratorModule.getName() + StringPool.AT +
-					jsConfigGeneratorModule.getVersion(),
-				_geJSConfigGeneratorModuleObject(jsConfigGeneratorModule));
+				StringBundler.concat(
+					jsConfigGeneratorPackage.getName(), StringPool.AT,
+					jsConfigGeneratorPackage.getVersion()),
+				_geJSConfigGeneratorModuleObject(jsConfigGeneratorPackage));
 		}
 
 		return jsConfigGeneratorObject;
@@ -215,7 +226,7 @@ public class JSResolutionInfoServlet extends HttpServlet {
 	}
 
 	@Reference
-	private JSConfigGeneratorModulesTracker _jsConfigGeneratorModulesTracker;
+	private JSConfigGeneratorPackageTracker _jsConfigGeneratorPackageTracker;
 
 	@Reference
 	private JSONFactory _jsonFactory;

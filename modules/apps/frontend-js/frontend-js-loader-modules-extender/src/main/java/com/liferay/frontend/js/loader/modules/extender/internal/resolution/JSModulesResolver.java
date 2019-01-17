@@ -15,7 +15,8 @@
 package com.liferay.frontend.js.loader.modules.extender.internal.resolution;
 
 import com.liferay.frontend.js.loader.modules.extender.internal.cfggen.JSConfigGeneratorModule;
-import com.liferay.frontend.js.loader.modules.extender.internal.cfggen.JSConfigGeneratorModulesTracker;
+import com.liferay.frontend.js.loader.modules.extender.internal.cfggen.JSConfigGeneratorPackage;
+import com.liferay.frontend.js.loader.modules.extender.internal.cfggen.JSConfigGeneratorPackageTracker;
 import com.liferay.frontend.js.loader.modules.extender.internal.resolution.descriptor.ConfigGeneratorModuleDescriptor;
 import com.liferay.frontend.js.loader.modules.extender.internal.resolution.descriptor.NPMRegistryModuleDescriptor;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSModule;
@@ -66,18 +67,34 @@ public class JSModulesResolver {
 	}
 
 	private List<JSModuleDescriptor> _getAllJSModuleDescriptors() {
-		Collection<JSConfigGeneratorModule> jsConfigGeneratorModules =
-			_jsConfigGeneratorModulesTracker.getJSConfigGeneratorModules();
+		Collection<JSConfigGeneratorPackage> jsConfigGeneratorPackages =
+			_jsConfigGeneratorPackageTracker.getJSConfigGeneratorPackages();
 
-		Stream<JSConfigGeneratorModule> jsConfigGeneratorModulesStream =
-			jsConfigGeneratorModules.stream();
+		Stream<JSConfigGeneratorPackage> jsConfigGeneratorPackagesStream =
+			jsConfigGeneratorPackages.stream();
 
 		List<ConfigGeneratorModuleDescriptor> configGeneratorModuleDescriptors =
-			jsConfigGeneratorModulesStream.map(
-				m -> new ConfigGeneratorModuleDescriptor(m, _portal)
-			).collect(
-				Collectors.toList()
-			);
+			jsConfigGeneratorPackagesStream.reduce(
+				new ArrayList<>(),
+				(arrayList, pkg) -> {
+					for (JSConfigGeneratorModule jsConfigGeneratorModule :
+							pkg.getUnversionedModules()) {
+
+						arrayList.add(
+							new ConfigGeneratorModuleDescriptor(
+								jsConfigGeneratorModule));
+					}
+
+					return arrayList;
+				},
+				(arrayList1, arrayList2) -> {
+					ArrayList<ConfigGeneratorModuleDescriptor> result =
+						new ArrayList<>(arrayList1);
+
+					result.addAll(arrayList2);
+
+					return result;
+				});
 
 		Collection<JSModule> resolvedJSModules =
 			_npmRegistry.getResolvedJSModules();
@@ -86,7 +103,7 @@ public class JSModulesResolver {
 
 		List<NPMRegistryModuleDescriptor> npmRegistryModuleDescriptors =
 			resolvedJSModulesStream.map(
-				m -> new NPMRegistryModuleDescriptor(m, _npmRegistry, _portal)
+				m -> new NPMRegistryModuleDescriptor(m, _npmRegistry)
 			).collect(
 				Collectors.toList()
 			);
@@ -155,8 +172,7 @@ public class JSModulesResolver {
 
 		if (jsModule != null) {
 			_processModule(
-				new NPMRegistryModuleDescriptor(
-					jsModule, _npmRegistry, _portal),
+				new NPMRegistryModuleDescriptor(jsModule, _npmRegistry),
 				jsModulesResolution);
 		}
 	}
@@ -185,7 +201,7 @@ public class JSModulesResolver {
 	}
 
 	@Reference
-	private JSConfigGeneratorModulesTracker _jsConfigGeneratorModulesTracker;
+	private JSConfigGeneratorPackageTracker _jsConfigGeneratorPackageTracker;
 
 	@Reference
 	private JSModulesNameMapper _jsModulesNameMapper;
