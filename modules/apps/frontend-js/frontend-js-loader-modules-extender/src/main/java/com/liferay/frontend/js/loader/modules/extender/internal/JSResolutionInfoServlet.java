@@ -14,9 +14,9 @@
 
 package com.liferay.frontend.js.loader.modules.extender.internal;
 
-import com.liferay.frontend.js.loader.modules.extender.internal.cfggen.JSConfigGeneratorModule;
-import com.liferay.frontend.js.loader.modules.extender.internal.cfggen.JSConfigGeneratorPackage;
-import com.liferay.frontend.js.loader.modules.extender.internal.cfggen.JSConfigGeneratorPackageTracker;
+import com.liferay.frontend.js.loader.modules.extender.internal.config.generator.JSConfigGeneratorModule;
+import com.liferay.frontend.js.loader.modules.extender.internal.config.generator.JSConfigGeneratorPackage;
+import com.liferay.frontend.js.loader.modules.extender.internal.config.generator.JSConfigGeneratorPackageTracker;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSBundle;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSModule;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSPackage;

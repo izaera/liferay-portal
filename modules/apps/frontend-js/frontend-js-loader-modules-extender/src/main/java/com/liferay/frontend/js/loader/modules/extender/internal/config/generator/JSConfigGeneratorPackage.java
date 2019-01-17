@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.frontend.js.loader.modules.extender.internal.cfggen;
+package com.liferay.frontend.js.loader.modules.extender.internal.config.generator;
 
 import aQute.bnd.osgi.Constants;
 

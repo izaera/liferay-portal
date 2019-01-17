@@ -16,7 +16,7 @@ package com.liferay.frontend.js.loader.modules.extender.internal;
 
 import aQute.lib.converter.Converter;
 
-import com.liferay.frontend.js.loader.modules.extender.internal.cfggen.JSConfigGeneratorPackageTracker;
+import com.liferay.frontend.js.loader.modules.extender.internal.config.generator.JSConfigGeneratorPackageTracker;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PortalUtil;

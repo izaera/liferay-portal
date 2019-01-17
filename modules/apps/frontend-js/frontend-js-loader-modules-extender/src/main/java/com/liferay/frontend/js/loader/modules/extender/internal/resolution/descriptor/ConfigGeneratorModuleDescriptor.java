@@ -14,8 +14,8 @@
 
 package com.liferay.frontend.js.loader.modules.extender.internal.resolution.descriptor;
 
-import com.liferay.frontend.js.loader.modules.extender.internal.cfggen.JSConfigGeneratorModule;
-import com.liferay.frontend.js.loader.modules.extender.internal.cfggen.JSConfigGeneratorPackage;
+import com.liferay.frontend.js.loader.modules.extender.internal.config.generator.JSConfigGeneratorModule;
+import com.liferay.frontend.js.loader.modules.extender.internal.config.generator.JSConfigGeneratorPackage;
 import com.liferay.frontend.js.loader.modules.extender.internal.resolution.JSModuleDescriptor;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;

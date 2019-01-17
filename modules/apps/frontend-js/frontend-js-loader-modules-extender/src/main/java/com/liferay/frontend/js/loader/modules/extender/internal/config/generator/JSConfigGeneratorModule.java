@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.frontend.js.loader.modules.extender.internal.cfggen;
+package com.liferay.frontend.js.loader.modules.extender.internal.config.generator;
 
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;

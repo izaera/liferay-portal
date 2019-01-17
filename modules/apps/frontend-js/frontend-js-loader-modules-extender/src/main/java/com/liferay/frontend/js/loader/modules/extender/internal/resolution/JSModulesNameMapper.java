@@ -14,8 +14,8 @@
 
 package com.liferay.frontend.js.loader.modules.extender.internal.resolution;
 
-import com.liferay.frontend.js.loader.modules.extender.internal.cfggen.JSConfigGeneratorPackage;
-import com.liferay.frontend.js.loader.modules.extender.internal.cfggen.JSConfigGeneratorPackageTracker;
+import com.liferay.frontend.js.loader.modules.extender.internal.config.generator.JSConfigGeneratorPackage;
+import com.liferay.frontend.js.loader.modules.extender.internal.config.generator.JSConfigGeneratorPackageTracker;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSBundle;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSBundleTracker;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSModuleAlias;
