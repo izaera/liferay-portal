@@ -43,12 +43,11 @@ renderResponse.setTitle(layoutPageTemplateDisplayContext.getLayoutPageTemplateEn
 <%
 JSONSerializer jsonSerializer = JSONFactoryUtil.createJSONSerializer();
 
-StringBundler sb = new StringBundler(16);
+StringBundler sb = new StringBundler(3);
 
-sb.append(npmResolvedPackageName);
-sb.append("/js/fragments_editor/reducers/reducers.es as ReducersModule, ");
-sb.append(npmResolvedPackageName);
-sb.append("/js/fragments_editor/store/store.es as StoreModule");
+sb.append("js/fragments_editor/reducers/reducers.es as ReducersModule");
+sb.append(StringPool.COMMA);
+sb.append("js/fragments_editor/store/store.es as StoreModule");
 %>
 
 <aui:script require="<%= sb.toString() %>">
