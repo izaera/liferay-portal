@@ -21,7 +21,6 @@ String namespace = AUIUtil.getNamespace(liferayPortletRequest, liferayPortletRes
 
 String protocol = HttpUtil.getProtocol(request);
 
-String bootstrapRequire = (String)request.getAttribute("liferay-map:map:bootstrapRequire");
 boolean geolocation = GetterUtil.getBoolean(request.getAttribute("liferay-map:map:geolocation"));
 double latitude = (Double)request.getAttribute("liferay-map:map:latitude");
 double longitude = (Double)request.getAttribute("liferay-map:map:longitude");
@@ -53,7 +52,7 @@ name = namespace + name;
 	<script src="<%= apiURL %>" type="text/javascript"></script>
 </liferay-util:html-top>
 
-<aui:script require="<%= bootstrapRequire %>">
+<aui:script require="js/MapGoogleMaps.es as MapGoogleMaps">
 	var MapControls = Liferay.MapBase.CONTROLS;
 
 	var mapConfig = {
