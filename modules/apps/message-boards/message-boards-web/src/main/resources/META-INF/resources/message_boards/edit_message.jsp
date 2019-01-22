@@ -454,7 +454,7 @@ if (portletTitleBasedNavigation) {
 	</aui:form>
 </div>
 
-<aui:script require='<%= npmResolvedPackageName + "/message_boards/js/MBPortlet.es as MBPortlet" %>'>
+<aui:script require="message_boards/js/MBPortlet.es as MBPortlet">
 	new MBPortlet.default(
 		{
 			constants: {
