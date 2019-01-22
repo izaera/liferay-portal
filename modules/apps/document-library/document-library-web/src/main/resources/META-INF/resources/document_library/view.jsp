@@ -182,7 +182,7 @@ String navigation = ParamUtil.getString(request, "navigation");
 			<portlet:namespace />toggleActionsButton();
 		</aui:script>
 
-		<aui:script use="liferay-document-library">
+		<aui:script use="document_library/tags/EditTags.es as EditTags">
 
 			<%
 			String[] entryColumns = dlPortletInstanceSettingsHelper.getEntryColumns();
@@ -200,84 +200,89 @@ String navigation = ParamUtil.getString(request, "navigation");
 			viewFileEntryTypeURL.setParameter("fileEntryTypeId", (String)null);
 			%>
 
-			Liferay.component(
-				'<portlet:namespace />DocumentLibrary',
-				new Liferay.Portlet.DocumentLibrary(
-					{
-						classNameId: '<%= ClassNameLocalServiceUtil.getClassNameId(DLFileEntryConstants.getClassName()) %>',
-						columnNames: ['<%= StringUtil.merge(escapedEntryColumns, "','") %>'],
-
-						<%
-						DecimalFormatSymbols decimalFormatSymbols = DecimalFormatSymbols.getInstance(locale);
-						%>
-
-						decimalSeparator: '<%= decimalFormatSymbols.getDecimalSeparator() %>',
-						displayStyle: '<%= HtmlUtil.escapeJS(displayStyle) %>',
-						editEntryUrl: '<portlet:actionURL name="/document_library/edit_entry" />',
-						downloadEntryUrl: '<portlet:resourceURL id="/document_library/download_entry"><portlet:param name="folderId" value="<%= String.valueOf(folderId) %>" /></portlet:resourceURL>',
-						folders: {
-							defaultParentFolderId: '<%= folderId %>',
-							dimensions: {
-								height: '<%= PrefsPropsUtil.getLong(PropsKeys.DL_FILE_ENTRY_THUMBNAIL_MAX_HEIGHT) %>',
-								width: '<%= PrefsPropsUtil.getLong(PropsKeys.DL_FILE_ENTRY_THUMBNAIL_MAX_WIDTH) %>'
-							}
-						},
-						form: {
-							method: 'POST',
-							node: A.one(document.<portlet:namespace />fm2)
-						},
-						maxFileSize: <%= dlConfiguration.fileMaxSize() %>,
-						moveEntryUrl: '<portlet:renderURL><portlet:param name="mvcRenderCommandName" value="/document_library/move_entry" /><portlet:param name="redirect" value="<%= currentURL %>" /><portlet:param name="newFolderId" value="<%= String.valueOf(folderId) %>" /></portlet:renderURL>',
-						editTagsUrl: '<portlet:renderURL><portlet:param name="mvcRenderCommandName" value="/document_library/edit_tags" /><portlet:param name="redirect" value="<%= currentURL %>" /></portlet:renderURL>',
-						namespace: '<portlet:namespace />',
-						npmResolvedPackageName: '<%= npmResolvedPackageName %>',
-						portletId: '<%= HtmlUtil.escapeJS(portletId) %>',
-						redirect: encodeURIComponent('<%= currentURL %>'),
-						repositories: [
+			AUI().use(
+				'liferay-document-library',
+				function(A) {
+					Liferay.component(
+						'<portlet:namespace />DocumentLibrary',
+						new Liferay.Portlet.DocumentLibrary(
 							{
-								id: '<%= scopeGroupId %>',
-								name: '<liferay-ui:message key="local" />'
+								classNameId: '<%= ClassNameLocalServiceUtil.getClassNameId(DLFileEntryConstants.getClassName()) %>',
+								columnNames: ['<%= StringUtil.merge(escapedEntryColumns, "','") %>'],
+
+								<%
+								DecimalFormatSymbols decimalFormatSymbols = DecimalFormatSymbols.getInstance(locale);
+								%>
+
+								decimalSeparator: '<%= decimalFormatSymbols.getDecimalSeparator() %>',
+								displayStyle: '<%= HtmlUtil.escapeJS(displayStyle) %>',
+								downloadEntryUrl: '<portlet:resourceURL id="/document_library/download_entry"><portlet:param name="folderId" value="<%= String.valueOf(folderId) %>" /></portlet:resourceURL>',
+								editEntryUrl: '<portlet:actionURL name="/document_library/edit_entry" />',
+								editTags: EditTags.default,
+								editTagsUrl: '<portlet:renderURL><portlet:param name="mvcRenderCommandName" value="/document_library/edit_tags" /><portlet:param name="redirect" value="<%= currentURL %>" /></portlet:renderURL>',
+								folders: {
+									defaultParentFolderId: '<%= folderId %>',
+									dimensions: {
+										height: '<%= PrefsPropsUtil.getLong(PropsKeys.DL_FILE_ENTRY_THUMBNAIL_MAX_HEIGHT) %>',
+										width: '<%= PrefsPropsUtil.getLong(PropsKeys.DL_FILE_ENTRY_THUMBNAIL_MAX_WIDTH) %>'
+									}
+								},
+								form: {
+									method: 'POST',
+									node: A.one(document.<portlet:namespace />fm2)
+								},
+								maxFileSize: <%= dlConfiguration.fileMaxSize() %>,
+								moveEntryUrl: '<portlet:renderURL><portlet:param name="mvcRenderCommandName" value="/document_library/move_entry" /><portlet:param name="redirect" value="<%= currentURL %>" /><portlet:param name="newFolderId" value="<%= String.valueOf(folderId) %>" /></portlet:renderURL>',
+								namespace: '<portlet:namespace />',
+								portletId: '<%= HtmlUtil.escapeJS(portletId) %>',
+								redirect: encodeURIComponent('<%= currentURL %>'),
+								repositories: [
+									{
+										id: '<%= scopeGroupId %>',
+										name: '<liferay-ui:message key="local" />'
+									}
+
+									<%
+									List<Folder> mountFolders = DLAppServiceUtil.getMountFolders(repositoryId, DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+
+									for (Folder mountFolder : mountFolders) {
+									%>
+
+										, {
+											id: '<%= mountFolder.getRepositoryId() %>',
+											name: '<%= HtmlUtil.escapeJS(mountFolder.getName()) %>'
+										}
+
+									<%
+									}
+									%>
+
+								],
+								selectFileEntryTypeURL: '<portlet:renderURL windowState="<%= LiferayWindowState.POP_UP.toString() %>"><portlet:param name="mvcPath" value="/document_library/select_file_entry_type.jsp" /><portlet:param name="fileEntryTypeId" value="<%= String.valueOf(fileEntryTypeId) %>" /></portlet:renderURL>',
+								scopeGroupId: <%= scopeGroupId %>,
+								searchContainerId: 'entries',
+								trashEnabled: <%= (scopeGroupId == repositoryId) && dlTrashUtil.isTrashEnabled(scopeGroupId, repositoryId) %>,
+								uploadable: <%= uploadable %>,
+								uploadURL: '<%= uploadURL %>',
+								viewFileEntryURL: '<portlet:renderURL><portlet:param name="mvcRenderCommandName" value="/document_library/view_file_entry" /><portlet:param name="redirect" value="<%= currentURL %>" /></portlet:renderURL>',
+								viewFileEntryTypeURL: '<%= viewFileEntryTypeURL %>'
 							}
+						),
+						{
+							destroyOnNavigate: true,
+							portletId: '<%= HtmlUtil.escapeJS(portletId) %>'
+						}
+					);
 
-							<%
-							List<Folder> mountFolders = DLAppServiceUtil.getMountFolders(repositoryId, DLFolderConstants.DEFAULT_PARENT_FOLDER_ID, QueryUtil.ALL_POS, QueryUtil.ALL_POS);
+					var changeScopeHandles = function(event) {
+						documentLibrary.destroy();
 
-							for (Folder mountFolder : mountFolders) {
-							%>
+						Liferay.detach('changeScope', changeScopeHandles);
+					};
 
-								, {
-									id: '<%= mountFolder.getRepositoryId() %>',
-									name: '<%= HtmlUtil.escapeJS(mountFolder.getName()) %>'
-								}
-
-							<%
-							}
-							%>
-
-						],
-						selectFileEntryTypeURL: '<portlet:renderURL windowState="<%= LiferayWindowState.POP_UP.toString() %>"><portlet:param name="mvcPath" value="/document_library/select_file_entry_type.jsp" /><portlet:param name="fileEntryTypeId" value="<%= String.valueOf(fileEntryTypeId) %>" /></portlet:renderURL>',
-						scopeGroupId: <%= scopeGroupId %>,
-						searchContainerId: 'entries',
-						trashEnabled: <%= (scopeGroupId == repositoryId) && dlTrashUtil.isTrashEnabled(scopeGroupId, repositoryId) %>,
-						uploadable: <%= uploadable %>,
-						uploadURL: '<%= uploadURL %>',
-						viewFileEntryURL: '<portlet:renderURL><portlet:param name="mvcRenderCommandName" value="/document_library/view_file_entry" /><portlet:param name="redirect" value="<%= currentURL %>" /></portlet:renderURL>',
-						viewFileEntryTypeURL: '<%= viewFileEntryTypeURL %>'
-					}
-				),
-				{
-					destroyOnNavigate: true,
-					portletId: '<%= HtmlUtil.escapeJS(portletId) %>'
+					Liferay.on('changeScope', changeScopeHandles);
 				}
 			);
-
-			var changeScopeHandles = function(event) {
-				documentLibrary.destroy();
-
-				Liferay.detach('changeScope', changeScopeHandles);
-			};
-
-			Liferay.on('changeScope', changeScopeHandles);
 		</aui:script>
 
 		<liferay-util:dynamic-include key="com.liferay.document.library.web#/document_library/view.jsp#post" />

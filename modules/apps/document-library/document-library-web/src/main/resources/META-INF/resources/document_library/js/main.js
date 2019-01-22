@@ -34,8 +34,8 @@ AUI.add(
 						validator: Lang.isString
 					},
 
-					npmResolvedPackageName: {
-						validator: Lang.isString
+					editTags: {
+						validator: Lang.isObject
 					},
 
 					searchContainerId: {
@@ -260,21 +260,18 @@ AUI.add(
 							var urlTags = themeDisplay.getPortalURL() + '/o/bulk/asset/tags/' + instance.get('classNameId') + '/common';
 							var urlUpdateTags = themeDisplay.getPortalURL() + '/o/bulk/asset/tags/' + instance.get('classNameId');
 
-							Liferay.Loader.require(
-								instance.get('npmResolvedPackageName') + '/document_library/tags/EditTags.es',
-								function(EditTags) {
-									instance._editTagsComponent = new EditTags.default(
-										{
-											fileEntries: instance._selectedFileEntries,
-											portletNamespace: namespace,
-											repositoryId: parseFloat(form.get(namespace + 'repositoryId').val()),
-											spritemap: themeDisplay.getPathThemeImages() + '/lexicon/icons.svg',
-											urlTags: urlTags,
-											urlUpdateTags: urlUpdateTags
-										},
-										'#' + instance.NS + 'documentLibraryModal'
-									);
-								}
+							var EditTags = instance.get('editTags');
+
+							instance._editTagsComponent = new EditTags(
+								{
+									fileEntries: instance._selectedFileEntries,
+									portletNamespace: namespace,
+									repositoryId: parseFloat(form.get(namespace + 'repositoryId').val()),
+									spritemap: themeDisplay.getPathThemeImages() + '/lexicon/icons.svg',
+									urlTags: urlTags,
+									urlUpdateTags: urlUpdateTags
+								},
+								'#' + instance.NS + 'documentLibraryModal'
 							);
 						}
 						else {
