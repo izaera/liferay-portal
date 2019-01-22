@@ -136,12 +136,11 @@ renderResponse.setTitle(siteNavigationAdminDisplayContext.getSiteNavigationMenuN
 </aui:script>
 
 <%
-StringBundler sb = new StringBundler(4);
+StringBundler sb = new StringBundler(3);
 
-sb.append(npmResolvedPackageName);
-sb.append("/js/SiteNavigationMenuEditor.es as siteNavigationMenuEditorModule, ");
-sb.append(npmResolvedPackageName);
-sb.append("/js/SiteNavigationMenuItemDOMHandler.es as siteNavigationMenuItemDOMHandlerModule");
+sb.append("js/SiteNavigationMenuEditor.es as siteNavigationMenuEditorModule");
+sb.append(StringPool.COMMA);
+sb.append("js/SiteNavigationMenuItemDOMHandler.es as siteNavigationMenuItemDOMHandlerModule");
 %>
 
 <aui:script require="<%= sb.toString() %>">
