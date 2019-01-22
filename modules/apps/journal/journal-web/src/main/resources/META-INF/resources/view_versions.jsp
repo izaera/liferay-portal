@@ -136,7 +136,7 @@
 	/>
 </liferay-ui:search-container>
 
-<aui:script require='<%= npmResolvedPackageName + "/js/ElementsDefaultEventHandler.es as ElementsDefaultEventHandler" %>'>
+<aui:script require="js/ElementsDefaultEventHandler.es as ElementsDefaultEventHandler">
 	Liferay.component(
 		'<%= JournalWebConstants.JOURNAL_ELEMENTS_DEFAULT_EVENT_HANDLER %>',
 		new ElementsDefaultEventHandler.default(

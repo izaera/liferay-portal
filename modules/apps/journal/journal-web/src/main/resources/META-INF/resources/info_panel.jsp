@@ -243,7 +243,7 @@ if (ListUtil.isEmpty(folders) && ListUtil.isEmpty(articles)) {
 	</c:otherwise>
 </c:choose>
 
-<aui:script require='<%= npmResolvedPackageName + "/js/ElementsDefaultEventHandler.es as ElementsDefaultEventHandler" %>'>
+<aui:script require="js/ElementsDefaultEventHandler.es as ElementsDefaultEventHandler">
 	Liferay.component(
 		'<%= JournalWebConstants.JOURNAL_INFO_PANEL_ELEMENTS_DEFAULT_EVENT_HANDLER %>',
 		new ElementsDefaultEventHandler.default(

@@ -24,7 +24,7 @@ JournalManagementToolbarDisplayContext journalManagementToolbarlDisplayContext =
 	displayContext="<%= journalManagementToolbarlDisplayContext %>"
 />
 
-<aui:script require='<%= npmResolvedPackageName + "/js/ManagementToolbarDefaultEventHandler.es as ManagementToolbarDefaultEventHandler" %>'>
+<aui:script require="js/ManagementToolbarDefaultEventHandler.es as ManagementToolbarDefaultEventHandler">
 	<portlet:renderURL var="addArticleURL">
 		<portlet:param name="mvcPath" value="/edit_article.jsp" />
 		<portlet:param name="redirect" value="<%= currentURL %>" />
