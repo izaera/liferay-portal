@@ -103,6 +103,9 @@ public class ScriptTag extends BaseScriptTag {
 		HttpServletRequest request =
 			(HttpServletRequest)pageContext.getRequest();
 
+		String namespace =
+			(String)pageContext.getAttribute("npmResolvedPackageName");
+
 		try {
 			String portletId = null;
 
@@ -146,7 +149,7 @@ public class ScriptTag extends BaseScriptTag {
 				if (require != null) {
 					scriptData.append(
 						portletId, bodyContentSB, require,
-						ScriptData.ModulesType.ES6);
+						ScriptData.ModulesType.ES6, namespace);
 				}
 				else {
 					scriptData.append(
@@ -178,7 +181,7 @@ public class ScriptTag extends BaseScriptTag {
 				if (require != null) {
 					scriptData.append(
 						portletId, bodyContentSB, require,
-						ScriptData.ModulesType.ES6);
+						ScriptData.ModulesType.ES6, namespace);
 				}
 				else {
 					scriptData.append(

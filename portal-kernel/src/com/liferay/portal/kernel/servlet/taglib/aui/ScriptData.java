@@ -45,18 +45,32 @@ public class ScriptData implements Mergeable<ScriptData>, Serializable {
 		String portletId, String content, String modules,
 		ModulesType modulesType) {
 
+		append(portletId, content, modules, modulesType, StringPool.BLANK);
+	}
+
+	public void append(
+		String portletId, String content, String modules,
+		ModulesType modulesType, String modulesPrefix) {
+
 		PortletData portletData = _getPortletData(portletId);
 
-		portletData.append(content, modules, modulesType);
+		portletData.append(content, modules, modulesType, modulesPrefix);
 	}
 
 	public void append(
 		String portletId, StringBundler contentSB, String modules,
 		ModulesType modulesType) {
 
+		append(portletId, contentSB, modules, modulesType, StringPool.BLANK);
+	}
+
+	public void append(
+		String portletId, StringBundler contentSB, String modules,
+		ModulesType modulesType, String modulesPrefix) {
+
 		PortletData portletData = _getPortletData(portletId);
 
-		portletData.append(contentSB, modules, modulesType);
+		portletData.append(contentSB, modules, modulesType, modulesPrefix);
 	}
 
 	public void mark() {
@@ -364,6 +378,13 @@ public class ScriptData implements Mergeable<ScriptData>, Serializable {
 		public void append(
 			String content, String modules, ModulesType modulesType) {
 
+			append(content, modules, modulesType, StringPool.BLANK);
+		}
+
+		public void append(
+			String content, String modules, ModulesType modulesType,
+			String modulesPrefix) {
+
 			if (Validator.isNull(modules)) {
 				_rawSB.append(content);
 			}
@@ -390,6 +411,10 @@ public class ScriptData implements Mergeable<ScriptData>, Serializable {
 					_es6CallbackSB.append("})();");
 
 					for (String module : modulesArray) {
+						if (Validator.isNotNull(modulesPrefix)) {
+							module = modulesPrefix + StringPool.SLASH + module;
+						}
+
 						_es6ModulesSet.add(StringUtil.trim(module));
 					}
 				}
@@ -398,6 +423,13 @@ public class ScriptData implements Mergeable<ScriptData>, Serializable {
 
 		public void append(
 			StringBundler contentSB, String modules, ModulesType modulesType) {
+
+			append(contentSB, modules, modulesType, StringPool.BLANK);
+		}
+
+		public void append(
+			StringBundler contentSB, String modules, ModulesType modulesType,
+			String modulesPrefix) {
 
 			if (Validator.isNull(modules)) {
 				_rawSB.append(contentSB);
@@ -420,6 +452,10 @@ public class ScriptData implements Mergeable<ScriptData>, Serializable {
 					_es6CallbackSB.append("})();");
 
 					for (String module : modulesArray) {
+						if (Validator.isNotNull(modulesPrefix)) {
+							module = modulesPrefix + StringPool.SLASH + module;
+						}
+
 						_es6ModulesSet.add(StringUtil.trim(module));
 					}
 				}
