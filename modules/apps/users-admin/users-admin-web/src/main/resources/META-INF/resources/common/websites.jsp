@@ -19,7 +19,6 @@
 <%
 String className = (String)request.getAttribute("contact_information.jsp-className");
 long classPK = (long)request.getAttribute("contact_information.jsp-classPK");
-String contactInformationRequireJS = (String)request.getAttribute("contact_information.jsp-contactInformationRequireJS");
 
 String emptyResultsMessage = ParamUtil.getString(request, "emptyResultsMessage");
 
@@ -121,7 +120,7 @@ List<Website> websites = WebsiteServiceUtil.getWebsites(className, classPK);
 	<portlet:param name="className" value="<%= className %>" />
 </portlet:renderURL>
 
-<aui:script require="<%= contactInformationRequireJS %>">
+<aui:script require="js/contact-information.es as ContactInformation">
 	ContactInformation.registerContactInformationListener(
 		'.modify-website-link a',
 		'<%= editWebsiteRenderURL.toString() %>',

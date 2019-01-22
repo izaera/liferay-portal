@@ -130,7 +130,7 @@ List<OrgLabor> orgLabors = OrgLaborServiceUtil.getOrgLabors(organizationId);
 	<portlet:param name="mvcPath" value="/organization/edit_opening_hours.jsp" />
 </portlet:renderURL>
 
-<aui:script require="<%= organizationScreenNavigationDisplayContext.getContactInformationJSRequire() %>">
+<aui:script require="js/contact-information.es as ContactInformation">
 	ContactInformation.registerContactInformationListener(
 		'.modify-opening-hours-link a',
 		'<%= editOpeningHoursRenderURL.toString() %>',
