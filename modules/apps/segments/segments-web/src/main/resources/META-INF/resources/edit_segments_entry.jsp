@@ -63,7 +63,7 @@ renderResponse.setTitle(editSegmentsEntryDisplayContext.getTitle(locale));
 
 	<liferay-portlet:resourceURL copyCurrentRenderParameters="<%= false %>" id="getSegmentsEntryClassPKsCount" var="getSegmentsEntryClassPKsCountURL" />
 
-	<aui:script require='<%= npmResolvedPackageName + "/js/index.es as SegmentEdit" %>'>
+	<aui:script require="js/index.es as SegmentEdit">
 		SegmentEdit.default(
 			'<%= segmentEditRootElementId %>',
 			{
