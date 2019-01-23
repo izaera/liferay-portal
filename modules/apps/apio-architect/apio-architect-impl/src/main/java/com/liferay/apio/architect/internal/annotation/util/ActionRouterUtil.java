@@ -436,11 +436,9 @@ public final class ActionRouterUtil {
 		if (hasPermission != null) {
 			boolean validIdAnnotation = _isResourceWithAnnotation(
 				resourceClass, Item.class, method, Id.class);
-
 			boolean validGenericParentIdAnnotation = _isResourceWithAnnotation(
 				resourceClass, GenericParent.class, method,
 				GenericParentId.class);
-
 			boolean validParentIdAnnotation = _isResourceWithAnnotation(
 				resourceClass, Nested.class, method, ParentId.class);
 

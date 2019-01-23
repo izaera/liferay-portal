@@ -312,6 +312,15 @@ public class BaseTest {
 	protected WebTarget createDefaultTarget() {
 		Client client = createClient();
 
+		return client.target(getJAXRSServiceEndpoint());
+	}
+
+	/**
+	 * Return the endpoint were the JAX-RS whiteboard is listening.
+	 *
+	 * @review
+	 */
+	protected String getJAXRSServiceEndpoint() {
 		return Try.of(
 			() -> _runtimeServiceReference.getProperty(JAX_RS_SERVICE_ENDPOINT)
 		).map(
@@ -323,8 +332,6 @@ public class BaseTest {
 					"\" property")
 		).map(
 			Traversable::head
-		).map(
-			client::target
 		).getOrElseThrow(
 			t -> new AssertionError("Unable to create a valid WebTarget", t)
 		);

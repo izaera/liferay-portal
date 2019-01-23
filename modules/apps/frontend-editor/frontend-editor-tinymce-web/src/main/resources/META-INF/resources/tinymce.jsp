@@ -153,7 +153,24 @@ name = HtmlUtil.escapeJS(name);
 					itemSelectorDialog.once(
 						'selectedItemChange',
 						function(event) {
-							callback(event.newVal ? event.newVal.value : value);
+							var selectedItem = event.newVal ? event.newVal : value;
+
+							if (selectedItem.returnType === 'com.liferay.item.selector.criteria.FileEntryItemSelectorReturnType') {
+								try {
+									var itemValue = JSON.parse(selectedItem.value);
+
+									var attachmentPrefix = tinymce.activeEditor.settings.attachmentURLPrefix;
+
+									selectedItem = attachmentPrefix ? attachmentPrefix + itemValue.title : itemValue.url;
+								}
+								catch (e) {
+								}
+							}
+							else {
+								selectedItem = selectedItem.value;
+							}
+
+							callback(selectedItem);
 						}
 					);
 
@@ -181,7 +198,12 @@ name = HtmlUtil.escapeJS(name);
 		},
 
 		focus: function() {
-			tinyMCE.editors['<%= name %>'].focus();
+			if (window['<%= name %>'].instanceReady) {
+				tinyMCE.editors['<%= name %>'].focus();
+			}
+			else {
+				window['<%= name %>'].pendingFocus = true;
+			}
 		},
 
 		getHTML: function() {
@@ -279,6 +301,12 @@ name = HtmlUtil.escapeJS(name);
 			</c:if>
 
 			window['<%= name %>'].instanceReady = true;
+
+			if (window['<%= name %>'].pendingFocus) {
+				window['<%= name %>'].pendingFocus = false;
+
+				window['<%= name %>'].focus();
+			}
 
 			Liferay.component(
 				'<%= name %>',

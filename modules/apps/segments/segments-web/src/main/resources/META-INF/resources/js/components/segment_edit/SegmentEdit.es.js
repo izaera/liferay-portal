@@ -1,18 +1,25 @@
-import React, {Component, Fragment} from 'react';
+import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import ClayButton from '../shared/ClayButton.es';
-import ClaySelect from '../shared/ClaySelect.es';
 import ClaySpinner from '../shared/ClaySpinner.es';
 import debounce from 'lodash.debounce';
+import ThemeContext from '../../ThemeContext.es';
 import TitleEditor from '../title_editor/TitleEditor.es';
-import ODataQueryBuilder from '../odata_query_builder/ODataQueryBuilder.es';
-import {SUPPORTED_CONJUNCTIONS} from '../../utils/constants.es';
 import {getPluralMessage} from '../../utils/utils.es';
+import {
+	SOURCES,
+	SUPPORTED_CONJUNCTIONS,
+	SUPPORTED_OPERATORS,
+	SUPPORTED_PROPERTY_TYPES
+} from '../../utils/constants.es';
 import {FieldArray, withFormik} from 'formik';
+import ContributorBuilder from '../criteria_builder/ContributorBuilder.es';
 
 const DEFAULT_SEGMENT_NAME = Liferay.Language.get('unnamed-segment');
 
 class SegmentEdit extends Component {
+	static contextType = ThemeContext;
+
 	static propTypes = {
 		contributors: PropTypes.arrayOf(
 			PropTypes.shape(
@@ -34,21 +41,23 @@ class SegmentEdit extends Component {
 		locale: PropTypes.string.isRequired,
 		portletNamespace: PropTypes.string,
 		previewMembersURL: PropTypes.string,
+		propertyGroups: PropTypes.array,
 		redirect: PropTypes.string,
 		requestMembersCountURL: PropTypes.string,
 		setValues: PropTypes.func,
+		source: PropTypes.string,
 		values: PropTypes.object
 	};
 
 	static defaultProps = {
+		initialMembersCount: 0,
 		initialSegmentActive: true,
 		initialSegmentName: DEFAULT_SEGMENT_NAME,
 		portletNamespace: ''
 	};
 
 	state = {
-		membersCount: this.props.initialMembersCount || 0,
-		membersCountLoading: false
+		membersCount: this.props.initialMembersCount
 	};
 
 	constructor(props) {
@@ -97,64 +106,52 @@ class SegmentEdit extends Component {
 		);
 	};
 
-	_handleSegmentNameBlur = event => {
-		const {handleBlur, setValues, values} = this.props;
-
-		if (values.name === '') {
-			setValues({...values, name: DEFAULT_SEGMENT_NAME});
-		}
-
-		handleBlur(event);
-	};
-
 	_handleQueryChange = () => {
 		this.setState({membersCountLoading: true});
 
 		this._debouncedFetchMembersCount();
 	};
 
+	_handleSegmentNameBlur = event => {
+		const {
+			handleBlur,
+			setValues,
+			values
+		} = this.props;
+
+		if (values.name === '') {
+			setValues(
+				{
+					...values,
+					name: DEFAULT_SEGMENT_NAME
+				}
+			);
+		}
+
+		handleBlur(event);
+	};
+
+	_handleSourceIconMouseOver = event => {
+		const message = this.props.source === SOURCES.ASAH_FARO_BACKEND.name ?
+			SOURCES.ASAH_FARO_BACKEND.label :
+			SOURCES.DEFAULT.label;
+
+		Liferay.Portal.ToolTip.show(event.currentTarget, message);
+	};
+
 	_renderContributors = () => {
-		const {handleChange, values} = this.props;
+		const {contributors, propertyGroups} = this.props;
 
 		return (
-			values.contributors.map(
-				(contributor, index) => {
-					return (
-						<Fragment key={contributor.inputId}>
-							<input
-								id={contributor.conjunctionInputId}
-								name={contributor.conjunctionInputId}
-								type="hidden"
-								value={contributor.conjunctionId ||
-									SUPPORTED_CONJUNCTIONS[0].name}
-							/>
-
-							{index !== 0 &&
-								<ClaySelect
-									className="contributor-conjunction"
-									name={`contributors.${index}.conjunctionId`}
-									onChange={handleChange}
-									options={SUPPORTED_CONJUNCTIONS.map(
-										({label, name}) => ({
-											label: label.toUpperCase(),
-											value: name
-										})
-									)}
-									selected={contributor.conjunctionId}
-								/>
-							}
-
-							<ODataQueryBuilder
-								initialQuery={contributor.initialQuery}
-								inputId={contributor.inputId}
-								modelLabel={contributor.modelLabel}
-								onChange={this._handleQueryChange}
-								properties={contributor.properties}
-							/>
-						</Fragment>
-					);
-				}
-			)
+			(propertyGroups && contributors) ?
+				<ContributorBuilder
+					initialContributors={contributors}
+					propertyGroups={propertyGroups}
+					supportedConjunctions={SUPPORTED_CONJUNCTIONS}
+					supportedOperators={SUPPORTED_OPERATORS}
+					supportedPropertyTypes={SUPPORTED_PROPERTY_TYPES}
+				/> :
+				null
 		);
 	};
 
@@ -165,10 +162,13 @@ class SegmentEdit extends Component {
 			portletNamespace,
 			previewMembersURL,
 			redirect,
+			source,
 			values
 		} = this.props;
 
 		const {membersCount, membersCountLoading} = this.state;
+
+		const {assetsPath} = this.context;
 
 		return (
 			<div className="segment-edit-page-root">
@@ -196,7 +196,7 @@ class SegmentEdit extends Component {
 					value={values.active}
 				/>
 
-				<div className="form-header-root">
+				<div className="form-header">
 					<div className="container-fluid container-fluid-max-xl form-header-container">
 						<div className="form-header-section-left">
 							<TitleEditor
@@ -205,6 +205,16 @@ class SegmentEdit extends Component {
 								onChange={handleChange}
 								placeholder={DEFAULT_SEGMENT_NAME}
 								value={values.name}
+							/>
+
+							<img
+								className="source-icon"
+								data-testid="source-icon"
+								onMouseOver={this._handleSourceIconMouseOver}
+								src={source === SOURCES.ASAH_FARO_BACKEND.name ?
+									`${assetsPath}${SOURCES.ASAH_FARO_BACKEND.icon}` :
+									`${assetsPath}${SOURCES.DEFAULT.icon}`
+								}
 							/>
 						</div>
 
@@ -251,7 +261,7 @@ class SegmentEdit extends Component {
 					</div>
 				</div>
 
-				<div>
+				<div className="form-body">
 					<FieldArray
 						name="contributors"
 						render={this._renderContributors}

@@ -14,13 +14,11 @@
 
 package com.liferay.media.object.apio.internal.architect.resource.test;
 
-import static java.nio.charset.StandardCharsets.UTF_8;
-
 import com.liferay.apio.architect.file.BinaryFile;
 import com.liferay.apio.architect.pagination.PageItems;
 import com.liferay.apio.architect.resource.NestedCollectionResource;
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
-import com.liferay.media.object.apio.architect.model.MediaObject;
+import com.liferay.media.object.apio.internal.architect.resource.test.model.MediaObjectImpl;
 import com.liferay.portal.apio.test.util.PaginationRequest;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.repository.model.FileEntry;
@@ -28,6 +26,8 @@ import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
+import com.liferay.portal.kernel.test.util.TestPropsValues;
+import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerTestRule;
 
@@ -35,11 +35,14 @@ import java.io.ByteArrayInputStream;
 
 import java.lang.reflect.Method;
 
+import java.net.URL;
+
+import java.nio.charset.StandardCharsets;
+
 import java.util.Arrays;
 import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
+
+import org.apache.commons.io.IOUtils;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -71,12 +74,13 @@ public class DefaultMediaObjectNestedCollectionResourceTest
 	public void testAddMediaObject() throws Exception {
 		String content = RandomTestUtil.randomString(10);
 
-		FileEntry fileEntry = _addFileEntry(
+		FileEntry fileEntry = addFileEntry(
 			_group.getGroupId(),
 			new MediaObjectImpl(
 				new BinaryFile(
-					new ByteArrayInputStream(content.getBytes(UTF_8)), 0L,
-					"application/octet-stream"),
+					new ByteArrayInputStream(
+						content.getBytes(StandardCharsets.UTF_8)),
+					0L, "application/octet-stream"),
 				"My media object testAddMediaObject",
 				"My media object description", null, null));
 
@@ -93,20 +97,32 @@ public class DefaultMediaObjectNestedCollectionResourceTest
 
 	@Test
 	public void testGetFileEntryPreviewURL() throws Exception {
-		String content = RandomTestUtil.randomString(10);
+		String fileName = "image.png";
 
-		FileEntry fileEntry = _addFileEntry(
+		byte[] bytes = FileUtil.getBytes(
+			getClass(),
+			"/com/liferay/media/object/apio/internal/architect/resource/test" +
+				"/dependencies/" + fileName);
+
+		BinaryFile binaryFile = new BinaryFile(
+			new ByteArrayInputStream(bytes), (long)bytes.length, "image/jpeg",
+			fileName);
+
+		FileEntry fileEntry = addFileEntry(
 			_group.getGroupId(),
 			new MediaObjectImpl(
-				new BinaryFile(
-					new ByteArrayInputStream(content.getBytes(UTF_8)), 0L,
-					"application/octet-stream"),
-				"My media object testGetFileEntryPreviewURL", null, null,
-				null));
+				binaryFile, "My media object testGetFileEntryPreviewURL", null,
+				null, null));
 
 		String fileEntryPreview = _getFileEntryPreviewURL(fileEntry);
 
 		Assert.assertNotNull(fileEntryPreview);
+
+		URL url = new URL(TestPropsValues.PORTAL_URL + fileEntryPreview);
+
+		byte[] contentBytes = IOUtils.toByteArray(url.openStream());
+
+		Assert.assertArrayEquals(bytes, contentBytes);
 	}
 
 	@Test
@@ -115,12 +131,13 @@ public class DefaultMediaObjectNestedCollectionResourceTest
 
 		List<String> keywords = Arrays.asList("keyword1", "keyword2");
 
-		FileEntry fileEntry = _addFileEntry(
+		FileEntry fileEntry = addFileEntry(
 			_group.getGroupId(),
 			new MediaObjectImpl(
 				new BinaryFile(
-					new ByteArrayInputStream(content.getBytes(UTF_8)), 0L,
-					"application/octet-stream"),
+					new ByteArrayInputStream(
+						content.getBytes(StandardCharsets.UTF_8)),
+					0L, "application/octet-stream"),
 				"My media object testAddMediaObject", null, keywords, null));
 
 		List<String> mediaObjectAssetTags = _getMediaObjectAssetTags(fileEntry);
@@ -137,12 +154,13 @@ public class DefaultMediaObjectNestedCollectionResourceTest
 	public void testGetPageItems() throws Exception {
 		String content = RandomTestUtil.randomString(10);
 
-		_addFileEntry(
+		addFileEntry(
 			_group.getGroupId(),
 			new MediaObjectImpl(
 				new BinaryFile(
-					new ByteArrayInputStream(content.getBytes(UTF_8)), 0L,
-					"application/octet-stream"),
+					new ByteArrayInputStream(
+						content.getBytes(StandardCharsets.UTF_8)),
+					0L, "application/octet-stream"),
 				"My media object testGetPageItems",
 				"My media object description", null, null));
 
@@ -161,23 +179,6 @@ public class DefaultMediaObjectNestedCollectionResourceTest
 			"My media object description", fileEntry.getDescription());
 		Assert.assertEquals(
 			"My media object testGetPageItems", fileEntry.getTitle());
-	}
-
-	private FileEntry _addFileEntry(long groupId, MediaObject mediaObject)
-		throws Exception {
-
-		NestedCollectionResource nestedCollectionResource =
-			getNestedCollectionResource();
-
-		Class<?> clazz = nestedCollectionResource.getClass();
-
-		Method method = clazz.getDeclaredMethod(
-			"_addFileEntry", long.class, MediaObject.class);
-
-		method.setAccessible(true);
-
-		return (FileEntry)method.invoke(
-			getNestedCollectionResource(), groupId, mediaObject);
 	}
 
 	private String _getFileEntryPreviewURL(FileEntry fileEntry)
@@ -215,67 +216,5 @@ public class DefaultMediaObjectNestedCollectionResourceTest
 
 	@DeleteAfterTestRun
 	private Group _group;
-
-	private static class MediaObjectImpl implements MediaObject {
-
-		@Override
-		public BinaryFile getBinaryFile() {
-			return _binaryFile;
-		}
-
-		@Override
-		public List<Long> getCategories() {
-			return _categories;
-		}
-
-		@Override
-		public String getDescription() {
-			return _description;
-		}
-
-		@Override
-		public List<String> getKeywords() {
-			return _keywords;
-		}
-
-		@Override
-		public String getTitle() {
-			return _title;
-		}
-
-		private MediaObjectImpl(
-			BinaryFile binaryFile, String title, String description,
-			List<String> keywords, List<Long> categories) {
-
-			_binaryFile = binaryFile;
-			_title = title;
-			_description = description;
-			_keywords = Optional.ofNullable(
-				keywords
-			).map(
-				List::stream
-			).orElseGet(
-				Stream::empty
-			).collect(
-				Collectors.toList()
-			);
-			_categories = Optional.ofNullable(
-				categories
-			).map(
-				List::stream
-			).orElseGet(
-				Stream::empty
-			).collect(
-				Collectors.toList()
-			);
-		}
-
-		private final BinaryFile _binaryFile;
-		private final List<Long> _categories;
-		private final String _description;
-		private final List<String> _keywords;
-		private final String _title;
-
-	}
 
 }

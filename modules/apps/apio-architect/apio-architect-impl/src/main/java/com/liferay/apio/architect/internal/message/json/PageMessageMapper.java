@@ -63,6 +63,19 @@ public interface PageMessageMapper<T>
 	}
 
 	@Override
+	public default void mapActionSemanticsExpectedResourceURL(
+		JSONObjectBuilder jsonObjectBuilder, String url) {
+
+		Optional<SingleModelMessageMapper<T>> optional =
+			getSingleModelMessageMapperOptional();
+
+		optional.ifPresent(
+			singleModelMessageMapper ->
+				singleModelMessageMapper.mapActionSemanticsExpectedResourceURL(
+					jsonObjectBuilder, url));
+	}
+
+	@Override
 	public default void mapActionSemanticsURL(
 		JSONObjectBuilder jsonObjectBuilder, String url) {
 

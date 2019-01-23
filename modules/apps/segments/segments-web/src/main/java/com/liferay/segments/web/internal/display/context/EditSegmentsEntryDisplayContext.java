@@ -19,9 +19,13 @@ import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemList;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.NavigationItemList;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.SafeConsumer;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.json.JSONArray;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -33,6 +37,7 @@ import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.segments.constants.SegmentsConstants;
 import com.liferay.segments.criteria.Criteria;
 import com.liferay.segments.criteria.contributor.SegmentsCriteriaContributor;
 import com.liferay.segments.criteria.contributor.SegmentsCriteriaContributorRegistry;
@@ -108,6 +113,42 @@ public class EditSegmentsEntryDisplayContext {
 						}));
 			}
 		};
+	}
+
+	public JSONArray getContributorsJSONArray() throws PortalException {
+		List<SegmentsCriteriaContributor> segmentsCriteriaContributors =
+			getSegmentsCriteriaContributors();
+
+		JSONArray jsonContributorsArray = JSONFactoryUtil.createJSONArray();
+
+		for (SegmentsCriteriaContributor segmentsCriteriaContributor :
+				segmentsCriteriaContributors) {
+
+			Criteria.Criterion criterion =
+				segmentsCriteriaContributor.getCriterion(getCriteria());
+
+			JSONObject jsonContributorObject =
+				JSONFactoryUtil.createJSONObject();
+
+			jsonContributorObject.put(
+				"conjunctionId", _getCriterionConjunction(criterion));
+			jsonContributorObject.put(
+				"conjunctionInputId",
+				_renderResponse.getNamespace() + "criterionConjunction" +
+					segmentsCriteriaContributor.getKey());
+			jsonContributorObject.put(
+				"initialQuery", _getCriterionFilterString(criterion));
+			jsonContributorObject.put(
+				"inputId",
+				_renderResponse.getNamespace() + "criterionFilter" +
+					segmentsCriteriaContributor.getKey());
+			jsonContributorObject.put(
+				"propertyKey", segmentsCriteriaContributor.getKey());
+
+			jsonContributorsArray.put(jsonContributorObject);
+		}
+
+		return jsonContributorsArray;
 	}
 
 	public Criteria getCriteria() throws PortalException {
@@ -243,6 +284,37 @@ public class EditSegmentsEntryDisplayContext {
 		return organizationSearchContainer.getTotal();
 	}
 
+	public JSONArray getPropertyGroupsJSONArray(Locale locale)
+		throws PortalException {
+
+		List<SegmentsCriteriaContributor> segmentsCriteriaContributors =
+			getSegmentsCriteriaContributors();
+
+		JSONArray jsonContributorsArray = JSONFactoryUtil.createJSONArray();
+
+		for (SegmentsCriteriaContributor segmentsCriteriaContributor :
+				segmentsCriteriaContributors) {
+
+			JSONObject jsonContributorObject =
+				JSONFactoryUtil.createJSONObject();
+
+			jsonContributorObject.put(
+				"name", segmentsCriteriaContributor.getLabel(locale));
+			jsonContributorObject.put(
+				"properties",
+				JSONFactoryUtil.createJSONArray(
+					JSONFactoryUtil.looseSerializeDeep(
+						segmentsCriteriaContributor.getFields(
+							_renderRequest))));
+			jsonContributorObject.put(
+				"propertyKey", segmentsCriteriaContributor.getKey());
+
+			jsonContributorsArray.put(jsonContributorObject);
+		}
+
+		return jsonContributorsArray;
+	}
+
 	public String getRedirect() {
 		if (_redirect != null) {
 			return _redirect;
@@ -304,6 +376,17 @@ public class EditSegmentsEntryDisplayContext {
 		_segmentsEntryId = ParamUtil.getLong(_request, "segmentsEntryId");
 
 		return _segmentsEntryId;
+	}
+
+	public String getSource() throws PortalException {
+		SegmentsEntry segmentsEntry = getSegmentsEntry();
+
+		if (segmentsEntry != null) {
+			return segmentsEntry.getSource();
+		}
+
+		return ParamUtil.getString(
+			_request, "source", SegmentsConstants.SOURCE_DEFAULT);
 	}
 
 	public String getTitle(Locale locale) throws PortalException {
@@ -428,6 +511,22 @@ public class EditSegmentsEntryDisplayContext {
 		}
 
 		return portletURL;
+	}
+
+	private String _getCriterionConjunction(Criteria.Criterion criterion) {
+		if (criterion == null) {
+			return StringPool.BLANK;
+		}
+
+		return criterion.getConjunction();
+	}
+
+	private String _getCriterionFilterString(Criteria.Criterion criterion) {
+		if (criterion == null) {
+			return StringPool.BLANK;
+		}
+
+		return criterion.getFilterString();
 	}
 
 	private String _getDetailsURL() {

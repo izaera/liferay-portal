@@ -22,13 +22,18 @@ import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.ClassNameLocalService;
 import com.liferay.portal.kernel.service.CompanyLocalService;
+import com.liferay.portal.kernel.service.PortalPreferencesLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalService;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.segments.constants.SegmentsConstants;
 import com.liferay.segments.internal.asah.client.AsahFaroBackendClient;
+import com.liferay.segments.internal.asah.client.AsahFaroBackendClientImpl;
+import com.liferay.segments.internal.asah.client.JSONWebServiceClient;
 import com.liferay.segments.internal.asah.client.model.Individual;
 import com.liferay.segments.internal.asah.client.model.IndividualSegment;
 import com.liferay.segments.internal.asah.client.model.Results;
@@ -38,19 +43,16 @@ import com.liferay.segments.service.SegmentsEntryLocalService;
 import com.liferay.segments.service.SegmentsEntryRelLocalService;
 
 import java.util.Collections;
-import java.util.Dictionary;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Optional;
-import java.util.Properties;
 import java.util.Set;
 
-import org.osgi.service.component.ComponentFactory;
-import org.osgi.service.component.ComponentInstance;
-import org.osgi.service.component.annotations.Activate;
+import javax.portlet.PortletPreferences;
+
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -64,54 +66,17 @@ import org.osgi.service.component.annotations.Reference;
 public class AsahFaroBackendIndividualSegmentsCheckerUtil {
 
 	public void checkIndividualSegments() throws PortalException {
-		if (_asahFaroBackendClient == null) {
+		Optional<AsahFaroBackendClient> asahFaroBackendClientOptional =
+			_createAsahFaroBackendClient();
+
+		if (!asahFaroBackendClientOptional.isPresent()) {
 			return;
 		}
+
+		_asahFaroBackendClient = asahFaroBackendClientOptional.get();
 
 		_checkIndividualSegments();
 		_checkIndividualSegmentsMemberships();
-	}
-
-	@Activate
-	protected void activate() {
-		String asahFaroBackendDataSourceId = System.getProperty(
-			"asah.faro.backend.dataSourceId");
-		String asahFaroBackendSecuritySignature = System.getProperty(
-			"asah.faro.backend.security.signature");
-		String asahFaroBackendURL = System.getProperty("asah.faro.backend.url");
-
-		if (Validator.isNull(asahFaroBackendDataSourceId) ||
-			Validator.isNull(asahFaroBackendSecuritySignature) ||
-			Validator.isNull(asahFaroBackendURL)) {
-
-			if (_log.isWarnEnabled()) {
-				_log.warn("Unable to configure Asah Faro Backend Client");
-			}
-
-			return;
-		}
-
-		Properties properties = new Properties();
-
-		properties.setProperty(
-			"asahFaroBackendDataSourceId", asahFaroBackendDataSourceId);
-		properties.setProperty(
-			"asahFaroBackendSecuritySignature",
-			asahFaroBackendSecuritySignature);
-		properties.setProperty("asahFaroBackendURL", asahFaroBackendURL);
-
-		ComponentInstance componentInstance = _componentFactory.newInstance(
-			(Dictionary)properties);
-
-		_asahFaroBackendClient =
-			(AsahFaroBackendClient)componentInstance.getInstance();
-	}
-
-	@Reference(
-		target = "(component.factory=AsahFaroBackendClient)", unbind = "-"
-	)
-	protected void setComponentFactory(ComponentFactory componentFactory) {
-		_componentFactory = componentFactory;
 	}
 
 	private void _addSegmentsEntry(
@@ -288,6 +253,39 @@ public class AsahFaroBackendIndividualSegmentsCheckerUtil {
 		}
 	}
 
+	private Optional<AsahFaroBackendClient> _createAsahFaroBackendClient() {
+		Company company = _companyLocalService.fetchCompany(
+			_portal.getDefaultCompanyId());
+
+		PortletPreferences portletPreferences =
+			_portalPreferencesLocalService.getPreferences(
+				company.getCompanyId(), PortletKeys.PREFS_OWNER_TYPE_COMPANY);
+
+		String asahFaroBackendDataSourceId = GetterUtil.getString(
+			portletPreferences.getValue("liferayAnalyticsDataSourceId", null));
+		String asahFaroBackendSecuritySignature = GetterUtil.getString(
+			portletPreferences.getValue(
+				"liferayAnalyticsFaroBackendSecuritySignature", null));
+		String asahFaroBackendURL = GetterUtil.getString(
+			portletPreferences.getValue("liferayAnalyticsEndpointURL", null));
+
+		if (Validator.isNull(asahFaroBackendDataSourceId) ||
+			Validator.isNull(asahFaroBackendSecuritySignature) ||
+			Validator.isNull(asahFaroBackendURL)) {
+
+			if (_log.isInfoEnabled()) {
+				_log.info("Unable to configure Asah Faro backend client");
+			}
+
+			return Optional.empty();
+		}
+
+		return Optional.of(
+			new AsahFaroBackendClientImpl(
+				_jsonWebServiceClient, asahFaroBackendDataSourceId,
+				asahFaroBackendSecuritySignature, asahFaroBackendURL));
+	}
+
 	private ServiceContext _getServiceContext() throws PortalException {
 		ServiceContext serviceContext = new ServiceContext();
 
@@ -341,10 +339,14 @@ public class AsahFaroBackendIndividualSegmentsCheckerUtil {
 	@Reference
 	private CompanyLocalService _companyLocalService;
 
-	private ComponentFactory _componentFactory;
+	@Reference
+	private JSONWebServiceClient _jsonWebServiceClient;
 
 	@Reference
 	private Portal _portal;
+
+	@Reference
+	private PortalPreferencesLocalService _portalPreferencesLocalService;
 
 	@Reference
 	private SegmentsEntryLocalService _segmentsEntryLocalService;

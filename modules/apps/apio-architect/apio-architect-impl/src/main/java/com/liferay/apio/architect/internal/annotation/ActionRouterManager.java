@@ -194,8 +194,8 @@ public class ActionRouterManager {
 		).executeFunction(
 			params -> execute(
 				resource, params, array -> method.invoke(actionRouter, array))
-		).bodyFunction(
-			body -> isListBody(method) ? form.getList(body) : form.get(body)
+		).form(
+			form, isListBody(method) ? Form::getList : Form::get
 		).receivesParams(
 			getParamClasses(method)
 		).annotatedWith(

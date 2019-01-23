@@ -120,7 +120,7 @@ if (editorOptions != null) {
 </div>
 
 <%
-String modules = "liferay-alloy-editor,liferay-notification";
+String modules = "liferay-alloy-editor";
 
 String uploadURL = StringPool.BLANK;
 
@@ -164,7 +164,21 @@ name = HtmlUtil.escapeJS(name);
 	};
 
 	var createInstance = function() {
-		document.getElementById('<%= name %>').setAttribute('contenteditable', true);
+		var editorNode = A.one('#<%= name %>');
+
+		if (!editorNode) {
+			var editorContainer = A.one('#<%= name %>Container');
+
+			editorContainer.setHTML('');
+
+			editorNode = A.Node.create('<%= HtmlUtil.escapeJS(editor) %>');
+
+			editorContainer.appendChild(editorNode);
+		}
+
+		if (editorNode) {
+			editorNode.attr('contenteditable', true);
+		}
 
 		var editorConfig = <%= Validator.isNotNull(editorConfigJSONObject) %> ? <%= editorConfigJSONObject %> : {};
 
@@ -276,21 +290,6 @@ name = HtmlUtil.escapeJS(name);
 			if (!validDropTarget) {
 				event.preventDefault();
 				event.stopImmediatePropagation();
-
-				new Liferay.Notification(
-					{
-						closeable: true,
-						delay: {
-							hide: 5000,
-							show: 0
-						},
-						duration: 500,
-						message: '<liferay-ui:message key="this-is-an-invalid-drag-and-drop-action" />',
-						render: true,
-						title: '<liferay-ui:message key="warning" />',
-						type: 'warning'
-					}
-				);
 			}
 		}
 	);

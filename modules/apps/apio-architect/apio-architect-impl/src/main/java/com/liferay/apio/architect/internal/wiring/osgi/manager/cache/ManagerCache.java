@@ -721,8 +721,8 @@ public class ManagerCache {
 		return variantListBuilder.mediaTypes(mediaTypes);
 	}
 
-	private static final MediaType _MEDIA_TYPE = MediaType.valueOf(
-		"application/hal+json");
+	private static final MediaType _MEDIA_TYPE = new MediaType(
+		"application", "hal+json");
 
 	private List<ActionSemantics> _actionSemantics;
 	private Map<MediaType, BatchResultMessageMapper> _batchResultMessageMappers;

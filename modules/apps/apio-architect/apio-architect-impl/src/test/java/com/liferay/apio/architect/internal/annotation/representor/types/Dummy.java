@@ -29,6 +29,7 @@ import com.liferay.apio.architect.identifier.Identifier;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 /**
  * @author Víctor Galán
@@ -105,6 +106,12 @@ public interface Dummy extends Identifier<Long> {
 		return "2d1d";
 	}
 
+	@Field(mode = READ_ONLY, value = "linkToChildCollectionList")
+	@LinkTo(resource = IntegerIdentifier.class, resourceType = CHILD_COLLECTION)
+	public default List<Integer> getLinkToChildCollectionList() {
+		return asList(1, 2, 3);
+	}
+
 	@Field("linkToSingle1")
 	@LinkTo(resource = IntegerIdentifier.class)
 	public default Integer getLinkToSingle1() {
@@ -154,9 +161,9 @@ public interface Dummy extends Identifier<Long> {
 		return "string1";
 	}
 
-	@Field("stringField2")
-	public default String getStringField2() {
-		return "string2";
+	@Field("stringFieldOptional")
+	public default Optional<String> getStringFieldOptional() {
+		return Optional.of("string2");
 	}
 
 	@Field("stringListField1")

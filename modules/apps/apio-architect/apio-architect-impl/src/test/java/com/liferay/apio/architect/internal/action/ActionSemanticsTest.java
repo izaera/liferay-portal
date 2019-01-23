@@ -16,24 +16,34 @@ package com.liferay.apio.architect.internal.action;
 
 import static com.liferay.apio.architect.operation.HTTPMethod.GET;
 
+import static com.spotify.hamcrest.optional.OptionalMatchers.optionalWithValue;
+
+import static in.tazj.vavr.matchers.ControlMatchers.isSuccess;
+
 import static java.lang.String.join;
 
 import static java.util.Arrays.asList;
+import static java.util.Collections.emptyList;
 import static java.util.Collections.singletonList;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.contains;
 import static org.hamcrest.Matchers.empty;
 import static org.hamcrest.Matchers.equalTo;
 import static org.hamcrest.Matchers.instanceOf;
-import static org.hamcrest.collection.IsIterableContainingInOrder.contains;
-import static org.hamcrest.core.Is.is;
+import static org.hamcrest.Matchers.is;
+import static org.hamcrest.Matchers.nullValue;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 import com.liferay.apio.architect.annotation.Id;
+import com.liferay.apio.architect.form.Body;
+import com.liferay.apio.architect.form.Form;
+import com.liferay.apio.architect.form.Form.Builder;
 import com.liferay.apio.architect.internal.annotation.Action;
+import com.liferay.apio.architect.internal.form.FormImpl.BuilderImpl;
 import com.liferay.apio.architect.internal.unsafe.Unsafe;
 import com.liferay.apio.architect.pagination.Page;
 import com.liferay.apio.architect.resource.Resource;
@@ -47,6 +57,7 @@ import java.lang.annotation.Annotation;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Optional;
 
 import org.junit.Test;
 
@@ -92,6 +103,57 @@ public class ActionSemanticsTest {
 		boolean permission = actionSemantics.checkPermissions(null);
 
 		assertTrue(permission);
+	}
+
+	@Test
+	public void testBuilderWithFormCreatesActionSemantics() throws Throwable {
+		Builder<Long> formBuilder = new BuilderImpl<>(
+			__ -> null, __ -> Optional.empty());
+
+		Form<Long> form = formBuilder.title(
+			__ -> "Title"
+		).description(
+			__ -> "Description"
+		).constructor(
+			() -> 42L
+		).build();
+
+		ActionSemantics actionSemantics = ActionSemantics.ofResource(
+			Paged.of("name")
+		).name(
+			"action"
+		).method(
+			GET
+		).returns(
+			Void.class
+		).permissionFunction(
+		).executeFunction(
+			_join
+		).form(
+			form, Form::get
+		).build();
+
+		assertThat(actionSemantics.getAnnotations(), is(emptyList()));
+		assertThat(actionSemantics.getActionName(), is("action"));
+		assertThat(actionSemantics.getHTTPMethod(), is("GET"));
+		assertThat(actionSemantics.getParamClasses(), is(emptyList()));
+		assertThat(actionSemantics.getResource(), is(Paged.of("name")));
+		assertThat(actionSemantics.getReturnClass(), is(equalTo(Void.class)));
+
+		String result = (String)actionSemantics.execute(asList("1", "2"));
+
+		assertThat(result, is("1-2"));
+
+		assertTrue(actionSemantics.checkPermissions(null));
+
+		assertThat(
+			actionSemantics.getFormOptional(),
+			is(optionalWithValue(equalTo(form))));
+
+		Object object = actionSemantics.getBodyValue(
+			Body.create(__ -> Optional.empty(), __ -> Optional.empty()));
+
+		assertThat(object, is(42L));
 	}
 
 	@Test
@@ -219,7 +281,34 @@ public class ActionSemanticsTest {
 	}
 
 	@Test
-	public void testToActionTransformsAnActionSemanticsIntoAnAction() {
+	public void testToActionTransformsAnActionSemanticsIntoANoContentAction() {
+		ActionSemantics actionSemantics = ActionSemantics.ofResource(
+			Resource.Paged.of("name")
+		).name(
+			"action"
+		).method(
+			GET
+		).returns(
+			Void.class
+		).permissionFunction(
+		).executeFunction(
+			__ -> null
+		).build();
+
+		Action action = actionSemantics.toAction(
+			(semantics, request, clazz) -> clazz.getSimpleName());
+
+		assertThat(action, is(instanceOf(Action.NoContent.class)));
+
+		Object object = action.execute(null);
+
+		assertThat(object, is(instanceOf(Try.class)));
+
+		assertThat((Try<Object>)object, isSuccess(nullValue()));
+	}
+
+	@Test
+	public void testToActionTransformsAnActionSemanticsIntoAnOkAction() {
 		ActionSemantics actionSemantics = ActionSemantics.ofResource(
 			Resource.Paged.of("name")
 		).name(
@@ -240,14 +329,13 @@ public class ActionSemanticsTest {
 		Action action = actionSemantics.toAction(
 			(semantics, request, clazz) -> clazz.getSimpleName());
 
-		Object object = action.apply(null);
+		assertThat(action, is(instanceOf(Action.Ok.class)));
+
+		Object object = action.execute(null);
 
 		assertThat(object, is(instanceOf(Try.class)));
 
-		@SuppressWarnings("unchecked")
-		Try<String> stringTry = (Try<String>)object;
-
-		assertThat(stringTry.get(), is("String-Long"));
+		assertThat((Try<String>)object, isSuccess(equalTo("String-Long")));
 	}
 
 	@Test

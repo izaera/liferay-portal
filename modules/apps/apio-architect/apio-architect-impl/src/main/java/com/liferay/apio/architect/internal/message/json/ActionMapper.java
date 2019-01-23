@@ -36,6 +36,18 @@ import com.liferay.apio.architect.internal.action.ActionSemantics;
 public interface ActionMapper {
 
 	/**
+	 * Maps a resource action's expected resource URL to its JSON object
+	 * representation.
+	 *
+	 * @param  jsonObjectBuilder the JSON object builder for the action
+	 * @param  url the expected resource url
+	 * @review
+	 */
+	public default void mapActionSemanticsExpectedResourceURL(
+		JSONObjectBuilder jsonObjectBuilder, String url) {
+	}
+
+	/**
 	 * Maps a resource action's url to its JSON object representation.
 	 *
 	 * @param  jsonObjectBuilder the JSON object builder for the action

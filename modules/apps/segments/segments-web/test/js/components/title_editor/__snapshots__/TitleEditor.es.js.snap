@@ -43,7 +43,8 @@ exports[`TitleEditor should show and hide the text input after blurring from the
 @@ -1,17 +1,17 @@
   <DocumentFragment>
     <div
-      class=\\"title-editor-root\\"
+-     class=\\"title-editor-root editing\\"
++     class=\\"title-editor-root\\"
     >
       <input
 -       class=\\"title-input\\"
@@ -70,7 +71,8 @@ exports[`TitleEditor should show the text input after clicking on the edit butto
 @@ -1,17 +1,17 @@
   <DocumentFragment>
     <div
-      class=\\"title-editor-root\\"
+-     class=\\"title-editor-root\\"
++     class=\\"title-editor-root editing\\"
     >
       <input
 -       class=\\"title-input hide\\"

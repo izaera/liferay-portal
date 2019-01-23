@@ -46,11 +46,9 @@ Export-Package:\
 	!com.liferay.portal.security.jaas.ext.*,\
 	!com.liferay.portal.service,\
 	!com.liferay.portal.sharepoint.*,\
-	!com.liferay.portal.spring.aop,\
 	!com.liferay.portal.spring.bean,\
 	!com.liferay.portal.spring.context,\
 	!com.liferay.portal.spring.hibernate,\
-	!com.liferay.portal.spring.transaction,\
 	!com.liferay.portal.systemevent,\
 	!com.liferay.portal.tools.comparator,\
 	!com.liferay.portal.tools.javadocformatter,\
@@ -253,7 +251,7 @@ Export-Package:\
 	org.apache.naming.java,\
 	org.apache.regexp;version='2.7.1',\
 	org.apache.tools.ant.*;version='1.8.4',\
-	org.apache.xalan.*;version='2.7.1',\
+	org.apache.xalan.*;version='2.7.2',\
 	org.apache.xerces.*;version='2.11.0',\
 	org.apache.xml.dtm.*;version='2.7.1',\
 	org.apache.xml.res.*;version='2.7.1',\

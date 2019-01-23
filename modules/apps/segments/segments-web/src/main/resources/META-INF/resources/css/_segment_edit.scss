@@ -1,10 +1,16 @@
 .segment-edit-page-root {
+	display: flex;
+	flex-direction: column;
+	height: calc(100vh - 56px);
+	position: absolute;
+	width: 100%;
+
 	.contributor-conjunction {
 		margin: 0 auto;
 		width: 120px;
 	}
 
-	.form-header-root {
+	.form-header {
 		background-color: $white;
 		border-bottom: 1px solid $mainLighten65;
 
@@ -21,7 +27,9 @@
 		}
 
 		.form-header-section-left {
+			display: flex;
 			flex: 1;
+			padding-right: 40px;
 		}
 
 		.form-header-section-right {
@@ -54,5 +62,18 @@
 				margin-right: 40px;
 			}
 		}
+
+		.source-icon {
+			margin: 0 8px;
+		}
+	}
+
+	.form-body {
+		flex: 1;
+		overflow: auto;
+	}
+
+	.title-editor-root.editing + .source-icon {
+		display: none;
 	}
 }

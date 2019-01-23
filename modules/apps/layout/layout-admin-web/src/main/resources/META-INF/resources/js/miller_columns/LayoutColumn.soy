@@ -13,6 +13,7 @@
 		hasChild: bool,
 		homePage: bool,
 		homePageTitle: string,
+		parentable: bool,
 		plid: string,
 		title: string,
 		url: string
@@ -114,6 +115,7 @@
 		hasChild: bool,
 		homePage: bool,
 		homePageTitle: string,
+		parentable: bool,
 		plid: string,
 		title: string,
 		url: string
@@ -133,6 +135,9 @@
 
 		{if $layoutColumnIndex != 0}
 			{sp}layout-drag-item
+		{/if}
+
+		{if $layoutColumnItem.parentable}
 			{sp}layout-drop-target-item
 		{/if}
 
@@ -148,6 +153,7 @@
 
 	{let $listGroupItemAttributes kind="attributes"}
 		class="{$listGroupItemClasses}"
+		data-layout-column-item-plid="{$layoutColumnItem.plid}"
 
 		{if $layoutColumnItem.active}
 			ref="active"
@@ -230,17 +236,16 @@
 					{if $layoutColumnItem.actionURLs['addURL']}
 						<div class="flex-col">
 							<div class="quick-action-menu">
-								<button
+								<a
 									class="component-action"
 									href="{$layoutColumnItem.actionURLs['addURL']}"
 									title="{msg desc=""}add-page{/msg}"
-									type="button"
 								>
 									{call .lexiconIcon}
 										{param name: 'plus' /}
 										{param pathThemeImages: $pathThemeImages /}
 									{/call}
-								</button>
+								</a>
 							</div>
 						</div>
 					{/if}

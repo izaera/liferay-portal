@@ -428,7 +428,7 @@ public class AMImageRequestHandlerTest {
 	private void _mockClosestMatch(
 			FileVersion fileVersion,
 			AMImageConfigurationEntry amImageConfigurationEntry,
-			List<AdaptiveMedia<AMImageProcessor>> adaptiveMediaList)
+			List<AdaptiveMedia<AMImageProcessor>> adaptiveMedias)
 		throws Exception {
 
 		Mockito.when(
@@ -470,7 +470,7 @@ public class AMImageRequestHandlerTest {
 					queryBuilderWidth.equals(configurationWidth) &&
 					queryBuilderHeight.equals(configurationHeight)) {
 
-					return adaptiveMediaList.stream();
+					return adaptiveMedias.stream();
 				}
 
 				return Stream.empty();

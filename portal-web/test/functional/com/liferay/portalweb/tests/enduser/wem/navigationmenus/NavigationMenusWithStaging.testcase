@@ -182,6 +182,15 @@ definition {
 			urlName = "Liferay"
 		);
 
+		NavigationMenusAdmin.openNavigationMenusAdmin(
+			siteURLKey = "test-site-name-staging"
+		);
+
+		NavigationMenusAdmin.configureMenuType(
+			menuType = "Primary Navigation",
+			navigationMenu = "Test Navigation Menu Name"
+		);
+
 		Navigator.openWithAppendToBaseURL(urlAppend = "web/test-site-name-staging");
 
 		NavigationMenusWidget.gotoNavigationMenuWidgetConfig();
@@ -287,9 +296,11 @@ definition {
 			value1 = "web/test-site-name-staging/test-page-1"
 		);
 
-		Click(locator1 = "Home#PAGE", key_pageName = "Liferay");
-
-		AssertLocation(value1 = "https://www.liferay.com/");
+		AssertVisible(
+			locator1 = "Home#PAGE_HREF",
+			key_href = "https://www.liferay.com/",
+			key_pageName = "Liferay"
+		);
 
 		NavigationMenusAdmin.openNavigationMenusAdmin(siteURLKey = "test-site-name");
 
@@ -403,6 +414,15 @@ definition {
 			urlName = "Liferay"
 		);
 
+		NavigationMenusAdmin.openNavigationMenusAdmin(
+			siteURLKey = "test-site-name-staging"
+		);
+
+		NavigationMenusAdmin.configureMenuType(
+			menuType = "Primary Navigation",
+			navigationMenu = "Test Navigation Menu Name"
+		);
+
 		Navigator.openWithAppendToBaseURL(urlAppend = "web/test-site-name-staging");
 
 		NavigationMenusWidget.gotoNavigationMenuWidgetConfig();
@@ -425,7 +445,11 @@ definition {
 			value1 = "web/test-site-name-staging/test-page-1"
 		);
 
-		Click(locator1 = "Home#PAGE", key_pageName = "Liferay");
+		AssertVisible(
+			locator1 = "Home#PAGE_HREF",
+			key_href = "https://www.liferay.com/",
+			key_pageName = "Liferay"
+		);
 
 		NavigationMenusAdmin.openNavigationMenusAdmin(siteURLKey = "test-site-name");
 
@@ -480,6 +504,15 @@ definition {
 		NavigationMenusAdmin.addItem(
 			item = "Page",
 			pageNames = "Test Page 1,Test Page 2,Test Page 3"
+		);
+
+		NavigationMenusAdmin.openNavigationMenusAdmin(
+			siteURLKey = "test-site-name-staging"
+		);
+
+		NavigationMenusAdmin.configureMenuType(
+			menuType = "Primary Navigation",
+			navigationMenu = "Test Navigation Menu Name"
 		);
 
 		Navigator.openWithAppendToBaseURL(urlAppend = "web/test-site-name-staging");

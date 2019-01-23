@@ -14,16 +14,21 @@
 
 package com.liferay.apio.architect.internal.action;
 
+import static io.vavr.API.$;
+import static io.vavr.API.Case;
+
 import static java.util.Collections.unmodifiableList;
 
 import com.liferay.apio.architect.annotation.Id;
 import com.liferay.apio.architect.form.Body;
+import com.liferay.apio.architect.form.Form;
 import com.liferay.apio.architect.internal.alias.ProvideFunction;
 import com.liferay.apio.architect.internal.annotation.Action;
 import com.liferay.apio.architect.operation.HTTPMethod;
 import com.liferay.apio.architect.resource.Resource;
 
 import io.vavr.CheckedFunction1;
+import io.vavr.Function2;
 import io.vavr.control.Try;
 
 import java.lang.annotation.Annotation;
@@ -31,6 +36,7 @@ import java.lang.annotation.Annotation;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
@@ -66,7 +72,7 @@ public final class ActionSemantics {
 	 * @review
 	 */
 	public Boolean checkPermissions(List<?> params) throws Throwable {
-		return _permissionFunction.apply(params);
+		return _permissionCheckedFunction1.apply(params);
 	}
 
 	/**
@@ -75,7 +81,7 @@ public final class ActionSemantics {
 	 * @review
 	 */
 	public Object execute(List<?> params) throws Throwable {
-		return _executeFunction.apply(params);
+		return _executeCheckedFunction1.apply(params);
 	}
 
 	/**
@@ -108,6 +114,16 @@ public final class ActionSemantics {
 		}
 
 		return _bodyFunction.apply(body);
+	}
+
+	/**
+	 * Returns the form for the action, if present. Returns {@code
+	 * Optional#empty()} otherwise.
+	 *
+	 * @review
+	 */
+	public Optional<Form> getFormOptional() {
+		return Optional.ofNullable(_form);
 	}
 
 	/**
@@ -192,25 +208,29 @@ public final class ActionSemantics {
 	 *         params
 	 * @review
 	 */
+	@SuppressWarnings({"Convert2MethodRef", "unchecked"})
 	public Action toAction(ProvideFunction provideFunction) {
-		return request -> Try.of(
+		Action action = request -> Try.of(
 			() -> getPermissionParams(provideFunction.apply(this, request))
 		).mapTry(
 			this::checkPermissions
 		).filter(
 			aBoolean -> aBoolean
-		).<Try<List<?>>>transform(
-			aTry -> {
-				if (aTry.isSuccess()) {
-					return Try.of(
-						() -> getParams(provideFunction.apply(this, request)));
-				}
-
-				return Try.failure(new ForbiddenException());
-			}
+		).mapFailure(
+			Case($(), () -> new ForbiddenException())
+		).mapTry(
+			__ -> provideFunction.apply(this, request)
+		).mapTry(
+			this::getParams
 		).mapTry(
 			this::execute
 		);
+
+		if (Void.class.isAssignableFrom(_returnClass)) {
+			return (Action.NoContent)action::execute;
+		}
+
+		return (Action.Ok)action::execute;
 	}
 
 	/**
@@ -232,11 +252,13 @@ public final class ActionSemantics {
 
 		actionSemantics._annotations = annotations;
 		actionSemantics._bodyFunction = _bodyFunction;
-		actionSemantics._executeFunction = _executeFunction;
+		actionSemantics._executeCheckedFunction1 = _executeCheckedFunction1;
+		actionSemantics._form = _form;
 		actionSemantics._method = _method;
 		actionSemantics._name = _name;
 		actionSemantics._paramClasses = _paramClasses;
-		actionSemantics._permissionFunction = _permissionFunction;
+		actionSemantics._permissionCheckedFunction1 =
+			_permissionCheckedFunction1;
 		actionSemantics._permissionProvidedClasses = _permissionProvidedClasses;
 		actionSemantics._resource = _resource;
 		actionSemantics._returnClass = _returnClass;
@@ -263,11 +285,13 @@ public final class ActionSemantics {
 
 		actionSemantics._annotations = _annotations;
 		actionSemantics._bodyFunction = _bodyFunction;
-		actionSemantics._executeFunction = _executeFunction;
+		actionSemantics._executeCheckedFunction1 = _executeCheckedFunction1;
+		actionSemantics._form = _form;
 		actionSemantics._method = method;
 		actionSemantics._name = _name;
 		actionSemantics._paramClasses = _paramClasses;
-		actionSemantics._permissionFunction = _permissionFunction;
+		actionSemantics._permissionCheckedFunction1 =
+			_permissionCheckedFunction1;
 		actionSemantics._permissionProvidedClasses = _permissionProvidedClasses;
 		actionSemantics._resource = _resource;
 		actionSemantics._returnClass = _returnClass;
@@ -294,11 +318,13 @@ public final class ActionSemantics {
 
 		actionSemantics._annotations = _annotations;
 		actionSemantics._bodyFunction = _bodyFunction;
-		actionSemantics._executeFunction = _executeFunction;
+		actionSemantics._executeCheckedFunction1 = _executeCheckedFunction1;
+		actionSemantics._form = _form;
 		actionSemantics._method = _method;
 		actionSemantics._name = name;
 		actionSemantics._paramClasses = _paramClasses;
-		actionSemantics._permissionFunction = _permissionFunction;
+		actionSemantics._permissionCheckedFunction1 =
+			_permissionCheckedFunction1;
 		actionSemantics._permissionProvidedClasses = _permissionProvidedClasses;
 		actionSemantics._resource = _resource;
 		actionSemantics._returnClass = _returnClass;
@@ -321,11 +347,13 @@ public final class ActionSemantics {
 
 		actionSemantics._annotations = _annotations;
 		actionSemantics._bodyFunction = _bodyFunction;
-		actionSemantics._executeFunction = _executeFunction;
+		actionSemantics._executeCheckedFunction1 = _executeCheckedFunction1;
+		actionSemantics._form = _form;
 		actionSemantics._method = _method;
 		actionSemantics._name = _name;
 		actionSemantics._paramClasses = _paramClasses;
-		actionSemantics._permissionFunction = _permissionFunction;
+		actionSemantics._permissionCheckedFunction1 =
+			_permissionCheckedFunction1;
 		actionSemantics._permissionProvidedClasses = _permissionProvidedClasses;
 		actionSemantics._resource = resource;
 		actionSemantics._returnClass = _returnClass;
@@ -352,11 +380,13 @@ public final class ActionSemantics {
 
 		actionSemantics._annotations = _annotations;
 		actionSemantics._bodyFunction = _bodyFunction;
-		actionSemantics._executeFunction = _executeFunction;
+		actionSemantics._executeCheckedFunction1 = _executeCheckedFunction1;
+		actionSemantics._form = _form;
 		actionSemantics._method = _method;
 		actionSemantics._name = _name;
 		actionSemantics._paramClasses = _paramClasses;
-		actionSemantics._permissionFunction = _permissionFunction;
+		actionSemantics._permissionCheckedFunction1 =
+			_permissionCheckedFunction1;
 		actionSemantics._permissionProvidedClasses = _permissionProvidedClasses;
 		actionSemantics._resource = _resource;
 		actionSemantics._returnClass = returnClass;
@@ -387,22 +417,28 @@ public final class ActionSemantics {
 		}
 
 		@Override
-		public FinalStep bodyFunction(Function<Body, Object> bodyFunction) {
-			_actionSemantics._bodyFunction = bodyFunction;
-
-			return this;
-		}
-
-		@Override
 		public ActionSemantics build() {
 			return _actionSemantics;
 		}
 
 		@Override
 		public FinalStep executeFunction(
-			CheckedFunction1<List<?>, ?> executeFunction) {
+			CheckedFunction1<List<?>, ?> executeCheckedFunction1) {
 
-			_actionSemantics._executeFunction = executeFunction;
+			_actionSemantics._executeCheckedFunction1 = executeCheckedFunction1;
+
+			return this;
+		}
+
+		@Override
+		public FinalStep form(
+			Form form, Function2<Form, Body, Object> function2) {
+
+			_actionSemantics._form = form;
+
+			if (form != null) {
+				_actionSemantics._bodyFunction = function2.apply(form);
+			}
 
 			return this;
 		}
@@ -423,16 +459,17 @@ public final class ActionSemantics {
 
 		@Override
 		public ExecuteStep permissionFunction() {
-			_actionSemantics._permissionFunction = params -> true;
+			_actionSemantics._permissionCheckedFunction1 = params -> true;
 
 			return this;
 		}
 
 		@Override
 		public ExecuteStep permissionFunction(
-			CheckedFunction1<List<?>, Boolean> permissionFunction) {
+			CheckedFunction1<List<?>, Boolean> permissionCheckedFunction1) {
 
-			_actionSemantics._permissionFunction = permissionFunction;
+			_actionSemantics._permissionCheckedFunction1 =
+				permissionCheckedFunction1;
 
 			return this;
 		}
@@ -473,12 +510,12 @@ public final class ActionSemantics {
 		 * @review
 		 */
 		public FinalStep executeFunction(
-			CheckedFunction1<List<?>, ?> executeFunction);
+			CheckedFunction1<List<?>, ?> executeCheckedFunction1);
 
 		/**
 		 * Provides information about the permission method arguments. This
 		 * function receives the list of param classes to provide to the
-		 * permissionFunction
+		 * permissionCheckedFunction1
 		 *
 		 * @review
 		 */
@@ -519,8 +556,16 @@ public final class ActionSemantics {
 		public FinalStep annotatedWith(Annotation... annotations);
 
 		/**
-		 * Provides information about the function used to transform the body
-		 * value into the object needed by the action.
+		 * Creates the {@link ActionSemantics} object with the information
+		 * provided to the builder.
+		 *
+		 * @review
+		 */
+		public ActionSemantics build();
+
+		/**
+		 * Provides information about the form and function used to transform
+		 * the body value into the object needed by the action.
 		 *
 		 * <p>
 		 * If the action does not need information from the body, this method
@@ -529,15 +574,8 @@ public final class ActionSemantics {
 		 *
 		 * @review
 		 */
-		public FinalStep bodyFunction(Function<Body, Object> bodyFunction);
-
-		/**
-		 * Creates the {@link ActionSemantics} object with the information
-		 * provided to the builder.
-		 *
-		 * @review
-		 */
-		public ActionSemantics build();
+		public FinalStep form(
+			Form form, Function2<Form, Body, Object> function2);
 
 		/**
 		 * Provides information about the params needed by the action.
@@ -605,7 +643,7 @@ public final class ActionSemantics {
 		 * @review
 		 */
 		public ExecuteStep permissionFunction(
-			CheckedFunction1<List<?>, Boolean> permissionFunction);
+			CheckedFunction1<List<?>, Boolean> permissionCheckedFunction1);
 
 	}
 
@@ -621,12 +659,13 @@ public final class ActionSemantics {
 	}
 
 	private List<Annotation> _annotations = new ArrayList<>();
-	private Function<Body, Object> _bodyFunction;
-	private CheckedFunction1<List<?>, ?> _executeFunction;
+	private Function<Body, Object> _bodyFunction = __ -> null;
+	private CheckedFunction1<List<?>, ?> _executeCheckedFunction1;
+	private Form _form;
 	private String _method;
 	private String _name;
 	private List<Class<?>> _paramClasses = new ArrayList<>();
-	private CheckedFunction1<List<?>, Boolean> _permissionFunction;
+	private CheckedFunction1<List<?>, Boolean> _permissionCheckedFunction1;
 	private List<Class<?>> _permissionProvidedClasses = new ArrayList<>();
 	private Resource _resource;
 	private Class<?> _returnClass;

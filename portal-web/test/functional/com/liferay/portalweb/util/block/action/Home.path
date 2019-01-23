@@ -179,6 +179,11 @@
 	<td></td>
 </tr>
 <tr>
+	<td>FOOTER</td>
+	<td>//footer[@id='footer']</td>
+	<td></td>
+</tr>
+<tr>
 	<td></td>
 	<td></td>
 	<td></td>
@@ -214,6 +219,11 @@
 <tr>
 	<td>PAGE</td>
 	<td>//div[contains(@id,'navbar')]/ul/li/a[contains(.,'${key_pageName}')]</td>
+	<td>Page</td>
+</tr>
+<tr>
+	<td>PAGE_HREF</td>
+	<td>//div[contains(@id,'navbar')]/ul/li/a[contains(.,'${key_pageName}')][@href='${key_href}']</td>
 	<td>Page</td>
 </tr>
 <tr>

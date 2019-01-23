@@ -94,23 +94,6 @@ import org.osgi.service.component.annotations.Reference;
 @Component(service = ActionManager.class)
 public class ActionManagerImpl implements ActionManager {
 
-	/**
-	 * Returns all of the action semantics collected by the different routers.
-	 *
-	 * @review
-	 */
-	public Stream<ActionSemantics> actionSemantics() {
-		return Stream.of(
-			_actionRouterManager.getActionSemantics(),
-			_itemRouterManager.getActionSemantics(),
-			_collectionRouterManager.getActionSemantics(),
-			_reusableNestedCollectionRouterManager.getActionSemantics(),
-			_nestedCollectionRouterManager.getActionSemantics()
-		).flatMap(
-			identity()
-		);
-	}
-
 	@Override
 	public Either<Action.Error, Action> getAction(
 		String method, List<String> params) {
@@ -222,7 +205,7 @@ public class ActionManagerImpl implements ActionManager {
 		Resource resource, Credentials credentials,
 		HttpServletRequest httpServletRequest) {
 
-		Stream<ActionSemantics> stream = actionSemantics();
+		Stream<ActionSemantics> stream = getActionSemanticsStream();
 
 		return stream.filter(
 			isActionFor(resource)
@@ -244,6 +227,19 @@ public class ActionManagerImpl implements ActionManager {
 	}
 
 	@Override
+	public Stream<ActionSemantics> getActionSemanticsStream() {
+		return Stream.of(
+			_actionRouterManager.getActionSemantics(),
+			_itemRouterManager.getActionSemantics(),
+			_collectionRouterManager.getActionSemantics(),
+			_reusableNestedCollectionRouterManager.getActionSemantics(),
+			_nestedCollectionRouterManager.getActionSemantics()
+		).flatMap(
+			identity()
+		);
+	}
+
+	@Override
 	public Documentation getDocumentation(
 		HttpServletRequest httpServletRequest) {
 
@@ -259,7 +255,7 @@ public class ActionManagerImpl implements ActionManager {
 			() -> providerManager.provideOptional(
 				httpServletRequest, ApplicationURL.class);
 
-		Stream<ActionSemantics> stream = actionSemantics();
+		Stream<ActionSemantics> stream = getActionSemanticsStream();
 
 		Stream<Resource> resourceStream = stream.map(
 			ActionSemantics::getResource
@@ -274,7 +270,7 @@ public class ActionManagerImpl implements ActionManager {
 
 	@Override
 	public EntryPoint getEntryPoint() {
-		return getEntryPointFrom(actionSemantics());
+		return getEntryPointFrom(getActionSemanticsStream());
 	}
 
 	@Override
@@ -284,7 +280,7 @@ public class ActionManagerImpl implements ActionManager {
 		return Either.narrow(
 			_getAction(item, isRetrieveAction)
 		).map(
-			action -> action.apply(request)
+			action -> action.execute(request)
 		).map(
 			object -> object instanceof Try ? ((Try)object).get() : object
 		).toJavaOptional(
@@ -304,7 +300,8 @@ public class ActionManagerImpl implements ActionManager {
 	private Either<Action.Error, Action> _getAction(
 		Resource resource, Predicate<ActionSemantics> predicate) {
 
-		Stream<ActionSemantics> actionSemanticsStream = actionSemantics();
+		Stream<ActionSemantics> actionSemanticsStream =
+			getActionSemanticsStream();
 
 		Optional<ActionSemantics> optionalActionSemantics =
 			actionSemanticsStream.filter(

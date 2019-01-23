@@ -220,7 +220,23 @@ public class Predicates {
 	 * @review
 	 */
 	public static Predicate<ActionSemantics> isActionFor(Resource resource) {
-		return areEquals(ActionSemantics::getResource, resource);
+		return isActionForAny(resource);
+	}
+
+	/**
+	 * Returns a predicate that checks if the action's resource is equals to any
+	 * of the provided.
+	 *
+	 * @review
+	 */
+	public static Predicate<ActionSemantics> isActionForAny(
+		Resource... resources) {
+
+		return actionSemantics -> Stream.of(
+			resources
+		).anyMatch(
+			resource -> resource.equals(actionSemantics.getResource())
+		);
 	}
 
 	/**

@@ -80,6 +80,13 @@ public interface ActionManager {
 		HttpServletRequest httpServletRequest);
 
 	/**
+	 * Returns all of the action semantics collected by the different routers.
+	 *
+	 * @review
+	 */
+	public Stream<ActionSemantics> getActionSemanticsStream();
+
+	/**
 	 * The API documentation with the list of actions and resources.
 	 *
 	 * @review

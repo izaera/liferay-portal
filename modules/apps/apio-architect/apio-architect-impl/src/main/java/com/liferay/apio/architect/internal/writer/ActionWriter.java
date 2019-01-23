@@ -14,8 +14,10 @@
 
 package com.liferay.apio.architect.internal.writer;
 
+import static com.liferay.apio.architect.internal.url.URLCreator.createAbsoluteURL;
 import static com.liferay.apio.architect.internal.url.URLCreator.createActionURL;
 
+import com.liferay.apio.architect.form.Form;
 import com.liferay.apio.architect.internal.action.ActionSemantics;
 import com.liferay.apio.architect.internal.message.json.ActionMapper;
 import com.liferay.apio.architect.internal.message.json.JSONObjectBuilder;
@@ -51,6 +53,17 @@ public class ActionWriter {
 		optional.ifPresent(
 			url -> _actionMapper.mapActionSemanticsURL(
 				operationJSONObjectBuilder, url));
+
+		Optional<Form> formOptional = actionSemantics.getFormOptional();
+
+		formOptional.map(
+			Form::getId
+		).map(
+			uri -> createAbsoluteURL(_requestInfo.getApplicationURL(), uri)
+		).ifPresent(
+			url -> _actionMapper.mapActionSemanticsExpectedResourceURL(
+				operationJSONObjectBuilder, url)
+		);
 
 		_actionMapper.mapHTTPMethod(
 			operationJSONObjectBuilder, actionSemantics.getHTTPMethod());

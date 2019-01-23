@@ -51,6 +51,17 @@ public class JSONLDSingleModelMessageMapper<T>
 	}
 
 	@Override
+	public void mapActionSemanticsExpectedResourceURL(
+		JSONObjectBuilder jsonObjectBuilder, String url) {
+
+		jsonObjectBuilder.field(
+			"expects"
+		).stringValue(
+			url
+		);
+	}
+
+	@Override
 	public void mapActionSemanticsURL(
 		JSONObjectBuilder jsonObjectBuilder, String url) {
 

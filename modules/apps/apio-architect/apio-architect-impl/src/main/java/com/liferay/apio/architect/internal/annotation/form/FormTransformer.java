@@ -85,7 +85,7 @@ public class FormTransformer {
 		Map<String, Object> resultsMap = new HashMap<>();
 
 		InvocationHandler invocationHandler =
-			(object, method, args) -> resultsMap.get(method.getName());
+			(object, method, args) -> _getReturnValue(resultsMap, method);
 
 		Function<String, BiConsumer<T, ?>> formFunction =
 			methodName -> (object, value) -> resultsMap.put(methodName, value);
@@ -112,7 +112,7 @@ public class FormTransformer {
 					unsafeCast(formFunction.apply(method.getName())));
 			});
 
-		List<FieldData> fieldDataList = _filterReadableFields(
+		List<FieldData<Class<?>>> fieldDataList = _filterReadableFields(
 			parsedType::getFieldDataList);
 
 		fieldDataList.forEach(
@@ -121,29 +121,29 @@ public class FormTransformer {
 
 				Method method = fieldData.getMethod();
 
-				Class<?> returnType = method.getReturnType();
+				Class<?> returnTypeClass = fieldData.getData();
 
-				if (returnType == String.class) {
+				if (returnTypeClass == String.class) {
 					fieldStep.addOptionalString(
 						key, unsafeCast(formFunction.apply(method.getName())));
 				}
-				else if (returnType == Date.class) {
+				else if (returnTypeClass == Date.class) {
 					fieldStep.addOptionalDate(
 						key, unsafeCast(formFunction.apply(method.getName())));
 				}
-				else if (returnType == Boolean.class) {
+				else if (returnTypeClass == Boolean.class) {
 					fieldStep.addOptionalBoolean(
 						key, unsafeCast(formFunction.apply(method.getName())));
 				}
-				else if (returnType == BinaryFile.class) {
+				else if (returnTypeClass == BinaryFile.class) {
 					fieldStep.addOptionalFile(
 						key, unsafeCast(formFunction.apply(method.getName())));
 				}
-				else if (returnType == Double.class) {
+				else if (returnTypeClass == Double.class) {
 					fieldStep.addOptionalDouble(
 						key, unsafeCast(formFunction.apply(method.getName())));
 				}
-				else if (Number.class.isAssignableFrom(returnType)) {
+				else if (Number.class.isAssignableFrom(returnTypeClass)) {
 					fieldStep.addOptionalLong(
 						key, unsafeCast(formFunction.apply(method.getName())));
 				}
@@ -190,16 +190,20 @@ public class FormTransformer {
 		for (FieldData<LinkTo> fieldData : linkToFieldDataList) {
 			LinkTo linkTo = fieldData.getData();
 
-			if (!SINGLE.equals(linkTo.resourceType())) {
-				continue;
-			}
-
 			String key = fieldData.getFieldName();
 			String methodName = fieldData.getMethodName();
+			Method method = fieldData.getMethod();
 
-			fieldStep.addOptionalLinkedModel(
-				key, unsafeCast(linkTo.resource()),
-				unsafeCast(formFunction.apply(methodName)));
+			if (SINGLE.equals(linkTo.resourceType())) {
+				fieldStep.addOptionalLinkedModel(
+					key, unsafeCast(linkTo.resource()),
+					unsafeCast(formFunction.apply(methodName)));
+			}
+			else if (method.getReturnType() == List.class) {
+				fieldStep.addOptionalLinkedModelList(
+					key, unsafeCast(linkTo.resource()),
+					unsafeCast(formFunction.apply(methodName)));
+			}
 		}
 
 		List<FieldData<ParsedType>> nestedParsedTypes = _filterReadableFields(
@@ -246,6 +250,18 @@ public class FormTransformer {
 		).collect(
 			Collectors.toList()
 		);
+	}
+
+	private static Object _getReturnValue(
+		Map<String, Object> resultsMap, Method method) {
+
+		Object value = resultsMap.get(method.getName());
+
+		if (method.getReturnType() == Optional.class) {
+			return Optional.ofNullable(value);
+		}
+
+		return value;
 	}
 
 	private static final Predicate<FieldData> _isReadableField = fieldData -> {

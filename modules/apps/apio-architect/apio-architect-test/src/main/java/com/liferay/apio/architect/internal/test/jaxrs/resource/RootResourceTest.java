@@ -28,6 +28,7 @@ import static javax.ws.rs.core.HttpHeaders.ALLOW;
 import static org.apache.commons.collections.CollectionUtils.isEqualCollection;
 
 import static org.hamcrest.MatcherAssert.assertThat;
+import static org.hamcrest.Matchers.isEmptyOrNullString;
 import static org.hamcrest.collection.IsIterableContainingInAnyOrder.containsInAnyOrder;
 import static org.hamcrest.core.Is.is;
 
@@ -127,6 +128,14 @@ public class RootResourceTest extends BaseTest {
 	}
 
 	@Test
+	public void testNoContentEndpoint() {
+		Response response = _makeRequestTo("no-content", "GET");
+
+		assertThat(response.getStatus(), is(204));
+		assertThat(response.readEntity(String.class), isEmptyOrNullString());
+	}
+
+	@Test
 	public void testNotAllowedEndpoint() {
 		Response response = _makeRequestTo("not-allowed", "GET");
 
@@ -210,6 +219,10 @@ public class RootResourceTest extends BaseTest {
 		public Either<Action.Error, Action> getAction(
 			String method, List<String> params) {
 
+			if (isEqualCollection(params, singletonList("no-content"))) {
+				return right((Action.NoContent)__ -> null);
+			}
+
 			if (isEqualCollection(params, singletonList("not-found"))) {
 				return left(_notFound);
 			}
@@ -237,6 +250,11 @@ public class RootResourceTest extends BaseTest {
 			Resource resource, Credentials credentials,
 			HttpServletRequest httpServletRequest) {
 
+			return Stream.empty();
+		}
+
+		@Override
+		public Stream<ActionSemantics> getActionSemanticsStream() {
 			return Stream.empty();
 		}
 

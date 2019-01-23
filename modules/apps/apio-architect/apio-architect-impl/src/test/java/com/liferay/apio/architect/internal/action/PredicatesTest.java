@@ -24,6 +24,7 @@ import static com.liferay.apio.architect.internal.action.Predicates.isActionByPA
 import static com.liferay.apio.architect.internal.action.Predicates.isActionByPOST;
 import static com.liferay.apio.architect.internal.action.Predicates.isActionByPUT;
 import static com.liferay.apio.architect.internal.action.Predicates.isActionFor;
+import static com.liferay.apio.architect.internal.action.Predicates.isActionForAny;
 import static com.liferay.apio.architect.internal.action.Predicates.isActionNamed;
 import static com.liferay.apio.architect.internal.action.Predicates.isCreateAction;
 import static com.liferay.apio.architect.internal.action.Predicates.isRemoveAction;
@@ -123,6 +124,18 @@ public class PredicatesTest {
 	public void testIsActionByPUT() {
 		assertTrue(isActionByPUT.test(_actionSemantics.withMethod("PUT")));
 		assertFalse(isActionByPUT.test(_actionSemantics));
+	}
+
+	@Test
+	public void testIsActionForAnyResource() {
+		Predicate<ActionSemantics> truePredicate = isActionForAny(
+			Item.of("Name"), Paged.of("Name"));
+
+		Predicate<ActionSemantics> falsePredicate = isActionForAny(
+			Paged.of("NotName"), Item.of("Name"));
+
+		assertTrue(truePredicate.test(_actionSemantics));
+		assertFalse(falsePredicate.test(_actionSemantics));
 	}
 
 	@Test

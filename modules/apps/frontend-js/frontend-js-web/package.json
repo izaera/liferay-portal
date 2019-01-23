@@ -16,8 +16,8 @@
 		}
 	},
 	"dependencies": {
-		"clay": "2.5.1",
-		"clay-alert": "2.5.1",
+		"clay": "2.6.0",
+		"clay-alert": "2.6.0",
 		"liferay-amd-loader": "3.1.2",
 		"lodash.escape": "4.0.1",
 		"lodash.groupby": "4.6.0",
@@ -76,8 +76,9 @@
 	},
 	"name": "frontend-js-web",
 	"scripts": {
-		"build": "metalsoy && babel -d classes/META-INF/resources src/main/resources/META-INF/resources && liferay-npm-bundler && liferay-npm-bridge-generator",
+		"build": "metalsoy && babel -d classes/META-INF/resources src/main/resources/META-INF/resources && liferay-npm-bundler && liferay-npm-bridge-generator && npm run cleanSoy",
 		"checkFormat": "npm run csf",
+		"cleanSoy": "rimraf src/**/*.soy.js",
 		"csf": "csf src/**/liferay/**/*.js test/**/*.js test/**/**/*.js",
 		"format": "npm run csf -- -i",
 		"start": "webpack-dev-server --config webpack.dev.js",

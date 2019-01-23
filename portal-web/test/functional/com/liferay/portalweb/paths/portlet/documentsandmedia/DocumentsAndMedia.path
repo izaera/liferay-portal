@@ -10,7 +10,7 @@
 <tbody>
 <tr>
 	<td>BREADCRUMB_HOME</td>
-	<td>//div[contains(@id,'breadcrumbContainer')]//ul/li[1]</td>
+	<td>//div[contains(@id,'breadcrumbContainer')]//ol/li[1]</td>
 	<td></td>
 </tr>
 <tr>
@@ -36,6 +36,11 @@
 <tr>
 	<td>CUSTOM_FIELD_NAME</td>
 	<td>//div[contains(@class,'custom-attributes')]/div/label[contains(.,'${key_customFieldName}')]</td>
+	<td></td>
+</tr>
+<tr>
+	<td>DOCUMENT_VERSION_ANY</td>
+	<td>//li[@class='list-group-item']/div[contains(.,'${key_dmDocumentVersionNumber}')]/div</td>
 	<td></td>
 </tr>
 <tr>

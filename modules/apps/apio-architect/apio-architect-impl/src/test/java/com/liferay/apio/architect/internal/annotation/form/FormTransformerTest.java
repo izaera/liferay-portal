@@ -55,8 +55,8 @@ public class FormTransformerTest {
 				put("numberField1", "10");
 				put("numberField2", "20");
 				put("relativeUrl1", "/first");
-				put("relativeUrl2", "/second");
 				put("stringField1", "string1");
+				put("stringFieldOptional", "stringOptional");
 			}
 		};
 
@@ -65,6 +65,9 @@ public class FormTransformerTest {
 				{
 					put("booleanListField1", asList("true", "false"));
 					put("booleanListField2", asList("false", "true"));
+					put(
+						"linkToChildCollectionList",
+						asList("something/3", "something/2", "something/1"));
 					put("numberListField1", asList("1", "2"));
 					put("numberListField2", asList("3", "4"));
 					put("stringListField1", asList("one", "two"));
@@ -79,7 +82,8 @@ public class FormTransformerTest {
 		ParsedType parsedType = TypeProcessor.processType(Dummy.class);
 
 		Form<Dummy> objectForm = FormTransformer.toForm(
-			parsedType, __ -> "", __ -> Optional.of("something"));
+			parsedType, path -> Integer.valueOf(path.getId()),
+			__ -> Optional.of("something"));
 
 		_dummy = objectForm.get(body);
 	}
@@ -102,11 +106,18 @@ public class FormTransformerTest {
 		assertThat(_dummy.getNumberListField2(), is(asList(3L, 4L)));
 		assertThat(_dummy.getStringListField1(), is(asList("one", "two")));
 		assertThat(_dummy.getStringListField2(), is(asList("three", "four")));
+		assertThat(_dummy.getLinkToChildCollectionList(), is(asList(3, 2, 1)));
 	}
 
 	@Test
 	public void testNotKeyInBodyShouldReturnNull() {
-		assertThat(_dummy.getStringField2(), is(nullValue()));
+		assertThat(_dummy.getRelativeUrl2(), is(nullValue()));
+	}
+
+	@Test
+	public void testOptionalFields() {
+		assertThat(
+			_dummy.getStringFieldOptional(), is(Optional.of("stringOptional")));
 	}
 
 	@Test
@@ -115,7 +126,6 @@ public class FormTransformerTest {
 			_dummy.getApplicationRelativeUrl(),
 			is("applicationRelativeUrlValue"));
 		assertThat(_dummy.getRelativeUrl1(), is("/first"));
-		assertThat(_dummy.getRelativeUrl2(), is("/second"));
 	}
 
 	private static Dummy _dummy;

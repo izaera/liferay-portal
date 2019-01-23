@@ -24,6 +24,7 @@ import static com.liferay.apio.architect.internal.annotation.representor.process
 import static com.liferay.apio.architect.internal.annotation.representor.processor.TypeProcessorTestUtil.testRelativeURLData;
 
 import static org.hamcrest.core.Is.is;
+import static org.hamcrest.core.IsEqual.equalTo;
 
 import static org.junit.Assert.assertThat;
 
@@ -56,7 +57,7 @@ public class TypeProcessorTest {
 
 	@Test
 	public void testBasicFields() {
-		List<FieldData> fieldMetadata = getOrderedList(
+		List<FieldData<Class<?>>> fieldMetadata = getOrderedList(
 			_parsedType::getFieldDataList);
 
 		testFieldData(fieldMetadata.get(0), "booleanField1", Boolean.class);
@@ -120,12 +121,23 @@ public class TypeProcessorTest {
 			linkToFieldDataList.get(1), CHILD_COLLECTION,
 			"linkToChildCollection2", StringIdentifier.class);
 
+		FieldData<LinkTo> linkToFieldData = linkToFieldDataList.get(2);
+
+		Vocabulary.Field field = linkToFieldData.getField();
+		LinkTo data = linkToFieldData.getData();
+		Method method = linkToFieldData.getMethod();
+
+		assertThat(field.value(), is("linkToChildCollectionList"));
+		assertThat(data.resource(), equalTo(IntegerIdentifier.class));
+		assertThat(data.resourceType(), is(CHILD_COLLECTION));
+		assertThat(method.getReturnType(), equalTo(List.class));
+
 		testLinkToFieldData(
-			linkToFieldDataList.get(2), SINGLE, "linkToSingle1",
+			linkToFieldDataList.get(3), SINGLE, "linkToSingle1",
 			IntegerIdentifier.class);
 
 		testLinkToFieldData(
-			linkToFieldDataList.get(3), SINGLE, "linkToSingle2",
+			linkToFieldDataList.get(4), SINGLE, "linkToSingle2",
 			StringIdentifier.class);
 	}
 

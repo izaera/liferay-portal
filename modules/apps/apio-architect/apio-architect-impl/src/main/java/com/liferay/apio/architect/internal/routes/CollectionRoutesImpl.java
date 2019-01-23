@@ -35,6 +35,8 @@ import com.liferay.apio.architect.function.throwable.ThrowableHexaFunction;
 import com.liferay.apio.architect.function.throwable.ThrowablePentaFunction;
 import com.liferay.apio.architect.identifier.Identifier;
 import com.liferay.apio.architect.internal.action.ActionSemantics;
+import com.liferay.apio.architect.internal.form.FormImpl;
+import com.liferay.apio.architect.internal.jaxrs.resource.FormResource;
 import com.liferay.apio.architect.internal.pagination.PageImpl;
 import com.liferay.apio.architect.internal.single.model.SingleModelImpl;
 import com.liferay.apio.architect.pagination.Page;
@@ -50,6 +52,8 @@ import java.util.Map;
 import java.util.Optional;
 import java.util.function.Function;
 import java.util.function.Supplier;
+
+import javax.ws.rs.core.UriBuilder;
 
 /**
  * @author Alejandro Hernández
@@ -150,6 +154,18 @@ public class CollectionRoutesImpl<T, S> implements CollectionRoutes<T, S> {
 			Form<?> form = formBuilderFunction.apply(
 				unsafeCast(_formBuilderSupplier.get()));
 
+			String uri = UriBuilder.fromResource(
+				FormResource.class
+			).path(
+				FormResource.class, "creatorForm"
+			).build(
+				_paged.getName()
+			).toString();
+
+			FormImpl formImpl = (FormImpl)form;
+
+			formImpl.setURI(uri);
+
 			ActionSemantics batchCreateActionSemantics =
 				ActionSemantics.ofResource(
 					_paged
@@ -172,8 +188,8 @@ public class CollectionRoutesImpl<T, S> implements CollectionRoutes<T, S> {
 						unsafeCast(params.get(2)), unsafeCast(params.get(3)),
 						unsafeCast(params.get(4))
 					)
-				).bodyFunction(
-					form::getList
+				).form(
+					form, Form::getList
 				).receivesParams(
 					Body.class, aClass, bClass, cClass, dClass
 				).build();
@@ -201,8 +217,8 @@ public class CollectionRoutesImpl<T, S> implements CollectionRoutes<T, S> {
 					unsafeCast(params.get(2)), unsafeCast(params.get(3)),
 					unsafeCast(params.get(4))
 				)
-			).bodyFunction(
-				form::get
+			).form(
+				form, Form::get
 			).receivesParams(
 				Body.class, aClass, bClass, cClass, dClass
 			).build();
@@ -223,18 +239,27 @@ public class CollectionRoutesImpl<T, S> implements CollectionRoutes<T, S> {
 				Function<Credentials, Boolean> permissionFunction,
 				FormBuilderFunction<R> formBuilderFunction) {
 
-			Optional<Form> optionalForm = Optional.ofNullable(
-				formBuilderFunction
-			).map(
-				function -> function.apply(
-					unsafeCast(_formBuilderSupplier.get()))
-			);
+			Form form = null;
+			Class<?> bodyClass = Void.class;
 
-			Class<?> bodyClass = optionalForm.<Class<?>>map(
-				__ -> Body.class
-			).orElse(
-				Void.class
-			);
+			if (formBuilderFunction != null) {
+				form = formBuilderFunction.apply(
+					unsafeCast(_formBuilderSupplier.get()));
+
+				String uri = UriBuilder.fromResource(
+					FormResource.class
+				).path(
+					FormResource.class, "customRouteForm"
+				).build(
+					_paged.getName(), customRoute.getName()
+				).toString();
+
+				FormImpl formImpl = (FormImpl)form;
+
+				formImpl.setURI(uri);
+
+				bodyClass = Body.class;
+			}
 
 			ActionSemantics createActionSemantics = ActionSemantics.ofResource(
 				_paged
@@ -257,12 +282,8 @@ public class CollectionRoutesImpl<T, S> implements CollectionRoutes<T, S> {
 					unsafeCast(params.get(2)), unsafeCast(params.get(3)),
 					unsafeCast(params.get(4)), unsafeCast(params.get(5))
 				)
-			).bodyFunction(
-				body -> optionalForm.map(
-					form -> form.get(body)
-				).orElse(
-					null
-				)
+			).form(
+				form, Form::get
 			).receivesParams(
 				Pagination.class, bodyClass, aClass, bClass, cClass, dClass
 			).build();
