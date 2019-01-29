@@ -133,39 +133,26 @@ AUI.add(
 					renderUI: function() {
 						var instance = this;
 
-						AssetTaglibTagsSelector.superclass.renderUI.apply(instance, arguments);
-
-						instance._renderIcons();
-
-						instance.inputNode.addClass('lfr-tag-selector-input');
-
-						instance._overlayAlign.node = instance.entryHolder;
-					},
+						instance.initMultiSelectComponent();
+},
 
 					bindUI: function() {
 						var instance = this;
-
-						AssetTaglibTagsSelector.superclass.bindUI.apply(instance, arguments);
-
-						instance._bindTagsSelector();
-
-						var entries = instance.entries;
-
-						entries.after('add', instance._updateHiddenInput, instance);
-						entries.after('remove', instance._updateHiddenInput, instance);
-
-						A.Do.before(instance._checkDuplicateTag, instance.entries, 'add', instance);
-						A.Do.before(instance._checkMaxLengthTag, instance.entries, 'add', instance);
 					},
 
 					syncUI: function() {
 						var instance = this;
+					},
 
-						AssetTaglibTagsSelector.superclass.syncUI.apply(instance, arguments);
+					initMultiSelectComponent: function() {
+						var instance = this;
+
+						AssetTaglibTagsSelector.superclass.renderUI.apply(instance, arguments);
 
 						var tagNames = instance.get('tagNames');
-
 						tagNames.forEach(instance.add, instance);
+
+						var form = instance.inputNode.get('form');
 					},
 
 					addEntries: function() {
@@ -410,6 +397,86 @@ AUI.add(
 							{},
 							false
 						);
+					},
+
+					showMultiSelectPopUp: function(event, callback) {
+						var instance = this;
+
+						event.preventDefault();
+
+						var uri = Lang.sub(
+							decodeURIComponent(instance.get('portletURL')),
+							{
+								selectedTagNames: instance.entries.keys.join()
+							}
+						);
+
+						var itemSelectorDialog = new A.LiferayItemSelectorDialog(
+							{
+								eventName: instance.get('eventName'),
+								on: {
+									selectedItemChange: function(event) {
+										var selectedItem = event.newVal;
+
+										if (selectedItem) {
+											instance.entries.each(
+												function(item) {
+													instance.entries.remove(item);
+												}
+											);
+
+											event.selectedItems = [];
+											AArray.each(
+												selectedItem.items.split(','),
+												function(value) {
+													instance.add(value);
+													event.selectedItems.push({label: value,
+														value: value});
+												}
+											);
+											if (callback) {
+												callback(event);
+											}
+										}
+									}
+								},
+								'strings.add': Liferay.Language.get('done'),
+								title: Liferay.Language.get('tags'),
+								url: uri
+							}
+						);
+
+						itemSelectorDialog.open();
+					},
+
+					multiSelectRemoveTag: function(event) {
+						var instance = this;
+						const item = event.data.item.value;
+						instance.entries.remove(item);
+						console.log(instance.entries.keys);
+},
+
+					getSelectedItems: function() {
+						var instance = this;
+						return instance.entries.keys.map(key => {
+							return {label: key,
+								value: key};
+						});
+					},
+
+					multiSelectAddEntries: function(selectedItems) {
+						var instance = this;
+
+						instance._multiSelectAddEntries(selectedItems);
+					},
+
+					_multiSelectAddEntries: function(selectedItems) {
+						var instance = this;
+						selectedItems.forEach(item => {
+							instance.entries.add(item.value, item.label);
+						});
+						instance._updateHiddenInput();
+						Liferay.Util.focusFormField(instance.inputNode);
 					},
 
 					_showSelectPopup: function(event) {
