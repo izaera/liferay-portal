@@ -31,5 +31,6 @@
         "metal-state": true,
         "metal-web-component": true
     },
+    "dump-report": true,
     "output": "classes/META-INF/resources/"
 }
