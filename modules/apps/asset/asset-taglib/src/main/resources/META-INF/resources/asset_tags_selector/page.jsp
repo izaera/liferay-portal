@@ -72,7 +72,7 @@ for (String tagName : tagNames){
 
 	HashMap<String, String> item = new HashMap<>();
 	item.put("label", tagName);
-	item.put("myValue", tagName);
+	item.put("value", tagName);
 	selectedItems.add(item);
 }
 String inputName = namespace + hiddenInput;
