@@ -41,21 +41,11 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * @author Rodolfo Roza Miranda
  */
-@Component(
-	immediate = true,
-	service = {JSBundleTracker.class, JSModulesNameMapper.class}
-)
-public class JSModulesNameMapper implements JSBundleTracker {
+@Component(immediate = true, service = JSModulesNameMapper.class)
+public class JSModulesNameMapper {
 
 	@Activate
 	public void activate() {
-		_clearCacheState();
-	}
-
-	@Override
-	public void addedJSBundle(
-		JSBundle jsBundle, Bundle bundle, NPMRegistry npmRegistry) {
-
 		_clearCacheState();
 	}
 
@@ -95,11 +85,27 @@ public class JSModulesNameMapper implements JSBundleTracker {
 		return resolvedModuleName;
 	}
 
-	@Override
-	public void removedJSBundle(
-		JSBundle jsBundle, Bundle bundle, NPMRegistry npmRegistry) {
+	@Component(immediate = true, service = JSBundleTracker.class)
+	public static class JSModulesNameMapperJSBundleTracker
+		implements JSBundleTracker {
 
-		_clearCacheState();
+		@Override
+		public void addedJSBundle(
+			JSBundle jsBundle, Bundle bundle, NPMRegistry npmRegistry) {
+
+			_jsModulesNameMapper._clearCacheState();
+		}
+
+		@Override
+		public void removedJSBundle(
+			JSBundle jsBundle, Bundle bundle, NPMRegistry npmRegistry) {
+
+			_jsModulesNameMapper._clearCacheState();
+		}
+
+		@Reference
+		private JSModulesNameMapper _jsModulesNameMapper;
+
 	}
 
 	private void _clearCacheState() {
