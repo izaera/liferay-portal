@@ -1,26 +1,31 @@
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
- * This library is free software; you can redistribute it and/or modify it under
- * the terms of the GNU Lesser General Public License as published by the Free
- * Software Foundation; either version 2.1 of the License, or (at your option)
- * any later version.
+ * This library is free software; you can redistribute it and/or modify it under the terms of the
+ * GNU Lesser General Public License as published by the Free Software Foundation; either version
+ * 2.1 of the License, or (at your option) any later version.
  *
- * This library is distributed in the hope that it will be useful, but WITHOUT
- * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
- * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
- * details.
+ * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
+ * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
+ * Lesser General Public License for more details.
  */
 
 package com.liferay.frontend.taglib.clay.servlet.taglib.soy;
 
+import com.liferay.frontend.taglib.clay.data.provider.ClayComponentDataProvider;
+import com.liferay.frontend.taglib.clay.data.provider.ClayComponentDataProviderRegistry;
+import com.liferay.frontend.taglib.clay.servlet.taglib.data.provider.ClayComponentDataProviderRegistryUtil;
 import com.liferay.frontend.taglib.clay.servlet.taglib.display.context.TableDisplayContext;
 import com.liferay.frontend.taglib.clay.servlet.taglib.display.context.table.Schema;
 import com.liferay.frontend.taglib.clay.servlet.taglib.display.context.table.Size;
 import com.liferay.frontend.taglib.clay.servlet.taglib.soy.base.BaseClayTag;
-
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.Validator;
 import java.util.Collection;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -38,6 +43,8 @@ public class TableTag extends BaseClayTag {
 			_populateContext(_tableDisplayContext);
 		}
 
+		_setItems();
+
 		return super.doStartTag();
 	}
 
@@ -47,6 +54,10 @@ public class TableTag extends BaseClayTag {
 
 	public void setActionsMenuVariant(String actionsMenuVariant) {
 		putValue("actionsMenuVariant", actionsMenuVariant);
+	}
+
+	public void setDataProviderKey(String dataProviderKey) {
+		_dataProviderKey = dataProviderKey;
 	}
 
 	public void setDisplayContext(TableDisplayContext tableDisplayContext) {
@@ -102,6 +113,21 @@ public class TableTag extends BaseClayTag {
 		super.cleanUp();
 
 		_tableDisplayContext = null;
+	}
+
+	private ClayComponentDataProvider _getDataProvider() {
+		if (Validator.isNull(_dataProviderKey)) {
+			return null;
+		}
+
+		ClayComponentDataProviderRegistry registry = ClayComponentDataProviderRegistryUtil
+			.getRegistry();
+
+		if (registry == null) {
+			return null;
+		}
+
+		return registry.get(_dataProviderKey);
 	}
 
 	private void _populateContext(TableDisplayContext tableDisplayContext) {
@@ -164,6 +190,29 @@ public class TableTag extends BaseClayTag {
 			setWrapTable(tableDisplayContext.isWrapTable());
 		}
 	}
+
+	private void _setItems() {
+		ClayComponentDataProvider dataProvider = _getDataProvider();
+
+		if (dataProvider == null) {
+			return;
+		}
+
+		try {
+			List items = dataProvider.getItems(request);
+
+			setItems(items);
+		}
+		catch (PortalException e) {
+			if (_log.isErrorEnabled()) {
+				_log.error(e);
+			}
+		}
+	}
+
+	private static final Log _log = LogFactoryUtil.getLog(TableTag.class);
+
+	private String _dataProviderKey;
 
 	private TableDisplayContext _tableDisplayContext;
 
