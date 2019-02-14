@@ -21,3 +21,10 @@
 <clay:table
 	displayContext="<%= tablesDisplayContext %>"
 />
+
+<blockquote><p>Table data can also be set using data provider service layer.</p></blockquote>
+
+<clay:table
+	dataProviderKey="SampleTableDataProvider"
+	displayContext="<%= tablesDisplayContext %>"
+/>
