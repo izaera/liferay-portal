@@ -12,18 +12,37 @@
 
 package com.liferay.frontend.taglib.clay.data.provider;
 
-import com.liferay.portal.kernel.exception.PortalException;
-
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 /**
- * @author Rodolfo Roza Miranda
+ * @author Marco Leo
  */
-public interface ClayComponentDataProvider<T> {
+public class PaginationImpl implements Pagination {
 
-	public List<T> getItems(HttpServletRequest request, Pagination pagination)
-		throws PortalException;
+	public PaginationImpl(int itemsPerPage, int pageNumber) {
+		_itemsPerPage = itemsPerPage;
+		_pageNumber = pageNumber;
+	}
+
+	@Override
+	public int getEndPosition() {
+		return _pageNumber * _itemsPerPage;
+	}
+
+	@Override
+	public int getItemsPerPage() {
+		return _itemsPerPage;
+	}
+
+	@Override
+	public int getPageNumber() {
+		return _pageNumber;
+	}
+
+	@Override
+	public int getStartPosition() {
+		return (_pageNumber - 1) * _itemsPerPage;
+	}
+
+	private final int _itemsPerPage;
+	private final int _pageNumber;
 
 }

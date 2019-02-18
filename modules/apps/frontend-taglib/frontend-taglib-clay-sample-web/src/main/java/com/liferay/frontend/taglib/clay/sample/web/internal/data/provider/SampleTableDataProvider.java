@@ -13,10 +13,14 @@
 package com.liferay.frontend.taglib.clay.sample.web.internal.data.provider;
 
 import com.liferay.frontend.taglib.clay.data.provider.ClayComponentDataProvider;
+import com.liferay.frontend.taglib.clay.data.provider.Pagination;
 import com.liferay.frontend.taglib.clay.sample.web.internal.display.context.TablesDisplayContext;
+
 import java.util.ArrayList;
 import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
+
 import org.osgi.service.component.annotations.Component;
 
 /**
@@ -24,22 +28,24 @@ import org.osgi.service.component.annotations.Component;
  */
 @Component(
 	immediate = true,
-	property = {
-		"clay.component.data.provider.key=SampleTableDataProvider"
-	},
+	property = "clay.component.data.provider.key=SampleTableDataProvider",
 	service = ClayComponentDataProvider.class
 )
-public class SampleTableDataProvider implements
-	ClayComponentDataProvider<TablesDisplayContext.Item> {
+public class SampleTableDataProvider
+	implements ClayComponentDataProvider<TablesDisplayContext.Item> {
 
 	@Override
-	public List<TablesDisplayContext.Item> getItems(HttpServletRequest request) {
+	public List<TablesDisplayContext.Item> getItems(
+		HttpServletRequest request, Pagination pagination) {
+
 		ArrayList<TablesDisplayContext.Item> items = new ArrayList<>();
 
 		items.add(new TablesDisplayContext.Item("Lemon", 14, "Yellow", false));
 		items.add(new TablesDisplayContext.Item("Lime", 11, "Green", false));
-		items.add(new TablesDisplayContext.Item("Grapefruit", 40, "Yellow", false));
+		items.add(
+			new TablesDisplayContext.Item("Grapefruit", 40, "Yellow", false));
 
 		return items;
 	}
+
 }

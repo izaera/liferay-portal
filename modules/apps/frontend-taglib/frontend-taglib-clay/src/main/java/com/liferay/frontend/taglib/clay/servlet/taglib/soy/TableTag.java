@@ -14,6 +14,8 @@ package com.liferay.frontend.taglib.clay.servlet.taglib.soy;
 
 import com.liferay.frontend.taglib.clay.data.provider.ClayComponentDataProvider;
 import com.liferay.frontend.taglib.clay.data.provider.ClayComponentDataProviderRegistry;
+import com.liferay.frontend.taglib.clay.data.provider.Pagination;
+import com.liferay.frontend.taglib.clay.data.provider.PaginationImpl;
 import com.liferay.frontend.taglib.clay.servlet.taglib.data.provider.ClayComponentDataProviderRegistryUtil;
 import com.liferay.frontend.taglib.clay.servlet.taglib.display.context.TableDisplayContext;
 import com.liferay.frontend.taglib.clay.servlet.taglib.display.context.table.Schema;
@@ -22,7 +24,9 @@ import com.liferay.frontend.taglib.clay.servlet.taglib.soy.base.BaseClayTag;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Validator;
+
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -130,6 +134,19 @@ public class TableTag extends BaseClayTag {
 		return registry.get(_dataProviderKey);
 	}
 
+	private int _getItemsPerPage() {
+		Object itemsPerPage = getContext().get("itemsPerPage");
+
+		return GetterUtil.getInteger(
+			itemsPerPage, _ITEMS_PER_PAGE_DEFAULT_VALUE);
+	}
+
+	private int _getPageNumber() {
+		Object pageNumber = getContext().get("pageNumber");
+
+		return GetterUtil.getInteger(pageNumber, _PAGE_NUMBER_DEFAULT_VALUE);
+	}
+
 	private void _populateContext(TableDisplayContext tableDisplayContext) {
 		Map<String, Object> context = getContext();
 
@@ -199,21 +216,30 @@ public class TableTag extends BaseClayTag {
 		}
 
 		try {
-			List items = dataProvider.getItems(request);
+			int itemsPerPage = _getItemsPerPage();
+			int pageNumber = _getPageNumber();
+
+			Pagination pagination = new PaginationImpl(
+				itemsPerPage, pageNumber);
+
+			List items = dataProvider.getItems(request, pagination);
 
 			setItems(items);
 		}
-		catch (PortalException e) {
+		catch (PortalException pe) {
 			if (_log.isErrorEnabled()) {
-				_log.error(e);
+				_log.error(pe, pe);
 			}
 		}
 	}
 
+	private static final int _ITEMS_PER_PAGE_DEFAULT_VALUE = 5;
+
+	private static final int _PAGE_NUMBER_DEFAULT_VALUE = 1;
+
 	private static final Log _log = LogFactoryUtil.getLog(TableTag.class);
 
 	private String _dataProviderKey;
-
 	private TableDisplayContext _tableDisplayContext;
 
 }
