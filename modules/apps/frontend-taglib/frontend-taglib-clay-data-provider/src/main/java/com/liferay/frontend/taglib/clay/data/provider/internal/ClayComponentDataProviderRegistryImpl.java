@@ -21,9 +21,11 @@ import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMapFactory
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.ListUtil;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -32,16 +34,14 @@ import org.osgi.service.component.annotations.Deactivate;
 /**
  * @author Rodolfo Roza Miranda
  */
-@Component(
-	immediate = true,
-	service = ClayComponentDataProviderRegistry.class
-)
-public class ClayComponentDataProviderRegistryImpl implements ClayComponentDataProviderRegistry {
+@Component(immediate = true, service = ClayComponentDataProviderRegistry.class)
+public class ClayComponentDataProviderRegistryImpl
+	implements ClayComponentDataProviderRegistry {
 
 	@Override
 	public ClayComponentDataProvider get(String key) {
-
-		ServiceWrapper<ClayComponentDataProvider> wrapper = _serviceTrackerMap.getService(key);
+		ServiceWrapper<ClayComponentDataProvider> wrapper =
+			_serviceTrackerMap.getService(key);
 
 		if (wrapper == null) {
 			if (_log.isDebugEnabled()) {
@@ -87,4 +87,5 @@ public class ClayComponentDataProviderRegistryImpl implements ClayComponentDataP
 
 	private ServiceTrackerMap<String, ServiceWrapper<ClayComponentDataProvider>>
 		_serviceTrackerMap;
+
 }
