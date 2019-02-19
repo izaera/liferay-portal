@@ -16,7 +16,7 @@ import com.liferay.frontend.taglib.clay.data.provider.ClayComponentDataProvider;
 import com.liferay.frontend.taglib.clay.data.provider.Pagination;
 import com.liferay.frontend.taglib.clay.sample.web.internal.display.context.TablesDisplayContext;
 
-import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -34,18 +34,39 @@ import org.osgi.service.component.annotations.Component;
 public class SampleTableDataProvider
 	implements ClayComponentDataProvider<TablesDisplayContext.Item> {
 
+	public SampleTableDataProvider() {
+		_items = Arrays.asList(
+			new TablesDisplayContext.Item("Banana", 89, "yellow", false),
+			new TablesDisplayContext.Item("Apple", 52, "red", true),
+			new TablesDisplayContext.Item("Pear", 58, "green", true),
+			new TablesDisplayContext.Item("Pomegranate", 68, "yellowish", false),
+			new TablesDisplayContext.Item("Lemon", 14, "Yellow", false),
+			new TablesDisplayContext.Item("Lime", 11, "Green", false),
+			new TablesDisplayContext.Item("Grapefruit", 40, "Yellow", false));
+	}
+
+	@Override
+	public int countItems(HttpServletRequest request) {
+		return _items.size();
+	}
+
 	@Override
 	public List<TablesDisplayContext.Item> getItems(
 		HttpServletRequest request, Pagination pagination) {
 
-		ArrayList<TablesDisplayContext.Item> items = new ArrayList<>();
+		if (pagination == null) {
+			return _items;
+		}
 
-		items.add(new TablesDisplayContext.Item("Lemon", 14, "Yellow", false));
-		items.add(new TablesDisplayContext.Item("Lime", 11, "Green", false));
-		items.add(
-			new TablesDisplayContext.Item("Grapefruit", 40, "Yellow", false));
+		int endPosition = _items.size();
 
-		return items;
+		if (pagination.getEndPosition() < _items.size()) {
+			endPosition = pagination.getEndPosition();
+		}
+
+		return _items.subList(pagination.getStartPosition(), endPosition);
 	}
+
+	private final List<TablesDisplayContext.Item> _items;
 
 }

@@ -12,25 +12,44 @@
 
 package com.liferay.frontend.taglib.clay.servlet.taglib.soy;
 
+import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
 import com.liferay.frontend.taglib.clay.data.provider.ClayComponentDataProvider;
 import com.liferay.frontend.taglib.clay.data.provider.ClayComponentDataProviderRegistry;
 import com.liferay.frontend.taglib.clay.data.provider.Pagination;
 import com.liferay.frontend.taglib.clay.data.provider.PaginationImpl;
+import com.liferay.frontend.taglib.clay.internal.js.loader.modules.extender.npm.NPMResolverProvider;
+import com.liferay.frontend.taglib.clay.internal.model.ClayPaginationEntry;
 import com.liferay.frontend.taglib.clay.servlet.taglib.data.provider.ClayComponentDataProviderRegistryUtil;
 import com.liferay.frontend.taglib.clay.servlet.taglib.display.context.TableDisplayContext;
 import com.liferay.frontend.taglib.clay.servlet.taglib.display.context.table.Schema;
 import com.liferay.frontend.taglib.clay.servlet.taglib.display.context.table.Size;
 import com.liferay.frontend.taglib.clay.servlet.taglib.soy.base.BaseClayTag;
+import com.liferay.petra.string.StringBundler;
+import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
+import com.liferay.portal.kernel.theme.PortletDisplay;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.HttpUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.util.PropsValues;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Stream;
+
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletURL;
 
 /**
  * @author Iván Zaera Avellón
@@ -39,7 +58,8 @@ public class TableTag extends BaseClayTag {
 
 	@Override
 	public int doStartTag() {
-		setComponentBaseName("ClayTable");
+		setComponentBaseName(
+			"com.liferay.frontend.taglib.clay.ClayTaglibTable");
 		setHydrate(true);
 		setModuleBaseName("table");
 
@@ -47,7 +67,9 @@ public class TableTag extends BaseClayTag {
 			_populateContext(_tableDisplayContext);
 		}
 
+		_setDataProviderAPI();
 		_setItems();
+		_setPagination();
 
 		return super.doStartTag();
 	}
@@ -56,12 +78,32 @@ public class TableTag extends BaseClayTag {
 		return _tableDisplayContext;
 	}
 
+	@Override
+	public String getModule() {
+		NPMResolver npmResolver = NPMResolverProvider.getNPMResolver();
+
+		if (npmResolver == null) {
+			return StringPool.BLANK;
+		}
+
+		return npmResolver.resolveModuleName(
+			"frontend-taglib-clay/table/ClayTaglibTable.es");
+	}
+
 	public void setActionsMenuVariant(String actionsMenuVariant) {
 		putValue("actionsMenuVariant", actionsMenuVariant);
 	}
 
 	public void setDataProviderKey(String dataProviderKey) {
-		_dataProviderKey = dataProviderKey;
+		putValue("dataProviderKey", dataProviderKey);
+	}
+
+	public void setDeltaParam(String deltaParam) {
+		putValue("deltaParam", deltaParam);
+	}
+
+	public void setDisableAJAX(boolean disableAJAX) {
+		putValue("disableAJAX", disableAJAX);
 	}
 
 	public void setDisplayContext(TableDisplayContext tableDisplayContext) {
@@ -70,6 +112,14 @@ public class TableTag extends BaseClayTag {
 
 	public void setItems(Collection<?> items) {
 		putValue("items", items);
+	}
+
+	public void setItemsPerPage(int itemsPerPage) {
+		putValue("itemsPerPage", itemsPerPage);
+	}
+
+	public void setPageNumber(int pageNumber) {
+		putValue("pageNumber", pageNumber);
 	}
 
 	public void setSchema(Schema schema) {
@@ -120,7 +170,7 @@ public class TableTag extends BaseClayTag {
 	}
 
 	private ClayComponentDataProvider _getDataProvider() {
-		if (Validator.isNull(_dataProviderKey)) {
+		if (Validator.isNull(_getDataProviderKey())) {
 			return null;
 		}
 
@@ -131,7 +181,18 @@ public class TableTag extends BaseClayTag {
 			return null;
 		}
 
-		return registry.get(_dataProviderKey);
+		return registry.get(_getDataProviderKey());
+	}
+
+	private String _getDataProviderKey() {
+		return GetterUtil.getString(getContext().get("dataProviderKey"));
+	}
+
+	private String _getDeltaParam() {
+		Object contextDeltaParam = getContext().get("deltaParam");
+
+		return GetterUtil.getString(
+			contextDeltaParam, SearchContainer.DEFAULT_DELTA_PARAM);
 	}
 
 	private int _getItemsPerPage() {
@@ -145,6 +206,31 @@ public class TableTag extends BaseClayTag {
 		Object pageNumber = getContext().get("pageNumber");
 
 		return GetterUtil.getInteger(pageNumber, _PAGE_NUMBER_DEFAULT_VALUE);
+	}
+
+	private List<ClayPaginationEntry> _getPaginationEntries(
+		PortletURL portletURL, String deltaParam) {
+
+		String portletURLString = portletURL.toString();
+
+		portletURLString = HttpUtil.removeParameter(
+			portletURLString, getNamespace() + deltaParam);
+
+		List<ClayPaginationEntry> clayPaginationEntries = new ArrayList<>();
+
+		for (int curDelta : PropsValues.SEARCH_CONTAINER_PAGE_DELTA_VALUES) {
+			if (curDelta > SearchContainer.MAX_DELTA) {
+				continue;
+			}
+
+			String curDeltaURL = HttpUtil.addParameter(
+				portletURLString, getNamespace() + deltaParam, curDelta);
+
+			clayPaginationEntries.add(
+				new ClayPaginationEntry(curDeltaURL, curDelta));
+		}
+
+		return clayPaginationEntries;
 	}
 
 	private void _populateContext(TableDisplayContext tableDisplayContext) {
@@ -208,6 +294,31 @@ public class TableTag extends BaseClayTag {
 		}
 	}
 
+	private void _setDataProviderAPI() {
+		if (Validator.isNull(_getDataProviderKey())) {
+			return;
+		}
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		Layout layout = themeDisplay.getLayout();
+
+		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
+
+		StringBundler sb = new StringBundler(7);
+
+		sb.append(PortalUtil.getPortalURL(request));
+		sb.append("/o/clay-data-provider/clay-data-provider/");
+		sb.append(_getDataProviderKey());
+		sb.append("?plid=");
+		sb.append(layout.getPlid());
+		sb.append("&portletId=");
+		sb.append(portletDisplay.getId());
+
+		putValue("dataProviderAPI", sb.toString());
+	}
+
 	private void _setItems() {
 		ClayComponentDataProvider dataProvider = _getDataProvider();
 
@@ -225,6 +336,12 @@ public class TableTag extends BaseClayTag {
 			List items = dataProvider.getItems(request, pagination);
 
 			setItems(items);
+
+			int totalItems = dataProvider.countItems(request);
+
+			putValue("currentPage", pageNumber);
+			putValue("pageSize", itemsPerPage);
+			putValue("totalItems", totalItems);
 		}
 		catch (PortalException pe) {
 			if (_log.isErrorEnabled()) {
@@ -233,13 +350,49 @@ public class TableTag extends BaseClayTag {
 		}
 	}
 
+	private void _setPagination() {
+		if (Validator.isNull(_getDataProviderKey())) {
+			return;
+		}
+
+		String deltaParam = _getDeltaParam();
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		String portletId = String.valueOf(themeDisplay.getPlid());
+
+		PortletURL portletURL = PortletURLFactoryUtil.create(
+			request, portletId, PortletRequest.RENDER_PHASE);
+
+		List<ClayPaginationEntry> paginationEntries = _getPaginationEntries(
+			portletURL, deltaParam);
+
+		putValue("paginationEntries", paginationEntries);
+
+		int itemsPerPage = _getItemsPerPage();
+
+		Stream<ClayPaginationEntry> stream = paginationEntries.stream();
+
+		ClayPaginationEntry clayPaginationEntry = stream.filter(
+			entry -> entry.getLabel() == itemsPerPage
+		).findAny(
+		).orElse(
+			null
+		);
+
+		int paginationSelectedEntry = paginationEntries.indexOf(
+			clayPaginationEntry);
+
+		putValue("paginationSelectedEntry", paginationSelectedEntry);
+	}
+
 	private static final int _ITEMS_PER_PAGE_DEFAULT_VALUE = 5;
 
 	private static final int _PAGE_NUMBER_DEFAULT_VALUE = 1;
 
 	private static final Log _log = LogFactoryUtil.getLog(TableTag.class);
 
-	private String _dataProviderKey;
 	private TableDisplayContext _tableDisplayContext;
 
 }

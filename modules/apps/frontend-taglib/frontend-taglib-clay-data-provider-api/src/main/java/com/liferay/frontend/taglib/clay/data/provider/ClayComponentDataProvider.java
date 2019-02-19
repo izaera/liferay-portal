@@ -23,6 +23,8 @@ import javax.servlet.http.HttpServletRequest;
  */
 public interface ClayComponentDataProvider<T> {
 
+	public int countItems(HttpServletRequest request);
+
 	public List<T> getItems(HttpServletRequest request, Pagination pagination)
 		throws PortalException;
 
