@@ -30,7 +30,7 @@ import org.osgi.service.jaxrs.whiteboard.JaxrsWhiteboardConstants;
 	},
 	service = Application.class
 )
-public class CommerceFrontEndApplication extends Application {
+public class ClayComponentApplication extends Application {
 
 	@Override
 	public Set<Object> getSingletons() {
