@@ -17,6 +17,7 @@ import com.liferay.frontend.taglib.clay.data.provider.ClayComponentDataProvider;
 import com.liferay.frontend.taglib.clay.data.provider.ClayComponentDataProviderRegistry;
 import com.liferay.frontend.taglib.clay.data.provider.Pagination;
 import com.liferay.frontend.taglib.clay.data.provider.PaginationImpl;
+import com.liferay.frontend.taglib.clay.internal.PaginationEntriesHelperProvider;
 import com.liferay.frontend.taglib.clay.internal.js.loader.modules.extender.npm.NPMResolverProvider;
 import com.liferay.frontend.taglib.clay.internal.model.ClayPaginationEntry;
 import com.liferay.frontend.taglib.clay.servlet.taglib.data.provider.ClayComponentDataProviderRegistryUtil;
@@ -24,6 +25,7 @@ import com.liferay.frontend.taglib.clay.servlet.taglib.display.context.TableDisp
 import com.liferay.frontend.taglib.clay.servlet.taglib.display.context.table.Schema;
 import com.liferay.frontend.taglib.clay.servlet.taglib.display.context.table.Size;
 import com.liferay.frontend.taglib.clay.servlet.taglib.soy.base.BaseClayTag;
+import com.liferay.frontend.taglib.clay.servlet.taglib.util.PaginationEntriesHelper;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
@@ -35,13 +37,10 @@ import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.theme.PortletDisplay;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.util.PropsValues;
 
-import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashSet;
 import java.util.List;
@@ -209,28 +208,37 @@ public class TableTag extends BaseClayTag {
 	}
 
 	private List<ClayPaginationEntry> _getPaginationEntries(
-		PortletURL portletURL, String deltaParam) {
+		PaginationEntriesHelper paginationEntriesHelper) {
 
-		String portletURLString = portletURL.toString();
+		String deltaParam = _getDeltaParam();
 
-		portletURLString = HttpUtil.removeParameter(
-			portletURLString, getNamespace() + deltaParam);
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
 
-		List<ClayPaginationEntry> clayPaginationEntries = new ArrayList<>();
+		String portletId = String.valueOf(themeDisplay.getPlid());
 
-		for (int curDelta : PropsValues.SEARCH_CONTAINER_PAGE_DELTA_VALUES) {
-			if (curDelta > SearchContainer.MAX_DELTA) {
-				continue;
-			}
+		PortletURL portletURL = PortletURLFactoryUtil.create(
+			request, portletId, PortletRequest.RENDER_PHASE);
 
-			String curDeltaURL = HttpUtil.addParameter(
-				portletURLString, getNamespace() + deltaParam, curDelta);
+		return paginationEntriesHelper.getPaginationEntries(
+			portletURL, getNamespace(), deltaParam);
+	}
 
-			clayPaginationEntries.add(
-				new ClayPaginationEntry(curDeltaURL, curDelta));
-		}
+	private int _getSelectedPaginationEntry(
+		List<ClayPaginationEntry> paginationEntries) {
 
-		return clayPaginationEntries;
+		int itemsPerPage = _getItemsPerPage();
+
+		Stream<ClayPaginationEntry> stream = paginationEntries.stream();
+
+		ClayPaginationEntry clayPaginationEntry = stream.filter(
+			entry -> entry.getLabel() == itemsPerPage
+		).findAny(
+		).orElse(
+			null
+		);
+
+		return paginationEntries.indexOf(clayPaginationEntry);
 	}
 
 	private void _populateContext(TableDisplayContext tableDisplayContext) {
@@ -355,34 +363,20 @@ public class TableTag extends BaseClayTag {
 			return;
 		}
 
-		String deltaParam = _getDeltaParam();
+		PaginationEntriesHelper paginationEntriesHelper =
+			PaginationEntriesHelperProvider.getHelper();
 
-		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
-			WebKeys.THEME_DISPLAY);
-
-		String portletId = String.valueOf(themeDisplay.getPlid());
-
-		PortletURL portletURL = PortletURLFactoryUtil.create(
-			request, portletId, PortletRequest.RENDER_PHASE);
+		if (paginationEntriesHelper == null) {
+			return;
+		}
 
 		List<ClayPaginationEntry> paginationEntries = _getPaginationEntries(
-			portletURL, deltaParam);
+			paginationEntriesHelper);
 
 		putValue("paginationEntries", paginationEntries);
 
-		int itemsPerPage = _getItemsPerPage();
-
-		Stream<ClayPaginationEntry> stream = paginationEntries.stream();
-
-		ClayPaginationEntry clayPaginationEntry = stream.filter(
-			entry -> entry.getLabel() == itemsPerPage
-		).findAny(
-		).orElse(
-			null
-		);
-
-		int paginationSelectedEntry = paginationEntries.indexOf(
-			clayPaginationEntry);
+		int paginationSelectedEntry = _getSelectedPaginationEntry(
+			paginationEntries);
 
 		putValue("paginationSelectedEntry", paginationSelectedEntry);
 	}
