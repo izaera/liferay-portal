@@ -15,10 +15,12 @@ package com.liferay.frontend.taglib.clay.sample.web.internal.data.provider;
 import com.liferay.frontend.taglib.clay.data.provider.ClayComponentDataProvider;
 import com.liferay.frontend.taglib.clay.data.provider.Filter;
 import com.liferay.frontend.taglib.clay.data.provider.Pagination;
+import com.liferay.frontend.taglib.clay.sample.web.internal.filter.provider.SampleFilter;
 import com.liferay.frontend.taglib.clay.sample.web.internal.model.Item;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -43,29 +45,56 @@ public class SampleTableDataProvider
 			new Item("Pomegranate", 68, "yellowish", false),
 			new Item("Lemon", 14, "Yellow", false),
 			new Item("Lime", 11, "Green", false),
-			new Item("Grapefruit", 40, "Yellow", false));
+			new Item("Grapefruit", 40, "Yellow", false),
+			new Item("Orange", 47, "Orange", false),
+			new Item("Pineapple", 50, "Yellow", false),
+			new Item("Avocado", 160, "Green", false));
 	}
 
 	@Override
 	public int countItems(HttpServletRequest request, Filter filter) {
-		return _items.size();
+		List<Item> filteredItems = _filter(_items, filter);
+
+		return filteredItems.size();
 	}
 
 	@Override
 	public List<Item> getItems(
 		HttpServletRequest request, Filter filter, Pagination pagination) {
 
-		if (pagination == null) {
-			return _items;
+		List<Item> items = _filter(_items, filter);
+
+		if (pagination != null) {
+			return _getPaginatedItems(items, pagination);
 		}
 
-		int endPosition = _items.size();
+		return items;
+	}
 
-		if (pagination.getEndPosition() < _items.size()) {
+	private List<Item> _filter(List<Item> items, Filter filter) {
+		if (filter == null) {
+			return items;
+		}
+
+		SampleFilter sampleFilter = (SampleFilter)filter;
+
+		return items.stream().filter(
+				item -> item.isSkinEdible() == sampleFilter.isSkinEdible()
+		).collect(
+				Collectors.toList()
+		);
+	}
+
+	private List<Item> _getPaginatedItems(
+		List<Item> items, Pagination pagination) {
+
+		int endPosition = items.size();
+
+		if (pagination.getEndPosition() < items.size()) {
 			endPosition = pagination.getEndPosition();
 		}
 
-		return _items.subList(pagination.getStartPosition(), endPosition);
+		return items.subList(pagination.getStartPosition(), endPosition);
 	}
 
 	private final List<Item> _items;
