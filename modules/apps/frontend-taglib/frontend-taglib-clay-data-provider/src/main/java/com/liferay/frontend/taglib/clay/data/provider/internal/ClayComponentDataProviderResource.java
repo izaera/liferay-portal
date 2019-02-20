@@ -14,6 +14,9 @@ package com.liferay.frontend.taglib.clay.data.provider.internal;
 
 import com.liferay.frontend.taglib.clay.data.provider.ClayComponentDataProvider;
 import com.liferay.frontend.taglib.clay.data.provider.ClayComponentDataProviderRegistry;
+import com.liferay.frontend.taglib.clay.data.provider.Filter;
+import com.liferay.frontend.taglib.clay.data.provider.FilterFactory;
+import com.liferay.frontend.taglib.clay.data.provider.FilterFactoryRegistry;
 import com.liferay.frontend.taglib.clay.data.provider.PaginationImpl;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -51,11 +54,15 @@ public class ClayComponentDataProviderResource {
 		@QueryParam("pageSize") int pageSize, @QueryParam("page") int page,
 		@Context HttpServletRequest request) {
 
-		ClayComponentDataProvider provider = _registry.get(dataProviderKey);
+		ClayComponentDataProvider provider = _dataProviderRegistry.get(
+			dataProviderKey);
 
 		try {
-			List items = provider.getItems(
-				request, new PaginationImpl(pageSize, page));
+			PaginationImpl pagination = new PaginationImpl(pageSize, page);
+
+			Filter filter = _getFilter(dataProviderKey, request);
+
+			List items = provider.getItems(request, filter, pagination);
 
 			return Response.ok(
 				items, MediaType.APPLICATION_JSON
@@ -70,10 +77,22 @@ public class ClayComponentDataProviderResource {
 		).build();
 	}
 
+	private Filter _getFilter(
+		String dataProviderKey, HttpServletRequest request) {
+
+		FilterFactory factory = _filterFactoryRegistry.getFilterFactory(
+			dataProviderKey);
+
+		return factory.create(request);
+	}
+
 	private static final Log _log = LogFactoryUtil.getLog(
 		ClayComponentDataProviderResource.class);
 
 	@Reference
-	private ClayComponentDataProviderRegistry _registry;
+	private ClayComponentDataProviderRegistry _dataProviderRegistry;
+
+	@Reference
+	private FilterFactoryRegistry _filterFactoryRegistry;
 
 }

@@ -13,8 +13,9 @@
 package com.liferay.frontend.taglib.clay.sample.web.internal.data.provider;
 
 import com.liferay.frontend.taglib.clay.data.provider.ClayComponentDataProvider;
+import com.liferay.frontend.taglib.clay.data.provider.Filter;
 import com.liferay.frontend.taglib.clay.data.provider.Pagination;
-import com.liferay.frontend.taglib.clay.sample.web.internal.display.context.TablesDisplayContext;
+import com.liferay.frontend.taglib.clay.sample.web.internal.model.Item;
 
 import java.util.Arrays;
 import java.util.List;
@@ -32,27 +33,27 @@ import org.osgi.service.component.annotations.Component;
 	service = ClayComponentDataProvider.class
 )
 public class SampleTableDataProvider
-	implements ClayComponentDataProvider<TablesDisplayContext.Item> {
+	implements ClayComponentDataProvider<Item> {
 
 	public SampleTableDataProvider() {
 		_items = Arrays.asList(
-			new TablesDisplayContext.Item("Banana", 89, "yellow", false),
-			new TablesDisplayContext.Item("Apple", 52, "red", true),
-			new TablesDisplayContext.Item("Pear", 58, "green", true),
-			new TablesDisplayContext.Item("Pomegranate", 68, "yellowish", false),
-			new TablesDisplayContext.Item("Lemon", 14, "Yellow", false),
-			new TablesDisplayContext.Item("Lime", 11, "Green", false),
-			new TablesDisplayContext.Item("Grapefruit", 40, "Yellow", false));
+			new Item("Banana", 89, "yellow", false),
+			new Item("Apple", 52, "red", true),
+			new Item("Pear", 58, "green", true),
+			new Item("Pomegranate", 68, "yellowish", false),
+			new Item("Lemon", 14, "Yellow", false),
+			new Item("Lime", 11, "Green", false),
+			new Item("Grapefruit", 40, "Yellow", false));
 	}
 
 	@Override
-	public int countItems(HttpServletRequest request) {
+	public int countItems(HttpServletRequest request, Filter filter) {
 		return _items.size();
 	}
 
 	@Override
-	public List<TablesDisplayContext.Item> getItems(
-		HttpServletRequest request, Pagination pagination) {
+	public List<Item> getItems(
+		HttpServletRequest request, Filter filter, Pagination pagination) {
 
 		if (pagination == null) {
 			return _items;
@@ -67,6 +68,6 @@ public class SampleTableDataProvider
 		return _items.subList(pagination.getStartPosition(), endPosition);
 	}
 
-	private final List<TablesDisplayContext.Item> _items;
+	private final List<Item> _items;
 
 }

@@ -12,21 +12,18 @@
 
 package com.liferay.frontend.taglib.clay.data.provider;
 
-import com.liferay.portal.kernel.exception.PortalException;
+import aQute.bnd.annotation.ProviderType;
 
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-
 /**
- * @author Rodolfo Roza Miranda
+ * @author Marco Leo
  */
-public interface ClayComponentDataProvider<T> {
+@ProviderType
+public interface FilterFactoryRegistry {
 
-	public int countItems(HttpServletRequest request, Filter filter);
+	public List<FilterFactory> getFilterFactories();
 
-	public List<T> getItems(
-			HttpServletRequest request, Filter filter, Pagination pagination)
-		throws PortalException;
+	public FilterFactory getFilterFactory(String key);
 
 }

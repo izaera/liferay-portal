@@ -12,9 +12,12 @@
 
 package com.liferay.frontend.taglib.clay.data.provider;
 
+import aQute.bnd.annotation.ProviderType;
+
 /**
  * @author Marco Leo
  */
+@ProviderType
 public interface Pagination {
 
 	/**

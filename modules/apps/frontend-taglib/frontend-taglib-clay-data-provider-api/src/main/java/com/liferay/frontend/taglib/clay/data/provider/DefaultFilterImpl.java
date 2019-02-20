@@ -12,21 +12,20 @@
 
 package com.liferay.frontend.taglib.clay.data.provider;
 
-import com.liferay.portal.kernel.exception.PortalException;
-
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 /**
- * @author Rodolfo Roza Miranda
+ * @author Marco Leo
  */
-public interface ClayComponentDataProvider<T> {
+public class DefaultFilterImpl implements Filter {
 
-	public int countItems(HttpServletRequest request, Filter filter);
+	@Override
+	public String getKeywords() {
+		return _keywords;
+	}
 
-	public List<T> getItems(
-			HttpServletRequest request, Filter filter, Pagination pagination)
-		throws PortalException;
+	public void setKeywords(String keywords) {
+		_keywords = keywords;
+	}
+
+	private String _keywords;
 
 }

@@ -14,6 +14,7 @@
 
 package com.liferay.frontend.taglib.clay.sample.web.internal.display.context;
 
+import com.liferay.frontend.taglib.clay.sample.web.internal.model.Item;
 import com.liferay.frontend.taglib.clay.servlet.taglib.display.context.BaseTableDisplayContext;
 import com.liferay.frontend.taglib.clay.servlet.taglib.display.context.table.Field;
 import com.liferay.frontend.taglib.clay.servlet.taglib.display.context.table.Schema;
@@ -24,42 +25,7 @@ import java.util.Collection;
 /**
  * @author Iván Zaera Avellón
  */
-public class TablesDisplayContext
-	extends BaseTableDisplayContext<TablesDisplayContext.Item> {
-
-	public static class Item {
-
-		public Item(
-			String name, int calories, String color, boolean skinEdible) {
-
-			_name = name;
-			_calories = calories;
-			_color = color;
-			_skinEdible = skinEdible;
-		}
-
-		public int getCalories() {
-			return _calories;
-		}
-
-		public String getColor() {
-			return _color;
-		}
-
-		public String getName() {
-			return _name;
-		}
-
-		public boolean isSkinEdible() {
-			return _skinEdible;
-		}
-
-		private final int _calories;
-		private final String _color;
-		private final String _name;
-		private final boolean _skinEdible;
-
-	}
+public class TablesDisplayContext extends BaseTableDisplayContext<Item> {
 
 	@Override
 	protected void configureSchema(Schema schema) {

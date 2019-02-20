@@ -15,8 +15,12 @@ package com.liferay.frontend.taglib.clay.servlet.taglib.soy;
 import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
 import com.liferay.frontend.taglib.clay.data.provider.ClayComponentDataProvider;
 import com.liferay.frontend.taglib.clay.data.provider.ClayComponentDataProviderRegistry;
+import com.liferay.frontend.taglib.clay.data.provider.Filter;
+import com.liferay.frontend.taglib.clay.data.provider.FilterFactory;
+import com.liferay.frontend.taglib.clay.data.provider.FilterFactoryRegistry;
 import com.liferay.frontend.taglib.clay.data.provider.Pagination;
 import com.liferay.frontend.taglib.clay.data.provider.PaginationImpl;
+import com.liferay.frontend.taglib.clay.internal.FilterFactoryRegistryProvider;
 import com.liferay.frontend.taglib.clay.internal.PaginationEntriesHelperProvider;
 import com.liferay.frontend.taglib.clay.internal.js.loader.modules.extender.npm.NPMResolverProvider;
 import com.liferay.frontend.taglib.clay.internal.model.ClayPaginationEntry;
@@ -194,6 +198,20 @@ public class TableTag extends BaseClayTag {
 			contextDeltaParam, SearchContainer.DEFAULT_DELTA_PARAM);
 	}
 
+	private Filter _getFilter() {
+		FilterFactoryRegistry filterFactoryRegistry =
+			FilterFactoryRegistryProvider.getRegistry();
+
+		if (filterFactoryRegistry == null) {
+			return null;
+		}
+
+		FilterFactory filterFactory = filterFactoryRegistry.getFilterFactory(
+			_getDataProviderKey());
+
+		return filterFactory.create(request);
+	}
+
 	private int _getItemsPerPage() {
 		Object itemsPerPage = getContext().get("itemsPerPage");
 
@@ -341,11 +359,13 @@ public class TableTag extends BaseClayTag {
 			Pagination pagination = new PaginationImpl(
 				itemsPerPage, pageNumber);
 
-			List items = dataProvider.getItems(request, pagination);
+			Filter filter = _getFilter();
+
+			List items = dataProvider.getItems(request, filter, pagination);
 
 			setItems(items);
 
-			int totalItems = dataProvider.countItems(request);
+			int totalItems = dataProvider.countItems(request, filter);
 
 			putValue("currentPage", pageNumber);
 			putValue("pageSize", itemsPerPage);
