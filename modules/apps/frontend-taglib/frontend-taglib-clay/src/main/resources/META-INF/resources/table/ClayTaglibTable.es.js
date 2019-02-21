@@ -82,7 +82,7 @@ Soy.register(ClayTaglibTable, templates);
 
 ClayTaglibTable.STATE = {
 	currentPage: Config.number(),
-  dataContributorAPI: Config.string(),
+	dataContributorAPI: Config.string(),
 	disableAJAX: Config.bool(),
 	pageSize: Config.number(),
 	paginationBaseHref: Config.string(),

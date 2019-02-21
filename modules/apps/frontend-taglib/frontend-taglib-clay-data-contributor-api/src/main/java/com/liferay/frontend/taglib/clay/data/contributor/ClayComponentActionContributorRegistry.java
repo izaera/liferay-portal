@@ -22,6 +22,7 @@ import java.util.List;
 @ProviderType
 public interface ClayComponentActionContributorRegistry {
 
-	public List<ClayComponentActionContributor> getActionContributors(String key);
+	public List<ClayComponentActionContributor> getActionContributors(
+		String key);
 
 }

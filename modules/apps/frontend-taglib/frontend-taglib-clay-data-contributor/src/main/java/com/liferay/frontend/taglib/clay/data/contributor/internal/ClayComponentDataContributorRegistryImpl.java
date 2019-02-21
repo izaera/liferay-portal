@@ -34,7 +34,9 @@ import org.osgi.service.component.annotations.Deactivate;
 /**
  * @author Rodolfo Roza Miranda
  */
-@Component(immediate = true, service = ClayComponentDataContributorRegistry.class)
+@Component(
+	immediate = true, service = ClayComponentDataContributorRegistry.class
+)
 public class ClayComponentDataContributorRegistryImpl
 	implements ClayComponentDataContributorRegistry {
 
@@ -46,7 +48,8 @@ public class ClayComponentDataContributorRegistryImpl
 		if (wrapper == null) {
 			if (_log.isDebugEnabled()) {
 				_log.debug(
-					"No ClayComponentDataContributor registered with key " + key);
+					"No ClayComponentDataContributor registered with key " +
+						key);
 			}
 
 			return null;

@@ -39,7 +39,9 @@ public class ClayComponentActionContributorRegistryImpl
 	implements ClayComponentActionContributorRegistry {
 
 	@Override
-	public List<ClayComponentActionContributor> getActionContributors(String key) {
+	public List<ClayComponentActionContributor> getActionContributors(
+		String key) {
+
 		List<ClayComponentActionContributor> contributors = new ArrayList<>();
 
 		List<ServiceWrapper<ClayComponentActionContributor>> wrappers =
@@ -48,13 +50,16 @@ public class ClayComponentActionContributorRegistryImpl
 		if (wrappers == null) {
 			if (_log.isDebugEnabled()) {
 				_log.debug(
-					"No ClayComponentActionContributor registered with key " + key);
+					"No ClayComponentActionContributor registered with key " +
+						key);
 			}
 
 			return null;
 		}
 
-		for (ServiceWrapper<ClayComponentActionContributor> wrapper : wrappers) {
+		for (ServiceWrapper<ClayComponentActionContributor> wrapper :
+				wrappers) {
+
 			contributors.add(wrapper.getService());
 		}
 
