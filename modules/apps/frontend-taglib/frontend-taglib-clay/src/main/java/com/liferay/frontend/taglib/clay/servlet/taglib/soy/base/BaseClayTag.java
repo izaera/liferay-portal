@@ -15,17 +15,22 @@
 package com.liferay.frontend.taglib.clay.servlet.taglib.soy.base;
 
 import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
+import com.liferay.frontend.taglib.clay.data.contributor.ClayTagMetaAttributeContributor;
+import com.liferay.frontend.taglib.clay.data.contributor.ClayTagMetaAttributeContributorRegistry;
+import com.liferay.frontend.taglib.clay.internal.ServletContextUtil;
 import com.liferay.frontend.taglib.clay.internal.js.loader.modules.extender.npm.NPMResolverProvider;
 import com.liferay.frontend.taglib.soy.servlet.taglib.TemplateRendererTag;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.ServerDetector;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.Map;
+import java.util.Set;
 
 import javax.portlet.PortletResponse;
 
@@ -62,6 +67,8 @@ public abstract class BaseClayTag extends TemplateRendererTag {
 
 		setTemplateNamespace(_componentBaseName + ".render");
 
+		_setMetaAttributes();
+
 		return super.doStartTag();
 	}
 
@@ -95,6 +102,10 @@ public abstract class BaseClayTag extends TemplateRendererTag {
 
 	public void setComponentBaseName(String componentBaseName) {
 		_componentBaseName = componentBaseName;
+	}
+
+	public void setContributorName(String contributorName) {
+		putValue("contributorName", contributorName);
 	}
 
 	public void setData(Map<String, String> data) {
@@ -136,8 +147,34 @@ public abstract class BaseClayTag extends TemplateRendererTag {
 		}
 	}
 
+	protected String getContributorName() {
+		return GetterUtil.getString(getContext().get("contributorName"));
+	}
+
 	protected String[] getNamespacedParams() {
 		return null;
+	}
+
+	private void _setMetaAttributes() {
+		if (Validator.isNull(getContributorName())) {
+			return;
+		}
+
+		ClayTagMetaAttributeContributorRegistry registry = ServletContextUtil
+			.getMetaAttributeContributorRegistry();
+
+		ClayTagMetaAttributeContributor contributor = registry
+			.get(getContributorName());
+
+		if (contributor == null) {
+			return;
+		}
+
+		Set<String> dependencies = contributor.getDependencies(request);
+
+		if (dependencies != null) {
+			setDependencies(dependencies);
+		}
 	}
 
 	private String _componentBaseName;

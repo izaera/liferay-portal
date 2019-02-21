@@ -96,10 +96,6 @@ public class TableTag extends BaseClayTag {
 		putValue("actionsMenuVariant", actionsMenuVariant);
 	}
 
-	public void setContributorName(String contributorName) {
-		putValue("contributorName", contributorName);
-	}
-
 	public void setDeltaParam(String deltaParam) {
 		putValue("deltaParam", deltaParam);
 	}
@@ -172,7 +168,7 @@ public class TableTag extends BaseClayTag {
 	}
 
 	private List<Object> _addActionItems(List<Object> items) {
-		if (Validator.isNull(_getContributorName())) {
+		if (Validator.isNull(getContributorName())) {
 			return items;
 		}
 
@@ -180,7 +176,7 @@ public class TableTag extends BaseClayTag {
 			ServletContextUtil.getClayComponentItemBuilder();
 
 		try {
-			return builder.build(request, _getContributorName(), items);
+			return builder.build(request, getContributorName(), items);
 		}
 		catch (Exception e) {
 			_log.error(e, e);
@@ -190,7 +186,7 @@ public class TableTag extends BaseClayTag {
 	}
 
 	private ClayComponentDataContributor _getDataContributor() {
-		if (Validator.isNull(_getContributorName())) {
+		if (Validator.isNull(getContributorName())) {
 			return null;
 		}
 
@@ -201,11 +197,7 @@ public class TableTag extends BaseClayTag {
 			return null;
 		}
 
-		return registry.get(_getContributorName());
-	}
-
-	private String _getContributorName() {
-		return GetterUtil.getString(getContext().get("contributorName"));
+		return registry.get(getContributorName());
 	}
 
 	private String _getDeltaParam() {
@@ -224,7 +216,7 @@ public class TableTag extends BaseClayTag {
 		}
 
 		FilterFactory filterFactory = filterFactoryRegistry.getFilterFactory(
-			_getContributorName());
+			getContributorName());
 
 		return filterFactory.create(request);
 	}
@@ -338,7 +330,7 @@ public class TableTag extends BaseClayTag {
 	}
 
 	private void _setDataContributorAPI() {
-		if (Validator.isNull(_getContributorName())) {
+		if (Validator.isNull(getContributorName())) {
 			return;
 		}
 
@@ -353,7 +345,7 @@ public class TableTag extends BaseClayTag {
 
 		sb.append(PortalUtil.getPortalURL(request));
 		sb.append("/o/clay-data-contributor/clay-data-contributor/");
-		sb.append(_getContributorName());
+		sb.append(getContributorName());
 		sb.append("?plid=");
 		sb.append(layout.getPlid());
 		sb.append("&portletId=");
@@ -398,7 +390,7 @@ public class TableTag extends BaseClayTag {
 	}
 
 	private void _setPagination() {
-		if (Validator.isNull(_getContributorName())) {
+		if (Validator.isNull(getContributorName())) {
 			return;
 		}
 
