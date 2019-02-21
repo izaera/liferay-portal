@@ -25,6 +25,8 @@
 <blockquote><p>Table data can also be set using data provider service layer.</p></blockquote>
 
 <clay:table
+	actionsMenuVariant='<%= "" %>'
 	dataProviderKey="SampleTableDataProvider"
 	displayContext="<%= tablesDisplayContext %>"
+	showActionsMenu="true"
 />

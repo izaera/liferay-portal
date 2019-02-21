@@ -15,13 +15,13 @@ package com.liferay.frontend.taglib.clay.servlet.taglib.soy;
 import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
 import com.liferay.frontend.taglib.clay.data.provider.ClayComponentDataProvider;
 import com.liferay.frontend.taglib.clay.data.provider.ClayComponentDataProviderRegistry;
+import com.liferay.frontend.taglib.clay.data.provider.ClayComponentItemBuilder;
 import com.liferay.frontend.taglib.clay.data.provider.Filter;
 import com.liferay.frontend.taglib.clay.data.provider.FilterFactory;
 import com.liferay.frontend.taglib.clay.data.provider.FilterFactoryRegistry;
 import com.liferay.frontend.taglib.clay.data.provider.Pagination;
 import com.liferay.frontend.taglib.clay.data.provider.PaginationImpl;
-import com.liferay.frontend.taglib.clay.internal.FilterFactoryRegistryProvider;
-import com.liferay.frontend.taglib.clay.internal.PaginationEntriesHelperProvider;
+import com.liferay.frontend.taglib.clay.internal.ServletContextUtil;
 import com.liferay.frontend.taglib.clay.internal.js.loader.modules.extender.npm.NPMResolverProvider;
 import com.liferay.frontend.taglib.clay.internal.model.ClayPaginationEntry;
 import com.liferay.frontend.taglib.clay.servlet.taglib.data.provider.ClayComponentDataProviderRegistryUtil;
@@ -172,6 +172,24 @@ public class TableTag extends BaseClayTag {
 		_tableDisplayContext = null;
 	}
 
+	private List<Object> _addActionItems(List<Object> items) {
+		if (Validator.isNull(_getDataProviderKey())) {
+			return items;
+		}
+
+		ClayComponentItemBuilder builder =
+			ServletContextUtil.getClayComponentItemBuilder();
+
+		try {
+			return builder.build(request, _getDataProviderKey(), items);
+		}
+		catch (Exception e) {
+			_log.error(e, e);
+		}
+
+		return items;
+	}
+
 	private ClayComponentDataProvider _getDataProvider() {
 		if (Validator.isNull(_getDataProviderKey())) {
 			return null;
@@ -200,7 +218,7 @@ public class TableTag extends BaseClayTag {
 
 	private Filter _getFilter() {
 		FilterFactoryRegistry filterFactoryRegistry =
-			FilterFactoryRegistryProvider.getRegistry();
+			ServletContextUtil.getFilterFactoryRegistry();
 
 		if (filterFactoryRegistry == null) {
 			return null;
@@ -363,6 +381,8 @@ public class TableTag extends BaseClayTag {
 
 			List items = dataProvider.getItems(request, filter, pagination);
 
+			items = _addActionItems(items);
+
 			setItems(items);
 
 			int totalItems = dataProvider.countItems(request, filter);
@@ -384,7 +404,7 @@ public class TableTag extends BaseClayTag {
 		}
 
 		PaginationEntriesHelper paginationEntriesHelper =
-			PaginationEntriesHelperProvider.getHelper();
+			ServletContextUtil.getPaginationEntriesHelper();
 
 		if (paginationEntriesHelper == null) {
 			return;

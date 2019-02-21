@@ -14,6 +14,7 @@ package com.liferay.frontend.taglib.clay.data.provider.internal;
 
 import com.liferay.frontend.taglib.clay.data.provider.ClayComponentDataProvider;
 import com.liferay.frontend.taglib.clay.data.provider.ClayComponentDataProviderRegistry;
+import com.liferay.frontend.taglib.clay.data.provider.ClayComponentItemBuilder;
 import com.liferay.frontend.taglib.clay.data.provider.Filter;
 import com.liferay.frontend.taglib.clay.data.provider.FilterFactory;
 import com.liferay.frontend.taglib.clay.data.provider.FilterFactoryRegistry;
@@ -64,6 +65,9 @@ public class ClayComponentDataProviderResource {
 
 			List items = provider.getItems(request, filter, pagination);
 
+			items = _clayComponentItemBuilder.build(
+				request, dataProviderKey, items);
+
 			return Response.ok(
 				items, MediaType.APPLICATION_JSON
 			).build();
@@ -88,6 +92,9 @@ public class ClayComponentDataProviderResource {
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		ClayComponentDataProviderResource.class);
+
+	@Reference
+	private ClayComponentItemBuilder _clayComponentItemBuilder;
 
 	@Reference
 	private ClayComponentDataProviderRegistry _dataProviderRegistry;
