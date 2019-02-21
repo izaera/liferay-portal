@@ -13,18 +13,17 @@
 package com.liferay.frontend.taglib.clay.servlet.taglib.soy;
 
 import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
-import com.liferay.frontend.taglib.clay.data.provider.ClayComponentDataProvider;
-import com.liferay.frontend.taglib.clay.data.provider.ClayComponentDataProviderRegistry;
-import com.liferay.frontend.taglib.clay.data.provider.ClayComponentItemBuilder;
-import com.liferay.frontend.taglib.clay.data.provider.Filter;
-import com.liferay.frontend.taglib.clay.data.provider.FilterFactory;
-import com.liferay.frontend.taglib.clay.data.provider.FilterFactoryRegistry;
-import com.liferay.frontend.taglib.clay.data.provider.Pagination;
-import com.liferay.frontend.taglib.clay.data.provider.PaginationImpl;
+import com.liferay.frontend.taglib.clay.data.contributor.ClayComponentDataContributor;
+import com.liferay.frontend.taglib.clay.data.contributor.ClayComponentDataContributorRegistry;
+import com.liferay.frontend.taglib.clay.data.contributor.ClayComponentItemBuilder;
+import com.liferay.frontend.taglib.clay.data.contributor.Filter;
+import com.liferay.frontend.taglib.clay.data.contributor.FilterFactory;
+import com.liferay.frontend.taglib.clay.data.contributor.FilterFactoryRegistry;
+import com.liferay.frontend.taglib.clay.data.contributor.Pagination;
+import com.liferay.frontend.taglib.clay.data.contributor.PaginationImpl;
 import com.liferay.frontend.taglib.clay.internal.ServletContextUtil;
 import com.liferay.frontend.taglib.clay.internal.js.loader.modules.extender.npm.NPMResolverProvider;
 import com.liferay.frontend.taglib.clay.internal.model.ClayPaginationEntry;
-import com.liferay.frontend.taglib.clay.servlet.taglib.data.provider.ClayComponentDataProviderRegistryUtil;
 import com.liferay.frontend.taglib.clay.servlet.taglib.display.context.TableDisplayContext;
 import com.liferay.frontend.taglib.clay.servlet.taglib.display.context.table.Schema;
 import com.liferay.frontend.taglib.clay.servlet.taglib.display.context.table.Size;
@@ -70,7 +69,7 @@ public class TableTag extends BaseClayTag {
 			_populateContext(_tableDisplayContext);
 		}
 
-		_setDataProviderAPI();
+		_setDataContributorAPI();
 		_setItems();
 		_setPagination();
 
@@ -97,8 +96,8 @@ public class TableTag extends BaseClayTag {
 		putValue("actionsMenuVariant", actionsMenuVariant);
 	}
 
-	public void setDataProviderKey(String dataProviderKey) {
-		putValue("dataProviderKey", dataProviderKey);
+	public void setContributorName(String contributorName) {
+		putValue("contributorName", contributorName);
 	}
 
 	public void setDeltaParam(String deltaParam) {
@@ -173,7 +172,7 @@ public class TableTag extends BaseClayTag {
 	}
 
 	private List<Object> _addActionItems(List<Object> items) {
-		if (Validator.isNull(_getDataProviderKey())) {
+		if (Validator.isNull(_getContributorName())) {
 			return items;
 		}
 
@@ -181,7 +180,7 @@ public class TableTag extends BaseClayTag {
 			ServletContextUtil.getClayComponentItemBuilder();
 
 		try {
-			return builder.build(request, _getDataProviderKey(), items);
+			return builder.build(request, _getContributorName(), items);
 		}
 		catch (Exception e) {
 			_log.error(e, e);
@@ -190,23 +189,23 @@ public class TableTag extends BaseClayTag {
 		return items;
 	}
 
-	private ClayComponentDataProvider _getDataProvider() {
-		if (Validator.isNull(_getDataProviderKey())) {
+	private ClayComponentDataContributor _getDataContributor() {
+		if (Validator.isNull(_getContributorName())) {
 			return null;
 		}
 
-		ClayComponentDataProviderRegistry registry = ClayComponentDataProviderRegistryUtil
-			.getRegistry();
+		ClayComponentDataContributorRegistry registry = ServletContextUtil
+			.getDataContributorRegistry();
 
 		if (registry == null) {
 			return null;
 		}
 
-		return registry.get(_getDataProviderKey());
+		return registry.get(_getContributorName());
 	}
 
-	private String _getDataProviderKey() {
-		return GetterUtil.getString(getContext().get("dataProviderKey"));
+	private String _getContributorName() {
+		return GetterUtil.getString(getContext().get("contributorName"));
 	}
 
 	private String _getDeltaParam() {
@@ -225,7 +224,7 @@ public class TableTag extends BaseClayTag {
 		}
 
 		FilterFactory filterFactory = filterFactoryRegistry.getFilterFactory(
-			_getDataProviderKey());
+			_getContributorName());
 
 		return filterFactory.create(request);
 	}
@@ -338,8 +337,8 @@ public class TableTag extends BaseClayTag {
 		}
 	}
 
-	private void _setDataProviderAPI() {
-		if (Validator.isNull(_getDataProviderKey())) {
+	private void _setDataContributorAPI() {
+		if (Validator.isNull(_getContributorName())) {
 			return;
 		}
 
@@ -353,20 +352,20 @@ public class TableTag extends BaseClayTag {
 		StringBundler sb = new StringBundler(7);
 
 		sb.append(PortalUtil.getPortalURL(request));
-		sb.append("/o/clay-data-provider/clay-data-provider/");
-		sb.append(_getDataProviderKey());
+		sb.append("/o/clay-data-contributor/clay-data-contributor/");
+		sb.append(_getContributorName());
 		sb.append("?plid=");
 		sb.append(layout.getPlid());
 		sb.append("&portletId=");
 		sb.append(portletDisplay.getId());
 
-		putValue("dataProviderAPI", sb.toString());
+		putValue("dataContributorAPI", sb.toString());
 	}
 
 	private void _setItems() {
-		ClayComponentDataProvider dataProvider = _getDataProvider();
+		ClayComponentDataContributor contributor = _getDataContributor();
 
-		if (dataProvider == null) {
+		if (contributor == null) {
 			return;
 		}
 
@@ -379,13 +378,13 @@ public class TableTag extends BaseClayTag {
 
 			Filter filter = _getFilter();
 
-			List items = dataProvider.getItems(request, filter, pagination);
+			List items = contributor.getItems(request, filter, pagination);
 
 			items = _addActionItems(items);
 
 			setItems(items);
 
-			int totalItems = dataProvider.countItems(request, filter);
+			int totalItems = contributor.countItems(request, filter);
 
 			putValue("currentPage", pageNumber);
 			putValue("pageSize", itemsPerPage);
@@ -399,7 +398,7 @@ public class TableTag extends BaseClayTag {
 	}
 
 	private void _setPagination() {
-		if (Validator.isNull(_getDataProviderKey())) {
+		if (Validator.isNull(_getContributorName())) {
 			return;
 		}
 

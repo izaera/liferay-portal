@@ -2064,7 +2064,7 @@
 		</attribute>
 		<attribute>
 			<description></description>
-			<name>dataProviderKey</name>
+			<name>contributorName</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>

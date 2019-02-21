@@ -67,7 +67,7 @@ class ClayTaglibTable extends ClayComponent {
 	}
 
 	_getApiURL() {
-		let url = this.dataProviderAPI;
+		let url = this.dataContributorAPI;
 
 		url = url + '&pageSize=' + this.pageSize;
 
@@ -82,7 +82,7 @@ Soy.register(ClayTaglibTable, templates);
 
 ClayTaglibTable.STATE = {
 	currentPage: Config.number(),
-	dataProviderAPI: Config.string(),
+  dataContributorAPI: Config.string(),
 	disableAJAX: Config.bool(),
 	pageSize: Config.number(),
 	paginationBaseHref: Config.string(),

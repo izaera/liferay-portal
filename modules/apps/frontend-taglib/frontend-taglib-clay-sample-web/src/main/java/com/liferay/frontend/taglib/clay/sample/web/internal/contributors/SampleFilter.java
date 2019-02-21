@@ -1,4 +1,3 @@
-<%--
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
@@ -12,21 +11,24 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
---%>
 
-<%@ include file="/init.jsp" %>
+package com.liferay.frontend.taglib.clay.sample.web.internal.contributors;
 
-<blockquote><p>Tables are lists of properties of items arranged as rows and columns. Each table cell can use a custom renderer so that its data can be displayed in the best way.</p></blockquote>
+import com.liferay.frontend.taglib.clay.data.contributor.DefaultFilterImpl;
 
-<clay:table
-	displayContext="<%= tablesDisplayContext %>"
-/>
+/**
+ * @author Rodolfo Roza Miranda
+ */
+public class SampleFilter extends DefaultFilterImpl {
 
-<blockquote><p>Table data can also be set using data contributor service layer.</p></blockquote>
+	public SampleFilter(boolean skinEdible) {
+		_skinEdible = skinEdible;
+	}
 
-<clay:table
-	actionsMenuVariant='<%= "" %>'
-	contributorName="SampleTable"
-	displayContext="<%= tablesDisplayContext %>"
-	showActionsMenu="true"
-/>
+	public boolean isSkinEdible() {
+		return _skinEdible;
+	}
+
+	private final boolean _skinEdible;
+
+}

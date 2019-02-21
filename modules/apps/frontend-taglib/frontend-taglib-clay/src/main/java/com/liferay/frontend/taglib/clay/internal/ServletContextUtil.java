@@ -1,7 +1,8 @@
 package com.liferay.frontend.taglib.clay.internal;
 
-import com.liferay.frontend.taglib.clay.data.provider.ClayComponentItemBuilder;
-import com.liferay.frontend.taglib.clay.data.provider.FilterFactoryRegistry;
+import com.liferay.frontend.taglib.clay.data.contributor.ClayComponentDataContributorRegistry;
+import com.liferay.frontend.taglib.clay.data.contributor.ClayComponentItemBuilder;
+import com.liferay.frontend.taglib.clay.data.contributor.FilterFactoryRegistry;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.PaginationEntriesHelper;
 
 import org.osgi.service.component.annotations.Activate;
@@ -27,6 +28,10 @@ public class ServletContextUtil {
 		return _instance._paginationEntriesHelper;
 	}
 
+	public static ClayComponentDataContributorRegistry getDataContributorRegistry() {
+		return _instance._dataContributorRegistry;
+	}
+
 	@Activate
 	protected void activate() {
 		_instance = this;
@@ -47,5 +52,8 @@ public class ServletContextUtil {
 
 	@Reference
 	private PaginationEntriesHelper _paginationEntriesHelper;
+
+	@Reference
+	private ClayComponentDataContributorRegistry _dataContributorRegistry;
 
 }
