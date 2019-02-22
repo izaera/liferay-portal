@@ -10,6 +10,7 @@ dependencies {
 	compileOnly project(":apps:frontend-taglib:frontend-taglib-clay-data-contributor-api")
 	compileOnly project(":apps:frontend-taglib:frontend-taglib-soy")
 	compileOnly project(":apps:portal-template:portal-template-soy-api")
+	compileOnly project(":apps:static:portal-configuration:portal-configuration-metatype-api")
 	compileOnly project(":core:petra:petra-string")
 }
 

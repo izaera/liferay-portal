@@ -1,13 +1,15 @@
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
- * This library is free software; you can redistribute it and/or modify it under the terms of the
- * GNU Lesser General Public License as published by the Free Software Foundation; either version
- * 2.1 of the License, or (at your option) any later version.
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
  *
- * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  */
 
 package com.liferay.frontend.taglib.clay.servlet.taglib.soy;
@@ -21,6 +23,7 @@ import com.liferay.frontend.taglib.clay.data.contributor.FilterFactory;
 import com.liferay.frontend.taglib.clay.data.contributor.FilterFactoryRegistry;
 import com.liferay.frontend.taglib.clay.data.contributor.Pagination;
 import com.liferay.frontend.taglib.clay.data.contributor.PaginationImpl;
+import com.liferay.frontend.taglib.clay.data.contributor.configuration.ClayPaginationConfiguration;
 import com.liferay.frontend.taglib.clay.internal.ServletContextUtil;
 import com.liferay.frontend.taglib.clay.internal.js.loader.modules.extender.npm.NPMResolverProvider;
 import com.liferay.frontend.taglib.clay.internal.model.ClayPaginationEntry;
@@ -31,7 +34,6 @@ import com.liferay.frontend.taglib.clay.servlet.taglib.soy.base.BaseClayTag;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.PaginationEntriesHelper;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -190,8 +192,8 @@ public class TableTag extends BaseClayTag {
 			return null;
 		}
 
-		ClayComponentDataContributorRegistry registry = ServletContextUtil
-			.getDataContributorRegistry();
+		ClayComponentDataContributorRegistry registry =
+			ServletContextUtil.getDataContributorRegistry();
 
 		if (registry == null) {
 			return null;
@@ -201,10 +203,14 @@ public class TableTag extends BaseClayTag {
 	}
 
 	private String _getDeltaParam() {
-		Object contextDeltaParam = getContext().get("deltaParam");
+		Object deltaParam = getContext().get("deltaParam");
 
-		return GetterUtil.getString(
-			contextDeltaParam, SearchContainer.DEFAULT_DELTA_PARAM);
+		ClayPaginationConfiguration configuration =
+			ServletContextUtil.getPaginationConfiguration();
+
+		String defaultDeltaParam = configuration.defaultDeltaParam();
+
+		return GetterUtil.getString(deltaParam, defaultDeltaParam);
 	}
 
 	private Filter _getFilter() {
@@ -224,14 +230,21 @@ public class TableTag extends BaseClayTag {
 	private int _getItemsPerPage() {
 		Object itemsPerPage = getContext().get("itemsPerPage");
 
+		ClayPaginationConfiguration configuration =
+			ServletContextUtil.getPaginationConfiguration();
+
 		return GetterUtil.getInteger(
-			itemsPerPage, _ITEMS_PER_PAGE_DEFAULT_VALUE);
+			itemsPerPage, configuration.itemsPerPageDefaultValue());
 	}
 
 	private int _getPageNumber() {
 		Object pageNumber = getContext().get("pageNumber");
 
-		return GetterUtil.getInteger(pageNumber, _PAGE_NUMBER_DEFAULT_VALUE);
+		ClayPaginationConfiguration configuration =
+			ServletContextUtil.getPaginationConfiguration();
+
+		return GetterUtil.getInteger(
+			pageNumber, configuration.currentPageDefaultValue());
 	}
 
 	private List<ClayPaginationEntry> _getPaginationEntries(
@@ -383,9 +396,7 @@ public class TableTag extends BaseClayTag {
 			putValue("totalItems", totalItems);
 		}
 		catch (PortalException pe) {
-			if (_log.isErrorEnabled()) {
-				_log.error(pe, pe);
-			}
+			_log.error(pe, pe);
 		}
 	}
 
@@ -411,10 +422,6 @@ public class TableTag extends BaseClayTag {
 
 		putValue("paginationSelectedEntry", paginationSelectedEntry);
 	}
-
-	private static final int _ITEMS_PER_PAGE_DEFAULT_VALUE = 5;
-
-	private static final int _PAGE_NUMBER_DEFAULT_VALUE = 1;
 
 	private static final Log _log = LogFactoryUtil.getLog(TableTag.class);
 

@@ -1,33 +1,41 @@
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
- * This library is free software; you can redistribute it and/or modify it under the terms of the
- * GNU Lesser General Public License as published by the Free Software Foundation; either version
- * 2.1 of the License, or (at your option) any later version.
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
  *
- * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  */
 
 package com.liferay.frontend.taglib.clay.servlet.taglib.util;
 
+import com.liferay.frontend.taglib.clay.data.contributor.configuration.ClayPaginationConfiguration;
 import com.liferay.frontend.taglib.clay.internal.model.ClayPaginationEntry;
-import com.liferay.portal.kernel.dao.search.SearchContainer;
+import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.util.HttpUtil;
-import com.liferay.portal.util.PropsValues;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import javax.portlet.PortletURL;
 
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Modified;
 
 /**
  * @author Rodolfo Roza Miranda
  */
-@Component(immediate = true, service = PaginationEntriesHelper.class)
+@Component(
+	configurationPid = "com.liferay.frontend.taglib.clay.data.contributor.configuration.ClayPaginationConfiguration",
+	immediate = true, service = PaginationEntriesHelper.class
+)
 public class PaginationEntriesHelperImpl implements PaginationEntriesHelper {
 
 	public List<ClayPaginationEntry> getPaginationEntries(
@@ -40,8 +48,8 @@ public class PaginationEntriesHelperImpl implements PaginationEntriesHelper {
 
 		List<ClayPaginationEntry> clayPaginationEntries = new ArrayList<>();
 
-		for (int curDelta : PropsValues.SEARCH_CONTAINER_PAGE_DELTA_VALUES) {
-			if (curDelta > SearchContainer.MAX_DELTA) {
+		for (int curDelta : _paginationConfiguration.pageDeltaValues()) {
+			if (curDelta > _paginationConfiguration.maxDelta()) {
 				continue;
 			}
 
@@ -54,5 +62,14 @@ public class PaginationEntriesHelperImpl implements PaginationEntriesHelper {
 
 		return clayPaginationEntries;
 	}
+
+	@Activate
+	@Modified
+	protected void activate(Map<String, Object> properties) {
+		_paginationConfiguration = ConfigurableUtil.createConfigurable(
+			ClayPaginationConfiguration.class, properties);
+	}
+
+	private volatile ClayPaginationConfiguration _paginationConfiguration;
 
 }
