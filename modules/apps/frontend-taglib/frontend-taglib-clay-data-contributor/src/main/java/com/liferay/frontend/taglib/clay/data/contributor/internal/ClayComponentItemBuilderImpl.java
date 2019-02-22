@@ -1,13 +1,15 @@
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
- * This library is free software; you can redistribute it and/or modify it under the terms of the
- * GNU Lesser General Public License as published by the Free Software Foundation; either version
- * 2.1 of the License, or (at your option) any later version.
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
  *
- * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  */
 
 package com.liferay.frontend.taglib.clay.data.contributor.internal;
@@ -54,16 +56,18 @@ public class ClayComponentItemBuilderImpl implements ClayComponentItemBuilder {
 			newItems.add(clayComponentItem);
 		}
 
-		String newItemsJsonString = _OBJECT_MAPPER.writeValueAsString(newItems);
+		String newItemsJSON = _OBJECT_MAPPER.writeValueAsString(newItems);
 
-		return (List<Object>)JSONFactoryUtil.looseDeserialize(newItemsJsonString);
+		return (List<Object>)JSONFactoryUtil.looseDeserialize(newItemsJSON);
 	}
 
-	private void _addActionItems(HttpServletRequest request,
-		String contributorName, ClayComponentItem item) throws PortalException {
+	private void _addActionItems(
+			HttpServletRequest request, String contributorName,
+			ClayComponentItem item)
+		throws PortalException {
 
-		List<ClayComponentActionContributor> contributors = _actionContributorRegistry
-			.getActionContributors(contributorName);
+		List<ClayComponentActionContributor> contributors =
+			_actionContributorRegistry.getActionContributors(contributorName);
 
 		if (contributors == null) {
 			return;

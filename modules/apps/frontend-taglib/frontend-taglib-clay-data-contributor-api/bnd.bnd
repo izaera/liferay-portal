@@ -1,5 +1,5 @@
 Bundle-Name: Liferay Frontend Taglib Clay Data Contributor API
-Bundle-SymbolicName: com.liferay.frontend.taglib.clay.data.contributor
+Bundle-SymbolicName: com.liferay.frontend.taglib.clay.data.contributor.api
 Bundle-Version: 1.0.0
 Export-Package:\
 	com.liferay.frontend.taglib.clay.data.contributor,\

@@ -1,3 +1,3 @@
-Bundle-Name: Liferay Frontend Taglib Clay Data Contributor Impl
-Bundle-SymbolicName: com.liferay.frontend.taglib.clay.data.contributor.impl
+Bundle-Name: Liferay Frontend Taglib Clay Data Contributor
+Bundle-SymbolicName: com.liferay.frontend.taglib.clay.data.contributor
 Bundle-Version: 1.0.0

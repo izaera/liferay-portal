@@ -160,11 +160,11 @@ public abstract class BaseClayTag extends TemplateRendererTag {
 			return;
 		}
 
-		ClayTagMetaAttributeContributorRegistry registry = ServletContextUtil
-			.getMetaAttributeContributorRegistry();
+		ClayTagMetaAttributeContributorRegistry registry =
+			ServletContextUtil.getMetaAttributeContributorRegistry();
 
-		ClayTagMetaAttributeContributor contributor = registry
-			.get(getContributorName());
+		ClayTagMetaAttributeContributor contributor = registry.get(
+			getContributorName());
 
 		if (contributor == null) {
 			return;

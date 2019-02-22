@@ -32,8 +32,8 @@ import org.osgi.service.component.annotations.Component;
 	immediate = true, property = "contributor.name=SampleTable",
 	service = ClayComponentActionContributor.class
 )
-public class
-SampleTableActionContributor implements ClayComponentActionContributor {
+public class SampleTableActionContributor
+	implements ClayComponentActionContributor {
 
 	@Override
 	public List<ClayComponentAction> getActions(

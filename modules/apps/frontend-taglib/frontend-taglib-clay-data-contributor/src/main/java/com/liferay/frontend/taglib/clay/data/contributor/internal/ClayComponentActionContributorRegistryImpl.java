@@ -1,13 +1,15 @@
 /**
  * Copyright (c) 2000-present Liferay, Inc. All rights reserved.
  *
- * This library is free software; you can redistribute it and/or modify it under the terms of the
- * GNU Lesser General Public License as published by the Free Software Foundation; either version
- * 2.1 of the License, or (at your option) any later version.
+ * This library is free software; you can redistribute it and/or modify it under
+ * the terms of the GNU Lesser General Public License as published by the Free
+ * Software Foundation; either version 2.1 of the License, or (at your option)
+ * any later version.
  *
- * This library is distributed in the hope that it will be useful, but WITHOUT ANY WARRANTY; without
- * even the implied warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU
- * Lesser General Public License for more details.
+ * This library is distributed in the hope that it will be useful, but WITHOUT
+ * ANY WARRANTY; without even the implied warranty of MERCHANTABILITY or FITNESS
+ * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
+ * details.
  */
 
 package com.liferay.frontend.taglib.clay.data.contributor.internal;
@@ -42,8 +44,6 @@ public class ClayComponentActionContributorRegistryImpl
 	public List<ClayComponentActionContributor> getActionContributors(
 		String key) {
 
-		List<ClayComponentActionContributor> contributors = new ArrayList<>();
-
 		List<ServiceWrapper<ClayComponentActionContributor>> wrappers =
 			_serviceTrackerMap.getService(key);
 
@@ -56,6 +56,8 @@ public class ClayComponentActionContributorRegistryImpl
 
 			return null;
 		}
+
+		List<ClayComponentActionContributor> contributors = new ArrayList<>();
 
 		for (ServiceWrapper<ClayComponentActionContributor> wrapper :
 				wrappers) {
@@ -82,8 +84,7 @@ public class ClayComponentActionContributorRegistryImpl
 	private static final Log _log = LogFactoryUtil.getLog(
 		ClayComponentActionContributorRegistryImpl.class);
 
-	private ServiceTrackerMap
-		<String, List<ServiceWrapper<ClayComponentActionContributor>>>
+	private ServiceTrackerMap<String, List<ServiceWrapper<ClayComponentActionContributor>>>
 		_serviceTrackerMap;
 
 }
