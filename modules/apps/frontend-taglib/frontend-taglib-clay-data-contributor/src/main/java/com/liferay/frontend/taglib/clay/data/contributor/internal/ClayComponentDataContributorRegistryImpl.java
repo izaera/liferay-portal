@@ -78,7 +78,7 @@ public class ClayComponentDataContributorRegistryImpl
 	protected void activate(BundleContext bundleContext) {
 		_serviceTrackerMap = ServiceTrackerMapFactory.openSingleValueMap(
 			bundleContext, ClayComponentDataContributor.class,
-			"contributor.name",
+			"tag.contributor.key",
 			ServiceTrackerCustomizerFactory.serviceWrapper(bundleContext));
 	}
 

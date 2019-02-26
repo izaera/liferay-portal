@@ -2064,7 +2064,7 @@
 		</attribute>
 		<attribute>
 			<description></description>
-			<name>contributorName</name>
+			<name>contributorKey</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>

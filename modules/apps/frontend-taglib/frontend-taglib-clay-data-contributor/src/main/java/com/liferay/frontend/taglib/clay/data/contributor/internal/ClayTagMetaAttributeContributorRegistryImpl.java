@@ -36,9 +36,9 @@ public class ClayTagMetaAttributeContributorRegistryImpl
 	implements ClayTagMetaAttributeContributorRegistry {
 
 	@Override
-	public ClayTagMetaAttributeContributor get(String contributorName) {
+	public ClayTagMetaAttributeContributor get(String contributorKey) {
 		ServiceWrapper<ClayTagMetaAttributeContributor> service =
-			_serviceTrackerMap.getService(contributorName);
+			_serviceTrackerMap.getService(contributorKey);
 
 		if (service != null) {
 			return service.getService();
@@ -51,7 +51,7 @@ public class ClayTagMetaAttributeContributorRegistryImpl
 	protected void activate(BundleContext bundleContext) {
 		_serviceTrackerMap = ServiceTrackerMapFactory.openSingleValueMap(
 			bundleContext, ClayTagMetaAttributeContributor.class,
-			"contributor.name",
+			"tag.contributor.key",
 			ServiceTrackerCustomizerFactory.serviceWrapper(bundleContext));
 	}
 

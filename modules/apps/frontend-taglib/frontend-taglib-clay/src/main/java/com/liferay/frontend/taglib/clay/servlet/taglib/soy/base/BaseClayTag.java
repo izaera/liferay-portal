@@ -104,8 +104,8 @@ public abstract class BaseClayTag extends TemplateRendererTag {
 		_componentBaseName = componentBaseName;
 	}
 
-	public void setContributorName(String contributorName) {
-		putValue("contributorName", contributorName);
+	public void setContributorKey(String contributorKey) {
+		putValue("contributorKey", contributorKey);
 	}
 
 	public void setData(Map<String, String> data) {
@@ -147,8 +147,8 @@ public abstract class BaseClayTag extends TemplateRendererTag {
 		}
 	}
 
-	protected String getContributorName() {
-		return GetterUtil.getString(getContext().get("contributorName"));
+	protected String getContributorKey() {
+		return GetterUtil.getString(getContext().get("contributorKey"));
 	}
 
 	protected String[] getNamespacedParams() {
@@ -156,7 +156,7 @@ public abstract class BaseClayTag extends TemplateRendererTag {
 	}
 
 	private void _setMetaAttributes() {
-		if (Validator.isNull(getContributorName())) {
+		if (Validator.isNull(getContributorKey())) {
 			return;
 		}
 
@@ -164,7 +164,7 @@ public abstract class BaseClayTag extends TemplateRendererTag {
 			ServletContextUtil.getMetaAttributeContributorRegistry();
 
 		ClayTagMetaAttributeContributor contributor = registry.get(
-			getContributorName());
+			getContributorKey());
 
 		if (contributor == null) {
 			return;

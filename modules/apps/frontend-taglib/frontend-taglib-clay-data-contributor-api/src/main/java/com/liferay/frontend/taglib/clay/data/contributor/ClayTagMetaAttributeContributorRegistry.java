@@ -19,6 +19,6 @@ package com.liferay.frontend.taglib.clay.data.contributor;
  */
 public interface ClayTagMetaAttributeContributorRegistry {
 
-	public ClayTagMetaAttributeContributor get(String contributorName);
+	public ClayTagMetaAttributeContributor get(String contributorKey);
 
 }

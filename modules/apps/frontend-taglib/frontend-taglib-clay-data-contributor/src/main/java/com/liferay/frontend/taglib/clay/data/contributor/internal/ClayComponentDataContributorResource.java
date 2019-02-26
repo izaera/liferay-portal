@@ -48,27 +48,27 @@ import org.osgi.service.component.annotations.Reference;
 public class ClayComponentDataContributorResource {
 
 	@GET
-	@Path("/clay-data-contributor/{contributorName}")
+	@Path("/clay-data-contributor/{contributorKey}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response get(
-		@PathParam("contributorName") String contributorName,
+		@PathParam("contributorKey") String contributorKey,
 		@QueryParam("plid") long plid,
 		@QueryParam("portletId") String portletId, @Context UriInfo uriInfo,
 		@QueryParam("pageSize") int pageSize, @QueryParam("page") int page,
 		@Context HttpServletRequest request) {
 
 		ClayComponentDataContributor contributor = _dataContributorRegistry.get(
-			contributorName);
+			contributorKey);
 
 		try {
 			PaginationImpl pagination = new PaginationImpl(pageSize, page);
 
-			Filter filter = _getFilter(contributorName, request);
+			Filter filter = _getFilter(contributorKey, request);
 
 			List items = contributor.getItems(request, filter, pagination);
 
 			items = _clayComponentItemBuilder.build(
-				request, contributorName, items);
+				request, contributorKey, items);
 
 			return Response.ok(
 				items, MediaType.APPLICATION_JSON
@@ -84,10 +84,10 @@ public class ClayComponentDataContributorResource {
 	}
 
 	private Filter _getFilter(
-		String contributorName, HttpServletRequest request) {
+		String contributorKey, HttpServletRequest request) {
 
 		FilterFactory factory = _filterFactoryRegistry.getFilterFactory(
-			contributorName);
+			contributorKey);
 
 		return factory.create(request);
 	}

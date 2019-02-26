@@ -42,7 +42,7 @@ public class ClayComponentItemBuilderImpl implements ClayComponentItemBuilder {
 
 	@Override
 	public List<Object> build(
-			HttpServletRequest request, String contributorName,
+			HttpServletRequest request, String contributorKey,
 			List<Object> items)
 		throws Exception {
 
@@ -51,7 +51,7 @@ public class ClayComponentItemBuilderImpl implements ClayComponentItemBuilder {
 		for (Object item : items) {
 			ClayComponentItem clayComponentItem = new ClayComponentItem(item);
 
-			_addActionItems(request, contributorName, clayComponentItem);
+			_addActionItems(request, contributorKey, clayComponentItem);
 
 			newItems.add(clayComponentItem);
 		}
@@ -62,12 +62,12 @@ public class ClayComponentItemBuilderImpl implements ClayComponentItemBuilder {
 	}
 
 	private void _addActionItems(
-			HttpServletRequest request, String contributorName,
+			HttpServletRequest request, String contributorKey,
 			ClayComponentItem item)
 		throws PortalException {
 
 		List<ClayComponentActionContributor> contributors =
-			_actionContributorRegistry.getActionContributors(contributorName);
+			_actionContributorRegistry.getActionContributors(contributorKey);
 
 		if (contributors == null) {
 			return;

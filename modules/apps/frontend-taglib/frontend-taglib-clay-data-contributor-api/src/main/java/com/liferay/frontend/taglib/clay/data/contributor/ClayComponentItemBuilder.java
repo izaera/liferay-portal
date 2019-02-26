@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 public interface ClayComponentItemBuilder {
 
 	public List<Object> build(
-			HttpServletRequest request, String contributorName,
+			HttpServletRequest request, String contributorKey,
 			List<Object> items)
 		throws Exception;
 

@@ -74,7 +74,7 @@ public class FilterFactoryRegistryImpl implements FilterFactoryRegistry {
 	@Activate
 	protected void activate(BundleContext bundleContext) {
 		_serviceTrackerMap = ServiceTrackerMapFactory.openSingleValueMap(
-			bundleContext, FilterFactory.class, "contributor.name",
+			bundleContext, FilterFactory.class, "tag.contributor.key",
 			ServiceTrackerCustomizerFactory.serviceWrapper(bundleContext));
 	}
 

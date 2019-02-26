@@ -26,7 +26,7 @@
 
 <clay:table
 	actionsMenuVariant='<%= "" %>'
-	contributorName="SampleTable"
+	contributorKey="SampleTable"
 	displayContext="<%= tablesDisplayContext %>"
 	showActionsMenu="true"
 />

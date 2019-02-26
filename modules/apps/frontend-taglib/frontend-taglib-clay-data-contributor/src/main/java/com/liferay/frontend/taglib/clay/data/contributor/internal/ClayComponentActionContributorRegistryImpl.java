@@ -72,7 +72,7 @@ public class ClayComponentActionContributorRegistryImpl
 	protected void activate(BundleContext bundleContext) {
 		_serviceTrackerMap = ServiceTrackerMapFactory.openMultiValueMap(
 			bundleContext, ClayComponentActionContributor.class,
-			"contributor.name",
+			"tag.contributor.key",
 			ServiceTrackerCustomizerFactory.serviceWrapper(bundleContext));
 	}
 

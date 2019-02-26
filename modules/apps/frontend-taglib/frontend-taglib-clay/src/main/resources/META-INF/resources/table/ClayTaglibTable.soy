@@ -9,7 +9,7 @@
 
 {@param? actionsMenuVariant: string}
 {@param? currentPage: int}
-{@param? contributorName: string}
+{@param? contributorKey: string}
 {@param? id: string}
 {@param? items : ?}
 {@param? paginationBaseHref : string}
@@ -40,7 +40,7 @@
 	  {param actionsMenuVariant: $actionsMenuVariant /}
 	{/call}
 
-	{if $contributorName}
+	{if $contributorKey}
 	  {call ClayPaginationBar.render}
 		{param events: ['itemsPerPageClicked': $_handleItemsPerPageClicked, 'pageClicked': $_handlePageClicked ] /}
 		{param currentPage: $currentPage ?: 0 /}

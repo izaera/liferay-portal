@@ -170,7 +170,7 @@ public class TableTag extends BaseClayTag {
 	}
 
 	private List<Object> _addActionItems(List<Object> items) {
-		if (Validator.isNull(getContributorName())) {
+		if (Validator.isNull(getContributorKey())) {
 			return items;
 		}
 
@@ -178,7 +178,7 @@ public class TableTag extends BaseClayTag {
 			ServletContextUtil.getClayComponentItemBuilder();
 
 		try {
-			return builder.build(request, getContributorName(), items);
+			return builder.build(request, getContributorKey(), items);
 		}
 		catch (Exception e) {
 			_log.error(e, e);
@@ -188,7 +188,7 @@ public class TableTag extends BaseClayTag {
 	}
 
 	private ClayComponentDataContributor _getDataContributor() {
-		if (Validator.isNull(getContributorName())) {
+		if (Validator.isNull(getContributorKey())) {
 			return null;
 		}
 
@@ -199,7 +199,7 @@ public class TableTag extends BaseClayTag {
 			return null;
 		}
 
-		return registry.get(getContributorName());
+		return registry.get(getContributorKey());
 	}
 
 	private String _getDeltaParam() {
@@ -222,7 +222,7 @@ public class TableTag extends BaseClayTag {
 		}
 
 		FilterFactory filterFactory = filterFactoryRegistry.getFilterFactory(
-			getContributorName());
+			getContributorKey());
 
 		return filterFactory.create(request);
 	}
@@ -343,7 +343,7 @@ public class TableTag extends BaseClayTag {
 	}
 
 	private void _setDataContributorAPI() {
-		if (Validator.isNull(getContributorName())) {
+		if (Validator.isNull(getContributorKey())) {
 			return;
 		}
 
@@ -358,7 +358,7 @@ public class TableTag extends BaseClayTag {
 
 		sb.append(PortalUtil.getPortalURL(request));
 		sb.append("/o/clay-data-contributor/clay-data-contributor/");
-		sb.append(getContributorName());
+		sb.append(getContributorKey());
 		sb.append("?plid=");
 		sb.append(layout.getPlid());
 		sb.append("&portletId=");
@@ -401,7 +401,7 @@ public class TableTag extends BaseClayTag {
 	}
 
 	private void _setPagination() {
-		if (Validator.isNull(getContributorName())) {
+		if (Validator.isNull(getContributorKey())) {
 			return;
 		}
 

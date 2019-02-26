@@ -32,7 +32,7 @@ import org.osgi.service.component.annotations.Component;
  * @author Rodolfo Roza Miranda
  */
 @Component(
-	immediate = true, property = "contributor.name=SampleTable",
+	immediate = true, property = "tag.contributor.key=SampleTable",
 	service = ClayComponentDataContributor.class
 )
 public class SampleTableDataContributor
