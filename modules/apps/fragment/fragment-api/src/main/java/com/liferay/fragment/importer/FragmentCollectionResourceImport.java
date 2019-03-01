@@ -14,17 +14,33 @@
 
 package com.liferay.fragment.importer;
 
-import java.util.List;
-
 /**
- * @author Jorge Ferrer
  * @author Rodolfo Roza Miranda
  */
-public interface FragmentsImporter {
+public class FragmentCollectionResourceImport {
 
-	public List<String> importCollection(
-			long groupId, long userId, long fragmentCollectionId,
-			FragmentImportAdapter adapter, boolean overwrite)
-		throws Exception;
+	public FragmentCollectionResourceImport(
+		String fileName, byte[] bytes, String contentType) {
+
+		_fileName = fileName;
+		_bytes = bytes;
+		_contentType = contentType;
+	}
+
+	public byte[] getBytes() {
+		return _bytes;
+	}
+
+	public String getContentType() {
+		return _contentType;
+	}
+
+	public String getFileName() {
+		return _fileName;
+	}
+
+	private final byte[] _bytes;
+	private final String _contentType;
+	private final String _fileName;
 
 }

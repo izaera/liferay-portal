@@ -14,17 +14,22 @@
 
 package com.liferay.fragment.importer;
 
-import java.util.List;
+import com.liferay.fragment.constants.FragmentExportImportConstants;
 
 /**
- * @author Jorge Ferrer
  * @author Rodolfo Roza Miranda
  */
-public interface FragmentsImporter {
+public abstract class BaseFragmentImportAdapter
+	implements FragmentImportAdapter {
 
-	public List<String> importCollection(
-			long groupId, long userId, long fragmentCollectionId,
-			FragmentImportAdapter adapter, boolean overwrite)
-		throws Exception;
+	protected boolean isFragmentCollection(String fileName) {
+		return FragmentExportImportConstants.FILE_NAME_COLLECTION_CONFIG.equals(
+			fileName);
+	}
+
+	protected boolean isFragmentEntry(String fileName) {
+		return FragmentExportImportConstants.FILE_NAME_FRAGMENT_CONFIG.equals(
+			fileName);
+	}
 
 }

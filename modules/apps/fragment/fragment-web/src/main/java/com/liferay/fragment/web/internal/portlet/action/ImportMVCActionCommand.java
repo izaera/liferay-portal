@@ -15,7 +15,10 @@
 package com.liferay.fragment.web.internal.portlet.action;
 
 import com.liferay.fragment.constants.FragmentPortletKeys;
+import com.liferay.fragment.importer.FragmentImportAdapter;
+import com.liferay.fragment.importer.FragmentZipFile;
 import com.liferay.fragment.importer.FragmentsImporter;
+import com.liferay.fragment.web.internal.portlet.util.ZipFileValidator;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
@@ -31,6 +34,7 @@ import com.liferay.portal.kernel.util.WebKeys;
 import java.io.File;
 
 import java.util.List;
+import java.util.zip.ZipFile;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -82,10 +86,16 @@ public class ImportMVCActionCommand extends BaseMVCActionCommand {
 			actionRequest, "overwrite", true);
 
 		try {
+			ZipFile zipFile = new ZipFile(file);
+
+			ZipFileValidator.validateZipFile(zipFile);
+
+			FragmentImportAdapter adapter = new FragmentZipFile(zipFile);
+
 			List<String> invalidFragmentEntriesNames =
-				_fragmentsImporter.importFile(
-					themeDisplay.getUserId(), themeDisplay.getScopeGroupId(),
-					fragmentCollectionId, file, overwrite);
+				_fragmentsImporter.importCollection(
+					themeDisplay.getScopeGroupId(), themeDisplay.getUserId(),
+					fragmentCollectionId, adapter, overwrite);
 
 			if (ListUtil.isNotEmpty(invalidFragmentEntriesNames)) {
 				SessionMessages.add(
