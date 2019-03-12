@@ -14,20 +14,35 @@
 
 package com.liferay.frontend.taglib.clay.servlet.taglib.soy;
 
+import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
 import com.liferay.frontend.taglib.clay.internal.ClayTableTagSchemaContributorsProvider;
 import com.liferay.frontend.taglib.clay.internal.ClayTagDataSourceProvider;
+import com.liferay.frontend.taglib.clay.internal.js.loader.modules.extender.npm.NPMResolverProvider;
+import com.liferay.frontend.taglib.clay.internal.servlet.taglib.data.ClayPaginationEntry;
 import com.liferay.frontend.taglib.clay.internal.servlet.taglib.display.context.TableDefaults;
 import com.liferay.frontend.taglib.clay.servlet.taglib.contributor.ClayTableTagSchemaContributor;
 import com.liferay.frontend.taglib.clay.servlet.taglib.data.ClayTagDataSource;
+import com.liferay.frontend.taglib.clay.servlet.taglib.data.Pagination;
 import com.liferay.frontend.taglib.clay.servlet.taglib.model.table.Schema;
 import com.liferay.frontend.taglib.clay.servlet.taglib.model.table.Size;
 import com.liferay.frontend.taglib.clay.servlet.taglib.soy.base.BaseClayTag;
+import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.dao.search.SearchContainer;
+import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
+import com.liferay.portal.kernel.util.HttpUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.util.PropsValues;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletURL;
 
 /**
  * @author Iván Zaera Avellón
@@ -42,10 +57,13 @@ public class TableTag<T> extends BaseClayTag {
 
 		int returnValue = super.doStartTag();
 
+		_populateContextDefaultValues();
+
 		ClayTagDataSource<T> clayTagDataSource = getClayTagDataSource();
 
 		if (clayTagDataSource != null) {
-			_populateContext(clayTagDataSource);
+			_populateContextItems(clayTagDataSource);
+			_populateContextPagination();
 		}
 
 		List<ClayTableTagSchemaContributor> clayTableTagSchemaContributors =
@@ -78,8 +96,28 @@ public class TableTag<T> extends BaseClayTag {
 		putValue("dataSourceKey", dataSourceKey);
 	}
 
+	public void setDataSourceURL(String dataSourceURL) {
+		putValue("dataSourceURL", dataSourceURL);
+	}
+
 	public void setItems(Collection<?> items) {
 		putValue("items", items);
+	}
+
+	public void setPage(int page) {
+		putValue("page", page);
+	}
+
+	public void setPageParamName(String pageParamName) {
+		putValue("pageParamName", pageParamName);
+	}
+
+	public void setPageSize(int pageSize) {
+		putValue("pageSize", pageSize);
+	}
+
+	public void setPageSizeParamName(String pageSizeParamName) {
+		putValue("pageSizeParamName", pageSizeParamName);
 	}
 
 	public void setSchema(Schema schema) {
@@ -125,9 +163,7 @@ public class TableTag<T> extends BaseClayTag {
 	}
 
 	protected ClayTagDataSource<T> getClayTagDataSource() {
-		Map<String, Object> context = getContext();
-
-		String dataSourceKey = (String)context.get("dataSourceKey");
+		String dataSourceKey = getValue("dataSourceKey");
 
 		if (Validator.isNull(dataSourceKey)) {
 			return null;
@@ -153,11 +189,80 @@ public class TableTag<T> extends BaseClayTag {
 			getClayTableTagSchemaContributors(tableSchemaContributorKey);
 	}
 
-	private void _populateContext(ClayTagDataSource<T> clayTagDataSource) {
+	private List<ClayPaginationEntry> _getClayPaginationEntries() {
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		String portletId = String.valueOf(themeDisplay.getPlid());
+
+		PortletURL portletURL = PortletURLFactoryUtil.create(
+			request, portletId, PortletRequest.RENDER_PHASE);
+
+		String deltaParam = getValue("deltaParam");
+
+		String portletURLString = HttpUtil.removeParameter(
+			portletURL.toString(), getNamespace() + deltaParam);
+
+		List<ClayPaginationEntry> clayPaginationEntries = new ArrayList<>();
+
+		for (int delta : PropsValues.SEARCH_CONTAINER_PAGE_DELTA_VALUES) {
+			if (delta > SearchContainer.MAX_DELTA) {
+				continue;
+			}
+
+			String url = HttpUtil.addParameter(
+				portletURLString, getNamespace() + deltaParam, delta);
+
+			clayPaginationEntries.add(new ClayPaginationEntry(url, delta));
+		}
+
+		return clayPaginationEntries;
+	}
+
+	private void _populateContextDefaultValues() {
 		Map<String, Object> context = getContext();
 
-		if (context.get("items") == null) {
-			setItems(clayTagDataSource.getItems(request));
+		putValue(
+			"deltaParam",
+			context.getOrDefault(
+				"deltaParam", SearchContainer.DEFAULT_DELTA_PARAM));
+		putValue("page", context.getOrDefault("page", 1));
+		putValue(
+			"pageParamName", context.getOrDefault("pageParamName", "page"));
+		putValue("pageSize", context.getOrDefault("pageSize", 5));
+		putValue(
+			"pageSizeParamName",
+			context.getOrDefault("pageSizeParamName", "pageSize"));
+	}
+
+	private void _populateContextItems(ClayTagDataSource<T> clayTagDataSource) {
+		setItems(
+			clayTagDataSource.getItems(
+				request,
+				new Pagination(getValue("pageSize"), getValue("page"))));
+
+		putValue("totalItems", clayTagDataSource.getTotalItemsCount());
+	}
+
+	private void _populateContextPagination() {
+		List<ClayPaginationEntry> clayPaginationEntries =
+			_getClayPaginationEntries();
+
+		putValue("paginationEntries", clayPaginationEntries);
+
+		putValue("paginationSelectedEntry", 0);
+
+		int page = getValue("page");
+
+		for (int i = 0; i < clayPaginationEntries.size(); i++) {
+			ClayPaginationEntry clayPaginationEntry = clayPaginationEntries.get(
+				i);
+
+			if (clayPaginationEntry.getLabel() == page) {
+				putValue("paginationSelectedEntry", i);
+
+				break;
+			}
 		}
 	}
 

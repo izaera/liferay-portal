@@ -14,17 +14,33 @@
 
 package com.liferay.frontend.taglib.clay.servlet.taglib.data;
 
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
-
 /**
- * @author Rodolfo Roza Miranda
+ * @author Marco Leo
  */
-public interface ClayTagDataSource<T> {
+public class Pagination {
 
-	public List<T> getItems(HttpServletRequest request, Pagination pagination);
+	public Pagination(int pageSize, int page) {
+		_pageSize = pageSize;
+		_page = page;
+	}
 
-	public int getTotalItemsCount();
+	public int getEnd() {
+		return _page * _pageSize;
+	}
+
+	public int getPage() {
+		return _page;
+	}
+
+	public int getPageSize() {
+		return _pageSize;
+	}
+
+	public int getStart() {
+		return (_page - 1) * _pageSize;
+	}
+
+	private final int _page;
+	private final int _pageSize;
 
 }

@@ -12,19 +12,27 @@
  * details.
  */
 
-package com.liferay.frontend.taglib.clay.servlet.taglib.data;
-
-import java.util.List;
-
-import javax.servlet.http.HttpServletRequest;
+package com.liferay.frontend.taglib.clay.internal.servlet.taglib.data;
 
 /**
  * @author Rodolfo Roza Miranda
  */
-public interface ClayTagDataSource<T> {
+public class ClayPaginationEntry {
 
-	public List<T> getItems(HttpServletRequest request, Pagination pagination);
+	public ClayPaginationEntry(String href, int label) {
+		_href = href;
+		_label = label;
+	}
 
-	public int getTotalItemsCount();
+	public String getHref() {
+		return _href;
+	}
+
+	public int getLabel() {
+		return _label;
+	}
+
+	private final String _href;
+	private final int _label;
 
 }
