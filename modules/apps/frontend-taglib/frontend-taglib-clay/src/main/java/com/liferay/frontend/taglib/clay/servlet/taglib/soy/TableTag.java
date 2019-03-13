@@ -158,9 +158,7 @@ public class TableTag<T> extends BaseClayTag {
 	}
 
 	protected ClayTagDataSource<T> getClayTagDataSource() {
-		Map<String, Object> context = getContext();
-
-		String dataSourceKey = (String)context.get("dataSourceKey");
+		String dataSourceKey = getValue("dataSourceKey");
 
 		if (Validator.isNull(dataSourceKey)) {
 			return null;
@@ -179,9 +177,7 @@ public class TableTag<T> extends BaseClayTag {
 		PortletURL portletURL = PortletURLFactoryUtil.create(
 			request, portletId, PortletRequest.RENDER_PHASE);
 
-		Map<String, Object> context = getContext();
-
-		String deltaParam = (String)context.get("deltaParam");
+		String deltaParam = getValue("deltaParam");
 
 		String portletURLString = HttpUtil.removeParameter(
 			portletURL.toString(), getNamespace() + deltaParam);
@@ -203,13 +199,11 @@ public class TableTag<T> extends BaseClayTag {
 	}
 
 	private void _populateContextDataSourceURL() {
-		Map<String, Object> context = getContext();
-
 		StringBundler sb = new StringBundler(3);
 
 		sb.append("/taglib-clay/clay-tag-data-source/");
 
-		String dataSourceKey = (String)context.get("dataSourceKey");
+		String dataSourceKey = getValue("dataSourceKey");
 
 		sb.append(dataSourceKey);
 
@@ -235,14 +229,11 @@ public class TableTag<T> extends BaseClayTag {
 	}
 
 	private void _populateContextItems(ClayTagDataSource<T> clayTagDataSource) {
-		Map<String, Object> context = getContext();
-
 		setItems(
 			clayTagDataSource.getItems(
 				request,
 				new Pagination(
-					(int)context.get("itemsPerPage"),
-					(int)context.get("pageNumber"))));
+					getValue("itemsPerPage"), getValue("pageNumber"))));
 
 		putValue("totalItems", clayTagDataSource.getTotalItemsCount());
 	}
@@ -255,9 +246,7 @@ public class TableTag<T> extends BaseClayTag {
 
 		putValue("paginationSelectedEntry", 0);
 
-		Map<String, Object> context = getContext();
-
-		int pageNumber = (int)context.get("pageNumber");
+		int pageNumber = getValue("pageNumber");
 
 		for (int i = 0; i < clayPaginationEntries.size(); i++) {
 			ClayPaginationEntry clayPaginationEntry = clayPaginationEntries.get(
