@@ -184,7 +184,7 @@ public class PortletExtenderConfigurationAction
 		ddmFormRenderingContext.setPortletNamespace(
 			PortalUtil.getPortletNamespace(
 				DDMPortletKeys.DYNAMIC_DATA_MAPPING_FORM_ADMIN));
-		ddmFormRenderingContext.setReadOnly(true);
+		ddmFormRenderingContext.setReadOnly(false);
 
 		return ddmFormRenderingContext;
 	}
