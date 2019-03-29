@@ -11,7 +11,7 @@ describe(
 			'should render',
 			() => {
 				const {asFragment} = render(
-					<CriteriaSidebar />
+					<CriteriaSidebar propertyGroups={[]} />
 				);
 
 				expect(asFragment()).toMatchSnapshot();

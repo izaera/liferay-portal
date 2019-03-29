@@ -14,7 +14,7 @@ exports[`ContributorBuilder should render: initialRender 1`] = `
         <div
           class="sidebar-header"
         >
-          x-properties
+          properties
         </div>
         <div
           class="sidebar-search"
@@ -54,15 +54,72 @@ exports[`ContributorBuilder should render: initialRender 1`] = `
             </div>
           </div>
         </div>
-        <ul
-          class="properties-list"
+        <div
+          class="sidebar-collapse"
         >
-          <li
-            class="empty-message"
+          <ul
+            class="sidebar-collapse-groups list-unstyled"
           >
-            no-results-were-found
-          </li>
-        </ul>
+            <li
+              class="sidebar-collapse-user"
+            >
+              <div
+                class="sidebar-collapse-header-root"
+              >
+                <a
+                  class="sidebar-collapse-header d-flex justify-content-between"
+                >
+                  User
+                  <span
+                    class="collapse-icon"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="lexicon-icon lexicon-icon-angle-right"
+                      viewBox="0 0 512 512"
+                    >
+                      <use
+                        xlink:href="#angle-right"
+                      />
+                    </svg>
+                  </span>
+                </a>
+              </div>
+              <ul
+                class="properties-list"
+              />
+            </li>
+            <li
+              class="sidebar-collapse-user-organization"
+            >
+              <div
+                class="sidebar-collapse-header-root"
+              >
+                <a
+                  class="sidebar-collapse-header d-flex justify-content-between"
+                >
+                  User Organization
+                  <span
+                    class="collapse-icon"
+                  >
+                    <svg
+                      aria-hidden="true"
+                      class="lexicon-icon lexicon-icon-angle-right"
+                      viewBox="0 0 512 512"
+                    >
+                      <use
+                        xlink:href="#angle-right"
+                      />
+                    </svg>
+                  </span>
+                </a>
+              </div>
+              <ul
+                class="properties-list"
+              />
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
     <div
