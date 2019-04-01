@@ -12,7 +12,6 @@
 	},
 	"exclude": {
 		"bootstrap": true,
-		"core-js": true,
 		"querystring": [
 			"test/**/*"
 		]
