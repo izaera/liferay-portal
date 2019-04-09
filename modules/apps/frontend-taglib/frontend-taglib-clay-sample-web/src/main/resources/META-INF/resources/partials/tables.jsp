@@ -20,6 +20,6 @@
 
 <clay:table
 	contributorKey="SampleTable"
-	dataSourceKey="SampleTable"
+	infoListProviderClassName="com.liferay.frontend.taglib.clay.sample.web.internal.data.SampleTableInfoListProvider"
 	tableSchemaContributorKey="SampleTable"
 />
