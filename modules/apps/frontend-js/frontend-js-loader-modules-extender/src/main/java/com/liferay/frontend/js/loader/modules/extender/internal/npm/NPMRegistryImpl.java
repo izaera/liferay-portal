@@ -458,7 +458,15 @@ public class NPMRegistryImpl implements NPMRegistry {
 		private JSPackageVersion(JSPackage jsPackage) {
 			_jsPackage = jsPackage;
 
-			_version = Version.from(jsPackage.getVersion(), true);
+			String version = jsPackage.getVersion();
+
+			int pos = version.indexOf("-hotfix");
+
+			if (pos != -1) {
+				version = version.substring(0, pos);
+			}
+
+			_version = Version.from(version, true);
 		}
 
 		private final JSPackage _jsPackage;
