@@ -2196,7 +2196,7 @@
 		</attribute>
 		<attribute>
 			<description></description>
-			<name>dataSourceKey</name>
+			<name>infoListProviderClassName</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>

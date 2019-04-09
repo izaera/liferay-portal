@@ -15,19 +15,24 @@
 package com.liferay.frontend.taglib.clay.servlet.taglib.soy;
 
 import com.liferay.frontend.taglib.clay.internal.ClayTableTagSchemaContributorsProvider;
-import com.liferay.frontend.taglib.clay.internal.ClayTagDataSourceProvider;
+import com.liferay.frontend.taglib.clay.internal.InfoListProviderProvider;
 import com.liferay.frontend.taglib.clay.internal.servlet.taglib.display.context.TableDefaults;
 import com.liferay.frontend.taglib.clay.servlet.taglib.contributor.ClayTableTagSchemaContributor;
-import com.liferay.frontend.taglib.clay.servlet.taglib.data.ClayTagDataSource;
 import com.liferay.frontend.taglib.clay.servlet.taglib.model.table.Schema;
 import com.liferay.frontend.taglib.clay.servlet.taglib.model.table.Size;
 import com.liferay.frontend.taglib.clay.servlet.taglib.soy.base.BaseClayTag;
+import com.liferay.info.provider.DefaultInfoListProviderContext;
+import com.liferay.info.provider.InfoListProvider;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Iván Zaera Avellón
@@ -42,10 +47,10 @@ public class TableTag<T> extends BaseClayTag {
 
 		int returnValue = super.doStartTag();
 
-		ClayTagDataSource<T> clayTagDataSource = getClayTagDataSource();
+		InfoListProvider<T> infoListProvider = getInfoListProvider();
 
-		if (clayTagDataSource != null) {
-			_populateContext(clayTagDataSource);
+		if (infoListProvider != null) {
+			_populateContext(infoListProvider);
 		}
 
 		List<ClayTableTagSchemaContributor> clayTableTagSchemaContributors =
@@ -74,8 +79,8 @@ public class TableTag<T> extends BaseClayTag {
 		putValue("actionsMenuVariant", actionsMenuVariant);
 	}
 
-	public void setDataSourceKey(String dataSourceKey) {
-		putValue("dataSourceKey", dataSourceKey);
+	public void setInfoListProviderClassName(String infoListProviderClassName) {
+		putValue("infoListProviderClassName", infoListProviderClassName);
 	}
 
 	public void setItems(Collection<?> items) {
@@ -124,17 +129,43 @@ public class TableTag<T> extends BaseClayTag {
 		putValue("wrapTable", wrapTable);
 	}
 
-	protected ClayTagDataSource<T> getClayTagDataSource() {
+	protected DefaultInfoListProviderContext
+		createDefaultInfoListProviderContext() {
+
+		HttpServletRequest httpServletRequest = getRequest();
+
+		ThemeDisplay themeDisplay =
+			(ThemeDisplay)httpServletRequest.getAttribute(
+				WebKeys.THEME_DISPLAY);
+
+		DefaultInfoListProviderContext defaultInfoListProviderContext =
+			new DefaultInfoListProviderContext(
+				themeDisplay.getScopeGroup(), themeDisplay.getUser());
+
+		defaultInfoListProviderContext.setLayout(themeDisplay.getLayout());
+
+		return defaultInfoListProviderContext;
+	}
+
+	protected InfoListProvider<T> getInfoListProvider() {
 		Map<String, Object> context = getContext();
 
-		String dataSourceKey = (String)context.get("dataSourceKey");
+		String infoListProviderClassName = (String)context.get(
+			"infoListProviderClassName");
 
-		if (Validator.isNull(dataSourceKey)) {
+		if (Validator.isNull(infoListProviderClassName)) {
 			return null;
 		}
 
-		return (ClayTagDataSource<T>)
-			ClayTagDataSourceProvider.getClayTagDataSource(dataSourceKey);
+		InfoListProvider infoListProvider =
+			InfoListProviderProvider.getInfoListProvider(
+				infoListProviderClassName);
+
+		if (infoListProvider == null) {
+			return null;
+		}
+
+		return infoListProvider;
 	}
 
 	protected List<ClayTableTagSchemaContributor>
@@ -153,11 +184,13 @@ public class TableTag<T> extends BaseClayTag {
 			getClayTableTagSchemaContributors(tableSchemaContributorKey);
 	}
 
-	private void _populateContext(ClayTagDataSource<T> clayTagDataSource) {
+	private void _populateContext(InfoListProvider<T> infoListProvider) {
 		Map<String, Object> context = getContext();
 
 		if (context.get("items") == null) {
-			setItems(clayTagDataSource.getItems(request));
+			setItems(
+				infoListProvider.getInfoList(
+					createDefaultInfoListProviderContext()));
 		}
 	}
 
