@@ -40,7 +40,19 @@ public class GenericsUtil {
 				continue;
 			}
 
-			return (Class<?>)parameterizedType.getActualTypeArguments()[0];
+			Type actualTypeArgument =
+				parameterizedType.getActualTypeArguments()[0];
+
+			if (actualTypeArgument instanceof Class) {
+				return (Class<?>)actualTypeArgument;
+			}
+			else if (actualTypeArgument instanceof ParameterizedType) {
+				return (Class<?>)
+					((ParameterizedType)actualTypeArgument).getRawType();
+			}
+
+			throw new UnsupportedOperationException(
+				"Unable to get item class for " + infoListProviderClass);
 		}
 
 		return Object.class;
