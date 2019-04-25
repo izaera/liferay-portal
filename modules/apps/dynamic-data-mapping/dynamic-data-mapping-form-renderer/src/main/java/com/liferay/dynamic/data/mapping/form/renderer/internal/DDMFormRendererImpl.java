@@ -24,6 +24,7 @@ import com.liferay.dynamic.data.mapping.form.renderer.internal.servlet.taglib.DD
 import com.liferay.dynamic.data.mapping.model.DDMForm;
 import com.liferay.dynamic.data.mapping.model.DDMFormLayout;
 import com.liferay.dynamic.data.mapping.util.DDM;
+import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.io.unsync.UnsyncStringWriter;
 import com.liferay.portal.kernel.json.JSONFactory;
@@ -35,9 +36,11 @@ import com.liferay.portal.kernel.template.TemplateException;
 import com.liferay.portal.kernel.template.TemplateManagerUtil;
 import com.liferay.portal.kernel.template.TemplateResource;
 import com.liferay.portal.kernel.template.URLTemplateResource;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.template.soy.SoyTemplateResourceFactory;
 import com.liferay.portal.template.soy.util.SoyRawData;
 
@@ -50,6 +53,9 @@ import java.util.Locale;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.CopyOnWriteArrayList;
+
+import javax.servlet.ServletContext;
+import javax.servlet.http.HttpServletRequest;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -139,6 +145,47 @@ public class DDMFormRendererImpl implements DDMFormRenderer {
 				_templateResources),
 			false);
 
+		HttpServletRequest request =
+			ddmFormRenderingContext.getHttpServletRequest();
+
+		ThemeDisplay themeDisplay = (ThemeDisplay)request.getAttribute(
+			WebKeys.THEME_DISPLAY);
+
+		String cdnBaseURL = themeDisplay.getCDNBaseURL();
+
+		ServletContext servletContext = request.getServletContext();
+
+		String postfix = _portal.getPathProxy();
+
+		if (postfix.isEmpty()) {
+			postfix = servletContext.getContextPath();
+		}
+		else {
+			postfix = postfix.concat(servletContext.getContextPath());
+		}
+
+		// HACK: I have no idea why, but the above produces the wrong context
+		// path ("/o/dynamic-data-mapping-form-web").
+
+		postfix = "/o/dynamic-data-mapping-form-renderer";
+
+		String staticResourceURL = _portal.getStaticResourceURL(
+			request,
+			cdnBaseURL.concat(
+				postfix
+			).concat(
+				"/css/main.css"
+			));
+
+		StringBundler sb = new StringBundler(8);
+
+		sb.append("<link data-senna-track=\"temporary\" ");
+		sb.append("rel=\"stylesheet\" ");
+		sb.append("property=\"stylesheet\" ");
+		sb.append("href=\"");
+		sb.append(staticResourceURL);
+		sb.append("\">");
+
 		populateCommonContext(
 			template, ddmForm, ddmFormLayout, ddmFormRenderingContext);
 
@@ -146,16 +193,16 @@ public class DDMFormRendererImpl implements DDMFormRenderer {
 
 		String templateNamespace = (String)soyRawData.getValue();
 
-		String html = render(template, templateNamespace);
+		sb.append(render(template, templateNamespace));
 
-		String javaScript = render(template, "ddm.form_renderer_js");
+		sb.append(render(template, "ddm.form_renderer_js"));
 
 		DynamicIncludeUtil.include(
 			ddmFormRenderingContext.getHttpServletRequest(),
 			ddmFormRenderingContext.getHttpServletResponse(),
 			DDMFormFieldTypesDynamicInclude.class.getName(), true);
 
-		return html.concat(javaScript);
+		return sb.toString();
 	}
 
 	protected String getDefaultLanguageId(

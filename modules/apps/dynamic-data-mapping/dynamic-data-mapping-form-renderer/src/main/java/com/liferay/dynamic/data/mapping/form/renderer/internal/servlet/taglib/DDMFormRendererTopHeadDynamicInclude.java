@@ -72,8 +72,11 @@ public class DDMFormRendererTopHeadDynamicInclude extends BaseDynamicInclude {
 
 		String content = "<link href=\"".concat(staticResourceURL);
 
-		printWriter.println(
-			content.concat("\" rel=\"stylesheet\" type = \"text/css\" />"));
+		// TODO: instead of suppressing this side-effect, remove this entire
+		// class.
+		// printWriter.println(
+		// 	content.concat("\" rel=\"stylesheet\" type = \"text/css\" />"));
+
 	}
 
 	@Override
