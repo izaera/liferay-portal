@@ -222,8 +222,12 @@ public class AbsolutePortalURLBuilderImpl implements AbsolutePortalURLBuilder {
 			sb.append(_getCDNHost(_httpServletRequest));
 		}
 
-		if (!ignorePathProxy) {
-			sb.append(_getPathProxy());
+		String pathProxy = _getPathProxy();
+
+		if (!ignorePathProxy && !pathPrefix.startsWith(pathProxy) &&
+			!relativeURL.startsWith(pathProxy)) {
+
+			sb.append(pathProxy);
 		}
 
 		if (!Validator.isBlank(pathPrefix)) {

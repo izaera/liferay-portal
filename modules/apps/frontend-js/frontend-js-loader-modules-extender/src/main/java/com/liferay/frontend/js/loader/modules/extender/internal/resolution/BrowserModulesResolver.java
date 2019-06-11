@@ -30,6 +30,7 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.Validator;
 
 import java.util.HashMap;
 import java.util.HashSet;
@@ -185,7 +186,23 @@ public class BrowserModulesResolver {
 
 		browserModulesResolution.putDependenciesMap(
 			moduleName, dependenciesMap);
-		browserModulesResolution.putPath(moduleName, browserModule.getPath());
+
+		String browserModulePath = browserModule.getPath();
+
+		String pathProxy = _portal.getPathProxy();
+
+		if (Validator.isNotNull(pathProxy) &&
+			!browserModulePath.startsWith(pathProxy)) {
+
+			StringBundler sb = new StringBundler(2);
+
+			sb.append(pathProxy);
+			sb.append(browserModulePath);
+
+			browserModulePath = sb.toString();
+		}
+
+		browserModulesResolution.putPath(moduleName, browserModulePath);
 
 		browserModulesResolution.addResolvedModuleName(moduleName);
 
