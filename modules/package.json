@@ -47,6 +47,7 @@
 			"apps/frontend-image-editor/frontend-image-editor-capability-rotate",
 			"apps/frontend-image-editor/frontend-image-editor-capability-saturation",
 			"apps/frontend-js/frontend-js-node-shims",
+			"apps/frontend-js/frontend-js-portlet-extender",
 			"apps/frontend-taglib/frontend-taglib-chart",
 			"apps/frontend-taglib/frontend-taglib-clay",
 			"apps/frontend-theme/frontend-theme-admin",
