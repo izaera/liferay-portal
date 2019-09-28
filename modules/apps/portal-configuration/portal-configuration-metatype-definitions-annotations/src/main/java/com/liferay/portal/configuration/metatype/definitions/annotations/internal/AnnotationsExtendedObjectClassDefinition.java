@@ -14,8 +14,10 @@
 
 package com.liferay.portal.configuration.metatype.definitions.annotations.internal;
 
+import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
 import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClassDefinition;
 import com.liferay.portal.configuration.metatype.definitions.ExtendedAttributeDefinition;
+import com.liferay.portal.configuration.metatype.extension.ExtensionProcessor;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
@@ -25,6 +27,8 @@ import com.liferay.portal.kernel.util.Validator;
 
 import java.io.IOException;
 import java.io.InputStream;
+
+import java.lang.annotation.Annotation;
 
 import java.net.URL;
 
@@ -45,10 +49,15 @@ public class AnnotationsExtendedObjectClassDefinition
 	implements com.liferay.portal.configuration.metatype.definitions.
 				   ExtendedObjectClassDefinition {
 
+	@SuppressWarnings("rawtypes")
 	public AnnotationsExtendedObjectClassDefinition(
-		Bundle bundle, ObjectClassDefinition objectClassDefinition) {
+		Bundle bundle, ObjectClassDefinition objectClassDefinition,
+		ServiceTrackerMap<Class<? extends Annotation>, ExtensionProcessor>
+			extensionProcessorServiceTrackerMap) {
 
 		_objectClassDefinition = objectClassDefinition;
+		_extensionProcessorServiceTrackerMap =
+			extensionProcessorServiceTrackerMap;
 
 		_loadConfigurationBeanClass(bundle);
 
@@ -78,7 +87,8 @@ public class AnnotationsExtendedObjectClassDefinition
 		for (int i = 0; i < attributeDefinitions.length; i++) {
 			extendedAttributeDefinitions[i] =
 				new AnnotationsExtendedAttributeDefinition(
-					_configurationBeanClass, attributeDefinitions[i]);
+					_configurationBeanClass, attributeDefinitions[i],
+					_extensionProcessorServiceTrackerMap);
 		}
 
 		_extendedAttributeDefinitions.put(filter, extendedAttributeDefinitions);
@@ -222,6 +232,12 @@ public class AnnotationsExtendedObjectClassDefinition
 		_extendedAttributeDefinitions = new HashMap<>();
 	private final Map<String, Map<String, String>> _extensionAttributes =
 		new HashMap<>();
+
+	@SuppressWarnings("rawtypes")
+	private final ServiceTrackerMap
+		<Class<? extends Annotation>, ExtensionProcessor>
+			_extensionProcessorServiceTrackerMap;
+
 	private final ObjectClassDefinition _objectClassDefinition;
 
 }

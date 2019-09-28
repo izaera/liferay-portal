@@ -5,4 +5,5 @@ Export-Package:\
 	com.liferay.portal.configuration.metatype.annotations,\
 	com.liferay.portal.configuration.metatype.bnd.util,\
 	com.liferay.portal.configuration.metatype.definitions,\
+	com.liferay.portal.configuration.metatype.extension,\
 	com.liferay.portal.configuration.metatype.util

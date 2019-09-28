@@ -14,8 +14,12 @@
 
 package com.liferay.portal.configuration.metatype.definitions.annotations.internal;
 
+import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
 import com.liferay.portal.configuration.metatype.definitions.ExtendedMetaTypeInformation;
 import com.liferay.portal.configuration.metatype.definitions.ExtendedObjectClassDefinition;
+import com.liferay.portal.configuration.metatype.extension.ExtensionProcessor;
+
+import java.lang.annotation.Annotation;
 
 import org.osgi.framework.Bundle;
 import org.osgi.service.metatype.MetaTypeInformation;
@@ -26,11 +30,16 @@ import org.osgi.service.metatype.MetaTypeInformation;
 public class AnnotationsExtendedMetaTypeInformation
 	implements ExtendedMetaTypeInformation {
 
+	@SuppressWarnings("rawtypes")
 	public AnnotationsExtendedMetaTypeInformation(
-		Bundle bundle, MetaTypeInformation metaTypeInformation) {
+		Bundle bundle, MetaTypeInformation metaTypeInformation,
+		ServiceTrackerMap<Class<? extends Annotation>, ExtensionProcessor>
+			extensionProcessorServiceTrackerMap) {
 
 		_bundle = bundle;
 		_metaTypeInformation = metaTypeInformation;
+		_extensionProcessorServiceTrackerMap =
+			extensionProcessorServiceTrackerMap;
 	}
 
 	@Override
@@ -53,7 +62,8 @@ public class AnnotationsExtendedMetaTypeInformation
 		String id, String locale) {
 
 		return new AnnotationsExtendedObjectClassDefinition(
-			_bundle, _metaTypeInformation.getObjectClassDefinition(id, locale));
+			_bundle, _metaTypeInformation.getObjectClassDefinition(id, locale),
+			_extensionProcessorServiceTrackerMap);
 	}
 
 	@Override
@@ -62,6 +72,12 @@ public class AnnotationsExtendedMetaTypeInformation
 	}
 
 	private final Bundle _bundle;
+
+	@SuppressWarnings("rawtypes")
+	private final ServiceTrackerMap
+		<Class<? extends Annotation>, ExtensionProcessor>
+			_extensionProcessorServiceTrackerMap;
+
 	private final MetaTypeInformation _metaTypeInformation;
 
 }

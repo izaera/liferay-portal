@@ -14,34 +14,65 @@
 
 package com.liferay.portal.configuration.metatype.definitions.annotations.internal;
 
-import com.liferay.petra.string.StringBundler;
-import com.liferay.portal.configuration.metatype.annotations.ExtendedAttributeDefinition;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
+import com.liferay.petra.string.StringPool;
+import com.liferay.portal.configuration.metatype.definitions.ExtendedAttributeDefinition;
+import com.liferay.portal.configuration.metatype.extension.ExtensionProcessor;
 import com.liferay.portal.kernel.util.StringUtil;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Method;
 
-import java.util.Collections;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
+
+import javax.xml.bind.annotation.XmlAttribute;
 
 import org.osgi.service.metatype.AttributeDefinition;
 
 /**
  * @author Iván Zaera
+ * @author Raymond Augé
  */
 public class AnnotationsExtendedAttributeDefinition
-	implements com.liferay.portal.configuration.metatype.definitions.
-				   ExtendedAttributeDefinition {
+	implements ExtendedAttributeDefinition {
 
+	@SuppressWarnings("rawtypes")
 	public AnnotationsExtendedAttributeDefinition(
 		Class<?> configurationBeanClass,
-		AttributeDefinition attributeDefinition) {
+		AttributeDefinition attributeDefinition,
+		ServiceTrackerMap<Class<? extends Annotation>, ExtensionProcessor>
+			extensionProcessorServiceTrackerMap) {
 
 		_configurationBeanClass = configurationBeanClass;
 		_attributeDefinition = attributeDefinition;
+		_extensionProcessorServiceTrackerMap =
+			extensionProcessorServiceTrackerMap;
+		_prefix = Stream.of(
+			_configurationBeanClass.getFields()
+		).filter(
+			f -> f.getName(
+			).equals(
+				"PREFIX_"
+			)
+		).findFirst(
+		).map(
+			f -> {
+				try {
+					return (String)f.get(_configurationBeanClass);
+				}
+				catch (ReflectiveOperationException roe) {
+					return null;
+				}
+			}
+		).orElse(
+			StringPool.BLANK
+		);
 
 		if (configurationBeanClass != null) {
 			_processExtendedMetatypeFields();
@@ -65,13 +96,8 @@ public class AnnotationsExtendedAttributeDefinition
 
 	@Override
 	public Map<String, String> getExtensionAttributes(String uri) {
-		Map<String, String> extensionAttributes = _extensionAttributes.get(uri);
-
-		if (extensionAttributes == null) {
-			extensionAttributes = Collections.emptyMap();
-		}
-
-		return extensionAttributes;
+		return _extensionAttributes.computeIfAbsent(
+			uri, key -> new HashMap<>());
 	}
 
 	@Override
@@ -109,53 +135,74 @@ public class AnnotationsExtendedAttributeDefinition
 		return _attributeDefinition.validate(value);
 	}
 
-	private void _processExtendedMetatypeFields() {
-		try {
-			Method method = _configurationBeanClass.getMethod(
-				_attributeDefinition.getID());
+	private String _mangled(String id) {
+		String mangled = id;
 
-			ExtendedAttributeDefinition extendedAttributeDefinition =
-				method.getAnnotation(ExtendedAttributeDefinition.class);
-
-			if (extendedAttributeDefinition != null) {
-				Map<String, String> map = new HashMap<>();
-
-				map.put(
-					"description-arguments",
-					StringUtil.merge(
-						extendedAttributeDefinition.descriptionArguments()));
-				map.put(
-					"name-arguments",
-					StringUtil.merge(
-						extendedAttributeDefinition.nameArguments()));
-				map.put(
-					"required-input",
-					String.valueOf(
-						extendedAttributeDefinition.requiredInput()));
-
-				_extensionAttributes.put(
-					ExtendedAttributeDefinition.XML_NAMESPACE, map);
-			}
+		if ((_prefix.length() > 0) && mangled.startsWith(_prefix)) {
+			mangled = mangled.substring(_prefix.length());
 		}
-		catch (NoSuchMethodException nsme) {
-			if (_log.isDebugEnabled()) {
-				_log.debug(
-					StringBundler.concat(
-						"The configuration bean class ",
-						_configurationBeanClass.getName(),
-						" does not have a method for the attribute definition ",
-						_attributeDefinition.getID()),
-					nsme);
+
+		mangled = StringUtil.replace(mangled, '_', "__");
+		mangled = StringUtil.replace(mangled, '.', '_');
+		mangled = StringUtil.replace(mangled, '$', "$$");
+		mangled = StringUtil.replace(mangled, '-', "$_$");
+
+		return mangled;
+	}
+
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	private void _processExtendedMetatypeFields() {
+		List<Annotation> extensionAnnotations = Stream.of(
+			_configurationBeanClass.getMethods()
+		).filter(
+			m -> {
+				String methodName = m.getName();
+
+				if (methodName.equals(_attributeDefinition.getID()) ||
+					methodName.equals(_mangled(_attributeDefinition.getID()))) {
+
+					return true;
+				}
+
+				return false;
+			}
+		).findFirst(
+		).map(
+			Method::getAnnotations
+		).map(
+			Arrays::stream
+		).orElse(
+			Stream.empty()
+		).filter(
+			ann -> ann.annotationType(
+			).isAnnotationPresent(
+				XmlAttribute.class
+			)
+		).collect(
+			Collectors.toList()
+		);
+
+		for (Annotation annotation : extensionAnnotations) {
+			ExtensionProcessor extensionProcessor =
+				_extensionProcessorServiceTrackerMap.getService(
+					annotation.annotationType());
+
+			if (extensionProcessor != null) {
+				extensionProcessor.process(this, annotation);
 			}
 		}
 	}
-
-	private static final Log _log = LogFactoryUtil.getLog(
-		AnnotationsExtendedAttributeDefinition.class);
 
 	private final AttributeDefinition _attributeDefinition;
 	private final Class<?> _configurationBeanClass;
 	private final Map<String, Map<String, String>> _extensionAttributes =
 		new HashMap<>();
+
+	@SuppressWarnings("rawtypes")
+	private final ServiceTrackerMap
+		<Class<? extends Annotation>, ExtensionProcessor>
+			_extensionProcessorServiceTrackerMap;
+
+	private final String _prefix;
 
 }

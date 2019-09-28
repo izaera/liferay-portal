@@ -14,16 +14,27 @@
 
 package com.liferay.portal.configuration.metatype.definitions.annotations.internal;
 
+import com.liferay.osgi.service.tracker.collections.map.ServiceReferenceMapper;
+import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
+import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMapFactory;
 import com.liferay.portal.configuration.metatype.definitions.ExtendedMetaTypeInformation;
 import com.liferay.portal.configuration.metatype.definitions.ExtendedMetaTypeService;
+import com.liferay.portal.configuration.metatype.extension.ExtensionProcessor;
+
+import java.lang.annotation.Annotation;
 
 import org.osgi.framework.Bundle;
+import org.osgi.framework.BundleContext;
+import org.osgi.framework.ServiceReference;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 import org.osgi.service.metatype.MetaTypeService;
 
 /**
  * @author Iván Zaera
+ * @author Raymond Augé
  */
 @Component(service = ExtendedMetaTypeService.class)
 public class AnnotationsExtendedMetaTypeService
@@ -32,13 +43,51 @@ public class AnnotationsExtendedMetaTypeService
 	@Override
 	public ExtendedMetaTypeInformation getMetaTypeInformation(Bundle bundle) {
 		return new AnnotationsExtendedMetaTypeInformation(
-			bundle, _metaTypeService.getMetaTypeInformation(bundle));
+			bundle, _metaTypeService.getMetaTypeInformation(bundle),
+			_extensionProcessorServiceTrackerMap);
+	}
+
+	@Activate
+	@SuppressWarnings({"rawtypes", "unchecked"})
+	protected void activate(final BundleContext bundleContext) {
+		_extensionProcessorServiceTrackerMap =
+			ServiceTrackerMapFactory.openSingleValueMap(
+				bundleContext, ExtensionProcessor.class, null,
+				new ServiceReferenceMapper
+					<Class<? extends Annotation>, ExtensionProcessor>() {
+
+					@Override
+					public void map(
+						ServiceReference<ExtensionProcessor> serviceReference,
+						Emitter<Class<? extends Annotation>> emitter) {
+
+						ExtensionProcessor panelCategory =
+							bundleContext.getService(serviceReference);
+
+						try {
+							emitter.emit(panelCategory.handlesType());
+						}
+						finally {
+							bundleContext.ungetService(serviceReference);
+						}
+					}
+
+				});
+	}
+
+	@Deactivate
+	protected void deactivate() {
+		_extensionProcessorServiceTrackerMap.close();
 	}
 
 	@Reference(unbind = "-")
 	protected void setMetaTypeService(MetaTypeService metaTypeService) {
 		_metaTypeService = metaTypeService;
 	}
+
+	@SuppressWarnings("rawtypes")
+	private ServiceTrackerMap<Class<? extends Annotation>, ExtensionProcessor>
+		_extensionProcessorServiceTrackerMap;
 
 	private MetaTypeService _metaTypeService;
 
