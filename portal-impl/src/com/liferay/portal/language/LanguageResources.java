@@ -43,12 +43,15 @@ import java.net.URL;
 import java.util.Collections;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.Properties;
 import java.util.ResourceBundle;
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.function.BiConsumer;
 
 /**
  * @author Shuyang Zhou
@@ -149,6 +152,18 @@ public class LanguageResources {
 		}
 
 		return superLocale;
+	}
+
+	public static void registerCallback(
+		BiConsumer<Locale, ResourceBundle> callback) {
+
+		_callbacks.add(callback);
+	}
+
+	public static void unregisterCallback(
+		BiConsumer<Locale, ResourceBundle> callback) {
+
+		_callbacks.remove(callback);
 	}
 
 	public void afterPropertiesSet() {
@@ -331,6 +346,8 @@ public class LanguageResources {
 		LanguageResources.class);
 
 	private static final Locale _blankLocale = new Locale(StringPool.BLANK);
+	private static final List<BiConsumer<Locale, ResourceBundle>> _callbacks =
+		new CopyOnWriteArrayList<>();
 	private static String[] _configNames;
 	private static final Map<Locale, Map<String, String>> _languageMaps =
 		new ConcurrentHashMap<>(64);
@@ -406,7 +423,7 @@ public class LanguageResources {
 			String languageId = GetterUtil.getString(
 				serviceReference.getProperty("language.id"));
 			Map<String, String> languageMap = new HashMap<>();
-			Locale locale = null;
+			final Locale locale;
 
 			if (Validator.isNotNull(languageId)) {
 				locale = LocaleUtil.fromLanguageId(languageId, true);
@@ -431,6 +448,9 @@ public class LanguageResources {
 
 			_diffLanguageMap.put(serviceReference, diffLanguageMap);
 
+			_callbacks.forEach(
+				callback -> callback.accept(locale, resourceBundle));
+
 			return resourceBundle;
 		}
 
@@ -451,7 +471,7 @@ public class LanguageResources {
 
 			String languageId = GetterUtil.getString(
 				serviceReference.getProperty("language.id"));
-			Locale locale = null;
+			final Locale locale;
 
 			if (Validator.isNotNull(languageId)) {
 				locale = LocaleUtil.fromLanguageId(languageId, true);
@@ -464,6 +484,9 @@ public class LanguageResources {
 				serviceReference);
 
 			_putLanguageMap(locale, languageMap);
+
+			_callbacks.forEach(
+				callback -> callback.accept(locale, resourceBundle));
 		}
 
 		private final Map<ServiceReference<?>, Map<String, String>>
