@@ -16,6 +16,11 @@ package com.liferay.frontend.js.web.internal;
 
 import com.liferay.portal.kernel.servlet.PortalWebResourceConstants;
 import com.liferay.portal.kernel.servlet.PortalWebResources;
+import com.liferay.portal.language.LanguageResources;
+
+import java.util.Locale;
+import java.util.ResourceBundle;
+import java.util.function.BiConsumer;
 
 import javax.servlet.ServletContext;
 
@@ -23,6 +28,7 @@ import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 
 /**
@@ -38,7 +44,7 @@ public class JavaScriptPortalWebResources implements PortalWebResources {
 
 	@Override
 	public long getLastModified() {
-		return _bundle.getLastModified();
+		return Math.max(_resourceBundleLastModified, _bundle.getLastModified());
 	}
 
 	@Override
@@ -54,6 +60,13 @@ public class JavaScriptPortalWebResources implements PortalWebResources {
 	@Activate
 	protected void activate(BundleContext bundleContext) {
 		_bundle = bundleContext.getBundle();
+
+		LanguageResources.registerCallback(_resourceBundleCallback);
+	}
+
+	@Deactivate
+	protected void deactivate() {
+		LanguageResources.unregisterCallback(_resourceBundleCallback);
 	}
 
 	@Reference(
@@ -65,6 +78,10 @@ public class JavaScriptPortalWebResources implements PortalWebResources {
 	}
 
 	private Bundle _bundle;
+	private final BiConsumer<Locale, ResourceBundle> _resourceBundleCallback =
+		(locale, resourceBundle) ->
+			_resourceBundleLastModified = System.currentTimeMillis();
+	private volatile long _resourceBundleLastModified;
 	private ServletContext _servletContext;
 
 }
