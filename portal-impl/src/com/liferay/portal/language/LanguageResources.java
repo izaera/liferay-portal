@@ -14,6 +14,8 @@
 
 package com.liferay.portal.language;
 
+import com.liferay.petra.concurrent.ConcurrentReferenceKeyHashMap;
+import com.liferay.petra.memory.FinalizeManager;
 import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
@@ -255,6 +257,8 @@ public class LanguageResources {
 
 		_languageMaps.put(locale, languageMap);
 
+		_reload(locale);
+
 		return languageMap;
 	}
 
@@ -339,7 +343,18 @@ public class LanguageResources {
 
 		_languageMaps.put(locale, newLanguageMap);
 
+		_reload(locale);
+
 		return diffLanguageMap;
+	}
+
+	private static void _reload(Locale locale) {
+		_languageResourcesBundles.forEach(
+			(key, value) -> {
+				if (locale.equals(key.getLocale())) {
+					key._load(locale);
+				}
+			});
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
@@ -351,6 +366,9 @@ public class LanguageResources {
 	private static String[] _configNames;
 	private static final Map<Locale, Map<String, String>> _languageMaps =
 		new ConcurrentHashMap<>(64);
+	private static final Map<LanguageResourcesBundle, LanguageResourcesBundle>
+		_languageResourcesBundles = new ConcurrentReferenceKeyHashMap<>(
+			FinalizeManager.WEAK_REFERENCE_FACTORY);
 	private static final Locale _nullLocale = new Locale(StringPool.BLANK);
 	private static final Map<Locale, Locale> _superLocales =
 		new ConcurrentHashMap<>();
@@ -388,6 +406,12 @@ public class LanguageResources {
 		private LanguageResourcesBundle(Locale locale) {
 			_locale = locale;
 
+			_load(locale);
+
+			_languageResourcesBundles.put(this, this);
+		}
+
+		private void _load(Locale locale) {
 			Map<String, String> languageMap = _languageMaps.get(locale);
 
 			if (languageMap == null) {
@@ -403,7 +427,7 @@ public class LanguageResources {
 			}
 		}
 
-		private final Map<String, String> _languageMap;
+		private Map<String, String> _languageMap;
 		private final Locale _locale;
 
 	}
