@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.template.Template;
 import com.liferay.portal.kernel.template.TemplateConstants;
 import com.liferay.portal.kernel.template.TemplateManager;
 import com.liferay.portal.kernel.template.TemplateResource;
+import com.liferay.portal.language.LanguageResources;
 import com.liferay.portal.template.BaseTemplateManager;
 import com.liferay.portal.template.TemplateContextHelper;
 import com.liferay.portal.template.soy.SoyTemplateResource;
@@ -27,7 +28,10 @@ import com.liferay.portal.template.soy.SoyTemplateResourceFactory;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.ResourceBundle;
+import java.util.function.BiConsumer;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
@@ -91,6 +95,8 @@ public class SoyManager extends BaseTemplateManager {
 
 	@Activate
 	protected void activate(BundleContext bundleContext) {
+		_bundleContext = bundleContext;
+
 		int stateMask = ~Bundle.INSTALLED & ~Bundle.UNINSTALLED;
 
 		_soyCapabilityBundleTrackerCustomizer =
@@ -102,11 +108,19 @@ public class SoyManager extends BaseTemplateManager {
 			bundleContext, stateMask, _soyCapabilityBundleTrackerCustomizer);
 
 		_bundleTracker.open();
+
+		_resourceBundleCallback =
+			(locale, resourceBundle) -> _soyTofuCacheHandler.removeIfAny(
+				locale);
+
+		LanguageResources.registerCallback(_resourceBundleCallback);
 	}
 
 	@Deactivate
 	protected void deactivate() {
 		_bundleTracker.close();
+
+		LanguageResources.unregisterCallback(_resourceBundleCallback);
 	}
 
 	@Override
@@ -149,7 +163,9 @@ public class SoyManager extends BaseTemplateManager {
 		SoyTemplateBundleResourceParser soyTemplateBundleResourceParser) {
 	}
 
+	private BundleContext _bundleContext;
 	private BundleTracker<List<TemplateResource>> _bundleTracker;
+	private BiConsumer<Locale, ResourceBundle> _resourceBundleCallback;
 	private SoyTemplateResourceBundleTrackerCustomizer
 		_soyCapabilityBundleTrackerCustomizer;
 	private SoyProviderCapabilityBundleRegister
