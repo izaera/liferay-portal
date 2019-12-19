@@ -16,6 +16,8 @@
 
 <%@ include file="/wiki/init.jsp" %>
 
+<liferay-icon:icon id="lexicon/angle-up" />
+
 <liferay-util:dynamic-include key="com.liferay.wiki.web#/wiki/view.jsp#pre" />
 
 <%
