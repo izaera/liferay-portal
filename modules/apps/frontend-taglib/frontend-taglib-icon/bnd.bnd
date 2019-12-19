@@ -1,0 +1,10 @@
+Bundle-Name: Liferay Frontend Taglib Icon
+Bundle-SymbolicName: com.liferay.frontend.taglib.icon
+Bundle-Version: 4.0.0
+Export-Package: com.liferay.frontend.taglib.icon.servlet.taglib
+Provide-Capability:\
+	osgi.extender;\
+		osgi.extender="jsp.taglib";\
+		uri="http://liferay.com/tld/icon";\
+		version:Version="${Bundle-Version}"
+Web-ContextPath: /frontend-taglib-icon
