@@ -1,0 +1,224 @@
+// Spacers map copy
+
+$spacers-cp: ();
+$spacers-cp: map-deep-merge((
+	0: var(--spacer-0),
+	1: var(--spacer-1),
+	2: var(--spacer-2),
+	3: var(--spacer-3),
+	4: var(--spacer-4),
+	5: var(--spacer-5),
+	6: var(--spacer-6),
+	7: var(--spacer-7),
+	8: var(--spacer-8),
+), $spacers-cp);
+
+// Theme colors
+
+$theme-colors-cp: ();
+$theme-colors-cp: map-deep-merge((
+	primary: var(--primary),
+	secondary: var(--secondary),
+	success: var(--success),
+	info: var(--info),
+	warning: var(--warning),
+	danger: var(--danger),
+	light: var(--light),
+	lighter: var(--gray-100),
+	gray-dark: var(--gray-800),
+	dark: var(--dark)
+), $theme-colors-cp);
+
+:root {
+	// Colors
+
+	@each $key, $value in $theme-colors {
+		--#{$key}: #{$value};
+	}
+    --white: #{$white};
+    --primary-dark: #{$primary-d1};
+	--secondary-dark: #{$secondary-d1};
+	--success-dark: #{$success-d1};
+    --gray-100: #{$gray-100};
+    --gray-200: #{$gray-200};
+    --gray-300: #{$gray-300};
+    --gray-400: #{$gray-400};
+    --gray-500: #{$gray-500};
+    --gray-600: #{$gray-600};
+    --gray-700: #{$gray-700};
+	--gray-800: #{$gray-800};
+
+	--transparent: transparent;
+
+    --body-color: #{$body-color};
+    --body-bg: #{$body-bg};
+
+	// Spacers
+
+    @each $key, $value in $spacers {
+		--spacer-#{$key}: #{$value};
+	}
+
+	// Container max
+
+	@each $key, $value in $container-max-widths {
+		--container-max-#{$key}: #{$value};
+	}
+
+	// Bg variants color
+
+	@each $color, $value in $theme-colors {
+		--bg-#{$color}: #{$value};
+	}
+
+	// Border radius
+	--border-radius-circle: 50%;
+	--border-radius-lg: #{$border-radius-lg};
+	--border-radius-sm: #{$border-radius-sm};
+	--border-radius: #{$border-radius};
+	--rounded-pill: #{$rounded-pill};
+
+	// Buttons
+
+    --btn-primary-bg-dark: var(--primary-dark);
+    --btn-primary-bg: var(--primary);
+    --btn-primary-border: var(--primary);
+    --btn-primary-color: var(--white);
+
+    --btn-secondary-bg-dark: var(--gray-100);
+    --btn-secondary-bg: var(--white);
+    --btn-secondary-border: var(--gray-400);
+    --btn-secondary-color: var(--secondary);
+
+    --btn-padding-y: #{$btn-padding-y};
+    --btn-padding-x: #{$btn-padding-x};
+    --btn-font-size: #{$btn-font-size};
+    --btn-line-height: #{$btn-line-height};
+    --btn-border-radius: #{$btn-border-radius};
+
+    --btn-padding-y-lg: #{$btn-padding-y-lg};
+    --btn-padding-x-lg: #{$btn-padding-x-lg};
+    --btn-font-size-lg: #{$btn-font-size-lg};
+    --btn-line-height-lg: #{$btn-line-height-lg};
+    --btn-border-radius-lg: #{$btn-border-radius-lg};
+
+    --btn-padding-y-sm: #{$btn-padding-y-sm};
+    --btn-padding-x-sm: #{$btn-padding-x-sm};
+    --btn-font-size-sm: #{$btn-font-size-sm};
+    --btn-line-height-sm: #{$btn-line-height-sm};
+	--btn-border-radius-sm: #{$btn-border-radius-sm};
+
+	// Shadows
+
+	--box-shadow-sm: #{$box-shadow-sm};
+	--box-shadow: #{$box-shadow};
+	--box-shadow-lg: #{$box-shadow-lg};
+
+	// Headers
+
+	--h1-font-size: #{$h1-font-size};
+	--h2-font-size: #{$h2-font-size};
+	--h3-font-size: #{$h3-font-size};
+	--h4-font-size: #{$h4-font-size};
+	--h5-font-size: #{$h5-font-size};
+	--h6-font-size: #{$h6-font-size};
+
+	// Alerts
+
+	--alert-padding-y: #{$alert-padding-y};
+	--alert-padding-x: #{$alert-padding-x};
+
+	--alert-primary-color: #{$primary};
+	--alert-primary-bg: #{$primary-l3};
+	--alert-primary-border-color: #{$primary-l1};
+
+	--alert-success-color: #{$success};
+	--alert-success-bg: #{$success-l2};
+	--alert-success-border-color: #{$success-l1};
+
+	--alert-info-color: #{$info};
+	--alert-info-bg: #{$info-l2};
+	--alert-info-border-color: #{$info-l1};
+
+	--alert-warning-color: #{$warning};
+	--alert-warning-bg: #{$warning-l2};
+	--alert-warning-border-color: #{$warning-l1};
+
+	--alert-danger-color: #{$danger};
+	--alert-danger-bg: #{$danger-l2};
+	--alert-danger-border-color: #{$danger-l1};
+
+	// Cards
+
+	--card-bg: #{$card-bg};
+	--card-border-color: #{$card-border-color};
+	--card-border-radius: #{$card-border-radius};
+	--card-border-width: #{$card-border-width};
+	--card-cap-bg: var(--card-bg);
+	--card-cap-color: var(--card-color);
+	--card-color: inherit;
+	--card-overflow: inherit;
+	--card-spacer-x: #{$card-spacer-x};
+	--card-spacer-y: #{$card-spacer-y};
+
+	// Forms
+
+	--input-height: #{$input-height};
+	--input-padding-y: #{$input-padding-y};
+	--input-padding-x: #{$input-padding-x};
+    --input-line-height: #{$input-line-height};
+    --input-color: #{$input-color};
+    --input-bg: #{$input-bg};
+	--input-border-width: #{$input-border-width};
+	--input-border-color: #{$input-border-color};
+	--input-border-radius: #{$input-border-radius};
+
+	--input-focus-color: #{$input-focus-color};
+    --input-focus-bg: #{$input-focus-bg};
+    --input-focus-border-color: #{$input-focus-border-color};
+
+	--custom-control-indicator-checked-border-color: var(--primary);
+	--custom-control-indicator-checked-bg: var(--primary);
+
+	--input-label-font-size: #{$input-label-font-size};
+	--input-label-margin-bottom: #{$input-label-margin-bottom};
+
+	// Nav and Navbar
+
+	--nav-font-size: #{$nav-font-size};
+	--navbar-font-size: #{$navbar-font-size};
+
+	--nav-link-color: inherit;
+	--nav-link-padding-x: #{$nav-link-padding-x};
+	--nav-link-padding-y: #{$nav-link-padding-y};
+
+	// Fonts
+
+	--font-family-sans-serif: #{$font-family-sans-serif};
+	--font-family-monospace: #{$font-family-monospace};
+	--font-family-base: #{$font-family-base};
+
+	--font-size-base: #{$font-size-base};
+	--font-size-lg: #{font-size-lg};
+	--font-size-sm: #{font-size-sm};
+
+	--font-weight-light: #{$font-weight-light};
+	--font-weight-lighter: #{$font-weight-lighter};
+	--font-weight-normal: #{$font-weight-normal};
+	--font-weight-semi-bold: #{$font-weight-semi-bold};
+	--font-weight-bold: #{$font-weight-bold};
+	--font-weight-bolder: #{$font-weight-bolder};
+
+	// Portlet vars
+
+	--portlet-bg: transparent;
+	--portlet-header-margin-bottom: 3rem;
+	--portlet-content-border-radius: 0;
+
+	--portlet-topper-border-radius: 2px 2px 0 0;
+    --portlet-topper-bg: var(--primary);
+    --portlet-topper-border: var(--primary);
+    --portlet-topper-color: var(--white);
+    --portlet-topper-link-color: var(--white);
+    --portlet-topper-link-hover-color: var(--white);
+}
