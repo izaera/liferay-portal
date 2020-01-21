@@ -11,6 +11,9 @@
 @import 'portlet/portlet_decorators';
 @import 'portlet/portlet_hello_world';
 
+// Import custom properties, CSS4 Variables
+@import 'custom_properties';
+
 body {
 	header {
 		.field-wrapper {
