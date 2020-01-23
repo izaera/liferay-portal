@@ -1,47 +1,53 @@
 // Spacers map copy
 
 $spacers-cp: ();
-$spacers-cp: map-deep-merge((
-	0: var(--spacer-0),
-	1: var(--spacer-1),
-	2: var(--spacer-2),
-	3: var(--spacer-3),
-	4: var(--spacer-4),
-	5: var(--spacer-5),
-	6: var(--spacer-6),
-	7: var(--spacer-7),
-	8: var(--spacer-8),
-), $spacers-cp);
+$spacers-cp: map-deep-merge(
+	(
+		0: var(--spacer-0),
+		1: var(--spacer-1),
+		2: var(--spacer-2),
+		3: var(--spacer-3),
+		4: var(--spacer-4),
+		5: var(--spacer-5),
+		6: var(--spacer-6),
+		7: var(--spacer-7),
+		8: var(--spacer-8)
+	),
+	$spacers-cp
+);
 
 // Theme colors
 
 $theme-colors-cp: ();
-$theme-colors-cp: map-deep-merge((
-	primary: var(--primary),
-	secondary: var(--secondary),
-	success: var(--success),
-	info: var(--info),
-	warning: var(--warning),
-	danger: var(--danger),
-	light: var(--light),
-	lighter: var(--gray-100),
-	gray-dark: var(--gray-800),
-	dark: var(--dark)
-), $theme-colors-cp);
+$theme-colors-cp: map-deep-merge(
+	(
+		primary: var(--primary),
+		secondary: var(--secondary),
+		success: var(--success),
+		info: var(--info),
+		warning: var(--warning),
+		danger: var(--danger),
+		light: var(--light),
+		lighter: var(--gray-100),
+		gray-dark: var(--gray-800),
+		dark: var(--dark)
+	),
+	$theme-colors-cp
+);
 
 :root {
 	// Colors
 
-    --white: #{$white}; // #FFF
-    --gray-100: #{$gray-100}; // #F7F8F9
-    --gray-200: #{$gray-200}; // #F1F2F5
-    --gray-300: #{$gray-300}; // #E7E7ED - not in use
-    --gray-400: #{$gray-400}; // #CDCED9
-    --gray-500: #{$gray-500}; // #A7A9BC - not in use
-    --gray-600: #{$gray-600}; // #6B6C7E - not in use
-    --gray-700: #{$gray-700}; // #495057 - not in use
+	--white: #{$white}; // #FFF
+	--gray-100: #{$gray-100}; // #F7F8F9
+	--gray-200: #{$gray-200}; // #F1F2F5
+	--gray-300: #{$gray-300}; // #E7E7ED - not in use
+	--gray-400: #{$gray-400}; // #CDCED9
+	--gray-500: #{$gray-500}; // #A7A9BC - not in use
+	--gray-600: #{$gray-600}; // #6B6C7E - not in use
+	--gray-700: #{$gray-700}; // #495057 - not in use
 	--gray-800: #{$gray-800}; // #393A4A - not in use
-    --black: #{$black}; // #000
+	--black: #{$black}; // #000
 	--transparent: transparent;
 	@each $key, $value in $theme-colors {
 		--#{$key}: #{$value};
@@ -55,8 +61,8 @@ $theme-colors-cp: map-deep-merge((
 	// --light: var(--gray-200);
 	// --dark: #{$dark}; // #272833
 	--primary-d1: #{$primary-d1}; // #0053F0
-    --primary-l1: #{$primary-l1}; // #80ACFF
-    --primary-l3: #{$primary-l3}; // #F0F5FF
+	--primary-l1: #{$primary-l1}; // #80ACFF
+	--primary-l3: #{$primary-l3}; // #F0F5FF
 	--secondary-d1: var(--gray-800); // not in use
 	--success-d1: #{$success-d1}; // #226A33
 	--success-l1: #{$success-l1}; // #5ACA76
@@ -71,7 +77,7 @@ $theme-colors-cp: map-deep-merge((
 	// Spacers
 
 	--spacer: #{$spacer}; // 1rem;
-    @each $key, $value in $spacers {
+	@each $key, $value in $spacers {
 		--spacer-#{$key}: #{$value};
 	}
 	// --spacer-0: calc(var(--spacer) * 0); // 0
@@ -90,9 +96,9 @@ $theme-colors-cp: map-deep-merge((
 		--container-max-#{$key}: #{$value};
 	}
 	// --container-max-sm: 540px
-    // --container-max-md: 720px
-    // --container-max-lg: 960px
-    // --container-max-xl: 1248px
+	// --container-max-md: 720px
+	// --container-max-lg: 960px
+	// --container-max-xl: 1248px
 
 	// Border radius
 	--border-radius-circle: 50%;
@@ -142,37 +148,37 @@ $theme-colors-cp: map-deep-merge((
 
 	// Body
 
-    --body-color: var(--dark);
-    --body-bg: var(--white);
+	--body-color: var(--dark);
+	--body-bg: var(--white);
 
 	// Buttons
 
-    --btn-primary-bg-dark: var(--primary-d1);
-    --btn-primary-bg: var(--primary);
-    --btn-primary-border: var(--primary);
-    --btn-primary-color: var(--white);
+	--btn-primary-bg-dark: var(--primary-d1);
+	--btn-primary-bg: var(--primary);
+	--btn-primary-border: var(--primary);
+	--btn-primary-color: var(--white);
 
-    --btn-secondary-bg-dark: var(--gray-100);
-    --btn-secondary-bg: var(--white);
-    --btn-secondary-border: var(--gray-400);
+	--btn-secondary-bg-dark: var(--gray-100);
+	--btn-secondary-bg: var(--white);
+	--btn-secondary-border: var(--gray-400);
 	--btn-secondary-color: var(--secondary);
 
-    --btn-padding-y: calc(var(--spacer) * 0.4375);
-    --btn-padding-x: calc(var(--spacer) * 0.9375);
-    --btn-font-size: var(--font-size-base);
-    --btn-line-height: var(--line-height-base);
-    --btn-border-radius: var(--border-radius);
+	--btn-padding-y: calc(var(--spacer) * 0.4375);
+	--btn-padding-x: calc(var(--spacer) * 0.9375);
+	--btn-font-size: var(--font-size-base);
+	--btn-line-height: var(--line-height-base);
+	--btn-border-radius: var(--border-radius);
 
-    --btn-padding-y-lg: calc(var(--spacer) * 0.59375);
-    --btn-padding-x-lg: calc(var(--spacer) * 1.5);
-    --btn-font-size-lg: var(--font-size-lg);
-    --btn-line-height-lg: var(--line-height-base);
-    --btn-border-radius-lg: var(--border-radius);
+	--btn-padding-y-lg: calc(var(--spacer) * 0.59375);
+	--btn-padding-x-lg: calc(var(--spacer) * 1.5);
+	--btn-font-size-lg: var(--font-size-lg);
+	--btn-line-height-lg: var(--line-height-base);
+	--btn-border-radius-lg: var(--border-radius);
 
-    --btn-padding-y-sm: calc(var(--spacer) * 0.4375);
-    --btn-padding-x-sm: calc(var(--spacer) * 0.75);
-    --btn-font-size-sm: var(--font-size-sm);
-    --btn-line-height-sm: var(--line-height-sm);
+	--btn-padding-y-sm: calc(var(--spacer) * 0.4375);
+	--btn-padding-x-sm: calc(var(--spacer) * 0.75);
+	--btn-font-size-sm: var(--font-size-sm);
+	--btn-line-height-sm: var(--line-height-sm);
 	--btn-border-radius-sm: var(--border-radius-sm);
 
 	// Alerts
@@ -218,16 +224,16 @@ $theme-colors-cp: map-deep-merge((
 	--input-height: #{$input-height}; // 2.5rem
 	--input-padding-y: calc(var(--spacer) * 0.4375);
 	--input-padding-x: var(--spacer);
-    --input-line-height: var(--line-height-base);
-    --input-color: var(--body-color);
-    --input-bg: var(--light);
+	--input-line-height: var(--line-height-base);
+	--input-color: var(--body-color);
+	--input-bg: var(--light);
 	--input-border-width: #{$input-border-width}; // 0.0625rem
 	--input-border-color: var(--gray-300);
 	--input-border-radius: var(--border-radius);
 
 	--input-focus-color: var(--input-color);
-    --input-focus-bg: var(--primary-l3);
-    --input-focus-border-color: var(--primary-l1);
+	--input-focus-bg: var(--primary-l3);
+	--input-focus-border-color: var(--primary-l1);
 
 	--custom-control-indicator-checked-border-color: var(--primary);
 	--custom-control-indicator-checked-bg: var(--primary);
@@ -250,10 +256,13 @@ $theme-colors-cp: map-deep-merge((
 	--portlet-header-margin-bottom: calc(var(--spacer) * 3);
 	--portlet-content-border-radius: 0; // not in use
 
-	--portlet-topper-border-radius: var(--border-radius-sm) var(--border-radius-sm) 0 0;
-    --portlet-topper-bg: var(--primary);
-    --portlet-topper-border: var(--portlet-topper-bg);
-    --portlet-topper-color: var(--white);
-    --portlet-topper-link-color: var(--portlet-topper-color); //not in use
-    --portlet-topper-link-hover-color: var(--portlet-topper-link-color); // not in use
+	--portlet-topper-border-radius: var(--border-radius-sm)
+		var(--border-radius-sm) 0 0;
+	--portlet-topper-bg: var(--primary);
+	--portlet-topper-border: var(--portlet-topper-bg);
+	--portlet-topper-color: var(--white);
+	--portlet-topper-link-color: var(--portlet-topper-color); //not in use
+	--portlet-topper-link-hover-color: var(
+		--portlet-topper-link-color
+	); // not in use
 }
