@@ -1,10 +1,17 @@
-@mixin button-cp($background, $border, $color, $hover-background: $background, $hover-border: $border, $hover-color: $color) {
+@mixin button-cp(
+	$background,
+	$border,
+	$color,
+	$hover-background: $background,
+	$hover-border: $border,
+	$hover-color: $color
+) {
 	background-color: $background;
-    border-color: $border;
-    color: $color;
+	border-color: $border;
+	color: $color;
 
-    &:active,
-    &:focus,
+	&:active,
+	&:focus,
 	&:hover {
 		background-color: $hover-background;
 		border-color: $hover-border;
