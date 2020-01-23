@@ -95,7 +95,7 @@
 // Buttons
 
 .btn-primary {
-	@include button-cp(var(--primary), var(--primary), var(--white), var(--primary-dark), var(--primary-dark));
+	@include button-cp(var(--primary), var(--primary), var(--white), var(--primary-d1), var(--primary-d1));
 }
 
 .btn-secondary {
@@ -103,11 +103,11 @@
 }
 
 .btn-success {
-	@include button-cp(var(--success), var(--success), var(--white), var(--success-dark), var(--success-dark));
+	@include button-cp(var(--success), var(--success), var(--white), var(--success-d1), var(--success-d1));
 }
 
 .btn-outline-primary {
-	@include button-cp(var(--transparent), var(--primary), var(--primary), var(--primary-dark), var(--primary-dark), var(--white));
+	@include button-cp(var(--transparent), var(--primary), var(--primary), var(--primary-d1), var(--primary-d1), var(--white));
 }
 
 .btn-outline-secondary {
@@ -119,7 +119,7 @@
 }
 
 .btn-link {
-	@include button-cp(var(--transparent), var(--transparent), var(--primary), var(--transparent), var(--transparent), var(--primary-dark));
+	@include button-cp(var(--transparent), var(--transparent), var(--primary), var(--transparent), var(--transparent), var(--primary-d1));
 }
 
 .btn-outline-borderless {
