@@ -49,6 +49,7 @@ $theme-colors-cp: map-deep-merge(
 	--gray-800: #{$gray-800};
 	--black: #{$black};
 	--transparent: transparent;
+
 	@each $key, $value in $theme-colors {
 		--#{$key}: #{$value};
 	}
@@ -100,21 +101,21 @@ $theme-colors-cp: map-deep-merge(
 	--font-family-base: #{$font-family-base};
 
 	--font-size-xs: 0.8125rem;
-	--font-size-sm: #{$font-size-sm}; // 0.875rem
-	--font-size-base: #{$font-size-base}; // 1rem
-	--font-size-lg: #{$font-size-lg}; // 1.125rem
+	--font-size-sm: #{$font-size-sm};
+	--font-size-base: #{$font-size-base};
+	--font-size-lg: #{$font-size-lg};
 	--font-size-xl: 1.1875rem;
 	--font-size-2xl: 1.375rem;
 	--font-size-3xl: 1.625rem;
 
-	--font-weight-light: #{$font-weight-light}; // 300
-	--font-weight-lighter: #{$font-weight-lighter}; // lighter
-	--font-weight-normal: #{$font-weight-normal}; // 400
-	--font-weight-semi-bold: #{$font-weight-semi-bold}; // 600
-	--font-weight-bold: #{$font-weight-bold}; // 700
-	--font-weight-bolder: #{$font-weight-bolder}; // 900
+	--font-weight-light: #{$font-weight-light};
+	--font-weight-lighter: #{$font-weight-lighter};
+	--font-weight-normal: #{$font-weight-normal};
+	--font-weight-semi-bold: #{$font-weight-semi-bold};
+	--font-weight-bold: #{$font-weight-bold};
+	--font-weight-bolder: #{$font-weight-bolder};
 
-	--line-height-base: #{$line-height-base}; // 1.5
+	--line-height-base: #{$line-height-base};
 	--line-height-sm: 1.15;
 
 	// Headings
@@ -189,25 +190,25 @@ $theme-colors-cp: map-deep-merge(
 	// Cards
 
 	--card-bg: var(--body-bg);
-	--card-border-color: #{$card-border-color}; // rgba(0, 0, 0, 0.125)
+	--card-border-color: #{$card-border-color};
 	--card-border-radius: var(--border-radius);
-	--card-border-width: #{$card-border-width}; // 0
+	--card-border-width: #{$card-border-width};
 	--card-cap-bg: var(--card-bg);
 	--card-cap-color: var(--card-color);
 	--card-color: inherit;
 	--card-overflow: inherit;
-	--card-spacer-x: calc(var(--spacer) * 0.75);
-	--card-spacer-y: calc(var(--spacer) * 1.25);
+	--card-spacer-x: calc(var(--spacer) * #{$card-spacer-x});
+	--card-spacer-y: calc(var(--spacer) * #{$card-spacer-y});
 
 	// Forms
 
-	--input-height: #{$input-height}; // 2.5rem
 	--input-padding-y: calc(var(--spacer) * 0.4375);
 	--input-padding-x: var(--spacer);
+	--input-height: #{$input-height};
 	--input-line-height: var(--line-height-base);
 	--input-color: var(--dark);
 	--input-bg: var(--light);
-	--input-border-width: #{$input-border-width}; // 0.0625rem
+	--input-border-width: #{$input-border-width};
 	--input-border-color: var(--gray-300);
 	--input-border-radius: var(--border-radius);
 
