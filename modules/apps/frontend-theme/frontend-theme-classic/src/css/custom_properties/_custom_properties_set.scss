@@ -177,6 +177,16 @@
 	border-color: transparent;
 }
 
+.btn {
+	@include button-size(
+		var(--btn-padding-y),
+		var(--btn-padding-x),
+		var(--btn-font-size),
+		var(--btn-line-height),
+		var(--btn-border-radius)
+	);
+}
+
 .btn-lg {
 	@include button-size(
 		var(--btn-padding-y-lg),
