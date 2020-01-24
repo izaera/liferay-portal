@@ -38,80 +38,60 @@ $theme-colors-cp: map-deep-merge(
 :root {
 	// Colors
 
-	--white: #{$white}; // #FFF
-	--gray-100: #{$gray-100}; // #F7F8F9
-	--gray-200: #{$gray-200}; // #F1F2F5
-	--gray-300: #{$gray-300}; // #E7E7ED - not in use
-	--gray-400: #{$gray-400}; // #CDCED9
-	--gray-500: #{$gray-500}; // #A7A9BC - not in use
-	--gray-600: #{$gray-600}; // #6B6C7E - not in use
-	--gray-700: #{$gray-700}; // #495057 - not in use
-	--gray-800: #{$gray-800}; // #393A4A - not in use
-	--black: #{$black}; // #000
+	--white: #{$white};
+	--gray-100: #{$gray-100};
+	--gray-200: #{$gray-200};
+	--gray-300: #{$gray-300};
+	--gray-400: #{$gray-400};
+	--gray-500: #{$gray-500};
+	--gray-600: #{$gray-600};
+	--gray-700: #{$gray-700};
+	--gray-800: #{$gray-800};
+	--black: #{$black};
 	--transparent: transparent;
 	@each $key, $value in $theme-colors {
 		--#{$key}: #{$value};
 	}
-	// --primary: #{$primary}; // #0B5FFF
-	// --secondary: var(--gray-600);
-	// --success: #{$success}; // #287D3C
-	// --info: #{$info}; // #2E5AAC
-	// --warning: #{$warning}; // #B95000
-	// --danger: #{$danger}; // #DA1414
-	// --light: var(--gray-200);
-	// --dark: #{$dark}; // #272833
-	--primary-d1: #{$primary-d1}; // #0053F0
-	--primary-l1: #{$primary-l1}; // #80ACFF
-	--primary-l3: #{$primary-l3}; // #F0F5FF
-	--secondary-d1: var(--gray-800); // not in use
-	--success-d1: #{$success-d1}; // #226A33
-	--success-l1: #{$success-l1}; // #5ACA76
-	--success-l2: #{$success-l2}; // #EDF9F0
-	--info-l1: #{$info-l1}; // #89A7E0
-	--info-l2: #{$info-l2}; // #EEF2FA
-	--warning-l1: #{$warning-l1}; // #FF8F39
-	--warning-l2: #{$warning-l2}; // #FFF4EC
-	--danger-l1: #{$danger-l1}; // #F48989
-	--danger-l2: #{$danger-l2}; // #FEEFEF
+
+	--primary-d1: #{$primary-d1};
+	--primary-l1: #{$primary-l1};
+	--primary-l3: #{$primary-l3};
+	--secondary-d1: var(--gray-800);
+	--success-d1: #{$success-d1};
+	--success-l1: #{$success-l1};
+	--success-l2: #{$success-l2};
+	--info-l1: #{$info-l1};
+	--info-l2: #{$info-l2};
+	--warning-l1: #{$warning-l1};
+	--warning-l2: #{$warning-l2};
+	--danger-l1: #{$danger-l1};
+	--danger-l2: #{$danger-l2};
 
 	// Spacers
 
-	--spacer: #{$spacer}; // 1rem;
+	--spacer: #{$spacer};
 	@each $key, $value in $spacers {
 		--spacer-#{$key}: #{$value};
 	}
-	// --spacer-0: calc(var(--spacer) * 0); // 0
-	// --spacer-1: calc(var(--spacer) * .25); // 0.25rem
-	// --spacer-2: calc(var(--spacer) * .5); // 0.5rem
-	// --spacer-3: calc(var(--spacer) * 1); // 1rem
-	// --spacer-4: calc(var(--spacer) * 1.5); // 1.5rem
-	// --spacer-5: calc(var(--spacer) * 3); // 3rem
-	// --spacer-6: calc(var(--spacer) * 4.5); // 4.5rem
-	// --spacer-7: calc(var(--spacer) * 6); // 6rem
-	// --spacer-8: calc(var(--spacer) * 7.5); // 7.5rem
 
 	// Container max
 
 	@each $key, $value in $container-max-widths {
 		--container-max-#{$key}: #{$value};
 	}
-	// --container-max-sm: 540px
-	// --container-max-md: 720px
-	// --container-max-lg: 960px
-	// --container-max-xl: 1248px
 
 	// Border radius
 	--border-radius-circle: 50%;
-	--border-radius-lg: #{$border-radius-lg}; // 0.375rem
-	--border-radius-sm: #{$border-radius-sm}; // 0.1875rem
-	--border-radius: #{$border-radius}; // 0.25rem
-	--rounded-pill: #{$rounded-pill}; // 50rem
+	--border-radius-lg: #{$border-radius-lg};
+	--border-radius-sm: #{$border-radius-sm};
+	--border-radius: #{$border-radius};
+	--rounded-pill: #{$rounded-pill};
 
 	// Shadows
 
-	--box-shadow-sm: #{$box-shadow-sm}; //0 0.125rem 0.25rem rgba(0, 0, 0, 0.075)
-	--box-shadow: #{$box-shadow}; //0 0.5rem 1rem rgba(0, 0, 0, 0.15)
-	--box-shadow-lg: #{$box-shadow-lg}; //0 1rem 3rem rgba(0, 0, 0, 0.175)
+	--box-shadow-sm: #{$box-shadow-sm};
+	--box-shadow: #{$box-shadow};
+	--box-shadow-lg: #{$box-shadow-lg};
 
 	// Fonts
 
@@ -254,7 +234,7 @@ $theme-colors-cp: map-deep-merge(
 
 	--portlet-bg: transparent;
 	--portlet-header-margin-bottom: calc(var(--spacer) * 3);
-	--portlet-content-border-radius: 0; // not in use
+	--portlet-content-border-radius: 0;
 
 	--portlet-topper-border-radius: var(--border-radius-sm)
 		var(--border-radius-sm) 0 0;
@@ -264,5 +244,5 @@ $theme-colors-cp: map-deep-merge(
 	--portlet-topper-link-color: var(--portlet-topper-color); //not in use
 	--portlet-topper-link-hover-color: var(
 		--portlet-topper-link-color
-	); // not in use
+	);
 }
