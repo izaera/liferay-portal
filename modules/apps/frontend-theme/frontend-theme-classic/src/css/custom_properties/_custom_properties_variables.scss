@@ -70,7 +70,7 @@ $theme-colors-cp: map-deep-merge(
 
 	// Spacers
 
-	--spacer: #{$spacer};
+	--spacer: 1;
 	@each $key, $value in $spacers {
 		--spacer-#{$key}: #{$value};
 	}
@@ -144,28 +144,28 @@ $theme-colors-cp: map-deep-merge(
 	--btn-secondary-border: var(--gray-400);
 	--btn-secondary-color: var(--secondary);
 
-	--btn-padding-y: calc(var(--spacer) * 0.4375);
-	--btn-padding-x: calc(var(--spacer) * 0.9375);
+	--btn-padding-y: calc(var(--spacer) * #{$btn-padding-y});
+	--btn-padding-x: calc(var(--spacer) * #{$btn-padding-x});
 	--btn-font-size: var(--font-size-base);
 	--btn-line-height: var(--line-height-base);
 	--btn-border-radius: var(--border-radius);
 
-	--btn-padding-y-lg: calc(var(--spacer) * 0.59375);
-	--btn-padding-x-lg: calc(var(--spacer) * 1.5);
+	--btn-padding-y-lg: calc(var(--spacer) * #{$btn-padding-y-lg});
+	--btn-padding-x-lg: calc(var(--spacer) * #{$btn-padding-x-lg});
 	--btn-font-size-lg: var(--font-size-lg);
 	--btn-line-height-lg: var(--line-height-base);
 	--btn-border-radius-lg: var(--border-radius);
 
-	--btn-padding-y-sm: calc(var(--spacer) * 0.4375);
-	--btn-padding-x-sm: calc(var(--spacer) * 0.75);
+	--btn-padding-y-sm: calc(var(--spacer) * #{$btn-padding-y-sm});
+	--btn-padding-x-sm: calc(var(--spacer) * #{$btn-padding-x-sm});
 	--btn-font-size-sm: var(--font-size-sm);
 	--btn-line-height-sm: var(--line-height-sm);
 	--btn-border-radius-sm: var(--border-radius-sm);
 
 	// Alerts
 
-	--alert-padding-y: calc(var(--spacer) * 1.09375);
-	--alert-padding-x: var(--spacer);
+	--alert-padding-y: calc(var(--spacer) * #{$alert-padding-y});
+	--alert-padding-x: calc(var(--spacer) * #{$spacer});
 
 	--alert-primary-color: var(--primary);
 	--alert-primary-bg: var(--primary-l3);
@@ -202,9 +202,9 @@ $theme-colors-cp: map-deep-merge(
 
 	// Forms
 
-	--input-padding-y: calc(var(--spacer) * 0.4375);
-	--input-padding-x: var(--spacer);
 	--input-height: #{$input-height};
+	--input-padding-y: calc(var(--spacer) * #{$input-padding-y});
+	--input-padding-x: calc(var(--spacer) * #{$spacer});
 	--input-line-height: var(--line-height-base);
 	--input-color: var(--dark);
 	--input-bg: var(--light);
@@ -228,13 +228,15 @@ $theme-colors-cp: map-deep-merge(
 	--navbar-font-size: var(--font-size-sm);
 
 	--nav-link-color: inherit;
-	--nav-link-padding-x: var(--spacer);
-	--nav-link-padding-y: calc(var(--spacer) * 0.625);
+	--nav-link-padding-x: calc(var(--spacer) * #{$spacer});
+	--nav-link-padding-y: calc(var(--spacer) * #{$nav-link-padding-y});
 
 	// Portlet vars
 
 	--portlet-bg: transparent;
-	--portlet-header-margin-bottom: calc(var(--spacer) * 3);
+	--portlet-header-margin-bottom: calc(
+		var(--spacer) * #{$portlet-header-margin-bottom}
+	);
 	--portlet-content-border-radius: 0;
 
 	--portlet-topper-border-radius: var(--border-radius-sm)
@@ -242,8 +244,6 @@ $theme-colors-cp: map-deep-merge(
 	--portlet-topper-bg: var(--primary);
 	--portlet-topper-border: var(--portlet-topper-bg);
 	--portlet-topper-color: var(--white);
-	--portlet-topper-link-color: var(--portlet-topper-color); //not in use
-	--portlet-topper-link-hover-color: var(
-		--portlet-topper-link-color
-	);
+	--portlet-topper-link-color: var(--portlet-topper-color);
+	--portlet-topper-link-hover-color: var(--portlet-topper-link-color);
 }
