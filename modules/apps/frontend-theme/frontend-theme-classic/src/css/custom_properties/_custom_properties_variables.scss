@@ -225,7 +225,7 @@ $theme-colors-cp: map-deep-merge(
 	--input-padding-y: calc(var(--spacer) * 0.4375);
 	--input-padding-x: var(--spacer);
 	--input-line-height: var(--line-height-base);
-	--input-color: var(--body-color);
+	--input-color: var(--dark);
 	--input-bg: var(--light);
 	--input-border-width: #{$input-border-width}; // 0.0625rem
 	--input-border-color: var(--gray-300);
