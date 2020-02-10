@@ -12,31 +12,20 @@
  * details.
  */
 
-package com.liferay.frontend.js.aui.web.internal.servlet.taglib;
+package com.liferay.frontend.js.aui.web.internal.servlet;
 
 import com.liferay.frontend.js.aui.web.internal.configuration.AuiConfiguration;
+import com.liferay.frontend.js.top.head.extender.TopHeadResources;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
-import com.liferay.portal.kernel.servlet.taglib.BaseDynamicInclude;
-import com.liferay.portal.kernel.servlet.taglib.DynamicInclude;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
-import com.liferay.portal.kernel.util.Portal;
-import com.liferay.portal.kernel.util.StringBundler;
-import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.url.builder.AbsolutePortalURLBuilder;
-import com.liferay.portal.url.builder.AbsolutePortalURLBuilderFactory;
-
-import java.io.IOException;
-import java.io.PrintWriter;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import javax.servlet.ServletContext;
 
-import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Modified;
@@ -47,141 +36,59 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	configurationPid = "com.liferay.frontend.js.aui.web.internal.configuration.AuiConfiguration",
-	immediate = true, service = DynamicInclude.class
+	immediate = true, property = "service.ranking:Integer=1",
+	service = TopHeadResources.class
 )
-public class AuiTopHeadDynamicInclude extends BaseDynamicInclude {
+public class AuiTopHeadResources implements TopHeadResources {
 
 	@Override
-	public void include(
-			HttpServletRequest httpServletRequest,
-			HttpServletResponse httpServletResponse, String key)
-		throws IOException {
-
-		ThemeDisplay themeDisplay =
-			(ThemeDisplay)httpServletRequest.getAttribute(
-				WebKeys.THEME_DISPLAY);
-
-		if (themeDisplay.isThemeJsBarebone()) {
-			_writeFileNames(
-				httpServletRequest, httpServletResponse, _fileNamesBarebone);
-		}
-		else {
-			_writeFileNames(
-				httpServletRequest, httpServletResponse, _fileNames);
-		}
+	public Collection<String> getAuthenticatedJsResourcePaths() {
+		return _authenticatedJsResourcePaths;
 	}
 
 	@Override
-	public void register(DynamicIncludeRegistry dynamicIncludeRegistry) {
-		dynamicIncludeRegistry.register(
-			"/html/common/themes/top_js.jspf#resources");
+	public Collection<String> getJsResourcePaths() {
+		return _jsResourcePaths;
+	}
+
+	@Override
+	public String getServletContextPath() {
+		return _servletContext.getContextPath();
 	}
 
 	@Activate
 	@Modified
-	protected void activate(
-		BundleContext bundleContext, Map<String, Object> properties) {
-
-		_bundleContext = bundleContext;
-
-		_lastModified = System.currentTimeMillis();
-
+	protected void activate(Map<String, Object> properties) {
 		AuiConfiguration auiConfiguration = ConfigurableUtil.createConfigurable(
 			AuiConfiguration.class, properties);
 
-		_fileNames.clear();
-		_fileNamesBarebone.clear();
+		List<String> authenticatedJsResourcePaths = new ArrayList<>();
+		List<String> jsResourcePaths = new ArrayList<>();
 
 		if (auiConfiguration.enableAui()) {
-			Collections.addAll(_fileNames, _FILE_NAMES_AUI_CORE);
-			Collections.addAll(_fileNamesBarebone, _FILE_NAMES_AUI_CORE);
+			Collections.addAll(
+				authenticatedJsResourcePaths, _FILE_NAMES_AUI_CORE);
+			Collections.addAll(jsResourcePaths, _FILE_NAMES_AUI_CORE);
 		}
 
 		if (auiConfiguration.enableAuiPreload()) {
-			Collections.addAll(_fileNames, _FILE_NAMES_AUI_PRELOAD_BAREBONE);
-
-			Collections.addAll(_fileNames, _FILE_NAMES_AUI_PRELOAD);
+			Collections.addAll(
+				authenticatedJsResourcePaths, _FILE_NAMES_AUI_PRELOAD);
 
 			Collections.addAll(
-				_fileNamesBarebone, _FILE_NAMES_AUI_PRELOAD_BAREBONE);
-		}
-	}
+				authenticatedJsResourcePaths,
+				_FILE_NAMES_AUI_PRELOAD_AUTHENTICATED);
 
-	private void _writeFileNames(
-			HttpServletRequest httpServletRequest,
-			HttpServletResponse httpServletResponse, List<String> fileNames)
-		throws IOException {
-
-		PrintWriter printWriter = httpServletResponse.getWriter();
-
-		ThemeDisplay themeDisplay =
-			(ThemeDisplay)httpServletRequest.getAttribute(
-				WebKeys.THEME_DISPLAY);
-
-		AbsolutePortalURLBuilder absolutePortalURLBuilder =
-			_absolutePortalURLBuilderFactory.getAbsolutePortalURLBuilder(
-				httpServletRequest);
-
-		StringBundler sb = new StringBundler();
-
-		if (themeDisplay.isThemeJsFastLoad()) {
-			absolutePortalURLBuilder.ignoreCDNHost();
-
-			sb.append("<script data-senna-track=\"permanent\" src=\"");
-			sb.append(
-				_portal.getStaticResourceURL(
-					httpServletRequest, _portal.getPathContext() + "/combo",
-					"minifierType=js", _lastModified));
-
-			for (String fileName : fileNames) {
-				sb.append("&");
-				sb.append(
-					absolutePortalURLBuilder.forModule(
-						_bundleContext.getBundle(), fileName
-					).build());
-			}
-
-			sb.append("\" type=\"text/javascript\"></script>");
-		}
-		else {
-			for (String fileName : fileNames) {
-				sb.append("<script data-senna-track=\"permanent\" src=\"");
-				sb.append(
-					absolutePortalURLBuilder.forModule(
-						_bundleContext.getBundle(), fileName
-					).build());
-				sb.append("\" type=\"text/javascript\"></script>");
-			}
+			Collections.addAll(jsResourcePaths, _FILE_NAMES_AUI_PRELOAD);
 		}
 
-		printWriter.println(sb.toString());
+		_authenticatedJsResourcePaths = authenticatedJsResourcePaths;
+		_jsResourcePaths = jsResourcePaths;
 	}
 
 	private static final String[] _FILE_NAMES_AUI_CORE = {"/aui/aui/aui.js"};
 
 	private static final String[] _FILE_NAMES_AUI_PRELOAD = {
-		"/aui/async-queue/async-queue.js", "/aui/base-build/base-build.js",
-		"/aui/cookie/cookie.js", "/aui/event-touch/event-touch.js",
-		"/aui/overlay/overlay.js",
-		"/aui/querystring-stringify/querystring-stringify.js",
-		"/aui/widget-child/widget-child.js",
-		"/aui/widget-position-align/widget-position-align.js",
-		"/aui/widget-position-constrain/widget-position-constrain.js",
-		"/aui/widget-position/widget-position.js",
-		"/aui/widget-stack/widget-stack.js",
-		"/aui/widget-stdmod/widget-stdmod.js", "/aui/aui-aria/aui-aria.js",
-		"/aui/aui-io-plugin-deprecated/aui-io-plugin-deprecated.js",
-		"/aui/aui-io-request/aui-io-request.js",
-		"/aui/aui-loading-mask-deprecated/aui-loading-mask-deprecated.js",
-		"/aui/aui-overlay-base-deprecated/aui-overlay-base-deprecated.js",
-		"/aui/aui-overlay-context-deprecated/aui-overlay-context-deprecated.js",
-		"/aui/aui-overlay-manager-deprecated/aui-overlay-manager-deprecated.js",
-		"/aui/aui-overlay-mask-deprecated/aui-overlay-mask-deprecated.js",
-		"/aui/aui-parse-content/aui-parse-content.js", "/liferay/session.js",
-		"/liferay/deprecated.js"
-	};
-
-	private static final String[] _FILE_NAMES_AUI_PRELOAD_BAREBONE = {
 		"/aui/aui-base-html5-shiv/aui-base-html5-shiv.js",
 		"/liferay/browser_selectors.js", "/liferay/modules.js",
 		"/liferay/aui_sandbox.js", "/aui/arraylist-add/arraylist-add.js",
@@ -253,15 +160,36 @@ public class AuiTopHeadDynamicInclude extends BaseDynamicInclude {
 		"/liferay/menu.js", "/liferay/notice.js", "/liferay/poller.js"
 	};
 
-	@Reference
-	private AbsolutePortalURLBuilderFactory _absolutePortalURLBuilderFactory;
+	private static final String[] _FILE_NAMES_AUI_PRELOAD_AUTHENTICATED = {
+		"/aui/async-queue/async-queue.js", "/aui/base-build/base-build.js",
+		"/aui/cookie/cookie.js", "/aui/event-touch/event-touch.js",
+		"/aui/overlay/overlay.js",
+		"/aui/querystring-stringify/querystring-stringify.js",
+		"/aui/widget-child/widget-child.js",
+		"/aui/widget-position-align/widget-position-align.js",
+		"/aui/widget-position-constrain/widget-position-constrain.js",
+		"/aui/widget-position/widget-position.js",
+		"/aui/widget-stack/widget-stack.js",
+		"/aui/widget-stdmod/widget-stdmod.js", "/aui/aui-aria/aui-aria.js",
+		"/aui/aui-io-plugin-deprecated/aui-io-plugin-deprecated.js",
+		"/aui/aui-io-request/aui-io-request.js",
+		"/aui/aui-loading-mask-deprecated/aui-loading-mask-deprecated.js",
+		"/aui/aui-overlay-base-deprecated/aui-overlay-base-deprecated.js",
+		"/aui/aui-overlay-context-deprecated/aui-overlay-context-deprecated.js",
+		"/aui/aui-overlay-manager-deprecated/aui-overlay-manager-deprecated.js",
+		"/aui/aui-overlay-mask-deprecated/aui-overlay-mask-deprecated.js",
+		"/aui/aui-parse-content/aui-parse-content.js", "/liferay/session.js",
+		"/liferay/deprecated.js"
+	};
 
-	private BundleContext _bundleContext;
-	private volatile List<String> _fileNames = new ArrayList<>();
-	private volatile List<String> _fileNamesBarebone = new ArrayList<>();
-	private long _lastModified;
+	private volatile List<String> _authenticatedJsResourcePaths =
+		new ArrayList<>();
+	private volatile List<String> _jsResourcePaths = new ArrayList<>();
 
-	@Reference
-	private Portal _portal;
+	@Reference(
+		target = "(osgi.web.symbolicname=com.liferay.frontend.js.aui.web)",
+		unbind = "-"
+	)
+	private ServletContext _servletContext;
 
 }
