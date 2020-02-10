@@ -349,7 +349,7 @@
 				return filterConfig;
 			},
 			getJavaScriptRootPath: function() {
-				return '<%= themeDisplay.getPathJavaScript() %>';
+				return '<%= Portal.PATH_MODULE %>/frontend-js-aui-web';
 			},
 			getLangPath: function() {
 				return '<%= PortalUtil.getStaticResourceURL(request, "aui_lang.jsp", jsLastModified) %>';
