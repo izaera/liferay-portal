@@ -1997,7 +1997,7 @@
 					form = form[0];
 				}
 
-				Liferay.fire('submitForm', {
+				A.fire('submitForm', {
 					action,
 					form: A.one(form),
 					singleSubmit,
@@ -2008,8 +2008,9 @@
 		['aui-base', 'aui-form-validator', 'aui-url', 'liferay-form']
 	);
 
-	Liferay.publish('submitForm', {
-		defaultFn: Util._defaultSubmitFormFn
+	A.publish('submitForm', {
+		defaultFn: Util._defaultSubmitFormFn,
+		emitFacade: true
 	});
 
 	Liferay.provide(
@@ -2025,7 +2026,7 @@
 		['liferay-util-window']
 	);
 
-	Liferay.after('closeWindow', event => {
+	A.after('closeWindow', event => {
 		var id = event.id;
 
 		var dialog = Liferay.Util.getTop().Liferay.Util.Window.getById(id);
