@@ -1,8 +1,7 @@
 Bundle-Name: Liferay Frontend JS Web
 Bundle-SymbolicName: com.liferay.frontend.js.web
 Bundle-Version: 4.0.5
-Liferay-JS-Resources-Top-Head-Authenticated:\
-	/liferay/layout_exporter.js
+Liferay-JS-Resources-Top-Head-Authenticated: /liferay/layout_exporter.js
 Liferay-JS-Resources-Top-Head:\
 	/loader/config.js,\
 	/loader/loader.js,\
