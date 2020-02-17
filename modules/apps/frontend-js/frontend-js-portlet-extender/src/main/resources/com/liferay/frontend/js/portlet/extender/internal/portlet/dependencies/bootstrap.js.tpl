@@ -1,4 +1,8 @@
 <script type="text/javascript">
+	if (typeof global === 'undefined') {
+		global = window;
+	}
+
 	Liferay.Loader.require(
 		"[$PACKAGE_NAME$]@[$PACKAGE_VERSION$]",
 		function(module) {
