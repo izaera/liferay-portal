@@ -82,7 +82,6 @@
 		}
 
 		.clamp-horizontal .clamp-container {
-			-ms-transform: none;
 			transform: none;
 		}
 	}
@@ -98,7 +97,6 @@
 		}
 
 		.clamp-horizontal .clamp-container {
-			-ms-transform: none;
 			transform: none;
 		}
 	}
@@ -171,8 +169,6 @@
 	.radio-bottom-left label > input[type='radio'] {
 		bottom: $checkbox-position;
 		left: $checkbox-position;
-
-		-ms-transform: none;
 		transform: none;
 	}
 
@@ -182,8 +178,6 @@
 	.radio-bottom-right label > input[type='radio'] {
 		bottom: $checkbox-position;
 		right: $checkbox-position;
-
-		-ms-transform: none;
 		transform: none;
 	}
 
@@ -194,8 +188,6 @@
 		left: $checkbox-position;
 		margin-top: 0;
 		top: 50%;
-
-		-ms-transform: translateY(-50%);
 		transform: translateY(-50%);
 	}
 
@@ -206,8 +198,6 @@
 		margin-top: 0;
 		right: $checkbox-position;
 		top: 50%;
-
-		-ms-transform: translateY(-50%);
 		transform: translateY(-50%);
 	}
 
@@ -215,8 +205,6 @@
 	.radio-top-left label > input[type='radio'] {
 		left: $checkbox-position;
 		top: $checkbox-position;
-
-		-ms-transform: none;
 		transform: none;
 	}
 
@@ -224,8 +212,6 @@
 	.radio-top-right label > input[type='radio'] {
 		right: $checkbox-position;
 		top: $checkbox-position;
-
-		-ms-transform: none;
 		transform: none;
 	}
 }
