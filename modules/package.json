@@ -10,7 +10,9 @@
 	},
 	"private": true,
 	"resolutions": {
-		"dnd-core": "10.0.1"
+		"dnd-core": "10.0.1",
+		"gulp": "4.0.2",
+		"liferay-theme-tasks": "10.0.0-alpha.1"
 	},
 	"scripts": {
 		"checkFormat": "liferay-npm-scripts check",
