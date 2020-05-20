@@ -1,0 +1,1 @@
+// TODO: modify packageRunBuild gradle plugin so that it doesn't copy .js files (cannot be done with configuration)
