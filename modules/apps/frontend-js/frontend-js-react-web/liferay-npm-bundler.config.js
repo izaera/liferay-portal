@@ -1,60 +1,29 @@
-{
-	"config": {
-		"imports": {
-			"frontend-taglib-clay": {
-				"@clayui/icon": ">=3.0.0-alpha.1"
-			}
+module.exports = {
+	'create-jar': false,
+	exports: {
+		classnames: 'classnames',
+		react: 'react',
+		react_dom: 'react-dom',
+		prop_types: 'prop-types'
+	},
+	imports: {
+		"frontend-taglib-clay": {
+			"@clayui/icon": ">=3.0.0-alpha.1"
 		}
 	},
-	"exclude": {
-		"babel-runtime": true,
-		"core-js": true,
-		"csstype": true,
-		"fbjs": [
-			"flow/**/*"
-		],
-		"iconv-lite": true,
-		"isomorphic-fetch": true,
-		"is-stream": true,
-		"lodash": [
-			"fp/**/*",
-			"lodash*"
-		],
-		"lodash-es": true,
-		"loose-envify": true,
-		"node-fetch": true,
-		"promise": true,
-		"react": [
-			"umd/**/*"
-		],
-		"react-dom": [
-			"**/*profiling*",
-			"**/*server*",
-			"**/*test*",
-			"**/*unstable*",
-			"umd/**/*"
-		],
-		"react-is": [
-			"umd/**/*"
-		],
-		"recompose": [
-			"dist/Recompose.esm.js",
-			"dist/Recompose.min.js",
-			"dist/Recompose.umd.js"
-		],
-		"redux": [
-			"es/**/*",
-			"src/**/*"
-		],
-		"regenerator-runtime": true,
-		"scheduler": [
-			"umd/**/*"
-		],
-		"tiny-warning": [
-			"src/**/*"
-		],
-		"whatwg-fetch": true
+	source: 'src/main/resources/META-INF/resources',
+	output: 'build/node/packageRunBuild/resources',
+	webpack: {
+		module: {
+			rules: [
+				{
+					test: /\.js$/,
+					exclude: /node_modules/,
+					use: ['babel-loader']
+				}
+			]
+		},
 	},
-	"output": "build/node/packageRunBuild/resources",
-	"preset": "liferay-npm-bundler-preset-standard"
+	workdir: 'build/node/bundler',
+	"log-level": "debug"
 }
