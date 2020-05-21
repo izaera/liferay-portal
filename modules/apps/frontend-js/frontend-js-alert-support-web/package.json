@@ -2,10 +2,13 @@
 	"dependencies": {
 		"metal-dom": "2.16.8"
 	},
+	"devDependencies": {
+		"liferay-npm-bundler": "3.0.0-alpha.1"
+	},
 	"name": "frontend-js-alert-support-web",
 	"private": true,
 	"scripts": {
-		"build": "liferay-npm-scripts build",
+		"build": "liferay-npm-bundler",
 		"checkFormat": "liferay-npm-scripts check",
 		"format": "liferay-npm-scripts fix"
 	},
