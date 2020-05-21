@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -62,6 +63,10 @@ public class BrowserModulesResolution {
 		sb.append(moduleName);
 
 		_explanation.add(0, sb.toString());
+	}
+
+	public void addWarning(String warning) {
+		_warnings.add(warning);
 	}
 
 	public void dedentExplanation() {
@@ -126,6 +131,12 @@ public class BrowserModulesResolution {
 		map.put("pathMap", _pathsMap);
 		map.put("resolvedModules", _resolvedModuleNames);
 
+		List<String> sortedWarnings = new ArrayList<>(_warnings);
+
+		Collections.sort(sortedWarnings);
+
+		map.put("warnings", sortedWarnings);
+
 		return _jsonFactory.looseSerializeDeep(map);
 	}
 
@@ -139,5 +150,6 @@ public class BrowserModulesResolution {
 	private final Map<String, String> _pathsMap = new HashMap<>();
 	private final Set<String> _processedModuleNames = new HashSet<>();
 	private final List<String> _resolvedModuleNames = new ArrayList<>();
+	private final Set<String> _warnings = new HashSet<>();
 
 }

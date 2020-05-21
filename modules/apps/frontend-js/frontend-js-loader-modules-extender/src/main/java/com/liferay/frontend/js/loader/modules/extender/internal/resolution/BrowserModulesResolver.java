@@ -71,7 +71,8 @@ public class BrowserModulesResolver {
 			new BrowserModulesResolution(
 				_jsonFactory, _details.explainResolutions());
 
-		Map<String, BrowserModule> browserModulesMap = _getBrowserModulesMap();
+		BrowserModulesMap browserModulesMap =
+			new BrowserModulesMap(browserModulesResolution, _npmRegistry);
 
 		for (String moduleName : moduleNames) {
 			_resolve(
@@ -162,13 +163,14 @@ public class BrowserModulesResolver {
 		_serviceTracker.close();
 	}
 
-	private Map<String, BrowserModule> _getBrowserModulesMap() {
+	private Map<String, BrowserModule> _getBrowserModulesMap(
+		BrowserModulesResolution browserModulesResolution) {
 		Map<String, BrowserModule> browserModulesMap = new HashMap<>(
 			_browserModulesMap);
 
 		for (JSModule jsModule : _npmRegistry.getResolvedJSModules()) {
 			JSBrowserModule jsBrowserModule = new JSBrowserModule(
-				jsModule, _npmRegistry);
+				jsModule, browserModulesResolution, _npmRegistry);
 
 			browserModulesMap.put(jsBrowserModule.getName(), jsBrowserModule);
 		}
@@ -207,7 +209,7 @@ public class BrowserModulesResolver {
 	}
 
 	private boolean _processBrowserModule(
-		Map<String, BrowserModule> browserModulesMap,
+		BrowserModulesMap browserModulesMap,
 		BrowserModule browserModule,
 		BrowserModulesResolution browserModulesResolution,
 		HttpServletRequest httpServletRequest) {
@@ -247,10 +249,10 @@ public class BrowserModulesResolver {
 					browserModulesResolution, httpServletRequest);
 			}
 			else {
-				browserModulesResolution.addResolvedModuleName(
+				browserModulesResolution.addWarning(
 					StringBundler.concat(
-						":ERROR:Missing dependency '", dependencyModuleName,
-						"' of '", moduleName, "'"));
+						"Missing dependency '", dependencyModuleName, "' of '",
+						moduleName, "'"));
 			}
 		}
 
@@ -284,7 +286,7 @@ public class BrowserModulesResolver {
 	}
 
 	private void _resolve(
-		Map<String, BrowserModule> browserModulesMap, String moduleName,
+		BrowserModulesMap browserModulesMap, String moduleName,
 		BrowserModulesResolution browserModulesResolution,
 		HttpServletRequest httpServletRequest) {
 
@@ -294,8 +296,9 @@ public class BrowserModulesResolver {
 		BrowserModule browserModule = browserModulesMap.get(mappedModuleName);
 
 		if (browserModule == null) {
-			browserModulesResolution.addResolvedModuleName(
-				":ERROR:Missing required module '" + moduleName + "'");
+			browserModulesResolution.addWarning(
+				StringBundler.concat(
+					"Missing required module '", moduleName, "'"));
 
 			return;
 		}
