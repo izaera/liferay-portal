@@ -15,9 +15,12 @@
 		"react": "16.12.0",
 		"react-dom": "16.12.0"
 	},
+	"devDependencies": {
+		"liferay-npm-bundler": "3.0.0-alpha.1"
+	},
 	"name": "frontend-taglib",
 	"scripts": {
-		"build": "liferay-npm-scripts build",
+		"build": "liferay-npm-bundler",
 		"checkFormat": "liferay-npm-scripts check",
 		"format": "liferay-npm-scripts fix"
 	},
