@@ -10,13 +10,14 @@
 		"react-dom": "16.12.0"
 	},
 	"devDependencies": {
+		"liferay-npm-bundler": "3.0.0-alpha.1",
 		"react-dnd-test-backend": "10.0.1",
 		"react-dnd-test-utils": "10.0.1"
 	},
 	"main": "js/index.es.js",
 	"name": "frontend-js-react-web",
 	"scripts": {
-		"build": "liferay-npm-scripts build",
+		"build": "liferay-npm-bundler",
 		"checkFormat": "liferay-npm-scripts check",
 		"format": "liferay-npm-scripts fix",
 		"test": "liferay-npm-scripts test"
