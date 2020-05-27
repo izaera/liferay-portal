@@ -2,9 +2,12 @@
 	"dependencies": {
 		"frontend-js-web": "*"
 	},
+	"devDependencies": {
+		"liferay-npm-bundler": "3.0.0-alpha.1"
+	},
 	"name": "account-admin-web",
 	"scripts": {
-		"build": "liferay-npm-scripts build",
+		"build": "liferay-npm-bundler",
 		"checkFormat": "liferay-npm-scripts check",
 		"format": "liferay-npm-scripts fix"
 	},
