@@ -3,7 +3,7 @@
 		"metal-dom": "2.16.8"
 	},
 	"devDependencies": {
-		"liferay-npm-bundler": "3.0.0-alpha.1"
+		"liferay-npm-bundler": "3.0.0-alpha.2"
 	},
 	"name": "frontend-js-alert-support-web",
 	"private": true,

@@ -11614,10 +11614,10 @@ liferay-npm-bundler@2.18.4:
     xml-js "^1.6.8"
     yargs "^14.0.0"
 
-liferay-npm-bundler@3.0.0-alpha.1:
-  version "3.0.0-alpha.1"
-  resolved "https://registry.yarnpkg.com/liferay-npm-bundler/-/liferay-npm-bundler-3.0.0-alpha.1.tgz#08d615c190bdf3e49cc1611132fb54db09663b4c"
-  integrity sha512-SSPU3kzVBVLFsRNY8I5nKfhZ3HAzZQBbj9pr9HAAQK4BwnsSq6Azndl/M28CR4ZX6Xizi5IzRvscgLYKKEqdhA==
+liferay-npm-bundler@3.0.0-alpha.2:
+  version "3.0.0-alpha.2"
+  resolved "https://registry.yarnpkg.com/liferay-npm-bundler/-/liferay-npm-bundler-3.0.0-alpha.2.tgz#827304fcbbea5a4cb8cd8e485b8ae41500d39012"
+  integrity sha512-8iNcFHtkpNsj9lxxv7tdVxIZLIiEXNAdgJu/wr4FyghGxhBFjpayQjW7sx1+zt220/Oi93svD17pDNub0KtJ6Q==
   dependencies:
     acorn "^6.2.1"
     cross-spawn "^7.0.0"

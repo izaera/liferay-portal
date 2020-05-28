@@ -3,7 +3,7 @@
 		"frontend-js-web": "*"
 	},
 	"devDependencies": {
-		"liferay-npm-bundler": "3.0.0-alpha.1"
+		"liferay-npm-bundler": "3.0.0-alpha.2"
 	},
 	"name": "account-admin-web",
 	"scripts": {
