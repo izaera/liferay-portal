@@ -14,6 +14,10 @@
 
 package com.liferay.frontend.css.variables.internal.configuration;
 
+import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
+import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMapFactory;
+import com.liferay.portal.kernel.json.JSONFactory;
+import com.liferay.portal.kernel.model.Theme;
 import com.liferay.portal.kernel.settings.CompanyServiceSettingsLocator;
 import com.liferay.portal.kernel.settings.ModifiableSettings;
 import com.liferay.portal.kernel.settings.Settings;
@@ -26,28 +30,26 @@ import com.liferay.portal.kernel.util.WebKeys;
 
 import java.io.IOException;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ValidatorException;
 
+import javax.servlet.ServletContext;
 import javax.servlet.http.HttpServletRequest;
 
+import org.osgi.framework.BundleContext;
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Iván Zaera Avellón
  */
-@Component(service = CssVariablesConfiguration.class)
+@Component(immediate = true, service = CssVariablesConfiguration.class)
 public class CssVariablesConfiguration {
-
-	public static final List<String> keys = Collections.unmodifiableList(
-		Arrays.asList("body-bg"));
 
 	public Map<String, String> getProperties(
 		HttpServletRequest httpServletRequest) {
@@ -58,14 +60,22 @@ public class CssVariablesConfiguration {
 			(ThemeDisplay)httpServletRequest.getAttribute(
 				WebKeys.THEME_DISPLAY);
 
+		Theme theme = themeDisplay.getTheme();
+
+		CssVariablesDefinition cssVariablesDefinition =
+			_serviceTrackerMap.getService(theme.getServletContextName());
+
+		if (cssVariablesDefinition == null) {
+			return properties;
+		}
+
 		Settings settings = _getSettings(themeDisplay.getCompanyId());
 
-		for (String key : keys) {
-			String value = settings.getValue(key, null);
+		for (String cssVariableName :
+				cssVariablesDefinition.getCssVariableNames()) {
 
-			if (Validator.isNotNull(value)) {
-				properties.put(key, value);
-			}
+			properties.put(
+				cssVariableName, settings.getValue(cssVariableName, null));
 		}
 
 		return properties;
@@ -77,19 +87,28 @@ public class CssVariablesConfiguration {
 		ThemeDisplay themeDisplay = (ThemeDisplay)actionRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
 
+		Theme theme = themeDisplay.getTheme();
+
+		CssVariablesDefinition cssVariablesDefinition =
+			_serviceTrackerMap.getService(theme.getServletContextName());
+
 		Settings settings = _getSettings(themeDisplay.getCompanyId());
 
 		ModifiableSettings modifiableSettings =
 			settings.getModifiableSettings();
 
-		for (String key : keys) {
-			String value = ParamUtil.getString(actionRequest, key);
+		modifiableSettings.reset();
+
+		for (String cssVariableName :
+				cssVariablesDefinition.getCssVariableNames()) {
+
+			String value = ParamUtil.getString(actionRequest, cssVariableName);
 
 			if (Validator.isNotNull(value)) {
-				modifiableSettings.setValue(key, value);
+				modifiableSettings.setValue(cssVariableName, value);
 			}
 			else {
-				modifiableSettings.reset(key);
+				modifiableSettings.reset(cssVariableName);
 			}
 		}
 
@@ -99,6 +118,21 @@ public class CssVariablesConfiguration {
 		catch (IOException ioException) {
 			throw new RuntimeException(ioException);
 		}
+	}
+
+	@Activate
+	protected void activate(BundleContext bundleContext) {
+		_bundleContext = bundleContext;
+
+		_serviceTrackerMap = ServiceTrackerMapFactory.openSingleValueMap(
+			bundleContext, ServletContext.class, "osgi.web.symbolicname",
+			new CssVariablesDefinitionServiceTrackerCustomizer(
+				_bundleContext, _jsonFactory));
+	}
+
+	@Deactivate
+	protected void deactivate() {
+		_serviceTrackerMap.close();
 	}
 
 	@Reference
@@ -116,5 +150,13 @@ public class CssVariablesConfiguration {
 
 	private static final String _SETTINGS_ID =
 		CssVariablesConfiguration.class.getName();
+
+	private BundleContext _bundleContext;
+
+	@Reference
+	private JSONFactory _jsonFactory;
+
+	private ServiceTrackerMap<String, CssVariablesDefinition>
+		_serviceTrackerMap;
 
 }

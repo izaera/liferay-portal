@@ -22,8 +22,7 @@ taglib uri="http://liferay.com/tld/frontend" prefix="liferay-frontend" %><%@
 taglib uri="http://liferay.com/tld/theme" prefix="liferay-theme" %><%@
 taglib uri="http://liferay.com/tld/ui" prefix="liferay-ui" %>
 
-<%@ page import="com.liferay.frontend.css.variables.internal.configuration.CssVariablesConfiguration" %><%@
-page import="com.liferay.frontend.css.variables.internal.constants.CssVariablesWebKeys" %>
+<%@ page import="com.liferay.frontend.css.variables.internal.constants.CssVariablesWebKeys" %>
 
 <%@ page import="java.util.Map" %>
 

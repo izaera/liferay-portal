@@ -38,10 +38,10 @@ Map<String, String> properties = (Map<String, String>)request.getAttribute(CssVa
 			</div>
 
 			<%
-			for (String key : CssVariablesConfiguration.keys) {
+			for (Map.Entry<String, String> entry : properties.entrySet()) {
 			%>
 
-				<aui:input name="<%= key %>" type="text" value="<%= properties.get(key) %>" />
+				<aui:input name="<%= entry.getKey() %>" type="text" value="<%= entry.getValue() %>" />
 
 			<%
 			}
