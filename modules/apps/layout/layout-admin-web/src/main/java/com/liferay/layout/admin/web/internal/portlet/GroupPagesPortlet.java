@@ -17,6 +17,7 @@ package com.liferay.layout.admin.web.internal.portlet;
 import com.liferay.application.list.GroupProvider;
 import com.liferay.asset.kernel.exception.AssetCategoryException;
 import com.liferay.dynamic.data.mapping.validator.DDMFormValuesValidationException;
+import com.liferay.frontend.css.variables.CSSVariablesConfiguration;
 import com.liferay.info.item.provider.InfoItemServiceTracker;
 import com.liferay.info.list.provider.InfoListProviderTracker;
 import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
@@ -185,8 +186,8 @@ public class GroupPagesPortlet extends MVCPortlet {
 
 			LayoutsAdminDisplayContext layoutsAdminDisplayContext =
 				new LayoutsAdminDisplayContext(
-					_layoutConverterConfiguration, _layoutConverterRegistry,
-					_layoutCopyHelper,
+					_cssVariablesConfiguration, _layoutConverterConfiguration,
+					_layoutConverterRegistry, _layoutCopyHelper,
 					_portal.getLiferayPortletRequest(renderRequest),
 					_portal.getLiferayPortletResponse(renderResponse),
 					_stagingGroupHelper);
@@ -248,6 +249,9 @@ public class GroupPagesPortlet extends MVCPortlet {
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		GroupPagesPortlet.class);
+
+	@Reference
+	private CSSVariablesConfiguration _cssVariablesConfiguration;
 
 	@Reference
 	private GroupProvider _groupProvider;

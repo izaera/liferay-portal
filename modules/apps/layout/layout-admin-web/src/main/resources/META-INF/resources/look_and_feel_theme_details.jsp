@@ -212,6 +212,31 @@ Map<String, ThemeSetting> configurableSettings = selTheme.getConfigurableSetting
 
 </c:if>
 
+<%
+CSSVariablesConfiguration cssVariablesConfiguration = layoutsAdminDisplayContext.getCSSVariablesConfiguration();
+
+CSSVariablesDefinition cssVariablesDefinition = cssVariablesConfiguration.getCSSVariablesDefinition(selTheme);
+
+Map<String, String> cssVariables = cssVariablesConfiguration.getCSSVariables(selTheme, company.getCompanyId());
+%>
+
+<h2 class="h4"><liferay-ui:message key="css-variables" /></h2>
+
+<fieldset>
+
+	<%
+	for (Map.Entry<String, String> entry : cssVariables.entrySet()) {
+		CSSVariableDefinition cssVariableDefinition = cssVariablesDefinition.getCSSVariableDefinition(entry.getKey());
+	%>
+
+		<aui:input label="<%= cssVariableDefinition.getLabel() %>" name='<%= "cssVariable-" + entry.getKey() %>' type="text" value="<%= entry.getValue() %>" />
+
+	<%
+	}
+	%>
+
+</fieldset>
+
 <c:if test="<%= !colorSchemes.isEmpty() %>">
 	<aui:script use="aui-base,aui-event-key">
 		var colorSchemesContainer = A.one(

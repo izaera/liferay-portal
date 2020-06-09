@@ -19,6 +19,7 @@ import com.liferay.asset.kernel.service.AssetCategoryServiceUtil;
 import com.liferay.asset.kernel.service.AssetVocabularyServiceUtil;
 import com.liferay.exportimport.kernel.staging.LayoutStagingUtil;
 import com.liferay.exportimport.kernel.staging.StagingUtil;
+import com.liferay.frontend.css.variables.CSSVariablesConfiguration;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemListBuilder;
 import com.liferay.layout.admin.web.internal.configuration.LayoutConverterConfiguration;
@@ -105,6 +106,7 @@ import javax.servlet.http.HttpServletRequest;
 public class LayoutsAdminDisplayContext {
 
 	public LayoutsAdminDisplayContext(
+		CSSVariablesConfiguration cssVariablesConfiguration,
 		LayoutConverterConfiguration layoutConverterConfiguration,
 		LayoutConverterRegistry layoutConverterRegistry,
 		LayoutCopyHelper layoutCopyHelper,
@@ -112,6 +114,7 @@ public class LayoutsAdminDisplayContext {
 		LiferayPortletResponse liferayPortletResponse,
 		StagingGroupHelper stagingGroupHelper) {
 
+		_cssVariablesConfiguration = cssVariablesConfiguration;
 		_layoutConverterConfiguration = layoutConverterConfiguration;
 		_layoutConverterRegistry = layoutConverterRegistry;
 		_layoutCopyHelper = layoutCopyHelper;
@@ -302,6 +305,10 @@ public class LayoutsAdminDisplayContext {
 			"explicitCreation", String.valueOf(Boolean.TRUE));
 
 		return copyLayoutURL.toString();
+	}
+
+	public CSSVariablesConfiguration getCSSVariablesConfiguration() {
+		return _cssVariablesConfiguration;
 	}
 
 	public String getDeleteLayoutURL(Layout layout) throws PortalException {
@@ -1682,6 +1689,7 @@ public class LayoutsAdminDisplayContext {
 
 	private Long _activeLayoutSetBranchId;
 	private String _backURL;
+	private final CSSVariablesConfiguration _cssVariablesConfiguration;
 	private String _displayStyle;
 	private Boolean _firstColumn;
 	private SearchContainer<String> _firstColumnLayoutsSearchContainer;

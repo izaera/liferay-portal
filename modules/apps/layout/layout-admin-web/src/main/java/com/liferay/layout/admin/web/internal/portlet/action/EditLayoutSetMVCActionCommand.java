@@ -15,9 +15,12 @@
 package com.liferay.layout.admin.web.internal.portlet.action;
 
 import com.liferay.document.library.kernel.service.DLAppLocalService;
+import com.liferay.frontend.css.variables.CSSVariablesConfiguration;
+import com.liferay.frontend.css.variables.CSSVariablesDefinition;
 import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.LayoutSet;
+import com.liferay.portal.kernel.model.Theme;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.repository.model.FileEntry;
@@ -33,6 +36,9 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -82,6 +88,30 @@ public class EditLayoutSetMVCActionCommand extends BaseMVCActionCommand {
 		updateSettings(
 			actionRequest, liveGroupId, stagingGroupId, privateLayout,
 			layoutSet.getSettingsProperties());
+
+		updateCSSVariables(
+			actionRequest, layoutSet.getTheme(), layoutSet.getCompanyId());
+	}
+
+	protected void updateCSSVariables(
+		ActionRequest actionRequest, Theme theme, long companyId) {
+
+		Map<String, String> cssVariables = new HashMap<>();
+
+		CSSVariablesDefinition cssVariablesDefinition =
+			_cssVariablesConfiguration.getCSSVariablesDefinition(theme);
+
+		for (String cssVariableName :
+				cssVariablesDefinition.getCSSVariableNames()) {
+
+			String cssVariableValue = ParamUtil.getString(
+				actionRequest, "cssVariable-" + cssVariableName);
+
+			cssVariables.put(cssVariableName, cssVariableValue);
+		}
+
+		_cssVariablesConfiguration.setCSSVariables(
+			theme, companyId, cssVariables);
 	}
 
 	protected void updateLogo(
@@ -187,6 +217,9 @@ public class EditLayoutSetMVCActionCommand extends BaseMVCActionCommand {
 		_layoutSetService.updateSettings(
 			groupId, privateLayout, settingsUnicodeProperties.toString());
 	}
+
+	@Reference
+	private CSSVariablesConfiguration _cssVariablesConfiguration;
 
 	@Reference
 	private DLAppLocalService _dlAppLocalService;

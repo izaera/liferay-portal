@@ -14,6 +14,7 @@
 
 package com.liferay.layout.admin.web.internal.portlet.action;
 
+import com.liferay.frontend.css.variables.CSSVariablesConfiguration;
 import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
 import com.liferay.layout.admin.web.internal.configuration.LayoutConverterConfiguration;
 import com.liferay.layout.admin.web.internal.display.context.LayoutsAdminDisplayContext;
@@ -74,8 +75,8 @@ public class GetLayoutChildrenMVCActionCommand extends BaseMVCActionCommand {
 
 		LayoutsAdminDisplayContext layoutsAdminDisplayContext =
 			new LayoutsAdminDisplayContext(
-				_layoutConverterConfiguration, _layoutConverterRegistry,
-				_layoutCopyHelper,
+				_cssVariablesConfiguration, _layoutConverterConfiguration,
+				_layoutConverterRegistry, _layoutCopyHelper,
 				_portal.getLiferayPortletRequest(actionRequest),
 				_portal.getLiferayPortletResponse(actionResponse),
 				_stagingGroupHelper);
@@ -92,6 +93,9 @@ public class GetLayoutChildrenMVCActionCommand extends BaseMVCActionCommand {
 		JSONPortletResponseUtil.writeJSON(
 			actionRequest, actionResponse, JSONUtil.put("children", jsonArray));
 	}
+
+	@Reference
+	private CSSVariablesConfiguration _cssVariablesConfiguration;
 
 	private volatile LayoutConverterConfiguration _layoutConverterConfiguration;
 
