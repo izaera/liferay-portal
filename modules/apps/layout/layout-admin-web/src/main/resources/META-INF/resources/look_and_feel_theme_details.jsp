@@ -229,7 +229,7 @@ Map<String, String> cssVariables = cssVariablesConfiguration.getCSSVariables(sel
 		CSSVariableDefinition cssVariableDefinition = cssVariablesDefinition.getCSSVariableDefinition(entry.getKey());
 	%>
 
-		<aui:input label="<%= cssVariableDefinition.getLabel() %>" name='<%= "cssVariable-" + entry.getKey() %>' type="text" value="<%= entry.getValue() %>" />
+		<aui:input label="<%= cssVariableDefinition.getLabel(themeDisplay.getLocale()) %>" name='<%= "cssVariable-" + entry.getKey() %>' type="text" value="<%= entry.getValue() %>" />
 
 	<%
 	}

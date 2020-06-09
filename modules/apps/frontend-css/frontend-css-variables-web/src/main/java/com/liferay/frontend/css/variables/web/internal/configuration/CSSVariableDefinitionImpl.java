@@ -15,20 +15,55 @@
 package com.liferay.frontend.css.variables.web.internal.configuration;
 
 import com.liferay.frontend.css.variables.CSSVariableDefinition;
+import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.util.Validator;
+
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * @author Iván Zaera Avellón
  */
 public class CSSVariableDefinitionImpl implements CSSVariableDefinition {
 
-	public CSSVariableDefinitionImpl(String label) {
-		_label = label;
+	public CSSVariableDefinitionImpl() {
+		this(StringPool.BLANK);
 	}
 
-	public String getLabel() {
-		return _label;
+	public CSSVariableDefinitionImpl(String defaultLabel) {
+		_labelsMap.put(StringPool.BLANK, defaultLabel);
 	}
 
-	private final String _label;
+	public void addLabel(String localeKey, String label) {
+		_labelsMap.put(localeKey, label);
+	}
+
+	public String getLabel(Locale locale) {
+		String languageCountryKey = _getLanguageCountryKey(locale);
+
+		if ((languageCountryKey != null) &&
+			_labelsMap.containsKey(languageCountryKey)) {
+
+			return _labelsMap.get(languageCountryKey);
+		}
+
+		if (_labelsMap.containsKey(locale.getLanguage())) {
+			return _labelsMap.get(locale.getLanguage());
+		}
+
+		return _labelsMap.get(StringPool.BLANK);
+	}
+
+	private String _getLanguageCountryKey(Locale locale) {
+		if (Validator.isNull(locale.getCountry())) {
+			return null;
+		}
+
+		return locale.getLanguage() + StringPool.UNDERLINE +
+			locale.getCountry();
+	}
+
+	private final Map<String, String> _labelsMap = new HashMap<>();
 
 }

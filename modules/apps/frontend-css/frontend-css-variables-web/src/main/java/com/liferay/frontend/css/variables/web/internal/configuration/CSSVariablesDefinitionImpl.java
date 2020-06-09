@@ -19,7 +19,6 @@ import com.liferay.frontend.css.variables.CSSVariablesDefinition;
 import com.liferay.portal.kernel.json.JSONException;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.json.JSONObject;
-import com.liferay.portal.kernel.util.Validator;
 
 import java.util.Collections;
 import java.util.HashMap;
@@ -59,14 +58,34 @@ public class CSSVariablesDefinitionImpl implements CSSVariablesDefinition {
 			JSONObject cssVariableDefinitionJSONObject =
 				variablesJSONObject.getJSONObject(name);
 
+			JSONObject labelsMapJSONObject =
+				cssVariableDefinitionJSONObject.getJSONObject("label");
+
+			if (labelsMapJSONObject != null) {
+				CSSVariableDefinitionImpl cssVariableDefinitionImpl =
+					new CSSVariableDefinitionImpl();
+
+				for (String localeKey : labelsMapJSONObject.keySet()) {
+					cssVariableDefinitionImpl.addLabel(
+						localeKey, labelsMapJSONObject.getString(localeKey));
+				}
+
+				_cssVariableDefinitions.put(name, cssVariableDefinitionImpl);
+
+				continue;
+			}
+
 			String label = cssVariableDefinitionJSONObject.getString("label");
 
-			if (Validator.isNull(label)) {
-				label = name;
+			if (label != null) {
+				_cssVariableDefinitions.put(
+					name, new CSSVariableDefinitionImpl(label));
+
+				continue;
 			}
 
 			_cssVariableDefinitions.put(
-				name, new CSSVariableDefinitionImpl(label));
+				name, new CSSVariableDefinitionImpl(name));
 		}
 	}
 
