@@ -1,10 +1,16 @@
 {
 	"variables": {
 		"body-bg": {
-			"label": "Background Color"
+			"label": {
+				"": "Background Color",
+				"es": "Color de fondo"
+			}
 		},
 		"font-size-base": {
-			"label": "Base Font Size"
+			"label": {
+				"": "Base Font Size",
+				"es": "Tamaño de letra base"
+			}
 		}
 	}
 }
