@@ -14,15 +14,11 @@
 
 package com.liferay.frontend.css.variables;
 
-import java.util.Locale;
-
 /**
  * @author Iván Zaera Avellón
  */
-public interface CSSVariableDefinition {
+public enum CSSVariableType {
 
-	public CSSVariableType getCSSVariableType();
-
-	public String getLabel(Locale locale);
+	COLOR, STRING
 
 }

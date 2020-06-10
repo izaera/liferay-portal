@@ -15,7 +15,9 @@
 package com.liferay.frontend.css.variables.web.internal.configuration;
 
 import com.liferay.frontend.css.variables.CSSVariableDefinition;
+import com.liferay.frontend.css.variables.CSSVariableType;
 import com.liferay.frontend.css.variables.CSSVariablesDefinition;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONException;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.json.JSONObject;
@@ -58,35 +60,49 @@ public class CSSVariablesDefinitionImpl implements CSSVariablesDefinition {
 			JSONObject cssVariableDefinitionJSONObject =
 				variablesJSONObject.getJSONObject(name);
 
-			JSONObject labelsMapJSONObject =
-				cssVariableDefinitionJSONObject.getJSONObject("label");
+			_cssVariableDefinitions.put(
+				name,
+				new CSSVariableDefinitionImpl(
+					_getCSSVariableType(cssVariableDefinitionJSONObject),
+					_getLabelsMap(cssVariableDefinitionJSONObject, name)));
+		}
+	}
 
-			if (labelsMapJSONObject != null) {
-				CSSVariableDefinitionImpl cssVariableDefinitionImpl =
-					new CSSVariableDefinitionImpl();
+	private CSSVariableType _getCSSVariableType(JSONObject jsonObject) {
+		String type = jsonObject.getString("type");
 
-				for (String localeKey : labelsMapJSONObject.keySet()) {
-					cssVariableDefinitionImpl.addLabel(
-						localeKey, labelsMapJSONObject.getString(localeKey));
-				}
+		if (type.equals("color")) {
+			return CSSVariableType.COLOR;
+		}
 
-				_cssVariableDefinitions.put(name, cssVariableDefinitionImpl);
+		return CSSVariableType.STRING;
+	}
 
-				continue;
+	private Map<String, String> _getLabelsMap(
+		JSONObject cssVariableDefinitionJSONObject, String defaultLabel) {
+
+		Map<String, String> labelsMap = new HashMap<>();
+
+		JSONObject labelsMapJSONObject =
+			cssVariableDefinitionJSONObject.getJSONObject("label");
+
+		if (labelsMapJSONObject != null) {
+			for (String localeKey : labelsMapJSONObject.keySet()) {
+				labelsMap.put(
+					localeKey, labelsMapJSONObject.getString(localeKey));
 			}
-
+		}
+		else {
 			String label = cssVariableDefinitionJSONObject.getString("label");
 
-			if (label != null) {
-				_cssVariableDefinitions.put(
-					name, new CSSVariableDefinitionImpl(label));
-
-				continue;
+			if (label == null) {
+				label = defaultLabel;
 			}
 
-			_cssVariableDefinitions.put(
-				name, new CSSVariableDefinitionImpl(name));
+			labelsMap.put(StringPool.BLANK, label);
 		}
+
+		return labelsMap;
 	}
 
 	private final Map<String, CSSVariableDefinition> _cssVariableDefinitions =

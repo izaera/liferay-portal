@@ -36,6 +36,7 @@ page import="com.liferay.exportimport.kernel.lar.PortletDataHandlerKeys" %><%@
 page import="com.liferay.exportimport.kernel.staging.LayoutStagingUtil" %><%@
 page import="com.liferay.exportimport.kernel.staging.StagingUtil" %><%@
 page import="com.liferay.frontend.css.variables.CSSVariableDefinition" %><%@
+page import="com.liferay.frontend.css.variables.CSSVariableType" %><%@
 page import="com.liferay.frontend.css.variables.CSSVariablesConfiguration" %><%@
 page import="com.liferay.frontend.css.variables.CSSVariablesDefinition" %><%@
 page import="com.liferay.layout.admin.constants.LayoutScreenNavigationEntryConstants" %><%@

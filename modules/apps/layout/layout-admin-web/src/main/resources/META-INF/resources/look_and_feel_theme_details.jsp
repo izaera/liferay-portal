@@ -227,9 +227,34 @@ Map<String, String> cssVariables = cssVariablesConfiguration.getCSSVariables(sel
 	<%
 	for (Map.Entry<String, String> entry : cssVariables.entrySet()) {
 		CSSVariableDefinition cssVariableDefinition = cssVariablesDefinition.getCSSVariableDefinition(entry.getKey());
+
+		CSSVariableType cssVariableType = cssVariableDefinition.getCSSVariableType();
 	%>
 
-		<aui:input label="<%= cssVariableDefinition.getLabel(themeDisplay.getLocale()) %>" name='<%= "cssVariable-" + entry.getKey() %>' type="text" value="<%= entry.getValue() %>" />
+		<c:if test="<%= cssVariableType == CSSVariableType.COLOR %>">
+
+			<%
+			Map<String, Object> data = HashMapBuilder.<String, Object>put(
+				"color", entry.getValue()
+			).put(
+				"label", cssVariableDefinition.getLabel(themeDisplay.getLocale())
+			).put(
+				"name", portletDisplay.getNamespace() + "cssVariable-" + entry.getKey()
+			).build();
+			%>
+
+			<div>
+				<react:component
+					data="<%= data %>"
+					module="js/component/ColorPickerInput.es"
+					servletContext="<%= application %>"
+				/>
+			</div>
+		</c:if>
+
+		<c:if test="<%= cssVariableType == CSSVariableType.STRING %>">
+			<aui:input label="<%= cssVariableDefinition.getLabel(themeDisplay.getLocale()) %>" name='<%= "cssVariable-" + entry.getKey() %>' type="text" value="<%= entry.getValue() %>" />
+		</c:if>
 
 	<%
 	}

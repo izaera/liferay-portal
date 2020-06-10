@@ -15,10 +15,10 @@
 package com.liferay.frontend.css.variables.web.internal.configuration;
 
 import com.liferay.frontend.css.variables.CSSVariableDefinition;
+import com.liferay.frontend.css.variables.CSSVariableType;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.Validator;
 
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 
@@ -27,16 +27,20 @@ import java.util.Map;
  */
 public class CSSVariableDefinitionImpl implements CSSVariableDefinition {
 
-	public CSSVariableDefinitionImpl() {
-		this(StringPool.BLANK);
-	}
+	public CSSVariableDefinitionImpl(
+		CSSVariableType cssVariableType, Map<String, String> labelsMap) {
 
-	public CSSVariableDefinitionImpl(String defaultLabel) {
-		_labelsMap.put(StringPool.BLANK, defaultLabel);
+		_cssVariableType = cssVariableType;
+		_labelsMap = labelsMap;
 	}
 
 	public void addLabel(String localeKey, String label) {
 		_labelsMap.put(localeKey, label);
+	}
+
+	@Override
+	public CSSVariableType getCSSVariableType() {
+		return _cssVariableType;
 	}
 
 	public String getLabel(Locale locale) {
@@ -64,6 +68,7 @@ public class CSSVariableDefinitionImpl implements CSSVariableDefinition {
 			locale.getCountry();
 	}
 
-	private final Map<String, String> _labelsMap = new HashMap<>();
+	private final CSSVariableType _cssVariableType;
+	private final Map<String, String> _labelsMap;
 
 }
