@@ -4,7 +4,8 @@
 			"label": {
 				"": "Background Color",
 				"es": "Color de fondo"
-			}
+			},
+			"type": "color"
 		},
 		"font-size-base": {
 			"label": {
