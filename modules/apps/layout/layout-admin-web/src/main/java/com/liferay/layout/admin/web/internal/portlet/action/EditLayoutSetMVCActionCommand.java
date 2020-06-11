@@ -15,9 +15,10 @@
 package com.liferay.layout.admin.web.internal.portlet.action;
 
 import com.liferay.document.library.kernel.service.DLAppLocalService;
-import com.liferay.frontend.css.variables.CSSVariablesConfiguration;
-import com.liferay.frontend.css.variables.CSSVariablesDefinition;
+import com.liferay.frontend.css.variables.CSSVariableDescription;
+import com.liferay.frontend.css.variables.theme.ThemeCSSVariableDescriptionsRegistry;
 import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
+import com.liferay.layout.admin.css.variables.LayoutCSSVariablesConfiguration;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.LayoutSet;
 import com.liferay.portal.kernel.model.Theme;
@@ -98,19 +99,18 @@ public class EditLayoutSetMVCActionCommand extends BaseMVCActionCommand {
 
 		Map<String, String> cssVariables = new HashMap<>();
 
-		CSSVariablesDefinition cssVariablesDefinition =
-			_cssVariablesConfiguration.getCSSVariablesDefinition(theme);
+		Map<String, CSSVariableDescription> cssVariableDescriptions =
+			_themeCSSVariableDescriptionsRegistry.getCSSVariableDescriptions(
+				theme);
 
-		for (String cssVariableName :
-				cssVariablesDefinition.getCSSVariableNames()) {
-
+		for (String cssVariableName : cssVariableDescriptions.keySet()) {
 			String cssVariableValue = ParamUtil.getString(
 				actionRequest, "cssVariable-" + cssVariableName);
 
 			cssVariables.put(cssVariableName, cssVariableValue);
 		}
 
-		_cssVariablesConfiguration.setCSSVariables(
+		_layoutCSSVariablesConfiguration.setCSSVariables(
 			theme, companyId, cssVariables);
 	}
 
@@ -219,9 +219,6 @@ public class EditLayoutSetMVCActionCommand extends BaseMVCActionCommand {
 	}
 
 	@Reference
-	private CSSVariablesConfiguration _cssVariablesConfiguration;
-
-	@Reference
 	private DLAppLocalService _dlAppLocalService;
 
 	@Reference
@@ -231,9 +228,16 @@ public class EditLayoutSetMVCActionCommand extends BaseMVCActionCommand {
 	private GroupService _groupService;
 
 	@Reference
+	private LayoutCSSVariablesConfiguration _layoutCSSVariablesConfiguration;
+
+	@Reference
 	private LayoutSetLocalService _layoutSetLocalService;
 
 	@Reference
 	private LayoutSetService _layoutSetService;
+
+	@Reference
+	private ThemeCSSVariableDescriptionsRegistry
+		_themeCSSVariableDescriptionsRegistry;
 
 }

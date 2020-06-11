@@ -14,15 +14,16 @@
 
 package com.liferay.frontend.css.variables;
 
-import java.util.Locale;
+import java.util.Collection;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Iván Zaera Avellón
  */
-public interface CSSVariableDefinition {
+public interface ScopedCSSVariablesProvider {
 
-	public CSSVariableType getCSSVariableType();
-
-	public String getLabel(Locale locale);
+	public Collection<ScopedCSSVariables> getScopedCSSVariablesCollection(
+		HttpServletRequest httpServletRequest);
 
 }

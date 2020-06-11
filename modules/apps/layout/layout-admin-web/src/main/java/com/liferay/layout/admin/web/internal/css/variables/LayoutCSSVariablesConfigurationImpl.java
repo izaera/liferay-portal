@@ -12,14 +12,12 @@
  * details.
  */
 
-package com.liferay.frontend.css.variables.web.internal.configuration;
+package com.liferay.layout.admin.web.internal.css.variables;
 
-import com.liferay.frontend.css.variables.CSSVariablesConfiguration;
-import com.liferay.frontend.css.variables.CSSVariablesDefinition;
-import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
-import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMapFactory;
+import com.liferay.frontend.css.variables.CSSVariableDescription;
+import com.liferay.frontend.css.variables.theme.ThemeCSSVariableDescriptionsRegistry;
+import com.liferay.layout.admin.css.variables.LayoutCSSVariablesConfiguration;
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.model.Theme;
 import com.liferay.portal.kernel.settings.CompanyServiceSettingsLocator;
 import com.liferay.portal.kernel.settings.ModifiableSettings;
@@ -35,37 +33,31 @@ import java.util.Map;
 
 import javax.portlet.ValidatorException;
 
-import javax.servlet.ServletContext;
-
-import org.osgi.framework.BundleContext;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Iván Zaera Avellón
  */
-@Component(immediate = true, service = CSSVariablesConfiguration.class)
-public class CSSVariablesConfigurationImpl
-	implements CSSVariablesConfiguration {
+@Component(service = LayoutCSSVariablesConfiguration.class)
+public class LayoutCSSVariablesConfigurationImpl
+	implements LayoutCSSVariablesConfiguration {
 
 	@Override
 	public Map<String, String> getCSSVariables(Theme theme, long companyId) {
 		Map<String, String> cssVariables = new HashMap<>();
 
-		CSSVariablesDefinition cssVariablesDefinition =
-			getCSSVariablesDefinition(theme);
+		Map<String, CSSVariableDescription> cssVariableDescriptions =
+			_themeCSSVariableDescriptionsRegistry.getCSSVariableDescriptions(
+				theme);
 
-		if (cssVariablesDefinition == null) {
+		if (cssVariableDescriptions == null) {
 			return cssVariables;
 		}
 
 		Settings settings = _getSettings(theme, companyId);
 
-		for (String cssVariableName :
-				cssVariablesDefinition.getCSSVariableNames()) {
-
+		for (String cssVariableName : cssVariableDescriptions.keySet()) {
 			cssVariables.put(
 				cssVariableName, settings.getValue(cssVariableName, null));
 		}
@@ -74,16 +66,12 @@ public class CSSVariablesConfigurationImpl
 	}
 
 	@Override
-	public CSSVariablesDefinition getCSSVariablesDefinition(Theme theme) {
-		return _serviceTrackerMap.getService(theme.getServletContextName());
-	}
-
-	@Override
 	public void setCSSVariables(
 		Theme theme, long companyId, Map<String, String> cssVariables) {
 
-		CSSVariablesDefinition cssVariablesDefinition =
-			getCSSVariablesDefinition(theme);
+		Map<String, CSSVariableDescription> cssVariableDescriptions =
+			_themeCSSVariableDescriptionsRegistry.getCSSVariableDescriptions(
+				theme);
 
 		Settings settings = _getSettings(theme, companyId);
 
@@ -92,9 +80,7 @@ public class CSSVariablesConfigurationImpl
 
 		modifiableSettings.reset();
 
-		for (String cssVariableName :
-				cssVariablesDefinition.getCSSVariableNames()) {
-
+		for (String cssVariableName : cssVariableDescriptions.keySet()) {
 			String value = cssVariables.get(cssVariableName);
 
 			if (Validator.isNotNull(value)) {
@@ -113,27 +99,9 @@ public class CSSVariablesConfigurationImpl
 		}
 	}
 
-	@Activate
-	protected void activate(BundleContext bundleContext) {
-		_bundleContext = bundleContext;
-
-		_serviceTrackerMap = ServiceTrackerMapFactory.openSingleValueMap(
-			bundleContext, ServletContext.class, "osgi.web.symbolicname",
-			new CSSVariablesDefinitionServiceTrackerCustomizer(
-				_bundleContext, _jsonFactory));
-	}
-
-	@Deactivate
-	protected void deactivate() {
-		_serviceTrackerMap.close();
-	}
-
-	@Reference
-	protected SettingsFactory settingsFactory;
-
 	private Settings _getSettings(Theme theme, long companyId) {
 		try {
-			return settingsFactory.getSettings(
+			return _settingsFactory.getSettings(
 				new CompanyServiceSettingsLocator(
 					companyId,
 					_SETTINGS_ID + StringPool.POUND + theme.getThemeId()));
@@ -143,15 +111,13 @@ public class CSSVariablesConfigurationImpl
 		}
 	}
 
-	private static final String _SETTINGS_ID =
-		CSSVariablesConfiguration.class.getName();
-
-	private BundleContext _bundleContext;
+	private static final String _SETTINGS_ID = "layout-css-variables";
 
 	@Reference
-	private JSONFactory _jsonFactory;
+	private SettingsFactory _settingsFactory;
 
-	private ServiceTrackerMap<String, CSSVariablesDefinition>
-		_serviceTrackerMap;
+	@Reference
+	private ThemeCSSVariableDescriptionsRegistry
+		_themeCSSVariableDescriptionsRegistry;
 
 }

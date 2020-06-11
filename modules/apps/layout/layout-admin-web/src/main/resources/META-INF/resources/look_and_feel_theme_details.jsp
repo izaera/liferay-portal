@@ -213,11 +213,13 @@ Map<String, ThemeSetting> configurableSettings = selTheme.getConfigurableSetting
 </c:if>
 
 <%
-CSSVariablesConfiguration cssVariablesConfiguration = layoutsAdminDisplayContext.getCSSVariablesConfiguration();
+LayoutCSSVariablesConfiguration layoutCSSVariablesConfiguration = layoutsAdminDisplayContext.getLayoutCSSVariablesConfiguration();
 
-CSSVariablesDefinition cssVariablesDefinition = cssVariablesConfiguration.getCSSVariablesDefinition(selTheme);
+Map<String, String> cssVariables = layoutCSSVariablesConfiguration.getCSSVariables(selTheme, company.getCompanyId());
 
-Map<String, String> cssVariables = cssVariablesConfiguration.getCSSVariables(selTheme, company.getCompanyId());
+ThemeCSSVariableDescriptionsRegistry themeCSSVariableDescriptionsRegistry = layoutsAdminDisplayContext.getThemeCSSVariableDescriptionsRegistry();
+
+Map<String, CSSVariableDescription> cssVariableDescriptions = themeCSSVariableDescriptionsRegistry.getCSSVariableDescriptions(selTheme);
 %>
 
 <h2 class="h4"><liferay-ui:message key="css-variables" /></h2>
@@ -226,9 +228,9 @@ Map<String, String> cssVariables = cssVariablesConfiguration.getCSSVariables(sel
 
 	<%
 	for (Map.Entry<String, String> entry : cssVariables.entrySet()) {
-		CSSVariableDefinition cssVariableDefinition = cssVariablesDefinition.getCSSVariableDefinition(entry.getKey());
+		CSSVariableDescription cssVariableDescription = cssVariableDescriptions.get(entry.getKey());
 
-		CSSVariableType cssVariableType = cssVariableDefinition.getCSSVariableType();
+		CSSVariableType cssVariableType = cssVariableDescription.getCSSVariableType();
 	%>
 
 		<c:if test="<%= cssVariableType == CSSVariableType.COLOR %>">
@@ -237,7 +239,7 @@ Map<String, String> cssVariables = cssVariablesConfiguration.getCSSVariables(sel
 			Map<String, Object> data = HashMapBuilder.<String, Object>put(
 				"color", entry.getValue()
 			).put(
-				"label", cssVariableDefinition.getLabel(themeDisplay.getLocale())
+				"label", cssVariableDescription.getLabel(themeDisplay.getLocale())
 			).put(
 				"name", portletDisplay.getNamespace() + "cssVariable-" + entry.getKey()
 			).build();
@@ -253,7 +255,7 @@ Map<String, String> cssVariables = cssVariablesConfiguration.getCSSVariables(sel
 		</c:if>
 
 		<c:if test="<%= cssVariableType == CSSVariableType.STRING %>">
-			<aui:input label="<%= cssVariableDefinition.getLabel(themeDisplay.getLocale()) %>" name='<%= "cssVariable-" + entry.getKey() %>' type="text" value="<%= entry.getValue() %>" />
+			<aui:input label="<%= cssVariableDescription.getLabel(themeDisplay.getLocale()) %>" name='<%= "cssVariable-" + entry.getKey() %>' type="text" value="<%= entry.getValue() %>" />
 		</c:if>
 
 	<%

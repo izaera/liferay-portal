@@ -14,15 +14,15 @@
 
 package com.liferay.frontend.css.variables;
 
-import java.util.Set;
+import java.util.Map;
 
 /**
  * @author Iván Zaera Avellón
  */
-public interface CSSVariablesDefinition {
+public interface ScopedCSSVariables {
 
-	public CSSVariableDefinition getCSSVariableDefinition(String name);
+	public Map<String, String> getCSSVariables();
 
-	public Set<String> getCSSVariableNames();
+	public String getScope();
 
 }

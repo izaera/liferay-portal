@@ -19,9 +19,10 @@ import com.liferay.asset.kernel.service.AssetCategoryServiceUtil;
 import com.liferay.asset.kernel.service.AssetVocabularyServiceUtil;
 import com.liferay.exportimport.kernel.staging.LayoutStagingUtil;
 import com.liferay.exportimport.kernel.staging.StagingUtil;
-import com.liferay.frontend.css.variables.CSSVariablesConfiguration;
+import com.liferay.frontend.css.variables.theme.ThemeCSSVariableDescriptionsRegistry;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemListBuilder;
+import com.liferay.layout.admin.css.variables.LayoutCSSVariablesConfiguration;
 import com.liferay.layout.admin.web.internal.configuration.LayoutConverterConfiguration;
 import com.liferay.layout.page.template.model.LayoutPageTemplateCollection;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
@@ -106,21 +107,25 @@ import javax.servlet.http.HttpServletRequest;
 public class LayoutsAdminDisplayContext {
 
 	public LayoutsAdminDisplayContext(
-		CSSVariablesConfiguration cssVariablesConfiguration,
+		LayoutCSSVariablesConfiguration layoutCSSVariablesConfiguration,
 		LayoutConverterConfiguration layoutConverterConfiguration,
 		LayoutConverterRegistry layoutConverterRegistry,
 		LayoutCopyHelper layoutCopyHelper,
 		LiferayPortletRequest liferayPortletRequest,
 		LiferayPortletResponse liferayPortletResponse,
-		StagingGroupHelper stagingGroupHelper) {
+		StagingGroupHelper stagingGroupHelper,
+		ThemeCSSVariableDescriptionsRegistry
+			themeCSSVariableDescriptionsRegistry) {
 
-		_cssVariablesConfiguration = cssVariablesConfiguration;
+		_layoutCSSVariablesConfiguration = layoutCSSVariablesConfiguration;
 		_layoutConverterConfiguration = layoutConverterConfiguration;
 		_layoutConverterRegistry = layoutConverterRegistry;
 		_layoutCopyHelper = layoutCopyHelper;
 		_liferayPortletRequest = liferayPortletRequest;
 		_liferayPortletResponse = liferayPortletResponse;
 		_stagingGroupHelper = stagingGroupHelper;
+		_themeCSSVariableDescriptionsRegistry =
+			themeCSSVariableDescriptionsRegistry;
 
 		httpServletRequest = PortalUtil.getHttpServletRequest(
 			_liferayPortletRequest);
@@ -305,10 +310,6 @@ public class LayoutsAdminDisplayContext {
 			"explicitCreation", String.valueOf(Boolean.TRUE));
 
 		return copyLayoutURL.toString();
-	}
-
-	public CSSVariablesConfiguration getCSSVariablesConfiguration() {
-		return _cssVariablesConfiguration;
 	}
 
 	public String getDeleteLayoutURL(Layout layout) throws PortalException {
@@ -525,6 +526,12 @@ public class LayoutsAdminDisplayContext {
 
 	public LayoutConverterConfiguration getLayoutConverterConfiguration() {
 		return _layoutConverterConfiguration;
+	}
+
+	public LayoutCSSVariablesConfiguration
+		getLayoutCSSVariablesConfiguration() {
+
+		return _layoutCSSVariablesConfiguration;
 	}
 
 	public List<LayoutDescription> getLayoutDescriptions() {
@@ -1031,6 +1038,12 @@ public class LayoutsAdminDisplayContext {
 		_tabs1 = ParamUtil.getString(_liferayPortletRequest, "tabs1", "pages");
 
 		return _tabs1;
+	}
+
+	public ThemeCSSVariableDescriptionsRegistry
+		getThemeCSSVariableDescriptionsRegistry() {
+
+		return _themeCSSVariableDescriptionsRegistry;
 	}
 
 	public String getTitle(boolean privatePages) {
@@ -1689,7 +1702,6 @@ public class LayoutsAdminDisplayContext {
 
 	private Long _activeLayoutSetBranchId;
 	private String _backURL;
-	private final CSSVariablesConfiguration _cssVariablesConfiguration;
 	private String _displayStyle;
 	private Boolean _firstColumn;
 	private SearchContainer<String> _firstColumnLayoutsSearchContainer;
@@ -1698,6 +1710,8 @@ public class LayoutsAdminDisplayContext {
 	private final LayoutConverterConfiguration _layoutConverterConfiguration;
 	private final LayoutConverterRegistry _layoutConverterRegistry;
 	private final LayoutCopyHelper _layoutCopyHelper;
+	private final LayoutCSSVariablesConfiguration
+		_layoutCSSVariablesConfiguration;
 	private List<LayoutDescription> _layoutDescriptions;
 	private Long _layoutId;
 	private SearchContainer<Layout> _layoutsSearchContainer;
@@ -1715,5 +1729,7 @@ public class LayoutsAdminDisplayContext {
 	private Long _selPlid;
 	private final StagingGroupHelper _stagingGroupHelper;
 	private String _tabs1;
+	private final ThemeCSSVariableDescriptionsRegistry
+		_themeCSSVariableDescriptionsRegistry;
 
 }

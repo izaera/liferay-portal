@@ -18,9 +18,11 @@ import com.liferay.application.list.GroupProvider;
 import com.liferay.asset.kernel.exception.AssetCategoryException;
 import com.liferay.dynamic.data.mapping.validator.DDMFormValuesValidationException;
 import com.liferay.frontend.css.variables.CSSVariablesConfiguration;
+import com.liferay.frontend.css.variables.theme.ThemeCSSVariableDescriptionsRegistry;
 import com.liferay.info.item.provider.InfoItemServiceTracker;
 import com.liferay.info.list.provider.InfoListProviderTracker;
 import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
+import com.liferay.layout.admin.css.variables.LayoutCSSVariablesConfiguration;
 import com.liferay.layout.admin.web.internal.configuration.LayoutConverterConfiguration;
 import com.liferay.layout.admin.web.internal.constants.LayoutAdminWebKeys;
 import com.liferay.layout.admin.web.internal.display.context.LayoutsAdminDisplayContext;
@@ -186,11 +188,12 @@ public class GroupPagesPortlet extends MVCPortlet {
 
 			LayoutsAdminDisplayContext layoutsAdminDisplayContext =
 				new LayoutsAdminDisplayContext(
-					_cssVariablesConfiguration, _layoutConverterConfiguration,
-					_layoutConverterRegistry, _layoutCopyHelper,
+					_layoutCSSVariablesConfiguration,
+					_layoutConverterConfiguration, _layoutConverterRegistry,
+					_layoutCopyHelper,
 					_portal.getLiferayPortletRequest(renderRequest),
 					_portal.getLiferayPortletResponse(renderResponse),
-					_stagingGroupHelper);
+					_stagingGroupHelper, _themeCSSVariableDescriptionsRegistry);
 
 			renderRequest.setAttribute(
 				LayoutAdminWebKeys.LAYOUT_PAGE_LAYOUT_ADMIN_DISPLAY_CONTEXT,
@@ -271,6 +274,9 @@ public class GroupPagesPortlet extends MVCPortlet {
 	private LayoutCopyHelper _layoutCopyHelper;
 
 	@Reference
+	private LayoutCSSVariablesConfiguration _layoutCSSVariablesConfiguration;
+
+	@Reference
 	private LayoutPageTemplateEntryLocalService
 		_layoutPageTemplateEntryLocalService;
 
@@ -282,5 +288,9 @@ public class GroupPagesPortlet extends MVCPortlet {
 
 	@Reference
 	private StagingGroupHelper _stagingGroupHelper;
+
+	@Reference
+	private ThemeCSSVariableDescriptionsRegistry
+		_themeCSSVariableDescriptionsRegistry;
 
 }

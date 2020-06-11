@@ -14,8 +14,9 @@
 
 package com.liferay.layout.admin.web.internal.portlet.action;
 
-import com.liferay.frontend.css.variables.CSSVariablesConfiguration;
+import com.liferay.frontend.css.variables.theme.ThemeCSSVariableDescriptionsRegistry;
 import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
+import com.liferay.layout.admin.css.variables.LayoutCSSVariablesConfiguration;
 import com.liferay.layout.admin.web.internal.configuration.LayoutConverterConfiguration;
 import com.liferay.layout.admin.web.internal.display.context.LayoutsAdminDisplayContext;
 import com.liferay.layout.admin.web.internal.display.context.MillerColumnsDisplayContext;
@@ -75,11 +76,11 @@ public class GetLayoutChildrenMVCActionCommand extends BaseMVCActionCommand {
 
 		LayoutsAdminDisplayContext layoutsAdminDisplayContext =
 			new LayoutsAdminDisplayContext(
-				_cssVariablesConfiguration, _layoutConverterConfiguration,
+				_layoutCSSVariablesConfiguration, _layoutConverterConfiguration,
 				_layoutConverterRegistry, _layoutCopyHelper,
 				_portal.getLiferayPortletRequest(actionRequest),
 				_portal.getLiferayPortletResponse(actionResponse),
-				_stagingGroupHelper);
+				_stagingGroupHelper, _themeCSSVariableDescriptionsRegistry);
 
 		MillerColumnsDisplayContext millerColumnsDisplayContext =
 			new MillerColumnsDisplayContext(
@@ -94,9 +95,6 @@ public class GetLayoutChildrenMVCActionCommand extends BaseMVCActionCommand {
 			actionRequest, actionResponse, JSONUtil.put("children", jsonArray));
 	}
 
-	@Reference
-	private CSSVariablesConfiguration _cssVariablesConfiguration;
-
 	private volatile LayoutConverterConfiguration _layoutConverterConfiguration;
 
 	@Reference
@@ -106,6 +104,9 @@ public class GetLayoutChildrenMVCActionCommand extends BaseMVCActionCommand {
 	private LayoutCopyHelper _layoutCopyHelper;
 
 	@Reference
+	private LayoutCSSVariablesConfiguration _layoutCSSVariablesConfiguration;
+
+	@Reference
 	private LayoutLocalService _layoutLocalService;
 
 	@Reference
@@ -113,5 +114,9 @@ public class GetLayoutChildrenMVCActionCommand extends BaseMVCActionCommand {
 
 	@Reference
 	private StagingGroupHelper _stagingGroupHelper;
+
+	@Reference
+	private ThemeCSSVariableDescriptionsRegistry
+		_themeCSSVariableDescriptionsRegistry;
 
 }

@@ -14,20 +14,15 @@
 
 package com.liferay.frontend.css.variables;
 
-import com.liferay.portal.kernel.model.Theme;
-
-import java.util.Map;
+import java.util.Locale;
 
 /**
  * @author Iván Zaera Avellón
  */
-public interface CSSVariablesConfiguration {
+public interface CSSVariableDescription {
 
-	public Map<String, String> getCSSVariables(Theme theme, long companyId);
+	public CSSVariableType getCSSVariableType();
 
-	public CSSVariablesDefinition getCSSVariablesDefinition(Theme theme);
-
-	public void setCSSVariables(
-		Theme theme, long companyId, Map<String, String> cssVariables);
+	public String getLabel(Locale locale);
 
 }

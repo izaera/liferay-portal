@@ -12,9 +12,9 @@
  * details.
  */
 
-package com.liferay.frontend.css.variables.web.internal.configuration;
+package com.liferay.frontend.css.variables.web.internal;
 
-import com.liferay.frontend.css.variables.CSSVariableDefinition;
+import com.liferay.frontend.css.variables.CSSVariableDescription;
 import com.liferay.frontend.css.variables.CSSVariableType;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.Validator;
@@ -25,9 +25,9 @@ import java.util.Map;
 /**
  * @author Iván Zaera Avellón
  */
-public class CSSVariableDefinitionImpl implements CSSVariableDefinition {
+public class CSSVariableDescriptionImpl implements CSSVariableDescription {
 
-	public CSSVariableDefinitionImpl(
+	public CSSVariableDescriptionImpl(
 		CSSVariableType cssVariableType, Map<String, String> labelsMap) {
 
 		_cssVariableType = cssVariableType;
