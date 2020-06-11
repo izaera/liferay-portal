@@ -22,7 +22,7 @@ import com.liferay.exportimport.kernel.staging.StagingUtil;
 import com.liferay.frontend.css.variables.theme.ThemeCSSVariableDescriptionsRegistry;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemListBuilder;
-import com.liferay.layout.admin.css.variables.LayoutCSSVariablesConfiguration;
+import com.liferay.layout.admin.css.variables.LayoutSetCSSVariablesConfiguration;
 import com.liferay.layout.admin.web.internal.configuration.LayoutConverterConfiguration;
 import com.liferay.layout.page.template.model.LayoutPageTemplateCollection;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
@@ -107,7 +107,7 @@ import javax.servlet.http.HttpServletRequest;
 public class LayoutsAdminDisplayContext {
 
 	public LayoutsAdminDisplayContext(
-		LayoutCSSVariablesConfiguration layoutCSSVariablesConfiguration,
+		LayoutSetCSSVariablesConfiguration layoutSetCSSVariablesConfiguration,
 		LayoutConverterConfiguration layoutConverterConfiguration,
 		LayoutConverterRegistry layoutConverterRegistry,
 		LayoutCopyHelper layoutCopyHelper,
@@ -117,7 +117,8 @@ public class LayoutsAdminDisplayContext {
 		ThemeCSSVariableDescriptionsRegistry
 			themeCSSVariableDescriptionsRegistry) {
 
-		_layoutCSSVariablesConfiguration = layoutCSSVariablesConfiguration;
+		_layoutSetCSSVariablesConfiguration =
+			layoutSetCSSVariablesConfiguration;
 		_layoutConverterConfiguration = layoutConverterConfiguration;
 		_layoutConverterRegistry = layoutConverterRegistry;
 		_layoutCopyHelper = layoutCopyHelper;
@@ -528,12 +529,6 @@ public class LayoutsAdminDisplayContext {
 		return _layoutConverterConfiguration;
 	}
 
-	public LayoutCSSVariablesConfiguration
-		getLayoutCSSVariablesConfiguration() {
-
-		return _layoutCSSVariablesConfiguration;
-	}
-
 	public List<LayoutDescription> getLayoutDescriptions() {
 		if (_layoutDescriptions != null) {
 			return _layoutDescriptions;
@@ -560,6 +555,12 @@ public class LayoutsAdminDisplayContext {
 		}
 
 		return _layoutId;
+	}
+
+	public LayoutSetCSSVariablesConfiguration
+		getLayoutSetCSSVariablesConfiguration() {
+
+		return _layoutSetCSSVariablesConfiguration;
 	}
 
 	public SearchContainer<Layout> getLayoutsSearchContainer()
@@ -1710,10 +1711,10 @@ public class LayoutsAdminDisplayContext {
 	private final LayoutConverterConfiguration _layoutConverterConfiguration;
 	private final LayoutConverterRegistry _layoutConverterRegistry;
 	private final LayoutCopyHelper _layoutCopyHelper;
-	private final LayoutCSSVariablesConfiguration
-		_layoutCSSVariablesConfiguration;
 	private List<LayoutDescription> _layoutDescriptions;
 	private Long _layoutId;
+	private final LayoutSetCSSVariablesConfiguration
+		_layoutSetCSSVariablesConfiguration;
 	private SearchContainer<Layout> _layoutsSearchContainer;
 	private final LiferayPortletRequest _liferayPortletRequest;
 	private final LiferayPortletResponse _liferayPortletResponse;

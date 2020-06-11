@@ -22,7 +22,7 @@ import com.liferay.frontend.css.variables.theme.ThemeCSSVariableDescriptionsRegi
 import com.liferay.info.item.provider.InfoItemServiceTracker;
 import com.liferay.info.list.provider.InfoListProviderTracker;
 import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
-import com.liferay.layout.admin.css.variables.LayoutCSSVariablesConfiguration;
+import com.liferay.layout.admin.css.variables.LayoutSetCSSVariablesConfiguration;
 import com.liferay.layout.admin.web.internal.configuration.LayoutConverterConfiguration;
 import com.liferay.layout.admin.web.internal.constants.LayoutAdminWebKeys;
 import com.liferay.layout.admin.web.internal.display.context.LayoutsAdminDisplayContext;
@@ -188,7 +188,7 @@ public class GroupPagesPortlet extends MVCPortlet {
 
 			LayoutsAdminDisplayContext layoutsAdminDisplayContext =
 				new LayoutsAdminDisplayContext(
-					_layoutCSSVariablesConfiguration,
+					_layoutSetCSSVariablesConfiguration,
 					_layoutConverterConfiguration, _layoutConverterRegistry,
 					_layoutCopyHelper,
 					_portal.getLiferayPortletRequest(renderRequest),
@@ -274,14 +274,15 @@ public class GroupPagesPortlet extends MVCPortlet {
 	private LayoutCopyHelper _layoutCopyHelper;
 
 	@Reference
-	private LayoutCSSVariablesConfiguration _layoutCSSVariablesConfiguration;
-
-	@Reference
 	private LayoutPageTemplateEntryLocalService
 		_layoutPageTemplateEntryLocalService;
 
 	@Reference
 	private LayoutPrototypeLocalService _layoutPrototypeLocalService;
+
+	@Reference
+	private LayoutSetCSSVariablesConfiguration
+		_layoutSetCSSVariablesConfiguration;
 
 	@Reference
 	private Portal _portal;

@@ -14,18 +14,18 @@
 
 package com.liferay.layout.admin.css.variables;
 
-import com.liferay.portal.kernel.model.Theme;
+import com.liferay.portal.kernel.model.LayoutSet;
 
 import java.util.Map;
 
 /**
  * @author Iván Zaera Avellón
  */
-public interface LayoutCSSVariablesConfiguration {
+public interface LayoutSetCSSVariablesConfiguration {
 
-	public Map<String, String> getCSSVariables(Theme theme, long companyId);
+	public Map<String, String> getCSSVariables(LayoutSet layoutSet);
 
 	public void setCSSVariables(
-		Theme theme, long companyId, Map<String, String> cssVariables);
+		LayoutSet layoutSet, Map<String, String> cssVariables);
 
 }

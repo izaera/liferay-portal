@@ -16,9 +16,9 @@ package com.liferay.layout.admin.web.internal.css.variables;
 
 import com.liferay.frontend.css.variables.CSSVariableDescription;
 import com.liferay.frontend.css.variables.theme.ThemeCSSVariableDescriptionsRegistry;
-import com.liferay.layout.admin.css.variables.LayoutCSSVariablesConfiguration;
+import com.liferay.layout.admin.css.variables.LayoutSetCSSVariablesConfiguration;
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.kernel.model.Theme;
+import com.liferay.portal.kernel.model.LayoutSet;
 import com.liferay.portal.kernel.settings.CompanyServiceSettingsLocator;
 import com.liferay.portal.kernel.settings.ModifiableSettings;
 import com.liferay.portal.kernel.settings.Settings;
@@ -39,23 +39,23 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * @author Iván Zaera Avellón
  */
-@Component(service = LayoutCSSVariablesConfiguration.class)
-public class LayoutCSSVariablesConfigurationImpl
-	implements LayoutCSSVariablesConfiguration {
+@Component(service = LayoutSetCSSVariablesConfiguration.class)
+public class LayoutSetCSSVariablesConfigurationImpl
+	implements LayoutSetCSSVariablesConfiguration {
 
 	@Override
-	public Map<String, String> getCSSVariables(Theme theme, long companyId) {
+	public Map<String, String> getCSSVariables(LayoutSet layoutSet) {
 		Map<String, String> cssVariables = new HashMap<>();
 
 		Map<String, CSSVariableDescription> cssVariableDescriptions =
 			_themeCSSVariableDescriptionsRegistry.getCSSVariableDescriptions(
-				theme);
+				layoutSet.getTheme());
 
 		if (cssVariableDescriptions == null) {
 			return cssVariables;
 		}
 
-		Settings settings = _getSettings(theme, companyId);
+		Settings settings = _getSettings(layoutSet);
 
 		for (String cssVariableName : cssVariableDescriptions.keySet()) {
 			cssVariables.put(
@@ -67,13 +67,13 @@ public class LayoutCSSVariablesConfigurationImpl
 
 	@Override
 	public void setCSSVariables(
-		Theme theme, long companyId, Map<String, String> cssVariables) {
+		LayoutSet layoutSet, Map<String, String> cssVariables) {
 
 		Map<String, CSSVariableDescription> cssVariableDescriptions =
 			_themeCSSVariableDescriptionsRegistry.getCSSVariableDescriptions(
-				theme);
+				layoutSet.getTheme());
 
-		Settings settings = _getSettings(theme, companyId);
+		Settings settings = _getSettings(layoutSet);
 
 		ModifiableSettings modifiableSettings =
 			settings.getModifiableSettings();
@@ -99,12 +99,13 @@ public class LayoutCSSVariablesConfigurationImpl
 		}
 	}
 
-	private Settings _getSettings(Theme theme, long companyId) {
+	private Settings _getSettings(LayoutSet layoutSet) {
 		try {
 			return _settingsFactory.getSettings(
 				new CompanyServiceSettingsLocator(
-					companyId,
-					_SETTINGS_ID + StringPool.POUND + theme.getThemeId()));
+					layoutSet.getCompanyId(),
+					_SETTINGS_ID + StringPool.POUND +
+						layoutSet.getLayoutSetId()));
 		}
 		catch (SettingsException settingsException) {
 			throw new RuntimeException(settingsException);

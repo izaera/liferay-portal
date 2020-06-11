@@ -213,9 +213,9 @@ Map<String, ThemeSetting> configurableSettings = selTheme.getConfigurableSetting
 </c:if>
 
 <%
-LayoutCSSVariablesConfiguration layoutCSSVariablesConfiguration = layoutsAdminDisplayContext.getLayoutCSSVariablesConfiguration();
+LayoutSetCSSVariablesConfiguration layoutSetCSSVariablesConfiguration = layoutsAdminDisplayContext.getLayoutSetCSSVariablesConfiguration();
 
-Map<String, String> cssVariables = layoutCSSVariablesConfiguration.getCSSVariables(selTheme, company.getCompanyId());
+Map<String, String> cssVariables = layoutSetCSSVariablesConfiguration.getCSSVariables(selLayoutSet);
 
 ThemeCSSVariableDescriptionsRegistry themeCSSVariableDescriptionsRegistry = layoutsAdminDisplayContext.getThemeCSSVariableDescriptionsRegistry();
 

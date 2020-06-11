@@ -16,7 +16,7 @@ package com.liferay.layout.admin.web.internal.portlet.action;
 
 import com.liferay.frontend.css.variables.theme.ThemeCSSVariableDescriptionsRegistry;
 import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
-import com.liferay.layout.admin.css.variables.LayoutCSSVariablesConfiguration;
+import com.liferay.layout.admin.css.variables.LayoutSetCSSVariablesConfiguration;
 import com.liferay.layout.admin.web.internal.configuration.LayoutConverterConfiguration;
 import com.liferay.layout.admin.web.internal.display.context.LayoutsAdminDisplayContext;
 import com.liferay.layout.admin.web.internal.display.context.MillerColumnsDisplayContext;
@@ -76,8 +76,9 @@ public class GetLayoutChildrenMVCActionCommand extends BaseMVCActionCommand {
 
 		LayoutsAdminDisplayContext layoutsAdminDisplayContext =
 			new LayoutsAdminDisplayContext(
-				_layoutCSSVariablesConfiguration, _layoutConverterConfiguration,
-				_layoutConverterRegistry, _layoutCopyHelper,
+				_layoutSetCSSVariablesConfiguration,
+				_layoutConverterConfiguration, _layoutConverterRegistry,
+				_layoutCopyHelper,
 				_portal.getLiferayPortletRequest(actionRequest),
 				_portal.getLiferayPortletResponse(actionResponse),
 				_stagingGroupHelper, _themeCSSVariableDescriptionsRegistry);
@@ -104,10 +105,11 @@ public class GetLayoutChildrenMVCActionCommand extends BaseMVCActionCommand {
 	private LayoutCopyHelper _layoutCopyHelper;
 
 	@Reference
-	private LayoutCSSVariablesConfiguration _layoutCSSVariablesConfiguration;
+	private LayoutLocalService _layoutLocalService;
 
 	@Reference
-	private LayoutLocalService _layoutLocalService;
+	private LayoutSetCSSVariablesConfiguration
+		_layoutSetCSSVariablesConfiguration;
 
 	@Reference
 	private Portal _portal;

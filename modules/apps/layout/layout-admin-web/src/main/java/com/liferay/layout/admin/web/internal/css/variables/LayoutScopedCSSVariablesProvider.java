@@ -16,7 +16,7 @@ package com.liferay.layout.admin.web.internal.css.variables;
 
 import com.liferay.frontend.css.variables.ScopedCSSVariables;
 import com.liferay.frontend.css.variables.ScopedCSSVariablesProvider;
-import com.liferay.layout.admin.css.variables.LayoutCSSVariablesConfiguration;
+import com.liferay.layout.admin.css.variables.LayoutSetCSSVariablesConfiguration;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.WebKeys;
 
@@ -45,11 +45,12 @@ public class LayoutScopedCSSVariablesProvider
 
 		return Arrays.asList(
 			new LayoutScopedCSSVariables(
-				_layoutCSSVariablesConfiguration.getCSSVariables(
-					themeDisplay.getTheme(), themeDisplay.getCompanyId())));
+				_layoutSetCSSVariablesConfiguration.getCSSVariables(
+					themeDisplay.getLayoutSet())));
 	}
 
 	@Reference
-	private LayoutCSSVariablesConfiguration _layoutCSSVariablesConfiguration;
+	private LayoutSetCSSVariablesConfiguration
+		_layoutSetCSSVariablesConfiguration;
 
 }

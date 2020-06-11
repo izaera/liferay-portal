@@ -18,10 +18,9 @@ import com.liferay.document.library.kernel.service.DLAppLocalService;
 import com.liferay.frontend.css.variables.CSSVariableDescription;
 import com.liferay.frontend.css.variables.theme.ThemeCSSVariableDescriptionsRegistry;
 import com.liferay.layout.admin.constants.LayoutAdminPortletKeys;
-import com.liferay.layout.admin.css.variables.LayoutCSSVariablesConfiguration;
+import com.liferay.layout.admin.css.variables.LayoutSetCSSVariablesConfiguration;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.LayoutSet;
-import com.liferay.portal.kernel.model.Theme;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.repository.model.FileEntry;
@@ -90,18 +89,17 @@ public class EditLayoutSetMVCActionCommand extends BaseMVCActionCommand {
 			actionRequest, liveGroupId, stagingGroupId, privateLayout,
 			layoutSet.getSettingsProperties());
 
-		updateCSSVariables(
-			actionRequest, layoutSet.getTheme(), layoutSet.getCompanyId());
+		updateCSSVariables(actionRequest, layoutSet);
 	}
 
 	protected void updateCSSVariables(
-		ActionRequest actionRequest, Theme theme, long companyId) {
+		ActionRequest actionRequest, LayoutSet layoutSet) {
 
 		Map<String, String> cssVariables = new HashMap<>();
 
 		Map<String, CSSVariableDescription> cssVariableDescriptions =
 			_themeCSSVariableDescriptionsRegistry.getCSSVariableDescriptions(
-				theme);
+				layoutSet.getTheme());
 
 		for (String cssVariableName : cssVariableDescriptions.keySet()) {
 			String cssVariableValue = ParamUtil.getString(
@@ -110,8 +108,8 @@ public class EditLayoutSetMVCActionCommand extends BaseMVCActionCommand {
 			cssVariables.put(cssVariableName, cssVariableValue);
 		}
 
-		_layoutCSSVariablesConfiguration.setCSSVariables(
-			theme, companyId, cssVariables);
+		_layoutSetCSSVariablesConfiguration.setCSSVariables(
+			layoutSet, cssVariables);
 	}
 
 	protected void updateLogo(
@@ -228,7 +226,8 @@ public class EditLayoutSetMVCActionCommand extends BaseMVCActionCommand {
 	private GroupService _groupService;
 
 	@Reference
-	private LayoutCSSVariablesConfiguration _layoutCSSVariablesConfiguration;
+	private LayoutSetCSSVariablesConfiguration
+		_layoutSetCSSVariablesConfiguration;
 
 	@Reference
 	private LayoutSetLocalService _layoutSetLocalService;
