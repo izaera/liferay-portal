@@ -1,0 +1,12 @@
+{
+	"variables": [
+		{
+			"name": "foreground",
+			"type": "color"
+		},
+		{
+			"name": "font-base",
+			"type": "string"
+		}
+	]
+}
