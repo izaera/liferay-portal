@@ -18,6 +18,7 @@ import com.liferay.frontend.css.variables.CSSVariableDescription;
 import com.liferay.frontend.css.variables.CSSVariableType;
 import com.liferay.frontend.css.variables.web.internal.CSSVariableDescriptionImpl;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONException;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.json.JSONObject;
@@ -107,18 +108,20 @@ public class ThemeCSSVariableDescriptionsServiceTrackerCustomizer
 			return null;
 		}
 
-		JSONObject variablesJSONObject = jsonObject.getJSONObject("variables");
+		JSONArray variablesJSONArray = jsonObject.getJSONArray("variables");
 
-		if (variablesJSONObject == null) {
+		if (variablesJSONArray == null) {
 			throw new JSONException("Unable to read variables field");
 		}
 
 		Map<String, CSSVariableDescription> cssVariableDescriptions =
 			new HashMap<>();
 
-		for (String name : variablesJSONObject.keySet()) {
+		for (int i = 0; i < variablesJSONArray.length(); i++) {
 			JSONObject cssVariableDefinitionJSONObject =
-				variablesJSONObject.getJSONObject(name);
+				variablesJSONArray.getJSONObject(i);
+
+			String name = cssVariableDefinitionJSONObject.getString("name");
 
 			cssVariableDescriptions.put(
 				name,
@@ -151,11 +154,11 @@ public class ThemeCSSVariableDescriptionsServiceTrackerCustomizer
 
 			if (liferayThemeJSONObject != null) {
 				cssVariablesPath = liferayThemeJSONObject.getString(
-					"cssVariablesPath");
+					"tokensPath");
 			}
 
 			if (Validator.isNull(cssVariablesPath)) {
-				cssVariablesPath = "/WEB-INF/css-variables.json";
+				cssVariablesPath = "/WEB-INF/tokens.json";
 			}
 
 			return cssVariablesPath;
