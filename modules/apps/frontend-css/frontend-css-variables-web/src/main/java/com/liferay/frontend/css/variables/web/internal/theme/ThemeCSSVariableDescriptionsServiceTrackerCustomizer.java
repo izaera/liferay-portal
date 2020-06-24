@@ -36,6 +36,7 @@ import java.util.concurrent.atomic.AtomicReference;
 
 import javax.servlet.ServletContext;
 
+import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
@@ -73,6 +74,7 @@ public class ThemeCSSVariableDescriptionsServiceTrackerCustomizer
 
 		ServletContext servletContext = _bundleContext.getService(
 			serviceReference);
+		Bundle bundle = serviceReference.getBundle();
 
 		try {
 			String fileName = _getCSSVariableDescriptionsFileName(
