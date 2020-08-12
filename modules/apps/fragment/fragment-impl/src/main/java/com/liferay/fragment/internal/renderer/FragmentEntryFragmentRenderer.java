@@ -25,16 +25,20 @@ import com.liferay.fragment.renderer.FragmentRenderer;
 import com.liferay.fragment.renderer.FragmentRendererContext;
 import com.liferay.fragment.renderer.constants.FragmentRendererConstants;
 import com.liferay.fragment.util.configuration.FragmentEntryConfigurationParser;
+import com.liferay.frontend.js.loader.modules.extender.npm.JSPackage;
+import com.liferay.frontend.js.loader.modules.extender.npm.JSPackageDependency;
+import com.liferay.frontend.js.loader.modules.extender.npm.ModuleNameUtil;
+import com.liferay.frontend.js.loader.modules.extender.npm.NPMRegistry;
 import com.liferay.petra.io.unsync.UnsyncStringWriter;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
-import com.liferay.petra.string.StringUtil;
 import com.liferay.portal.kernel.cache.MultiVMPool;
 import com.liferay.portal.kernel.cache.PortalCache;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.servlet.taglib.util.OutputData;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.taglib.servlet.PipingServletResponse;
@@ -42,6 +46,8 @@ import com.liferay.taglib.servlet.PipingServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -224,7 +230,7 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 			sb.append("'); var configuration = ");
 			sb.append(configuration);
 			sb.append(";");
-			sb.append(js);
+			sb.append(_rewriteRequiredModules(fragmentEntryId, js));
 			sb.append(";}());</script>");
 		}
 
@@ -347,6 +353,73 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 		return content;
 	}
 
+	// TODO: this method assumes that the imports information comes in a header
+	// in the JS code (because the bundler has put it there). This is only for
+	// the PoC and should be moved to a more suitable place in the final
+	// version (perhaps the fragment.json file or something like that).
+
+	private String _rewriteRequiredModules(long fragmentEntryId, String js) {
+		if (!js.startsWith("//{imports")) {
+			return js;
+		}
+
+		List<String> modules = new ArrayList<>();
+		List<String> variables = new ArrayList<>();
+
+		String[] lines = js.split(StringPool.NEW_LINE);
+
+		for (int i = 1; i < lines.length; i++) {
+			String line = lines[i];
+
+			if (line.equals("//}imports")) {
+				break;
+			}
+
+			line = line.substring(2);
+
+			String[] parts = line.split("\\|");
+
+			variables.add(parts[0]);
+
+			String moduleName = parts[1];
+
+			String packageName = ModuleNameUtil.getPackageName(moduleName);
+
+			// TODO: this is a bit of a hack because we are passing a null
+			// JSPackage owner to JSPackageDependency, but it can be used in
+			// older versions of the portal if we need to as the NPMRegistry
+			// doesn't use it.
+
+			JSPackage jsPackage = _npmRegistry.resolveJSPackageDependency(
+				new JSPackageDependency(null, packageName, parts[2]));
+
+			if (jsPackage == null) {
+				throw new IllegalStateException(
+					StringBundler.concat(
+						"Unable to resolve package version for module ",
+						moduleName, " in fragment entry ", fragmentEntryId));
+			}
+
+			moduleName = StringUtil.replace(
+				moduleName, packageName, jsPackage.getResolvedId());
+
+			modules.add(
+				StringPool.APOSTROPHE + moduleName + StringPool.APOSTROPHE);
+		}
+
+		StringBuilder sb = new StringBuilder();
+
+		sb.append("Liferay.Loader.require([");
+		sb.append(StringUtil.merge(modules, StringPool.COMMA));
+		sb.append("], function(");
+		sb.append(StringUtil.merge(variables, StringPool.COMMA));
+		sb.append(") {\n");
+		sb.append(js);
+		sb.append("\n});");
+
+		return sb.toString();
+	}
+
 	private String _writePortletPaths(
 			FragmentEntryLink fragmentEntryLink, String html,
 			HttpServletRequest httpServletRequest,
@@ -378,6 +451,9 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 
 	@Reference
 	private MultiVMPool _multiVMPool;
+
+	@Reference
+	private NPMRegistry _npmRegistry;
 
 	@Reference
 	private PortletRegistry _portletRegistry;
