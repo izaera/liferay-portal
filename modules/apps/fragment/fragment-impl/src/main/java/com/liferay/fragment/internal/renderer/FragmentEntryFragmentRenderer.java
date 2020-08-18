@@ -25,6 +25,11 @@ import com.liferay.fragment.renderer.FragmentRenderer;
 import com.liferay.fragment.renderer.FragmentRendererContext;
 import com.liferay.fragment.renderer.constants.FragmentRendererConstants;
 import com.liferay.fragment.util.configuration.FragmentEntryConfigurationParser;
+import com.liferay.frontend.js.loader.modules.extender.npm.JSModule;
+import com.liferay.frontend.js.loader.modules.extender.npm.JSPackage;
+import com.liferay.frontend.js.loader.modules.extender.npm.ModuleNameUtil;
+import com.liferay.frontend.js.loader.modules.extender.npm.NPMRegistry;
+import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
 import com.liferay.petra.io.unsync.UnsyncStringWriter;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
@@ -37,11 +42,19 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.servlet.taglib.util.OutputData;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.template.react.renderer.ComponentDescriptor;
+import com.liferay.portal.template.react.renderer.ReactRenderer;
 import com.liferay.taglib.servlet.PipingServletResponse;
 
+import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.Writer;
 
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -110,6 +123,9 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 	protected void activate() {
 		_portalCache = (PortalCache<String, String>)_multiVMPool.getPortalCache(
 			FragmentEntryLink.class.getName());
+
+		_reactRendererDependencies = Arrays.asList(
+			_npmResolver.resolveModuleName("react"));
 	}
 
 	private FragmentEntry _getContributedFragmentEntry(
@@ -140,6 +156,35 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 		return fragmentEntryLink;
 	}
 
+	private String _getModuleName(long fragmentEntryId, String js) {
+		JSPackage jsPackage = _npmResolver.getJSPackage();
+
+		String moduleName = "fragment/" + fragmentEntryId;
+
+		JSModule jsModule = _npmRegistry.getJSModule(
+			ModuleNameUtil.getModuleId(jsPackage, moduleName));
+
+		// TODO: refresh JSModule when JavaScript changes or else find a better
+		// way to maintain JSModules for fragment in sync with DB
+
+		if (jsModule == null) {
+			int x = js.indexOf("'");
+
+			int y = js.indexOf("'", x + 1);
+
+			js = StringBundler.concat(
+				js.substring(0, x + 1),
+				ModuleNameUtil.getModuleResolvedId(jsPackage, moduleName),
+				js.substring(y));
+
+			jsModule = _npmRegistry.registerJSModule(
+				jsPackage, moduleName,
+				Arrays.asList("frontend-js-react-web$react"), js);
+		}
+
+		return jsModule.getResolvedId();
+	}
+
 	private boolean _isCacheable(FragmentEntryLink fragmentEntryLink) {
 		if (Validator.isNull(fragmentEntryLink.getRendererKey())) {
 			return fragmentEntryLink.isCacheable();
@@ -154,6 +199,15 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 		}
 
 		return fragmentEntry.isCacheable();
+	}
+
+	private boolean _isReactFragment(FragmentEntryLink fragmentEntryLink) {
+
+		// TODO: find a better way to detect fragments of React type
+
+		String js = fragmentEntryLink.getJs();
+
+		return js.startsWith("Liferay.Loader.define(");
 	}
 
 	private String _renderFragmentEntry(
@@ -331,10 +385,17 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 					fragmentEntryLink.getEditableValues());
 		}
 
-		content = _renderFragmentEntry(
-			fragmentEntryLink.getFragmentEntryId(), css, html,
-			fragmentEntryLink.getJs(), configurationJSONObject.toString(),
-			fragmentEntryLink.getNamespace(), httpServletRequest);
+		if (_isReactFragment(fragmentEntryLink)) {
+			content = _renderReactFragmentEntry(
+				fragmentEntryLink.getFragmentEntryId(),
+				fragmentEntryLink.getJs(), httpServletRequest);
+		}
+		else {
+			content = _renderFragmentEntry(
+				fragmentEntryLink.getFragmentEntryId(), css, html,
+				fragmentEntryLink.getJs(), configurationJSONObject.toString(),
+				fragmentEntryLink.getNamespace(), httpServletRequest);
+		}
 
 		if (Objects.equals(
 				fragmentRendererContext.getMode(),
@@ -345,6 +406,28 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 		}
 
 		return content;
+	}
+
+	private String _renderReactFragmentEntry(
+			long fragmentEntryId, String js,
+			HttpServletRequest httpServletRequest)
+		throws PortalException {
+
+		Writer writer = new CharArrayWriter();
+
+		try {
+			_reactRenderer.renderReact(
+				new ComponentDescriptor(
+					_getModuleName(fragmentEntryId, js),
+					"fragment" + fragmentEntryId, Collections.emptyList(),
+					true),
+				new HashMap<>(), httpServletRequest, writer);
+		}
+		catch (IOException ioException) {
+			throw new PortalException(ioException);
+		}
+
+		return writer.toString();
 	}
 
 	private String _writePortletPaths(
@@ -380,6 +463,17 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 	private MultiVMPool _multiVMPool;
 
 	@Reference
+	private NPMRegistry _npmRegistry;
+
+	@Reference
+	private NPMResolver _npmResolver;
+
+	@Reference
 	private PortletRegistry _portletRegistry;
+
+	@Reference
+	private ReactRenderer _reactRenderer;
+
+	private List<String> _reactRendererDependencies;
 
 }
