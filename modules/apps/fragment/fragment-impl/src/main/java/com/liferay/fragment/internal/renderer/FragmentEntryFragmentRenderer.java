@@ -16,6 +16,7 @@ package com.liferay.fragment.internal.renderer;
 
 import com.liferay.fragment.constants.FragmentEntryLinkConstants;
 import com.liferay.fragment.contributor.FragmentCollectionContributorTracker;
+import com.liferay.fragment.internal.util.FragmentTypeUtil;
 import com.liferay.fragment.model.FragmentEntry;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.processor.DefaultFragmentEntryProcessorContext;
@@ -24,8 +25,8 @@ import com.liferay.fragment.processor.PortletRegistry;
 import com.liferay.fragment.renderer.FragmentRenderer;
 import com.liferay.fragment.renderer.FragmentRendererContext;
 import com.liferay.fragment.renderer.constants.FragmentRendererConstants;
+import com.liferay.fragment.service.FragmentEntryLinkLocalService;
 import com.liferay.fragment.util.configuration.FragmentEntryConfigurationParser;
-import com.liferay.frontend.js.loader.modules.extender.npm.JSModule;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSPackage;
 import com.liferay.frontend.js.loader.modules.extender.npm.ModuleNameUtil;
 import com.liferay.frontend.js.loader.modules.extender.npm.NPMRegistry;
@@ -51,7 +52,6 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
 
-import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -120,6 +120,8 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 
 	@Activate
 	protected void activate() {
+		_jsPackage = _npmResolver.getJSPackage();
+
 		_portalCache = (PortalCache<String, String>)_multiVMPool.getPortalCache(
 			FragmentEntryLink.class.getName());
 	}
@@ -152,33 +154,6 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 		return fragmentEntryLink;
 	}
 
-	private String _getModuleName(long fragmentEntryLinkId, String js) {
-		JSPackage jsPackage = _npmResolver.getJSPackage();
-
-		String moduleName = "fragmentEntryLink/" + fragmentEntryLinkId;
-
-		JSModule jsModule = _npmRegistry.getJSModule(
-			ModuleNameUtil.getModuleId(jsPackage, moduleName));
-
-		// TODO: refresh JSModule when JavaScript changes or else find a better
-		// way to maintain JSModules for fragment in sync with DB
-
-		if (jsModule == null) {
-			js = StringUtil.replace(
-				js, "'__FRAGMENT_MODULE_NAME__'",
-				StringBundler.concat(
-					StringPool.APOSTROPHE,
-					ModuleNameUtil.getModuleResolvedId(jsPackage, moduleName),
-					StringPool.APOSTROPHE));
-
-			jsModule = _npmRegistry.registerJSModule(
-				jsPackage, moduleName,
-				Arrays.asList("frontend-js-react-web$react"), js);
-		}
-
-		return jsModule.getResolvedId();
-	}
-
 	private boolean _isCacheable(FragmentEntryLink fragmentEntryLink) {
 		if (Validator.isNull(fragmentEntryLink.getRendererKey())) {
 			return fragmentEntryLink.isCacheable();
@@ -193,12 +168,6 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 		}
 
 		return fragmentEntry.isCacheable();
-	}
-
-	private boolean _isReactFragment(FragmentEntryLink fragmentEntryLink) {
-		String js = fragmentEntryLink.getJs();
-
-		return js.startsWith("//# fragmentType=react\n");
 	}
 
 	private String _renderFragmentEntry(
@@ -376,10 +345,9 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 					fragmentEntryLink.getEditableValues());
 		}
 
-		if (_isReactFragment(fragmentEntryLink)) {
+		if (FragmentTypeUtil.isReactFragment(fragmentEntryLink)) {
 			content = _renderReactFragmentEntryLink(
-				fragmentEntryLink.getFragmentEntryLinkId(),
-				fragmentEntryLink.getJs(), httpServletRequest);
+				fragmentEntryLink.getFragmentEntryLinkId(), httpServletRequest);
 		}
 		else {
 			content = _renderFragmentEntry(
@@ -400,8 +368,7 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 	}
 
 	private String _renderReactFragmentEntryLink(
-			long fragmentEntryLinkId, String js,
-			HttpServletRequest httpServletRequest)
+			long fragmentEntryLinkId, HttpServletRequest httpServletRequest)
 		throws PortalException {
 
 		Writer writer = new CharArrayWriter();
@@ -409,7 +376,8 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 		try {
 			_reactRenderer.renderReact(
 				new ComponentDescriptor(
-					_getModuleName(fragmentEntryLinkId, js),
+					ModuleNameUtil.getModuleResolvedId(
+						_jsPackage, "fragmentEntryLink/" + fragmentEntryLinkId),
 					"fragment" + fragmentEntryLinkId, Collections.emptyList(),
 					true),
 				new HashMap<>(), httpServletRequest, writer);
@@ -448,7 +416,12 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 	private FragmentEntryConfigurationParser _fragmentEntryConfigurationParser;
 
 	@Reference
+	private FragmentEntryLinkLocalService _fragmentEntryLinkLocalService;
+
+	@Reference
 	private FragmentEntryProcessorRegistry _fragmentEntryProcessorRegistry;
+
+	private JSPackage _jsPackage;
 
 	@Reference
 	private MultiVMPool _multiVMPool;
