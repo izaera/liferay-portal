@@ -12,11 +12,11 @@
  * details.
  */
 
-package com.liferay.fragment.internal.model.listener;
+package com.liferay.fragment.react.internal.model.listener;
 
-import com.liferay.fragment.internal.util.FragmentTypeUtil;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.service.FragmentEntryLinkLocalService;
+import com.liferay.fragment.util.FragmentTypeDetector;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSModule;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSPackage;
 import com.liferay.frontend.js.loader.modules.extender.npm.ModuleNameUtil;
@@ -46,7 +46,7 @@ public class FragmentEntryLinkModelListener
 
 	@Override
 	public void onAfterCreate(FragmentEntryLink fragmentEntryLink) {
-		if (!FragmentTypeUtil.isReactFragment(fragmentEntryLink)) {
+		if (!_isReact(fragmentEntryLink)) {
 			return;
 		}
 
@@ -61,7 +61,7 @@ public class FragmentEntryLinkModelListener
 
 	@Override
 	public void onAfterRemove(FragmentEntryLink fragmentEntryLink) {
-		if (!FragmentTypeUtil.isReactFragment(fragmentEntryLink)) {
+		if (!_isReact(fragmentEntryLink)) {
 			return;
 		}
 
@@ -75,7 +75,7 @@ public class FragmentEntryLinkModelListener
 
 	@Override
 	public void onAfterUpdate(FragmentEntryLink fragmentEntryLink) {
-		if (!FragmentTypeUtil.isReactFragment(fragmentEntryLink)) {
+		if (!_isReact(fragmentEntryLink)) {
 			return;
 		}
 
@@ -101,7 +101,7 @@ public class FragmentEntryLinkModelListener
 		NPMRegistryUpdate npmRegistryUpdate = _npmRegistry.update();
 
 		for (FragmentEntryLink fragmentEntryLink : fragmentEntryLinks) {
-			if (!FragmentTypeUtil.isReactFragment(fragmentEntryLink)) {
+			if (!_isReact(fragmentEntryLink)) {
 				continue;
 			}
 
@@ -128,11 +128,25 @@ public class FragmentEntryLinkModelListener
 			fragmentEntryLink.getFragmentEntryLinkId();
 	}
 
+	private boolean _isReact(FragmentEntryLink fragmentEntryLink) {
+		String fragmentType = _fragmentTypeDetector.getFragmentType(
+			fragmentEntryLink);
+
+		if (fragmentType == null) {
+			return false;
+		}
+
+		return fragmentType.equals("react");
+	}
+
 	private static final List<String> _dependencies = Arrays.asList(
 		"frontend-js-react-web$react");
 
 	@Reference
 	private FragmentEntryLinkLocalService _fragmentEntryLinkLocalService;
+
+	@Reference
+	private FragmentTypeDetector _fragmentTypeDetector;
 
 	private JSPackage _jsPackage;
 

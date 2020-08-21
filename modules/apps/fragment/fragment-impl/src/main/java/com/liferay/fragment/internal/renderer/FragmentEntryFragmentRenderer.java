@@ -16,7 +16,6 @@ package com.liferay.fragment.internal.renderer;
 
 import com.liferay.fragment.constants.FragmentEntryLinkConstants;
 import com.liferay.fragment.contributor.FragmentCollectionContributorTracker;
-import com.liferay.fragment.internal.util.FragmentTypeUtil;
 import com.liferay.fragment.model.FragmentEntry;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.processor.DefaultFragmentEntryProcessorContext;
@@ -24,13 +23,13 @@ import com.liferay.fragment.processor.FragmentEntryProcessorRegistry;
 import com.liferay.fragment.processor.PortletRegistry;
 import com.liferay.fragment.renderer.FragmentRenderer;
 import com.liferay.fragment.renderer.FragmentRendererContext;
+import com.liferay.fragment.renderer.FragmentRendererDelegate;
 import com.liferay.fragment.renderer.constants.FragmentRendererConstants;
 import com.liferay.fragment.service.FragmentEntryLinkLocalService;
+import com.liferay.fragment.util.FragmentTypeDetector;
 import com.liferay.fragment.util.configuration.FragmentEntryConfigurationParser;
-import com.liferay.frontend.js.loader.modules.extender.npm.JSPackage;
-import com.liferay.frontend.js.loader.modules.extender.npm.ModuleNameUtil;
-import com.liferay.frontend.js.loader.modules.extender.npm.NPMRegistry;
-import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
+import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
+import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMapFactory;
 import com.liferay.petra.io.unsync.UnsyncStringWriter;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
@@ -43,17 +42,11 @@ import com.liferay.portal.kernel.servlet.taglib.util.OutputData;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.template.react.renderer.ComponentDescriptor;
-import com.liferay.portal.template.react.renderer.ReactRenderer;
 import com.liferay.taglib.servlet.PipingServletResponse;
 
-import java.io.CharArrayWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.io.Writer;
 
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -62,8 +55,10 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.osgi.framework.BundleContext;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 
 /**
@@ -119,11 +114,18 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 	}
 
 	@Activate
-	protected void activate() {
-		_jsPackage = _npmResolver.getJSPackage();
-
+	protected void activate(BundleContext bundleContext) {
 		_portalCache = (PortalCache<String, String>)_multiVMPool.getPortalCache(
 			FragmentEntryLink.class.getName());
+
+		_fragmentRendererDelegates =
+			ServiceTrackerMapFactory.openSingleValueMap(
+				bundleContext, FragmentRendererDelegate.class, "fragmentType");
+	}
+
+	@Deactivate
+	protected void deactivate() {
+		_fragmentRendererDelegates.close();
 	}
 
 	private FragmentEntry _getContributedFragmentEntry(
@@ -152,6 +154,19 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 		}
 
 		return fragmentEntryLink;
+	}
+
+	private FragmentRendererDelegate _getFragmentRendererDelegate(
+		FragmentEntryLink fragmentEntryLink) {
+
+		String fragmentType = _fragmentTypeDetector.getFragmentType(
+			fragmentEntryLink);
+
+		if (fragmentType == null) {
+			return null;
+		}
+
+		return _fragmentRendererDelegates.getService(fragmentType);
 	}
 
 	private boolean _isCacheable(FragmentEntryLink fragmentEntryLink) {
@@ -345,9 +360,17 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 					fragmentEntryLink.getEditableValues());
 		}
 
-		if (FragmentTypeUtil.isReactFragment(fragmentEntryLink)) {
-			content = _renderReactFragmentEntryLink(
-				fragmentEntryLink.getFragmentEntryLinkId(), httpServletRequest);
+		FragmentRendererDelegate fragmentRendererDelegate =
+			_getFragmentRendererDelegate(fragmentEntryLink);
+
+		if (fragmentRendererDelegate != null) {
+			try {
+				content = fragmentRendererDelegate.renderFragmentEntryLink(
+					fragmentEntryLink, httpServletRequest);
+			}
+			catch (IOException ioException) {
+				throw new PortalException(ioException);
+			}
 		}
 		else {
 			content = _renderFragmentEntry(
@@ -365,28 +388,6 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 		}
 
 		return content;
-	}
-
-	private String _renderReactFragmentEntryLink(
-			long fragmentEntryLinkId, HttpServletRequest httpServletRequest)
-		throws PortalException {
-
-		Writer writer = new CharArrayWriter();
-
-		try {
-			_reactRenderer.renderReact(
-				new ComponentDescriptor(
-					ModuleNameUtil.getModuleResolvedId(
-						_jsPackage, "fragmentEntryLink/" + fragmentEntryLinkId),
-					"fragment" + fragmentEntryLinkId, Collections.emptyList(),
-					true),
-				new HashMap<>(), httpServletRequest, writer);
-		}
-		catch (IOException ioException) {
-			throw new PortalException(ioException);
-		}
-
-		return writer.toString();
 	}
 
 	private String _writePortletPaths(
@@ -421,21 +422,16 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 	@Reference
 	private FragmentEntryProcessorRegistry _fragmentEntryProcessorRegistry;
 
-	private JSPackage _jsPackage;
+	private ServiceTrackerMap<String, FragmentRendererDelegate>
+		_fragmentRendererDelegates;
+
+	@Reference
+	private FragmentTypeDetector _fragmentTypeDetector;
 
 	@Reference
 	private MultiVMPool _multiVMPool;
 
 	@Reference
-	private NPMRegistry _npmRegistry;
-
-	@Reference
-	private NPMResolver _npmResolver;
-
-	@Reference
 	private PortletRegistry _portletRegistry;
-
-	@Reference
-	private ReactRenderer _reactRenderer;
 
 }

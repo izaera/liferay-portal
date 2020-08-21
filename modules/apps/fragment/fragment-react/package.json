@@ -1,5 +1,5 @@
 {
-	"name": "fragment-impl",
+	"name": "fragment-react",
 	"scripts": {
 		"build": "liferay-npm-scripts build",
 		"checkFormat": "liferay-npm-scripts check",
@@ -7,5 +7,5 @@
 		"test": "liferay-npm-scripts test",
 		"watch": "liferay-npm-scripts webpack --watch"
 	},
-	"version": "3.0.20"
+	"version": "1.0.0"
 }

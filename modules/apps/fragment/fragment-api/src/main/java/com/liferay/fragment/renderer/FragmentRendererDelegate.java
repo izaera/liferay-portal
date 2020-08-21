@@ -12,19 +12,22 @@
  * details.
  */
 
-package com.liferay.fragment.internal.util;
+package com.liferay.fragment.renderer;
 
 import com.liferay.fragment.model.FragmentEntryLink;
+
+import java.io.IOException;
+
+import javax.servlet.http.HttpServletRequest;
 
 /**
  * @author Iván Zaera Avellón
  */
-public class FragmentTypeUtil {
+public interface FragmentRendererDelegate {
 
-	public static boolean isReactFragment(FragmentEntryLink fragmentEntryLink) {
-		String js = fragmentEntryLink.getJs();
-
-		return js.startsWith("//# fragmentType=react\n");
-	}
+	public String renderFragmentEntryLink(
+			FragmentEntryLink fragmentEntryLink,
+			HttpServletRequest httpServletRequest)
+		throws IOException;
 
 }
