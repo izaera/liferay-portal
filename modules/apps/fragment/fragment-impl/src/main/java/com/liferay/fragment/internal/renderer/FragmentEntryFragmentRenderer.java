@@ -33,13 +33,13 @@ import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
 import com.liferay.petra.io.unsync.UnsyncStringWriter;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
-import com.liferay.petra.string.StringUtil;
 import com.liferay.portal.kernel.cache.MultiVMPool;
 import com.liferay.portal.kernel.cache.PortalCache;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.servlet.taglib.util.OutputData;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.template.react.renderer.ComponentDescriptor;
@@ -54,7 +54,6 @@ import java.io.Writer;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
@@ -123,9 +122,6 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 	protected void activate() {
 		_portalCache = (PortalCache<String, String>)_multiVMPool.getPortalCache(
 			FragmentEntryLink.class.getName());
-
-		_reactRendererDependencies = Arrays.asList(
-			_npmResolver.resolveModuleName("react"));
 	}
 
 	private FragmentEntry _getContributedFragmentEntry(
@@ -156,10 +152,10 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 		return fragmentEntryLink;
 	}
 
-	private String _getModuleName(long fragmentEntryId, String js) {
+	private String _getModuleName(long fragmentEntryLinkId, String js) {
 		JSPackage jsPackage = _npmResolver.getJSPackage();
 
-		String moduleName = "fragment/" + fragmentEntryId;
+		String moduleName = "fragmentEntryLink/" + fragmentEntryLinkId;
 
 		JSModule jsModule = _npmRegistry.getJSModule(
 			ModuleNameUtil.getModuleId(jsPackage, moduleName));
@@ -168,14 +164,12 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 		// way to maintain JSModules for fragment in sync with DB
 
 		if (jsModule == null) {
-			int x = js.indexOf("'");
-
-			int y = js.indexOf("'", x + 1);
-
-			js = StringBundler.concat(
-				js.substring(0, x + 1),
-				ModuleNameUtil.getModuleResolvedId(jsPackage, moduleName),
-				js.substring(y));
+			js = StringUtil.replace(
+				js, "'__FRAGMENT_MODULE_NAME__'",
+				StringBundler.concat(
+					StringPool.APOSTROPHE,
+					ModuleNameUtil.getModuleResolvedId(jsPackage, moduleName),
+					StringPool.APOSTROPHE));
 
 			jsModule = _npmRegistry.registerJSModule(
 				jsPackage, moduleName,
@@ -202,12 +196,9 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 	}
 
 	private boolean _isReactFragment(FragmentEntryLink fragmentEntryLink) {
-
-		// TODO: find a better way to detect fragments of React type
-
 		String js = fragmentEntryLink.getJs();
 
-		return js.startsWith("Liferay.Loader.define(");
+		return js.startsWith("//# fragmentType=react\n");
 	}
 
 	private String _renderFragmentEntry(
@@ -386,8 +377,8 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 		}
 
 		if (_isReactFragment(fragmentEntryLink)) {
-			content = _renderReactFragmentEntry(
-				fragmentEntryLink.getFragmentEntryId(),
+			content = _renderReactFragmentEntryLink(
+				fragmentEntryLink.getFragmentEntryLinkId(),
 				fragmentEntryLink.getJs(), httpServletRequest);
 		}
 		else {
@@ -408,8 +399,8 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 		return content;
 	}
 
-	private String _renderReactFragmentEntry(
-			long fragmentEntryId, String js,
+	private String _renderReactFragmentEntryLink(
+			long fragmentEntryLinkId, String js,
 			HttpServletRequest httpServletRequest)
 		throws PortalException {
 
@@ -418,8 +409,8 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 		try {
 			_reactRenderer.renderReact(
 				new ComponentDescriptor(
-					_getModuleName(fragmentEntryId, js),
-					"fragment" + fragmentEntryId, Collections.emptyList(),
+					_getModuleName(fragmentEntryLinkId, js),
+					"fragment" + fragmentEntryLinkId, Collections.emptyList(),
 					true),
 				new HashMap<>(), httpServletRequest, writer);
 		}
@@ -473,7 +464,5 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 
 	@Reference
 	private ReactRenderer _reactRenderer;
-
-	private List<String> _reactRendererDependencies;
 
 }
