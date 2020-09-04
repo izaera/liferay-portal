@@ -14,11 +14,13 @@
 
 package com.liferay.remote.web.component.admin.web.internal.portlet;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.ResourceBundleLoader;
+import com.liferay.portal.kernel.util.StringBundler;
 import com.liferay.remote.web.component.model.RemoteWebComponentEntry;
 
 import java.io.IOException;
@@ -101,8 +103,16 @@ public class RemoteWebComponentPortlet extends MVCPortlet {
 			PrintWriter printWriter = renderResponse.getWriter();
 
 			printWriter.print(
-				"<iframe src=\"" + _remoteWebComponentEntry.getUrl() +
-					"\"></iframe>");
+				"<script src=\"" + _remoteWebComponentEntry.getUrl() +
+					"\"></script>");
+
+			String name = _remoteWebComponentEntry.getName(
+				renderRequest.getLocale());
+
+			printWriter.print(
+				StringBundler.concat(
+					StringPool.LESS_THAN, name, StringPool.GREATER_THAN, "</",
+					name, StringPool.GREATER_THAN));
 
 			printWriter.flush();
 		}
