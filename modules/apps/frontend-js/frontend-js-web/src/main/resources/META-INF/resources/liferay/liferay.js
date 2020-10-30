@@ -14,6 +14,56 @@
 
 Liferay = window.Liferay || {};
 
+Liferay.Webpack = {
+	SharedScope: {},
+
+	launch: function(appId) {
+		var script = document.createElement("script");
+
+		script.src = "/o/" + appId + "/js/remoteEntry.js";
+
+		script.onload = function() {
+			const app = window[appId];
+
+			Promise.resolve(app.init(Liferay.Webpack.SharedScope)).then(x => {
+				Promise.resolve(app.get('./index')).then(index => {
+					console.log('Launching', appId, '...');
+					index();
+				})
+			});
+		}
+
+		console.log('Fetching', appId, '...');
+		document.body.appendChild(script);
+	},
+
+	require: function(moduleName, callback) {
+		var parts = moduleName.split("/");
+		var appId = parts[0];
+		var path =
+			parts.length == 1 ?
+				'./index' :
+				"./" + parts.slice(1).join("/");
+
+		var script = document.createElement("script");
+
+		script.src = "/o/" + appId + "/js/remoteEntry.js";
+
+		script.onload = function() {
+			const app = window[appId.replace(/-/g, '_')];
+
+			Promise.resolve(app.init(Liferay.Webpack.SharedScope)).then(x => {
+				Promise.resolve(app.get(path)).then(module => {
+					callback(module());
+				})
+			});
+		}
+
+		console.log('Fetching', appId, '...');
+		document.body.appendChild(script);
+	}
+};
+
 (function (Liferay) {
 	var isFunction = function (val) {
 		return typeof val === 'function';

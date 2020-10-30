@@ -16,6 +16,23 @@
 
 <%@ include file="/wiki/init.jsp" %>
 
+
+<div style="border: 1px solid red;" id="perico">
+	<%-- Would be:
+	<aui:script require='wiki-web/wiki/js/fetchThing.es as fetchThing'>
+		fetchThing();
+	</aui:script>
+	--%>
+	<script>
+		Liferay.Webpack.require("wiki-web/fetchThing", function(fetchThing) {
+			document.getElementById("perico").innerHTML =
+				"fetchThing() returns: " + fetchThing.default();
+		});
+	</script>
+
+</div>
+
+
 <liferay-util:dynamic-include key="com.liferay.wiki.web#/wiki/view.jsp#pre" />
 
 <%
