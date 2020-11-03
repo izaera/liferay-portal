@@ -20,7 +20,7 @@ Liferay.Webpack = {
 	launch: function(appId) {
 		var script = document.createElement("script");
 
-		script.src = "/o/" + appId + "/js/remoteEntry.js";
+		script.src = "/o/" + appId + "/webpack/remoteEntry.js";
 
 		script.onload = function() {
 			const app = window[appId];
@@ -47,10 +47,10 @@ Liferay.Webpack = {
 
 		var script = document.createElement("script");
 
-		script.src = "/o/" + appId + "/js/remoteEntry.js";
+		script.src = "/o/" + appId + "/webpack/remoteEntry.js";
 
 		script.onload = function() {
-			const app = window[appId.replace(/-/g, '_')];
+			const app = window[Liferay.Webpack._toVariableName(appId)];
 
 			Promise.resolve(app.init(Liferay.Webpack.SharedScope)).then(x => {
 				Promise.resolve(app.get(path)).then(module => {
@@ -61,6 +61,25 @@ Liferay.Webpack = {
 
 		console.log('Fetching', appId, '...');
 		document.body.appendChild(script);
+	},
+
+	_toVariableName: function(appId) {
+		var ret = '';
+
+		for(var i=0; i<appId.length; i++) {
+			switch(appId.charAt(i)) {
+				case '-':
+					i++;
+					ret += appId.charAt(i).toUpperCase();
+					break;
+
+				default:
+					ret += appId.charAt(i);
+					break;
+			}
+		}
+
+		return ret;
 	}
 };
 

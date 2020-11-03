@@ -24,6 +24,14 @@
 		"react-dom": "16.12.0",
 		"uuid": "^3.3.2"
 	},
+	"devDependencies": {
+		"@babel/core": "^7.12.3",
+		"@babel/preset-react": "^7.12.1",
+		"babel-loader": "^8.1.0",
+		"webpack": "^5.1.3",
+		"webpack-cli": "^4.0.0",
+		"webpack-dev-server": "^3.11.0"
+	},
 	"jest": {
 		"setupFiles": [
 			"<rootDir>/test/liferay/portlet/mock/setup.es.js"
@@ -35,7 +43,7 @@
 	"main": "index.es.js",
 	"name": "frontend-js-web",
 	"scripts": {
-		"build": "liferay-npm-scripts build",
+		"build": "liferay-npm-scripts build; webpack -c webpack5.config.js",
 		"checkFormat": "liferay-npm-scripts check",
 		"format": "liferay-npm-scripts fix",
 		"test": "liferay-npm-scripts test",

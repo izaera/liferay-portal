@@ -14,6 +14,9 @@ module.exports = {
 				exclude: /node_modules/,
 				use: {
 					loader: 'babel-loader',
+					options: {
+						presets: ['@babel/preset-react']
+					}
 				},
 			},
 		],
@@ -27,17 +30,14 @@ module.exports = {
 			'resources',
 			'webpack',
 		),
-		publicPath: '/o/wiki-web/webpack/',
+		publicPath: '/o/frontend-js-web/webpack/',
 	},
 	plugins: [
 		new ModuleFederationPlugin({
-			name: 'wikiWeb',
+			name: 'frontendJsWeb',
 			filename: 'remoteEntry.js',
 			exposes: {
-				'./fetchThing': './src/main/resources/META-INF/resources/wiki/js/fetchThing.es.js',
-			},
-			remotes: {
-				'frontend-js-web': 'frontendJsWeb@/o/frontend-js-web/webpack/remoteEntry.js'
+				'.': './src/main/resources/META-INF/resources/test.index.es.js',
 			}
 		}),
 	]
