@@ -94,14 +94,14 @@ dependencies {
 	compile(group: "com.liferay", name: "com.liferay.gradle.plugins", version: "13.0.6") {
 		exclude group: "biz.aQute.bnd", module: "biz.aQute.bnd"
 	}
-	compile(group: "com.liferay", name: "com.liferay.gradle.plugins.css.builder", version: "5.0.1") {
+	compile(group: "com.liferay", name: "com.liferay.gradle.plugins.css.builder", version: "5.0.2") {
 		exclude group: "biz.aQute.bnd", module: "biz.aQute.bnd"
 	}
 	compile(group: "com.liferay", name: "com.liferay.gradle.plugins.poshi.runner", version: "3.0.8") {
 		exclude group: "biz.aQute.bnd", module: "biz.aQute.bnd"
 	}
 	compile group: "com.liferay", name: "com.liferay.gradle.plugins.target.platform", version: "2.1.27"
-	compile(group: "com.liferay", name: "com.liferay.gradle.plugins.theme.builder", version: "2.0.14") {
+	compile(group: "com.liferay", name: "com.liferay.gradle.plugins.theme.builder", version: "2.0.15") {
 		exclude group: "biz.aQute.bnd", module: "biz.aQute.bnd"
 	}
 	compile(group: "com.liferay", name: "com.liferay.portal.tools.bundle.support", version: "3.7.2") {
