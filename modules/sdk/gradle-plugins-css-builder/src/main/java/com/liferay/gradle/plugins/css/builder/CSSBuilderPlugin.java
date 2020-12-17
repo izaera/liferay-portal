@@ -16,9 +16,12 @@ package com.liferay.gradle.plugins.css.builder;
 
 import com.liferay.gradle.util.GradleUtil;
 
+import groovy.json.JsonSlurper;
+
 import java.io.File;
 
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 import java.util.concurrent.Callable;
@@ -177,20 +180,26 @@ public class CSSBuilderPlugin implements Plugin<Project> {
 		final BuildCSSTask buildCSSTask = GradleUtil.addTask(
 			project, BUILD_CSS_TASK_NAME, BuildCSSTask.class);
 
-		buildCSSTask.dependsOn(copyCSSTask);
-
-		buildCSSTask.setBaseDir(
-			new Callable<File>() {
-
-				@Override
-				public File call() throws Exception {
-					return copyCSSTask.getDestinationDir();
-				}
-
-			});
-
 		buildCSSTask.setDescription("Build CSS files.");
-		buildCSSTask.setGroup(BasePlugin.BUILD_GROUP);
+
+		if (_hasNPMBuildScript(project)) {
+			System.out.println("Letting @liferay/npm-scripts to build sass.");
+		}
+		else {
+			buildCSSTask.dependsOn(copyCSSTask);
+
+			buildCSSTask.setBaseDir(
+				new Callable<File>() {
+
+					@Override
+					public File call() throws Exception {
+						return copyCSSTask.getDestinationDir();
+					}
+
+				});
+
+			buildCSSTask.setGroup(BasePlugin.BUILD_GROUP);
+		}
 
 		TaskOutputs taskOutputs = buildCSSTask.getOutputs();
 
@@ -213,17 +222,22 @@ public class CSSBuilderPlugin implements Plugin<Project> {
 
 		copyCSSTask.setDescription("Copies CSS files to a temp directory.");
 
-		copyCSSTask.include("**/*.css", "**/*.scss");
+		if (_hasNPMBuildScript(project)) {
+			System.out.println("Letting @liferay/npm-scripts to copy CSS files.");
+		}
+		else {
+			copyCSSTask.include("**/*.css", "**/*.scss");
+		
+			copyCSSTask.into(
+				new Callable<File>() {
 
-		copyCSSTask.into(
-			new Callable<File>() {
+					@Override
+					public File call() throws Exception {
+						return copyCSSTask.getTemporaryDir();
+					}
 
-				@Override
-				public File call() throws Exception {
-					return copyCSSTask.getTemporaryDir();
-				}
-
-			});
+				});
+		}
 
 		PluginContainer pluginContainer = project.getPlugins();
 
@@ -437,6 +451,26 @@ public class CSSBuilderPlugin implements Plugin<Project> {
 			project, WarPluginConvention.class);
 
 		return warPluginConvention.getWebAppDir();
+	}
+
+	private Boolean _hasNPMBuildScript(Project project) {
+		File packageJSONFile = project.file("package.json");
+
+		if ((packageJSONFile != null) && packageJSONFile.exists()) {
+			JsonSlurper jsonSlurper = new JsonSlurper();
+
+			Map<String, Object> packageJSONMap =
+				(Map<String, Object>)jsonSlurper.parse(packageJSONFile);
+
+			Map<String, Object> scripts =
+				(Map<String, Object>)packageJSONMap.get("scripts");
+
+			if ((scripts != null) && scripts.containsKey("build")) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 }
