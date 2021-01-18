@@ -117,6 +117,7 @@ public class DynamicCSSFilter extends IgnoreModuleRequestFilter {
 
 		long lastModified = getLastModified(httpServletRequest, resourceURL);
 
+		/*
 		if (cacheDataFile.exists() &&
 			(cacheDataFile.lastModified() == lastModified)) {
 
@@ -127,6 +128,7 @@ public class DynamicCSSFilter extends IgnoreModuleRequestFilter {
 
 			return cacheDataFile;
 		}
+        */
 
 		ServletContext servletContext = objectValuePair.getKey();
 
