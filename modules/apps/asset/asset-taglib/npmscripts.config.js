@@ -14,7 +14,7 @@
 
 module.exports = {
 	federation: {
-		bridges: [],
+		bridges: true,
 		exposes: [
 			'<inputDir>/asset_categories_navigation/js/AssetCategoriesNavigationTreeView.js',
 			'<inputDir>/asset_categories_selector/AssetCategoriesSelectorTag.es.js',
