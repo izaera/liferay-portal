@@ -22,7 +22,6 @@ import com.liferay.dynamic.data.mapping.form.renderer.DDMFormTemplateContextFact
 import com.liferay.dynamic.data.mapping.model.DDMForm;
 import com.liferay.dynamic.data.mapping.model.DDMFormLayout;
 import com.liferay.dynamic.data.mapping.util.DDM;
-import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
 import com.liferay.petra.io.unsync.UnsyncStringWriter;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -121,8 +120,7 @@ public class DDMFormRendererImpl implements DDMFormRenderer {
 		writer.append("\">");
 
 		_reactRenderer.renderReact(
-			new ComponentDescriptor(
-				_npmResolver.resolveModuleName(_MODULE_NAME)),
+			new ComponentDescriptor(_MODULE_NAME),
 			getDDMFormTemplateContext(
 				ddmForm, ddmFormLayout, ddmFormRenderingContext),
 			ddmFormRenderingContext.getHttpServletRequest(), writer);
@@ -143,9 +141,6 @@ public class DDMFormRendererImpl implements DDMFormRenderer {
 
 	@Reference
 	private DDMFormTemplateContextFactory _ddmFormTemplateContextFactory;
-
-	@Reference
-	private NPMResolver _npmResolver;
 
 	@Reference
 	private ReactRenderer _reactRenderer;

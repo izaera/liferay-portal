@@ -19,7 +19,6 @@ import com.liferay.app.builder.portlet.tab.AppBuilderAppPortletTab;
 import com.liferay.app.builder.portlet.tab.AppBuilderAppPortletTabContext;
 import com.liferay.dynamic.data.mapping.model.DDMStructureLayout;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLayoutLocalService;
-import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 
 import org.osgi.service.component.annotations.Component;
@@ -57,26 +56,20 @@ public class StandardAppBuilderAppPortletTab
 
 	@Override
 	public String getEditEntryPoint() {
-		return _npmResolver.resolveModuleName(
-			"app-builder-web/js/pages/entry/EditEntry.es");
+		return "app-builder-web/js/pages/entry/EditEntry.es";
 	}
 
 	@Override
 	public String getListEntryPoint() {
-		return _npmResolver.resolveModuleName(
-			"app-builder-web/js/pages/entry/ListEntries.es");
+		return "app-builder-web/js/pages/entry/ListEntries.es";
 	}
 
 	@Override
 	public String getViewEntryPoint() {
-		return _npmResolver.resolveModuleName(
-			"app-builder-web/js/pages/entry/ViewEntry.es");
+		return "app-builder-web/js/pages/entry/ViewEntry.es";
 	}
 
 	@Reference
 	private DDMStructureLayoutLocalService _ddmStructureLayoutLocalService;
-
-	@Reference
-	private NPMResolver _npmResolver;
 
 }

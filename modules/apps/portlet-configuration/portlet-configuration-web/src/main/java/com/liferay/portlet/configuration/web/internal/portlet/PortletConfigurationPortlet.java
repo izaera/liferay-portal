@@ -664,11 +664,9 @@ public class PortletConfigurationPortlet extends MVCPortlet {
 					renderRequest, portletPreferences);
 
 				if (mvcPath.endsWith("edit_configuration_templates.jsp")) {
-					String moduleName = _npmResolver.resolveModuleName(
-						"portlet-configuration-web");
-
 					renderRequest.setAttribute(
-						PortletConfigurationWebKeys.MODULE_NAME, moduleName);
+						PortletConfigurationWebKeys.MODULE_NAME,
+						"portlet-configuration-web");
 				}
 			}
 
@@ -1082,9 +1080,6 @@ public class PortletConfigurationPortlet extends MVCPortlet {
 
 	private GroupLocalService _groupLocalService;
 	private LayoutLocalService _layoutLocalService;
-
-	@Reference
-	private NPMResolver _npmResolver;
 
 	private PermissionService _permissionService;
 

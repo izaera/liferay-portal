@@ -164,14 +164,7 @@ public class ManagementToolbarTag extends BaseClayTag {
 
 	@Override
 	public String getModule() {
-		NPMResolver npmResolver = NPMResolverProvider.getNPMResolver();
-
-		if (npmResolver == null) {
-			return StringPool.BLANK;
-		}
-
-		return npmResolver.resolveModuleName(
-			"frontend-taglib-clay/management_toolbar/ManagementToolbar.es");
+		return "frontend-taglib-clay/management_toolbar/ManagementToolbar.es";
 	}
 
 	public void setActionDropdownItems(List<DropdownItem> actionDropdownItems) {

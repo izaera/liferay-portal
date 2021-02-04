@@ -18,7 +18,6 @@ import com.liferay.dynamic.data.mapping.form.field.type.BaseDDMFormFieldType;
 import com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldType;
 import com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldTypeSettings;
 import com.liferay.frontend.js.loader.modules.extender.npm.JSPackage;
-import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
 import com.liferay.layout.dynamic.data.mapping.form.field.type.constants.LayoutDDMFormFieldTypeConstants;
 
 import org.osgi.service.component.annotations.Component;
@@ -51,9 +50,7 @@ public class LayoutDDMFormFieldType extends BaseDDMFormFieldType {
 
 	@Override
 	public String getModuleName() {
-		JSPackage jsPackage = _npmResolver.getJSPackage();
-
-		return jsPackage.getResolvedId() + "/LayoutSelector";
+		return "layout-dynamic-data-mapping-form-field-type/LayoutSelector";
 	}
 
 	@Override
@@ -65,8 +62,5 @@ public class LayoutDDMFormFieldType extends BaseDDMFormFieldType {
 	public boolean isCustomDDMFormFieldType() {
 		return true;
 	}
-
-	@Reference
-	private NPMResolver _npmResolver;
 
 }

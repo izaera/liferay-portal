@@ -81,7 +81,6 @@ import com.liferay.dynamic.data.mapping.util.comparator.StructureModifiedDateCom
 import com.liferay.dynamic.data.mapping.util.comparator.StructureNameComparator;
 import com.liferay.dynamic.data.mapping.validator.DDMFormValidationException;
 import com.liferay.dynamic.data.mapping.validator.DDMFormValidator;
-import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
 import com.liferay.petra.sql.dsl.Column;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONArray;
@@ -1182,11 +1181,7 @@ public class DataDefinitionResourceImpl
 			return StringPool.BLANK;
 		}
 
-		if (ddmFormFieldType.isCustomDDMFormFieldType()) {
-			return ddmFormFieldType.getModuleName();
-		}
-
-		return _npmResolver.resolveModuleName(ddmFormFieldType.getModuleName());
+		return ddmFormFieldType.getModuleName();
 	}
 
 	private void _setTypeDDMFormFieldValue(
@@ -1586,9 +1581,6 @@ public class DataDefinitionResourceImpl
 
 	@Reference
 	private JSONFactory _jsonFactory;
-
-	@Reference
-	private NPMResolver _npmResolver;
 
 	@Reference
 	private Portal _portal;

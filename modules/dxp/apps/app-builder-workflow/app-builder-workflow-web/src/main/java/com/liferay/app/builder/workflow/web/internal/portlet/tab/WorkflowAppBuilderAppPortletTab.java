@@ -24,7 +24,6 @@ import com.liferay.app.builder.workflow.service.AppBuilderWorkflowTaskLinkLocalS
 import com.liferay.dynamic.data.lists.model.DDLRecord;
 import com.liferay.dynamic.data.mapping.model.DDMStructureLayout;
 import com.liferay.dynamic.data.mapping.service.DDMStructureLayoutLocalService;
-import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.log.Log;
@@ -131,20 +130,17 @@ public class WorkflowAppBuilderAppPortletTab
 
 	@Override
 	public String getEditEntryPoint() {
-		return _npmResolver.resolveModuleName(
-			"app-builder-workflow-web/js/pages/entry/EditEntry.es");
+		return "app-builder-workflow-web/js/pages/entry/EditEntry.es";
 	}
 
 	@Override
 	public String getListEntryPoint() {
-		return _npmResolver.resolveModuleName(
-			"app-builder-workflow-web/js/pages/entry/ListEntries.es");
+		return "app-builder-workflow-web/js/pages/entry/ListEntries.es";
 	}
 
 	@Override
 	public String getViewEntryPoint() {
-		return _npmResolver.resolveModuleName(
-			"app-builder-workflow-web/js/pages/entry/ViewEntry.es");
+		return "app-builder-workflow-web/js/pages/entry/ViewEntry.es";
 	}
 
 	private long _getGroupId(long dataRecordId) {
@@ -230,9 +226,6 @@ public class WorkflowAppBuilderAppPortletTab
 
 	@Reference
 	private DDMStructureLayoutLocalService _ddmStructureLayoutLocalService;
-
-	@Reference
-	private NPMResolver _npmResolver;
 
 	@Reference
 	private WorkflowInstanceLinkLocalService _workflowInstanceLinkLocalService;

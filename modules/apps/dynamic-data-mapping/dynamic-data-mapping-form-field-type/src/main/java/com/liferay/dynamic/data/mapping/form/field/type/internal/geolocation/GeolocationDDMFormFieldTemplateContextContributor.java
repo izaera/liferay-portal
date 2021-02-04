@@ -129,18 +129,13 @@ public class GeolocationDDMFormFieldTemplateContextContributor
 
 	protected String getModuleName(String mapProviderKey) {
 		if (StringUtil.equals(mapProviderKey, "GoogleMaps")) {
-			return _npmResolver.resolveModuleName(
-				"map-google-maps/js/MapGoogleMaps.es");
+			return "map-google-maps/js/MapGoogleMaps.es";
 		}
 
-		return _npmResolver.resolveModuleName(
-			"map-openstreetmap/js/MapOpenStreetMap.es");
+		return "map-openstreetmap/js/MapOpenStreetMap.es";
 	}
 
 	@Reference
 	private GroupLocalService _groupLocalService;
-
-	@Reference
-	private NPMResolver _npmResolver;
 
 }

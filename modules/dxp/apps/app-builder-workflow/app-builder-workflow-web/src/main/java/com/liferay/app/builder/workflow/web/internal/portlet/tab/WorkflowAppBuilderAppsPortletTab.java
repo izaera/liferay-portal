@@ -48,8 +48,7 @@ public class WorkflowAppBuilderAppsPortletTab
 
 	@Override
 	public String getEditEntryPoint() {
-		return _npmResolver.resolveModuleName(
-			"app-builder-workflow-web/js/pages/apps/edit/EditApp.es");
+		return "app-builder-workflow-web/js/pages/apps/edit/EditApp.es";
 	}
 
 	@Override
@@ -62,14 +61,10 @@ public class WorkflowAppBuilderAppsPortletTab
 
 	@Override
 	public String getListEntryPoint() {
-		return _npmResolver.resolveModuleName(
-			"app-builder-workflow-web/js/pages/apps/ListApps.es");
+		return "app-builder-workflow-web/js/pages/apps/ListApps.es";
 	}
 
 	@Reference
 	private Language _language;
-
-	@Reference
-	private NPMResolver _npmResolver;
 
 }

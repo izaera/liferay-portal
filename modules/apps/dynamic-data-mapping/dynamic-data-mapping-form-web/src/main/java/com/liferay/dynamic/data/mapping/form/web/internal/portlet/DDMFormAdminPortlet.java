@@ -35,7 +35,6 @@ import com.liferay.dynamic.data.mapping.service.DDMStructureLocalService;
 import com.liferay.dynamic.data.mapping.service.DDMStructureService;
 import com.liferay.dynamic.data.mapping.storage.DDMStorageAdapterTracker;
 import com.liferay.dynamic.data.mapping.util.DDMFormValuesMerger;
-import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.log.Log;
@@ -150,7 +149,7 @@ public class DDMFormAdminPortlet extends MVCPortlet {
 					_ddmFormWebConfigurationActivator.
 						getDDMFormWebConfiguration(),
 					_ddmStorageAdapterTracker, _ddmStructureLocalService,
-					_ddmStructureService, _jsonFactory, _npmResolver, _portal));
+					_ddmStructureService, _jsonFactory, _portal));
 		}
 		else {
 			renderRequest.setAttribute(
@@ -171,7 +170,7 @@ public class DDMFormAdminPortlet extends MVCPortlet {
 					_ddmFormWebConfigurationActivator.
 						getDDMFormWebConfiguration(),
 					_ddmStorageAdapterTracker, _ddmStructureLocalService,
-					_ddmStructureService, _jsonFactory, _npmResolver, _portal));
+					_ddmStructureService, _jsonFactory, _portal));
 		}
 	}
 
@@ -250,9 +249,6 @@ public class DDMFormAdminPortlet extends MVCPortlet {
 
 	@Reference
 	private JSONFactory _jsonFactory;
-
-	@Reference
-	private NPMResolver _npmResolver;
 
 	@Reference
 	private Portal _portal;

@@ -159,8 +159,7 @@ public class ChangeTrackingIndicatorDynamicInclude extends BaseDynamicInclude {
 				_portal.getPortletNamespace(CTPortletKeys.PUBLICATIONS) +
 					"IndicatorComponent";
 			String module =
-				_npmResolver.resolveModuleName("change-tracking-web") +
-					"/publications/js/ChangeTrackingIndicator";
+				"change-tracking-web/publications/js/ChangeTrackingIndicator";
 
 			_reactRenderer.renderReact(
 				new ComponentDescriptor(module, componentId),
@@ -397,9 +396,6 @@ public class ChangeTrackingIndicatorDynamicInclude extends BaseDynamicInclude {
 
 	@Reference
 	private Language _language;
-
-	@Reference
-	private NPMResolver _npmResolver;
 
 	@Reference
 	private Portal _portal;

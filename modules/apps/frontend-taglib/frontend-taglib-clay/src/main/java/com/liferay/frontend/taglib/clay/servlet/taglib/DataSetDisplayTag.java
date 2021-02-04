@@ -99,11 +99,8 @@ public class DataSetDisplayTag extends IncludeTag {
 				_creationMenu = new CreationMenu();
 			}
 
-			NPMResolver npmResolver = NPMResolverProvider.getNPMResolver();
-
-			if ((npmResolver != null) && Validator.isNull(_module)) {
-				_module = npmResolver.resolveModuleName(
-					"frontend-taglib-clay/data_set_display/entry");
+			if (Validator.isNull(_module)) {
+				_module = "frontend-taglib-clay/data_set_display/entry";
 			}
 
 			_setActiveViewSettingsJSON();

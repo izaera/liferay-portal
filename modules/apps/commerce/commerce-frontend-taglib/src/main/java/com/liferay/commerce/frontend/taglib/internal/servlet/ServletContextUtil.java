@@ -22,7 +22,6 @@ import com.liferay.commerce.product.service.CommerceChannelLocalService;
 import com.liferay.commerce.product.util.CPDefinitionHelper;
 import com.liferay.commerce.product.util.CPInstanceHelper;
 import com.liferay.commerce.product.util.CPSubscriptionTypeRegistry;
-import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
 import com.liferay.portal.kernel.module.configuration.ConfigurationProvider;
 
 import javax.servlet.ServletContext;
@@ -77,10 +76,6 @@ public class ServletContextUtil {
 		getCPSubscriptionTypeRegistry() {
 
 		return _servletContextUtil._getCPSubscriptionTypeRegistry();
-	}
-
-	public static final NPMResolver getNPMResolver() {
-		return _servletContextUtil._getNPMResolver();
 	}
 
 	public static final ProductHelper getProductHelper() {
@@ -154,11 +149,6 @@ public class ServletContextUtil {
 	}
 
 	@Reference(unbind = "-")
-	protected void setNPMResolver(NPMResolver npmResolver) {
-		_npmResolver = npmResolver;
-	}
-
-	@Reference(unbind = "-")
 	protected void setProductHelper(ProductHelper productHelper) {
 		_productHelper = productHelper;
 	}
@@ -205,10 +195,6 @@ public class ServletContextUtil {
 		return _cpSubscriptionTypeRegistry;
 	}
 
-	private NPMResolver _getNPMResolver() {
-		return _npmResolver;
-	}
-
 	private ProductHelper _getProductHelper() {
 		return _productHelper;
 	}
@@ -227,7 +213,6 @@ public class ServletContextUtil {
 	private CPDefinitionHelper _cpDefinitionHelper;
 	private CPInstanceHelper _cpInstanceHelper;
 	private CPSubscriptionTypeRegistry _cpSubscriptionTypeRegistry;
-	private NPMResolver _npmResolver;
 	private ProductHelper _productHelper;
 	private ServletContext _servletContext;
 

@@ -95,14 +95,7 @@ public class AddToCartTag extends ComponentRendererTag {
 
 	@Override
 	public String getModule() {
-		NPMResolver npmResolver = ServletContextUtil.getNPMResolver();
-
-		if (npmResolver == null) {
-			return StringPool.BLANK;
-		}
-
-		return npmResolver.resolveModuleName(
-			"commerce-cart-taglib/add_to_cart/AddToCart.es");
+		return "commerce-cart-taglib/add_to_cart/AddToCart.es";
 	}
 
 	public void setCPDefinitionId(long cpDefinitionId) {

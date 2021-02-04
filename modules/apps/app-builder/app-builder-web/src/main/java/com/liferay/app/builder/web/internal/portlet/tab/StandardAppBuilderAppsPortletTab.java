@@ -16,7 +16,6 @@ package com.liferay.app.builder.web.internal.portlet.tab;
 
 import com.liferay.app.builder.portlet.tab.AppBuilderAppsPortletTab;
 import com.liferay.app.builder.rest.resource.v1_0.AppResource;
-import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
 import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
@@ -48,8 +47,7 @@ public class StandardAppBuilderAppsPortletTab
 
 	@Override
 	public String getEditEntryPoint() {
-		return _npmResolver.resolveModuleName(
-			"app-builder-web/js/pages/apps/edit/EditApp.es");
+		return "app-builder-web/js/pages/apps/edit/EditApp.es";
 	}
 
 	@Override
@@ -62,14 +60,10 @@ public class StandardAppBuilderAppsPortletTab
 
 	@Override
 	public String getListEntryPoint() {
-		return _npmResolver.resolveModuleName(
-			"app-builder-web/js/pages/apps/ListStandardApps.es");
+		return "app-builder-web/js/pages/apps/ListStandardApps.es";
 	}
 
 	@Reference
 	private Language _language;
-
-	@Reference
-	private NPMResolver _npmResolver;
 
 }

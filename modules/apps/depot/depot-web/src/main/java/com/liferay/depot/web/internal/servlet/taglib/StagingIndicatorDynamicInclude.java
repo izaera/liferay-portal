@@ -18,7 +18,6 @@ import com.liferay.depot.model.DepotEntry;
 import com.liferay.depot.service.DepotEntryLocalService;
 import com.liferay.depot.web.internal.constants.DepotPortletKeys;
 import com.liferay.exportimport.kernel.staging.Staging;
-import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
 import com.liferay.petra.reflect.ReflectionUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.exception.SystemException;
@@ -379,9 +378,7 @@ public class StagingIndicatorDynamicInclude extends BaseDynamicInclude {
 		String componentId =
 			_portal.getPortletNamespace(DepotPortletKeys.DEPOT_ADMIN) +
 				"IndicatorComponent";
-		String module =
-			_npmResolver.resolveModuleName("depot-web") +
-				"/dynamic_include/StagingIndicator";
+		String module = "depot-web/dynamic_include/StagingIndicator";
 
 		_reactRenderer.renderReact(
 			new ComponentDescriptor(module, componentId),
@@ -402,9 +399,6 @@ public class StagingIndicatorDynamicInclude extends BaseDynamicInclude {
 
 	@Reference
 	private Language _language;
-
-	@Reference
-	private NPMResolver _npmResolver;
 
 	@Reference
 	private Portal _portal;

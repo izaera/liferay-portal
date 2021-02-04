@@ -61,7 +61,6 @@ import com.liferay.dynamic.data.mapping.util.DDMFormLayoutFactory;
 import com.liferay.dynamic.data.mapping.util.DDMFormValuesMerger;
 import com.liferay.dynamic.data.mapping.util.comparator.DDMFormInstanceModifiedDateComparator;
 import com.liferay.dynamic.data.mapping.util.comparator.DDMFormInstanceNameComparator;
-import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.CreationMenu;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.CreationMenuBuilder;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
@@ -154,7 +153,7 @@ public class DDMFormAdminDisplayContext {
 		DDMStorageAdapterTracker ddmStorageAdapterTracker,
 		DDMStructureLocalService ddmStructureLocalService,
 		DDMStructureService ddmStructureService, JSONFactory jsonFactory,
-		NPMResolver npmResolver, Portal portal) {
+		Portal portal) {
 
 		_addDefaultSharedFormLayoutPortalInstanceLifecycleListener =
 			addDefaultSharedFormLayoutPortalInstanceLifecycleListener;
@@ -176,7 +175,6 @@ public class DDMFormAdminDisplayContext {
 		_ddmStorageAdapterTracker = ddmStorageAdapterTracker;
 		_ddmStructureLocalService = ddmStructureLocalService;
 		_ddmStructureService = ddmStructureService;
-		_npmResolver = npmResolver;
 		_portal = portal;
 
 		this.renderRequest = renderRequest;
@@ -800,7 +798,7 @@ public class DDMFormAdminDisplayContext {
 	}
 
 	public String getMainRequire() {
-		return _npmResolver.resolveModuleName("dynamic-data-mapping-form-web");
+		return "dynamic-data-mapping-form-web";
 	}
 
 	public List<NavigationItem> getNavigationItems() {
@@ -1677,7 +1675,6 @@ public class DDMFormAdminDisplayContext {
 	private final FormInstancePermissionCheckerHelper
 		_formInstancePermissionCheckerHelper;
 	private final Map<Long, String> _invalidDDMFormFieldTypes = new HashMap<>();
-	private final NPMResolver _npmResolver;
 	private final Portal _portal;
 
 }

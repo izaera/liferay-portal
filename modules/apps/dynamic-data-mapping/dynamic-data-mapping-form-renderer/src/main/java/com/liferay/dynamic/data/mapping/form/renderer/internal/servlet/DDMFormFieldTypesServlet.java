@@ -16,7 +16,6 @@ package com.liferay.dynamic.data.mapping.form.renderer.internal.servlet;
 
 import com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldType;
 import com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldTypeServicesTracker;
-import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.events.EventsProcessorUtil;
 import com.liferay.portal.json.JSONObjectImpl;
@@ -137,19 +136,8 @@ public class DDMFormFieldTypesServlet extends HttpServlet {
 	}
 
 	protected String resolveModuleName(DDMFormFieldType ddmFormFieldType) {
-		if (Validator.isNull(ddmFormFieldType.getModuleName())) {
-			return StringPool.BLANK;
-		}
-
-		if (ddmFormFieldType.isCustomDDMFormFieldType()) {
-			return ddmFormFieldType.getModuleName();
-		}
-
-		return npmResolver.resolveModuleName(ddmFormFieldType.getModuleName());
+ 		return ddmFormFieldType.getModuleName();
 	}
-
-	@Reference
-	protected NPMResolver npmResolver;
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		DDMFormFieldTypesServlet.class);
