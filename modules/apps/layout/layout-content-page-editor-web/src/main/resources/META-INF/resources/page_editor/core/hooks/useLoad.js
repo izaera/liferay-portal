@@ -35,23 +35,21 @@ export default function useLoad() {
 				modules.current.set(
 					key,
 					new Promise((resolve, reject) => {
-						Liferay.Loader.require(
-							[entryPoint],
-							(Plugin) => {
-								if (isMounted()) {
-									resolve(Plugin.default);
-								}
-							},
-							(error) => {
-								if (isMounted()) {
-
-									// Reset to allow future retries.
-
-									modules.current.delete(key);
-									reject(error);
-								}
+						window[Symbol.for('__LIFERAY_WEBPACK_GET_MODULE__')](
+							entryPoint
+						).then(Plugin => {
+							if (isMounted()) {
+								resolve(Plugin.default);
 							}
-						);
+						}).catch(error => {
+							if (isMounted()) {
+
+								// Reset to allow future retries.
+
+								modules.current.delete(key);
+								reject(error);
+							}
+						})
 					})
 				);
 			}

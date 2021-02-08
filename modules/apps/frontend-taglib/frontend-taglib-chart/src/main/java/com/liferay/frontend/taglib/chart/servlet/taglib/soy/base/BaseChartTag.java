@@ -15,7 +15,7 @@
 package com.liferay.frontend.taglib.chart.servlet.taglib.soy.base;
 
 import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
-import com.liferay.frontend.taglib.chart.internal.js.loader.modules.extender.npm.NPMResolverProvider;
+import com.liferay.frontend.taglib.chart.internal.js.loader.modules.extender.npm.ServicesProvider;
 import com.liferay.frontend.taglib.chart.model.ChartConfig;
 import com.liferay.frontend.taglib.soy.servlet.taglib.TemplateRendererTag;
 import com.liferay.frontend.taglib.util.TagAccessor;
@@ -54,7 +54,7 @@ public abstract class BaseChartTag extends TemplateRendererTag {
 
 	@Override
 	public String getModule() {
-		NPMResolver npmResolver = NPMResolverProvider.getNPMResolver();
+		NPMResolver npmResolver = ServicesProvider.getNPMResolver();
 
 		if (npmResolver == null) {
 			return StringPool.BLANK;

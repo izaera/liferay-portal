@@ -23,18 +23,10 @@ import org.osgi.service.component.annotations.Reference;
  * @author Iván Zaera Avellón
  */
 @Component(immediate = true, service = {})
-public class NPMResolverProvider {
+public class ServicesProvider {
 
 	public static NPMResolver getNPMResolver() {
-		if (_npmResolverProvider == null) {
-			return null;
-		}
-
-		return _npmResolverProvider._npmResolver;
-	}
-
-	public NPMResolverProvider() {
-		_npmResolverProvider = this;
+		return _npmResolver;
 	}
 
 	@Reference(unbind = "-")
@@ -42,8 +34,6 @@ public class NPMResolverProvider {
 		_npmResolver = npmResolver;
 	}
 
-	private static NPMResolverProvider _npmResolverProvider;
-
-	private NPMResolver _npmResolver;
+	private static NPMResolver _npmResolver;
 
 }

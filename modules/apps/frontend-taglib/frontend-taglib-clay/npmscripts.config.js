@@ -85,6 +85,10 @@ module.exports = {
 			"clay-table",
 			"clay-tooltip",
 		],
+		exposes: [
+			'<inputDir>/data_set_display/entry.js',
+			'<inputDir>/management_toolbar/ManagementToolbar.es.js',
+		],
 		runLegacyBuild: false
 	},
 	preset: '@liferay/npm-scripts/src/presets/standard',

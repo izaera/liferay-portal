@@ -1457,6 +1457,16 @@
 		</attribute>
 	</tag>
 	<tag>
+		<name>script</name>
+		<tag-class>com.liferay.frontend.taglib.servlet.taglib.ScriptTag</tag-class>
+		<body-content>JSP</body-content>
+		<attribute>
+			<name>require</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+	</tag>
+	<tag>
 		<description>Creates a lexicon-based sidebar panel component.</description>
 		<name>sidebar-panel</name>
 		<tag-class>com.liferay.frontend.taglib.servlet.taglib.SidebarPanelTag</tag-class>
