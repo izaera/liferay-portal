@@ -14,13 +14,10 @@
 
 package com.liferay.frontend.taglib.chart.servlet.taglib.soy.base;
 
-import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
-import com.liferay.frontend.taglib.chart.internal.js.loader.modules.extender.npm.NPMResolverProvider;
 import com.liferay.frontend.taglib.chart.model.ChartConfig;
 import com.liferay.frontend.taglib.soy.servlet.taglib.TemplateRendererTag;
 import com.liferay.frontend.taglib.util.TagAccessor;
 import com.liferay.frontend.taglib.util.TagResourceHandler;
-import com.liferay.petra.string.StringPool;
 
 import java.util.Map;
 
@@ -54,14 +51,7 @@ public abstract class BaseChartTag extends TemplateRendererTag {
 
 	@Override
 	public String getModule() {
-		NPMResolver npmResolver = NPMResolverProvider.getNPMResolver();
-
-		if (npmResolver == null) {
-			return StringPool.BLANK;
-		}
-
-		return npmResolver.resolveModuleName(
-			"clay-charts/lib/" + _moduleBaseName);
+		return "frontend-taglib-chart/" + _moduleBaseName;
 	}
 
 	public void setConfig(ChartConfig<?> chartConfig) {

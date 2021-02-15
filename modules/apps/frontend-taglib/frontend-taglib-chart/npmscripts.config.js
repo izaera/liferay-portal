@@ -14,6 +14,24 @@
 
 module.exports = {
 	check: [],
+	federation: {
+		exposes: [
+			"<inputDir>/AreaSplineChart.js",
+			"<inputDir>/AreaStepChart.js",
+			"<inputDir>/BarChart.js",
+			"<inputDir>/Chart.js",
+			"<inputDir>/DonutChart.js",
+			"<inputDir>/GaugeChart.js",
+			"<inputDir>/Geomap.js",
+			"<inputDir>/LineChart.js",
+			"<inputDir>/PieChart.js",
+			"<inputDir>/PredictiveChart.js",
+			"<inputDir>/ScatterChart.js",
+			"<inputDir>/SplineChart.js",
+			"<inputDir>/StepChart.js",
+		],
+		runLegacyBuild: false,
+	},
 	fix: [],
 	preset: '@liferay/npm-scripts/src/presets/standard',
 };
