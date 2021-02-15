@@ -43,9 +43,6 @@ public abstract class BaseChartTag extends TemplateRendererTag {
 			setTemplateNamespace("ClayChart.render");
 		}
 
-		_tagResourceHandler.outputNPMStyleSheet("clay-charts/lib/css/main.css");
-		_tagResourceHandler.outputNPMResource("clay-charts/lib/svg/tiles.svg");
-
 		return super.doStartTag();
 	}
 
