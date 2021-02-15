@@ -15,7 +15,6 @@
 package com.liferay.frontend.taglib.util;
 
 import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
-import com.liferay.frontend.taglib.util.internal.NPMResolverRef;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.log.Log;
@@ -71,47 +70,6 @@ public class TagResourceHandler {
 		sb.append("\" rel=\"stylesheet\">");
 
 		outputResource(Position.TOP, sb.toString());
-	}
-
-	public void outputNPMResource(String npmResourcePath) {
-		try (NPMResolverRef npmResolverRef = new NPMResolverRef(_tagAccessor)) {
-			NPMResolver npmResolver = npmResolverRef.getNPMResolver();
-
-			String resourcePath = npmResolver.resolveModuleName(
-				npmResourcePath);
-
-			URL url = _bundle.getEntry(
-				"META-INF/resources/node_modules/" + resourcePath);
-
-			outputResource(Position.BOTTOM, StringUtil.read(url.openStream()));
-		}
-		catch (Exception exception) {
-			_log.error(
-				"Unable to output NPM resource " + npmResourcePath, exception);
-		}
-	}
-
-	public void outputNPMStyleSheet(String npmCssPath) {
-		try (NPMResolverRef npmResolverRef = new NPMResolverRef(_tagAccessor)) {
-			NPMResolver npmResolver = npmResolverRef.getNPMResolver();
-
-			String cssPath = npmResolver.resolveModuleName(npmCssPath);
-
-			StringBundler sb = new StringBundler(6);
-
-			sb.append("<link href=\"");
-			sb.append(PortalUtil.getPathModule());
-			sb.append(_webContextPath);
-			sb.append("/node_modules/");
-			sb.append(cssPath);
-			sb.append("\" rel=\"stylesheet\">");
-
-			outputResource(Position.TOP, sb.toString());
-		}
-		catch (Exception exception) {
-			_log.error(
-				"Unable to output NPM style sheet " + npmCssPath, exception);
-		}
 	}
 
 	public void outputResource(Position position, String html) {
