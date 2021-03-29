@@ -24,7 +24,7 @@ CommerceAccount commerceAccount = commerceAccountDisplayContext.getCurrentCommer
 
 <portlet:actionURL name="/commerce_account/edit_commerce_address" var="editCommerceAddressActionURL" />
 
-<clay:data-set-display
+<dataset:display
 	contextParams='<%=
 		HashMapBuilder.<String, String>put(
 			"commerceAccountId", String.valueOf(commerceAccount.getCommerceAccountId())

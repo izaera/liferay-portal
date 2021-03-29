@@ -22,7 +22,7 @@ CommerceAccountDisplayContext commerceAccountDisplayContext = (CommerceAccountDi
 CommerceAccount commerceAccount = commerceAccountDisplayContext.getCurrentCommerceAccount();
 %>
 
-<clay:data-set-display
+<dataset:display
 	contextParams='<%=
 		HashMapBuilder.<String, String>put(
 			"commerceAccountId", String.valueOf(commerceAccount.getCommerceAccountId())

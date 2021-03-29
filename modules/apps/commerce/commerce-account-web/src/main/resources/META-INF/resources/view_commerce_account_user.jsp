@@ -82,7 +82,7 @@ PortletURL portletURL = PortletURLBuilder.create(
 	</div>
 
 	<div class="commerce-account-container">
-		<clay:data-set-display
+		<dataset:display
 			contextParams="<%= contextParams %>"
 			dataProviderKey="<%= CommerceAccountUserRolesClayTableDataSetDisplayView.NAME %>"
 			id="<%= CommerceAccountUserRolesClayTableDataSetDisplayView.NAME %>"
