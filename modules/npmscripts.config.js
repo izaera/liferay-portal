@@ -170,7 +170,6 @@ module.exports = {
 						'clay-collapse': '>=2.9.0',
 						'clay-component': '>=2.9.0',
 						'clay-data-provider': '>=2.9.0',
-						'clay-dataset-display': '>=2.9.0',
 						'clay-dropdown': '>=2.9.0',
 						'clay-icon': '>=2.9.0',
 						'clay-label': '>=2.9.0',
@@ -190,6 +189,9 @@ module.exports = {
 						'clay-sticker': '>=2.9.0',
 						'clay-table': '>=2.9.0',
 						'clay-tooltip': '>=2.9.0',
+					},
+					'dataset-taglib': {
+						'clay-dataset-display': '*',
 					},
 				},
 			},
