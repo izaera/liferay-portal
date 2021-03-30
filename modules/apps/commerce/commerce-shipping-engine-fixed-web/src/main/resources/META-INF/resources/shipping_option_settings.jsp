@@ -22,7 +22,7 @@ CommerceShippingFixedOptionRelsDisplayContext commerceShippingFixedOptionRelsDis
 
 <c:choose>
 	<c:when test="<%= commerceShippingFixedOptionRelsDisplayContext.isVisible() %>">
-		<clay:data-set-display
+		<dataset:display
 			contextParams='<%=
 				HashMapBuilder.<String, String>put(
 					"commerceShippingMethodId", String.valueOf(commerceShippingFixedOptionRelsDisplayContext.getCommerceShippingMethodId())
