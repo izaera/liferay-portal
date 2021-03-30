@@ -12,6 +12,7 @@ dependencies {
 	compileOnly project(":apps:commerce:commerce-product-api")
 	compileOnly project(":apps:commerce:commerce-service")
 	compileOnly project(":apps:commerce:commerce-shipping-engine-fixed-api")
+	compileOnly project(":apps:dataset:dataset-taglib")
 	compileOnly project(":apps:frontend-taglib:frontend-taglib")
 	compileOnly project(":apps:frontend-taglib:frontend-taglib-clay")
 	compileOnly project(":core:petra:petra-function")
