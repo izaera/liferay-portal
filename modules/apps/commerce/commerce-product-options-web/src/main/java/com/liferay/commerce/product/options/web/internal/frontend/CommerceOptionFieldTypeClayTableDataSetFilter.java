@@ -20,9 +20,9 @@ import com.liferay.commerce.product.options.web.internal.frontend.constants.Comm
 import com.liferay.commerce.product.util.DDMFormFieldTypeUtil;
 import com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldType;
 import com.liferay.dynamic.data.mapping.form.field.type.DDMFormFieldTypeServicesTracker;
-import com.liferay.frontend.taglib.clay.data.set.filter.BaseRadioClayDataSetFilter;
-import com.liferay.frontend.taglib.clay.data.set.filter.ClayDataSetFilter;
-import com.liferay.frontend.taglib.clay.data.set.filter.RadioClayDataSetFilterItem;
+import com.liferay.dataset.taglib.filter.BaseRadioClayDataSetFilter;
+import com.liferay.dataset.taglib.filter.ClayDataSetFilter;
+import com.liferay.dataset.taglib.filter.RadioClayDataSetFilterItem;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.module.configuration.ConfigurationException;
 import com.liferay.portal.kernel.module.configuration.ConfigurationProvider;
