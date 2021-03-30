@@ -14,7 +14,7 @@
 
 package com.liferay.commerce.organization.web.internal.pagination;
 
-import com.liferay.frontend.taglib.clay.data.Pagination;
+import com.liferay.dataset.taglib.Pagination;
 
 /**
  * @author Marco Leo

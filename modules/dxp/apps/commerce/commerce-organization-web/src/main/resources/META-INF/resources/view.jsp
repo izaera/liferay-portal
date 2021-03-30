@@ -69,7 +69,7 @@ request.setAttribute("view.jsp-filterPerOrganization", false);
 <c:choose>
 	<c:when test="<%= viewMode.equals(CommerceOrganizationConstants.LIST_VIEW_MODE) %>">
 		<div class="commerce-organization-container" id="<portlet:namespace />entriesContainer">
-			<clay:data-set-display
+			<dataset:display
 				dataProviderKey="<%= CommerceOrganizationClayTableDataSetDisplayView.NAME %>"
 				id="<%= CommerceOrganizationClayTableDataSetDisplayView.NAME %>"
 				itemsPerPage="<%= 10 %>"

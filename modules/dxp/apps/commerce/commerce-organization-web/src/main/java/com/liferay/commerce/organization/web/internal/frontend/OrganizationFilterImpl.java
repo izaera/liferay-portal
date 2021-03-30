@@ -14,7 +14,7 @@
 
 package com.liferay.commerce.organization.web.internal.frontend;
 
-import com.liferay.frontend.taglib.clay.data.Filter;
+import com.liferay.dataset.taglib.Filter;
 
 /**
  * @author Alessio Antonio Rendina

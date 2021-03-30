@@ -21,7 +21,7 @@ CommerceOrganizationDisplayContext commerceOrganizationDisplayContext = (Commerc
 %>
 
 <div class="commerce-organization-container" id="<portlet:namespace />entriesContainer">
-	<clay:data-set-display
+	<dataset:display
 		contextParams='<%= HashMapBuilder.<String, String>put("organizationId", String.valueOf(commerceOrganizationDisplayContext.getOrganizationId())).build() %>'
 		dataProviderKey="<%= CommerceOrganizationAccountClayTableDataSetDisplayView.NAME %>"
 		id="<%= CommerceOrganizationAccountClayTableDataSetDisplayView.NAME %>"
