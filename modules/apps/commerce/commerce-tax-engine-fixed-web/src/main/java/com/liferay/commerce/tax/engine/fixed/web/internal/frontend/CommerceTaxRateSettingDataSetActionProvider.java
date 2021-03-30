@@ -20,7 +20,7 @@ import com.liferay.commerce.product.service.CommerceChannelService;
 import com.liferay.commerce.tax.engine.fixed.web.internal.frontend.constants.CommerceTaxRateSettingDataSetConstants;
 import com.liferay.commerce.tax.engine.fixed.web.internal.model.TaxRateSetting;
 import com.liferay.commerce.tax.model.CommerceTaxMethod;
-import com.liferay.frontend.taglib.clay.data.set.ClayDataSetActionProvider;
+import com.liferay.dataset.taglib.ClayDataSetActionProvider;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemListBuilder;
 import com.liferay.petra.portlet.url.builder.PortletURLBuilder;

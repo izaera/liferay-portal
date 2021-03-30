@@ -37,7 +37,7 @@ CommerceTaxFixedRateAddressRelsDisplayContext commerceTaxFixedRateAddressRelsDis
 		</aui:select>
 	</commerce-ui:panel>
 
-	<clay:data-set-display
+	<dataset:display
 		contextParams='<%=
 			HashMapBuilder.<String, String>put(
 				"commerceChannelId", String.valueOf(commerceTaxFixedRateAddressRelsDisplayContext.getCommerceChannelId())
