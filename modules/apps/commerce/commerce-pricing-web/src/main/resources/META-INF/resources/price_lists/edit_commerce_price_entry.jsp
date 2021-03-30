@@ -68,7 +68,7 @@ if ((commercePriceEntry != null) && (commercePriceEntry.getExpirationDate() != n
 						</div>
 					</div>
 
-					<clay:data-set-display
+					<dataset:display
 						contextParams='<%=
 							HashMapBuilder.<String, String>put(
 								"commercePriceEntryId", String.valueOf(commercePriceEntryId)

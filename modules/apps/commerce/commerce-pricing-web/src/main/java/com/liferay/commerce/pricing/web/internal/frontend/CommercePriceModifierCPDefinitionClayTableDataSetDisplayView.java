@@ -15,12 +15,12 @@
 package com.liferay.commerce.pricing.web.internal.frontend;
 
 import com.liferay.commerce.pricing.web.internal.frontend.constants.CommercePricingDataSetConstants;
-import com.liferay.frontend.taglib.clay.data.set.ClayDataSetDisplayView;
-import com.liferay.frontend.taglib.clay.data.set.view.table.BaseTableClayDataSetDisplayView;
-import com.liferay.frontend.taglib.clay.data.set.view.table.ClayTableSchema;
-import com.liferay.frontend.taglib.clay.data.set.view.table.ClayTableSchemaBuilder;
-import com.liferay.frontend.taglib.clay.data.set.view.table.ClayTableSchemaBuilderFactory;
-import com.liferay.frontend.taglib.clay.data.set.view.table.ClayTableSchemaField;
+import com.liferay.dataset.taglib.ClayDataSetDisplayView;
+import com.liferay.dataset.taglib.view.table.BaseTableClayDataSetDisplayView;
+import com.liferay.dataset.taglib.view.table.ClayTableSchema;
+import com.liferay.dataset.taglib.view.table.ClayTableSchemaBuilder;
+import com.liferay.dataset.taglib.view.table.ClayTableSchemaBuilderFactory;
+import com.liferay.dataset.taglib.view.table.ClayTableSchemaField;
 import com.liferay.petra.string.StringPool;
 
 import org.osgi.service.component.annotations.Component;

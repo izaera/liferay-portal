@@ -132,7 +132,7 @@ CProduct cProduct = cpDefinition.getCProduct();
 			elementClasses="mt-4"
 			title='<%= LanguageUtil.get(request, "product-groups") %>'
 		>
-			<clay:data-set-display
+			<dataset:display
 				contextParams='<%=
 					HashMapBuilder.<String, String>put(
 						"cpDefinitionId", String.valueOf(cpDefinitionPricingClassDisplayContext.getCPDefinitionId())

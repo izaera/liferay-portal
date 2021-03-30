@@ -21,9 +21,9 @@ import com.liferay.commerce.pricing.web.internal.frontend.constants.CommercePric
 import com.liferay.commerce.pricing.web.internal.model.PricingClassPriceList;
 import com.liferay.commerce.product.model.CommerceCatalog;
 import com.liferay.commerce.product.service.CommerceCatalogService;
-import com.liferay.frontend.taglib.clay.data.Filter;
-import com.liferay.frontend.taglib.clay.data.Pagination;
-import com.liferay.frontend.taglib.clay.data.set.provider.ClayDataSetDataProvider;
+import com.liferay.dataset.taglib.Filter;
+import com.liferay.dataset.taglib.Pagination;
+import com.liferay.dataset.taglib.provider.ClayDataSetDataProvider;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;

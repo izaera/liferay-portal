@@ -24,7 +24,7 @@ long commercePriceListId = commercePriceListDisplayContext.getCommercePriceListI
 
 <c:if test="<%= commercePriceListDisplayContext.hasPermission(commercePriceListId, ActionKeys.UPDATE) %>">
 	<div class="pt-4">
-		<clay:data-set-display
+		<dataset:display
 			contextParams='<%=
 				HashMapBuilder.<String, String>put(
 					"commercePriceListId", String.valueOf(commercePriceListId)

@@ -22,7 +22,7 @@ CommercePricingClassDisplayContext commercePricingClassDisplayContext = (Commerc
 
 <div class="row">
 	<div class="col-12">
-		<clay:data-set-display
+		<dataset:display
 			creationMenu="<%= commercePricingClassDisplayContext.getCreationMenu() %>"
 			dataProviderKey="<%= CommercePricingDataSetConstants.COMMERCE_DATA_SET_KEY_PRICING_CLASSES %>"
 			id="<%= CommercePricingDataSetConstants.COMMERCE_DATA_SET_KEY_PRICING_CLASSES %>"

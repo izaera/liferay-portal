@@ -26,7 +26,7 @@ CommercePricingClass commercePricingClass = commercePricingClassDiscountDisplayC
 
 <c:if test="<%= hasPermission %>">
 	<div class="col-12 pt-4">
-		<clay:data-set-display
+		<dataset:display
 			contextParams='<%=
 				HashMapBuilder.<String, String>put(
 					"commercePricingClassId", String.valueOf(commercePricingClass.getCommercePricingClassId())
