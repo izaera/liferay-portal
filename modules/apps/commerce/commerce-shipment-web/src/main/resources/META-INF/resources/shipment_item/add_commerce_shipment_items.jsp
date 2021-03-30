@@ -34,7 +34,7 @@ CommerceShipment commerceShipment = commerceShipmentDisplayContext.getCommerceSh
 		<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
 		<aui:input name="commerceShipmentId" type="hidden" value="<%= commerceShipment.getCommerceShipmentId() %>" />
 
-		<clay:data-set-display
+		<dataset:display
 			bulkActionDropdownItems="<%= commerceShipmentDisplayContext.getShipmentItemBulkActions() %>"
 			contextParams='<%=
 				HashMapBuilder.<String, String>put(

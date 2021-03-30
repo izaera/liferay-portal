@@ -191,7 +191,7 @@ Format dateFormat = FastDateFormatFactoryUtil.getDate(DateFormat.MEDIUM, locale,
 	bodyClasses="p-0"
 	title='<%= LanguageUtil.get(request, "products") %>'
 >
-	<clay:data-set-display
+	<dataset:display
 		contextParams='<%=
 			HashMapBuilder.<String, String>put(
 				"commerceShipmentId", String.valueOf(commerceShipment.getCommerceShipmentId())
