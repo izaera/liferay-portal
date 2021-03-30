@@ -22,7 +22,7 @@ String notificationNavigationItem = ParamUtil.getString(request, "notificationNa
 CommerceNotificationQueueEntriesDisplayContext commerceNotificationQueueEntriesDisplayContext = (CommerceNotificationQueueEntriesDisplayContext)request.getAttribute(WebKeys.PORTLET_DISPLAY_CONTEXT);
 %>
 
-<clay:data-set-display
+<dataset:display
 	contextParams='<%=
 		HashMapBuilder.<String, String>put(
 			"commerceChannelId", String.valueOf(commerceNotificationQueueEntriesDisplayContext.getCommerceChannelId())
