@@ -23,7 +23,7 @@ CommerceInventoryDisplayContext commerceInventoryDisplayContext = (CommerceInven
 <commerce-ui:panel
 	title='<%= LanguageUtil.get(request, "change-logs") %>'
 >
-	<clay:data-set-display
+	<dataset:display
 		contextParams='<%=
 			HashMapBuilder.<String, String>put(
 				"sku", commerceInventoryDisplayContext.getSku()
