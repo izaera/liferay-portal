@@ -15,8 +15,8 @@
 package com.liferay.commerce.order.web.internal.frontend;
 
 import com.liferay.commerce.order.web.internal.frontend.constants.CommerceOrderDataSetConstants;
-import com.liferay.frontend.taglib.clay.data.set.ClayDataSetDisplayView;
-import com.liferay.frontend.taglib.clay.data.set.view.list.BaseListClayDataSetDisplayView;
+import com.liferay.dataset.taglib.ClayDataSetDisplayView;
+import com.liferay.dataset.taglib.view.list.BaseListClayDataSetDisplayView;
 
 import org.osgi.service.component.annotations.Component;
 

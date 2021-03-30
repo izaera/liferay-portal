@@ -36,7 +36,7 @@ long commerceOrderId = commerceOrder.getCommerceOrderId();
 
 		<liferay-ui:error exception="<%= CommerceOrderPaymentMethodException.class %>" message="please-select-a-valid-payment-method" />
 
-		<clay:data-set-display
+		<dataset:display
 			contextParams='<%=
 				HashMapBuilder.<String, String>put(
 					"commerceOrderId", String.valueOf(commerceOrderId)

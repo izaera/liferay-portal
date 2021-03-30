@@ -15,9 +15,9 @@
 package com.liferay.commerce.order.web.internal.frontend;
 
 import com.liferay.commerce.order.web.internal.frontend.constants.CommerceOrderDataSetConstants;
-import com.liferay.frontend.taglib.clay.data.set.filter.BaseDateRangeClayDataSetFilter;
-import com.liferay.frontend.taglib.clay.data.set.filter.ClayDataSetFilter;
-import com.liferay.frontend.taglib.clay.data.set.filter.DateClayDataSetFilterItem;
+import com.liferay.dataset.taglib.filter.BaseDateRangeClayDataSetFilter;
+import com.liferay.dataset.taglib.filter.ClayDataSetFilter;
+import com.liferay.dataset.taglib.filter.DateClayDataSetFilterItem;
 
 import java.util.Calendar;
 

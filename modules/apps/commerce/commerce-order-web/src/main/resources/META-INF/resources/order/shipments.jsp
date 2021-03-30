@@ -29,7 +29,7 @@ CommerceOrderEditDisplayContext commerceOrderEditDisplayContext = (CommerceOrder
 CommerceOrder commerceOrder = commerceOrderEditDisplayContext.getCommerceOrder();
 %>
 
-<clay:data-set-display
+<dataset:display
 	contextParams='<%=
 		HashMapBuilder.<String, String>put(
 			"commerceOrderId", String.valueOf(commerceOrder.getCommerceOrderId())
