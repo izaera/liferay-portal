@@ -40,7 +40,7 @@ PortletURL portletURL = cpDefinitionLinkDisplayContext.getPortletURL();
 			<aui:input name="<%= Constants.CMD %>" type="hidden" />
 			<aui:input name="redirect" type="hidden" value="<%= currentURL %>" />
 
-			<clay:data-set-display
+			<dataset:display
 				contextParams='<%=
 					HashMapBuilder.<String, String>put(
 						"cpDefinitionId", String.valueOf(cpDefinitionLinkDisplayContext.getCPDefinitionId())

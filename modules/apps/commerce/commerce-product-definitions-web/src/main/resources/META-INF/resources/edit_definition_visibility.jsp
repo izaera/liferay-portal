@@ -44,7 +44,7 @@ Map<String, String> contextParams = HashMapBuilder.<String, String>put(
 		collapseSwitchName='<%= liferayPortletResponse.getNamespace() + "channelFilterEnabled" %>'
 		title='<%= LanguageUtil.get(request, "channels") %>'
 	>
-		<clay:data-set-display
+		<dataset:display
 			contextParams="<%= contextParams %>"
 			creationMenu="<%= cpDefinitionsDisplayContext.getChannelsCreationMenu() %>"
 			dataProviderKey="<%= CommerceProductDataSetConstants.COMMERCE_DATA_SET_KEY_PRODUCT_CHANNELS %>"
@@ -64,7 +64,7 @@ Map<String, String> contextParams = HashMapBuilder.<String, String>put(
 		collapseSwitchName='<%= liferayPortletResponse.getNamespace() + "accountGroupFilterEnabled" %>'
 		title='<%= LanguageUtil.get(request, "account-groups") %>'
 	>
-		<clay:data-set-display
+		<dataset:display
 			contextParams="<%= contextParams %>"
 			creationMenu="<%= cpDefinitionsDisplayContext.getAccountGroupsCreationMenu() %>"
 			dataProviderKey="<%= CommerceProductDataSetConstants.COMMERCE_DATA_SET_KEY_PRODUCT_ACCOUNT_GROUPS %>"

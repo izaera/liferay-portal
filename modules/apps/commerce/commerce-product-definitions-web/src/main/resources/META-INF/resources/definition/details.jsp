@@ -312,7 +312,7 @@ if ((cpDefinition != null) && (cpDefinition.getExpirationDate() != null)) {
 					bodyClasses="p-0"
 					title='<%= LanguageUtil.get(request, "specifications") %>'
 				>
-					<clay:data-set-display
+					<dataset:display
 						contextParams='<%=
 							HashMapBuilder.<String, String>put(
 								"cpDefinitionId", String.valueOf(cpDefinitionId)

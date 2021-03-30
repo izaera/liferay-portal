@@ -36,7 +36,7 @@ Map<String, String> contextParams = HashMapBuilder.<String, String>put(
 			bodyClasses="p-0"
 			title='<%= LanguageUtil.get(request, "images") %>'
 		>
-			<clay:data-set-display
+			<dataset:display
 				contextParams="<%= contextParams %>"
 				creationMenu="<%= cpAttachmentFileEntriesDisplayContext.getCreationMenu(CPAttachmentFileEntryConstants.TYPE_IMAGE) %>"
 				dataProviderKey="<%= CommerceProductDataSetConstants.COMMERCE_DATA_SET_KEY_PRODUCT_IMAGES %>"
@@ -53,7 +53,7 @@ Map<String, String> contextParams = HashMapBuilder.<String, String>put(
 			bodyClasses="p-0"
 			title='<%= LanguageUtil.get(request, "attachments") %>'
 		>
-			<clay:data-set-display
+			<dataset:display
 				contextParams="<%= contextParams %>"
 				creationMenu="<%= cpAttachmentFileEntriesDisplayContext.getCreationMenu(CPAttachmentFileEntryConstants.TYPE_OTHER) %>"
 				dataProviderKey="<%= CommerceProductDataSetConstants.COMMERCE_DATA_SET_KEY_PRODUCT_ATTACHMENTS %>"

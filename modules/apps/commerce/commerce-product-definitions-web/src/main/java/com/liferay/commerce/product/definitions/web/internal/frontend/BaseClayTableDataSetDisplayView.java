@@ -14,11 +14,11 @@
 
 package com.liferay.commerce.product.definitions.web.internal.frontend;
 
-import com.liferay.frontend.taglib.clay.data.set.view.table.BaseTableClayDataSetDisplayView;
-import com.liferay.frontend.taglib.clay.data.set.view.table.ClayTableSchema;
-import com.liferay.frontend.taglib.clay.data.set.view.table.ClayTableSchemaBuilder;
-import com.liferay.frontend.taglib.clay.data.set.view.table.ClayTableSchemaBuilderFactory;
-import com.liferay.frontend.taglib.clay.data.set.view.table.ClayTableSchemaField;
+import com.liferay.dataset.taglib.view.table.BaseTableClayDataSetDisplayView;
+import com.liferay.dataset.taglib.view.table.ClayTableSchema;
+import com.liferay.dataset.taglib.view.table.ClayTableSchemaBuilder;
+import com.liferay.dataset.taglib.view.table.ClayTableSchemaBuilderFactory;
+import com.liferay.dataset.taglib.view.table.ClayTableSchemaField;
 
 import org.osgi.service.component.annotations.Reference;
 

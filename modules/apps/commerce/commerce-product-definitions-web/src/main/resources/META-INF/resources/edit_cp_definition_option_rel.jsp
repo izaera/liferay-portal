@@ -125,7 +125,7 @@ String defaultLanguageId = cpDefinitionOptionRelDisplayContext.getCatalogDefault
 				}
 				%>
 
-				<clay:data-set-display
+				<dataset:display
 					contextParams='<%=
 						HashMapBuilder.<String, String>put(
 							"cpDefinitionOptionRelId", String.valueOf(cpDefinitionOptionRelId)

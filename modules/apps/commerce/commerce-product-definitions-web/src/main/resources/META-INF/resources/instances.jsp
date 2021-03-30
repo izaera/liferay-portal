@@ -22,7 +22,7 @@ CPInstanceDisplayContext cpInstanceDisplayContext = (CPInstanceDisplayContext)re
 
 <c:if test="<%= CommerceCatalogPermission.contains(permissionChecker, cpInstanceDisplayContext.getCPDefinition(), ActionKeys.VIEW) %>">
 	<div class="pt-4" id="<portlet:namespace />productInstancesContainer">
-		<clay:data-set-display
+		<dataset:display
 			contextParams='<%=
 				HashMapBuilder.<String, String>put(
 					"cpDefinitionId", String.valueOf(cpInstanceDisplayContext.getCPDefinitionId())

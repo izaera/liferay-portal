@@ -15,9 +15,9 @@
 package com.liferay.commerce.product.definitions.web.internal.frontend;
 
 import com.liferay.commerce.product.definitions.web.internal.frontend.constants.CommerceProductDataSetConstants;
-import com.liferay.frontend.taglib.clay.data.set.ClayDataSetDisplayView;
-import com.liferay.frontend.taglib.clay.data.set.view.table.ClayTableSchemaBuilder;
-import com.liferay.frontend.taglib.clay.data.set.view.table.ClayTableSchemaField;
+import com.liferay.dataset.taglib.ClayDataSetDisplayView;
+import com.liferay.dataset.taglib.view.table.ClayTableSchemaBuilder;
+import com.liferay.dataset.taglib.view.table.ClayTableSchemaField;
 
 import org.osgi.service.component.annotations.Component;
 
