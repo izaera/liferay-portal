@@ -24,7 +24,7 @@ CommerceCatalogDisplayContext commerceCatalogDisplayContext = (CommerceCatalogDi
 
 <div class="row">
 	<div class="col-12">
-		<clay:data-set-display
+		<dataset:display
 			creationMenu="<%= commerceCatalogDisplayContext.getCreationMenu() %>"
 			dataProviderKey="<%= CommerceCatalogDataSetConstants.COMMERCE_DATA_SET_KEY_CATALOGS %>"
 			id="<%= CommerceCatalogDataSetConstants.COMMERCE_DATA_SET_KEY_CATALOGS %>"

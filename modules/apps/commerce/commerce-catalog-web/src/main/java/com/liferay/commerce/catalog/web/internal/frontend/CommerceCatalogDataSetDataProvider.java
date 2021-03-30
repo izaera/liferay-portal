@@ -18,9 +18,9 @@ import com.liferay.commerce.catalog.web.internal.frontend.constants.CommerceCata
 import com.liferay.commerce.catalog.web.internal.model.Catalog;
 import com.liferay.commerce.product.model.CommerceCatalog;
 import com.liferay.commerce.product.service.CommerceCatalogService;
-import com.liferay.frontend.taglib.clay.data.Filter;
-import com.liferay.frontend.taglib.clay.data.Pagination;
-import com.liferay.frontend.taglib.clay.data.set.provider.ClayDataSetDataProvider;
+import com.liferay.dataset.taglib.Filter;
+import com.liferay.dataset.taglib.Pagination;
+import com.liferay.dataset.taglib.provider.ClayDataSetDataProvider;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.search.Sort;

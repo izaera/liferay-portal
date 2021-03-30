@@ -24,7 +24,7 @@ CommerceCatalog commerceCatalog = commerceCatalogDisplayContext.getCommerceCatal
 
 <div class="row">
 	<div class="col-12">
-		<clay:data-set-display
+		<dataset:display
 			contextParams='<%=
 				HashMapBuilder.<String, String>put(
 					"commerceCatalogId", String.valueOf(commerceCatalog.getCommerceCatalogId())
