@@ -16,7 +16,7 @@
 
 <%@ include file="/data_set_display/init.jsp" %>
 
-<link href="<%= PortalUtil.getStaticResourceURL(request, PortalUtil.getPathModule() + "/dataset-taglib/data_set_display/styles/main.css") %>" rel="stylesheet" />
+<link href="<%= PortalUtil.getStaticResourceURL(request, PortalUtil.getPathModule() + "/dataset-web/data_set_display/styles/main.css") %>" rel="stylesheet" />
 
 <div class="table-root" id="<%= containerId %>">
 	<span aria-hidden="true" class="loading-animation my-7"></span>

@@ -1,5 +1,8 @@
 {
-	"name": "dataset-taglib",
+	"dependencies": {
+		"clay-dataset-display": "2.22.3"
+	},
+	"name": "dataset-web",
 	"private": true,
 	"scripts": {
 		"build": "liferay-npm-scripts build",

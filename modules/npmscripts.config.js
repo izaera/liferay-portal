@@ -42,6 +42,10 @@ module.exports = {
 					'@liferay/frontend-taglib': {
 						'/': '>=1.0.0',
 					},
+					'dataset-web': {
+						'/': '*',
+						'clay-dataset-display': '*',
+					},
 					'frontend-js-components-web': {
 						'/': '>=1.0.0',
 					},
@@ -189,9 +193,6 @@ module.exports = {
 						'clay-sticker': '>=2.9.0',
 						'clay-table': '>=2.9.0',
 						'clay-tooltip': '>=2.9.0',
-					},
-					'dataset-taglib': {
-						'clay-dataset-display': '*',
 					},
 				},
 			},

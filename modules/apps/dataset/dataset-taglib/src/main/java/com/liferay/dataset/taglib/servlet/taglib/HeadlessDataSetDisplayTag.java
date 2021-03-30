@@ -66,7 +66,7 @@ public class HeadlessDataSetDisplayTag extends IncludeTag {
 
 			if ((npmResolver != null) && Validator.isNull(_module)) {
 				_module = npmResolver.resolveModuleName(
-					"dataset-taglib/data_set_display/entry");
+					"dataset-web/data_set_display/entry");
 			}
 
 			_setActiveViewSettingsJSON();
