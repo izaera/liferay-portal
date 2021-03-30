@@ -33,7 +33,7 @@ CommerceOrderContentDisplayContext commerceOrderContentDisplayContext = (Commerc
 >
 	<div class="container-fluid container-fluid-max-xl" id="<portlet:namespace />ordersContainer">
 		<div class="commerce-orders-container" id="<portlet:namespace />entriesContainer">
-			<clay:data-set-display
+			<dataset:display
 				dataProviderKey="<%= CommerceOrderDataSetConstants.COMMERCE_DATA_SET_KEY_PLACED_ORDERS %>"
 				id="<%= CommerceOrderDataSetConstants.COMMERCE_DATA_SET_KEY_PLACED_ORDERS %>"
 				itemsPerPage="<%= 10 %>"

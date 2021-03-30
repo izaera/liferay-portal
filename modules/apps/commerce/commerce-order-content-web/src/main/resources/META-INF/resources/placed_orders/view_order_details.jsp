@@ -212,7 +212,7 @@ if (commerceOrder != null) {
 		contextParams.put("commerceOrderId", String.valueOf(commerceOrder.getCommerceOrderId()));
 		%>
 
-		<clay:data-set-display
+		<dataset:display
 			contextParams="<%= contextParams %>"
 			dataProviderKey="<%= CommerceOrderDataSetConstants.COMMERCE_DATA_SET_KEY_PLACED_ORDER_ITEMS %>"
 			id="<%= CommerceOrderDataSetConstants.COMMERCE_DATA_SET_KEY_PLACED_ORDER_ITEMS %>"
