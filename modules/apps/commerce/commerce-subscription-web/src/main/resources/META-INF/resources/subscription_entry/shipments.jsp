@@ -26,7 +26,7 @@ CommerceSubscriptionEntryDisplayContext commerceSubscriptionEntryDisplayContext 
 			bodyClasses="p-0"
 			title='<%= LanguageUtil.get(request, "items") %>'
 		>
-			<clay:data-set-display
+			<dataset:display
 				contextParams='<%=
 					HashMapBuilder.<String, String>put(
 						"commerceSubscriptionEntryId", String.valueOf(commerceSubscriptionEntryDisplayContext.getCommerceSubscriptionEntryId())

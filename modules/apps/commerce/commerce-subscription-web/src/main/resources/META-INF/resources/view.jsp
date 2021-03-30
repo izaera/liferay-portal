@@ -29,7 +29,7 @@ contextParams.put("companyId", String.valueOf(themeDisplay.getCompanyId()));
 <div class="row">
 	<div class="col-12 mb-4">
 		<c:if test="<%= hasManageCommerceSubscriptionEntryPermission %>">
-			<clay:data-set-display
+			<dataset:display
 				contextParams="<%= contextParams %>"
 				dataProviderKey="<%= CommerceSubscriptionDataSetConstants.COMMERCE_DATA_SET_KEY_SUBSCRIPTION_ENTRIES %>"
 				id="<%= CommerceSubscriptionDataSetConstants.COMMERCE_DATA_SET_KEY_SUBSCRIPTION_ENTRIES %>"

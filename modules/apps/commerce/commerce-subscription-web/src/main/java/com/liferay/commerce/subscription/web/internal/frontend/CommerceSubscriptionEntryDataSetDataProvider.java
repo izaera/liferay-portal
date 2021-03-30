@@ -26,9 +26,9 @@ import com.liferay.commerce.subscription.web.internal.frontend.constants.Commerc
 import com.liferay.commerce.subscription.web.internal.model.Label;
 import com.liferay.commerce.subscription.web.internal.model.Link;
 import com.liferay.commerce.subscription.web.internal.model.SubscriptionEntry;
-import com.liferay.frontend.taglib.clay.data.Filter;
-import com.liferay.frontend.taglib.clay.data.Pagination;
-import com.liferay.frontend.taglib.clay.data.set.provider.ClayDataSetDataProvider;
+import com.liferay.dataset.taglib.Filter;
+import com.liferay.dataset.taglib.Pagination;
+import com.liferay.dataset.taglib.provider.ClayDataSetDataProvider;
 import com.liferay.petra.portlet.url.builder.PortletURLBuilder;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
