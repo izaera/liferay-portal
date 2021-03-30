@@ -20,7 +20,7 @@
 CommerceChannelDisplayContext commerceChannelDisplayContext = (CommerceChannelDisplayContext)request.getAttribute(WebKeys.PORTLET_DISPLAY_CONTEXT);
 %>
 
-<clay:data-set-display
+<dataset:display
 	contextParams="<%= new HashMap<>() %>"
 	creationMenu="<%= commerceChannelDisplayContext.getCreationMenu() %>"
 	dataProviderKey="<%= CommerceChannelClayTable.NAME %>"

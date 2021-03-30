@@ -19,6 +19,7 @@ dependencies {
 	compileOnly project(":apps:commerce:commerce-service")
 	compileOnly project(":apps:commerce:commerce-taglib")
 	compileOnly project(":apps:commerce:commerce-tax-api")
+	compileOnly project(":apps:dataset:dataset-taglib")
 	compileOnly project(":apps:expando:expando-taglib")
 	compileOnly project(":apps:frontend-taglib:frontend-taglib")
 	compileOnly project(":apps:frontend-taglib:frontend-taglib-clay")
