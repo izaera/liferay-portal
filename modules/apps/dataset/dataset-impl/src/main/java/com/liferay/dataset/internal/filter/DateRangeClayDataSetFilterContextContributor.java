@@ -12,12 +12,12 @@
  * details.
  */
 
-package com.liferay.dataset.taglib.internal.filter;
+package com.liferay.dataset.internal.filter;
 
-import com.liferay.dataset.taglib.filter.BaseDateRangeClayDataSetFilter;
-import com.liferay.dataset.taglib.filter.ClayDataSetFilter;
-import com.liferay.dataset.taglib.filter.ClayDataSetFilterContextContributor;
-import com.liferay.dataset.taglib.filter.DateClayDataSetFilterItem;
+import com.liferay.dataset.filter.BaseDateRangeClayDataSetFilter;
+import com.liferay.dataset.filter.ClayDataSetFilter;
+import com.liferay.dataset.filter.ClayDataSetFilterContextContributor;
+import com.liferay.dataset.filter.DateClayDataSetFilterItem;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.util.HashMapBuilder;

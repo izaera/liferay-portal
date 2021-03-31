@@ -12,17 +12,21 @@
  * details.
  */
 
-package com.liferay.dataset.taglib.filter;
+package com.liferay.dataset.filter;
 
 /**
- * @author Marco Leo
+ * @author Luca Pellizzon
  */
-public interface ClayDataSetFilter {
+public abstract class BaseDateRangeClayDataSetFilter
+	implements ClayDataSetFilter {
 
-	public String getId();
+	public abstract DateClayDataSetFilterItem getMaxDateClayDataSetFilterItem();
 
-	public String getLabel();
+	public abstract DateClayDataSetFilterItem getMinDateClayDataSetFilterItem();
 
-	public String getType();
+	@Override
+	public String getType() {
+		return "dateRange";
+	}
 
 }

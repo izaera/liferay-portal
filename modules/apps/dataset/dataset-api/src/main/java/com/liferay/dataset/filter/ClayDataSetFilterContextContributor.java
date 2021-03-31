@@ -12,16 +12,17 @@
  * details.
  */
 
-package com.liferay.dataset.taglib.filter;
+package com.liferay.dataset.filter;
 
-import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
 /**
  * @author Marco Leo
  */
-public interface ClayDataSetFilterRegistry {
+public interface ClayDataSetFilterContextContributor {
 
-	public List<ClayDataSetFilter> getClayDataSetFilters(
-		String clayDataSetDisplayName);
+	public Map<String, Object> getClayDataSetFilterContext(
+		ClayDataSetFilter clayDataSetFilter, Locale locale);
 
 }

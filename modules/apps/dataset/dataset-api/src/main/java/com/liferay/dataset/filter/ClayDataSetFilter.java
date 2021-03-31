@@ -12,27 +12,17 @@
  * details.
  */
 
-package com.liferay.dataset.taglib.filter;
+package com.liferay.dataset.filter;
 
 /**
  * @author Marco Leo
  */
-public class CheckBoxClayDataSetFilterItem {
+public interface ClayDataSetFilter {
 
-	public CheckBoxClayDataSetFilterItem(String label, Object value) {
-		_label = label;
-		_value = value;
-	}
+	public String getId();
 
-	public String getLabel() {
-		return _label;
-	}
+	public String getLabel();
 
-	public Object getValue() {
-		return _value;
-	}
-
-	private final String _label;
-	private final Object _value;
+	public String getType();
 
 }

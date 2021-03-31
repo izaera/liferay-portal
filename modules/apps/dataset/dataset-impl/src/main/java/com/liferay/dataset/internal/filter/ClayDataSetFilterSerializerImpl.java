@@ -12,13 +12,13 @@
  * details.
  */
 
-package com.liferay.dataset.taglib.internal.filter;
+package com.liferay.dataset.internal.filter;
 
-import com.liferay.dataset.taglib.filter.ClayDataSetFilter;
-import com.liferay.dataset.taglib.filter.ClayDataSetFilterContextContributor;
-import com.liferay.dataset.taglib.filter.ClayDataSetFilterContextContributorRegistry;
-import com.liferay.dataset.taglib.filter.ClayDataSetFilterRegistry;
-import com.liferay.dataset.taglib.filter.ClayDataSetFilterSerializer;
+import com.liferay.dataset.filter.ClayDataSetFilter;
+import com.liferay.dataset.filter.ClayDataSetFilterContextContributor;
+import com.liferay.dataset.filter.ClayDataSetFilterContextContributorRegistry;
+import com.liferay.dataset.filter.ClayDataSetFilterRegistry;
+import com.liferay.dataset.filter.ClayDataSetFilterSerializer;
 import com.liferay.portal.kernel.json.JSONArray;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.json.JSONObject;

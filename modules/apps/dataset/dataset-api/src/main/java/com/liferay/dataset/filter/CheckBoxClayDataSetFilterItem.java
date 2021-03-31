@@ -12,33 +12,27 @@
  * details.
  */
 
-package com.liferay.dataset.taglib.filter;
+package com.liferay.dataset.filter;
 
 /**
- * @author Luca Pellizzon
+ * @author Marco Leo
  */
-public class DateClayDataSetFilterItem {
+public class CheckBoxClayDataSetFilterItem {
 
-	public DateClayDataSetFilterItem(int day, int month, int year) {
-		_day = day;
-		_month = month;
-		_year = year;
+	public CheckBoxClayDataSetFilterItem(String label, Object value) {
+		_label = label;
+		_value = value;
 	}
 
-	public int getDay() {
-		return _day;
+	public String getLabel() {
+		return _label;
 	}
 
-	public int getMonth() {
-		return _month;
+	public Object getValue() {
+		return _value;
 	}
 
-	public int getYear() {
-		return _year;
-	}
-
-	private final int _day;
-	private final int _month;
-	private final int _year;
+	private final String _label;
+	private final Object _value;
 
 }

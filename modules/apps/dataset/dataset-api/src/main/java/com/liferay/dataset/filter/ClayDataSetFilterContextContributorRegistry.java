@@ -12,35 +12,16 @@
  * details.
  */
 
-package com.liferay.dataset.taglib.filter;
-
-import com.liferay.portal.kernel.util.ResourceBundleUtil;
+package com.liferay.dataset.filter;
 
 import java.util.List;
-import java.util.Locale;
-import java.util.ResourceBundle;
 
 /**
  * @author Marco Leo
  */
-public abstract class BaseCheckBoxClayDataSetFilter
-	implements ClayDataSetFilter {
+public interface ClayDataSetFilterContextContributorRegistry {
 
-	public abstract List<CheckBoxClayDataSetFilterItem>
-		getCheckBoxClayDataSetFilterItems(Locale locale);
-
-	public String getOperator() {
-		return "eq";
-	}
-
-	public ResourceBundle getResourceBundle(Locale locale) {
-		return ResourceBundleUtil.getBundle(
-			"content.Language", locale, getClass());
-	}
-
-	@Override
-	public String getType() {
-		return "checkbox";
-	}
+	public List<ClayDataSetFilterContextContributor>
+		getClayDataSetFilterContextContributors(String clayDataSetFilterType);
 
 }

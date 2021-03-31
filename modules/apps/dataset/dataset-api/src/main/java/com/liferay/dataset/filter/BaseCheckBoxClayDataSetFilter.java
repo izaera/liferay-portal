@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.dataset.taglib.filter;
+package com.liferay.dataset.filter;
 
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 
@@ -23,14 +23,15 @@ import java.util.ResourceBundle;
 /**
  * @author Marco Leo
  */
-public abstract class BaseRadioClayDataSetFilter implements ClayDataSetFilter {
+public abstract class BaseCheckBoxClayDataSetFilter
+	implements ClayDataSetFilter {
+
+	public abstract List<CheckBoxClayDataSetFilterItem>
+		getCheckBoxClayDataSetFilterItems(Locale locale);
 
 	public String getOperator() {
 		return "eq";
 	}
-
-	public abstract List<RadioClayDataSetFilterItem>
-		getRadioClayDataSetFilterItems(Locale locale);
 
 	public ResourceBundle getResourceBundle(Locale locale) {
 		return ResourceBundleUtil.getBundle(
@@ -39,7 +40,7 @@ public abstract class BaseRadioClayDataSetFilter implements ClayDataSetFilter {
 
 	@Override
 	public String getType() {
-		return "radio";
+		return "checkbox";
 	}
 
 }

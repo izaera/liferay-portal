@@ -12,16 +12,33 @@
  * details.
  */
 
-package com.liferay.dataset.taglib.filter;
-
-import java.util.List;
+package com.liferay.dataset.filter;
 
 /**
- * @author Marco Leo
+ * @author Luca Pellizzon
  */
-public interface ClayDataSetFilterContextContributorRegistry {
+public class DateClayDataSetFilterItem {
 
-	public List<ClayDataSetFilterContextContributor>
-		getClayDataSetFilterContextContributors(String clayDataSetFilterType);
+	public DateClayDataSetFilterItem(int day, int month, int year) {
+		_day = day;
+		_month = month;
+		_year = year;
+	}
+
+	public int getDay() {
+		return _day;
+	}
+
+	public int getMonth() {
+		return _month;
+	}
+
+	public int getYear() {
+		return _year;
+	}
+
+	private final int _day;
+	private final int _month;
+	private final int _year;
 
 }

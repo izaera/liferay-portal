@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.dataset.taglib.filter;
+package com.liferay.dataset.filter;
 
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 

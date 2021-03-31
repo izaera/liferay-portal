@@ -12,27 +12,17 @@
  * details.
  */
 
-package com.liferay.dataset.taglib.filter;
+package com.liferay.dataset.filter;
+
+import com.liferay.portal.kernel.json.JSONArray;
+
+import java.util.Locale;
 
 /**
  * @author Marco Leo
  */
-public class RadioClayDataSetFilterItem {
+public interface ClayDataSetFilterSerializer {
 
-	public RadioClayDataSetFilterItem(String label, Object value) {
-		_label = label;
-		_value = value;
-	}
-
-	public String getLabel() {
-		return _label;
-	}
-
-	public Object getValue() {
-		return _value;
-	}
-
-	private final String _label;
-	private final Object _value;
+	public JSONArray serialize(String clayDataSetDisplayName, Locale locale);
 
 }

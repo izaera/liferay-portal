@@ -12,11 +12,11 @@
  * details.
  */
 
-package com.liferay.dataset.taglib.internal.filter;
+package com.liferay.dataset.internal.filter;
 
-import com.liferay.dataset.taglib.filter.BaseAutocompleteClayDataSetFilter;
-import com.liferay.dataset.taglib.filter.ClayDataSetFilter;
-import com.liferay.dataset.taglib.filter.ClayDataSetFilterContextContributor;
+import com.liferay.dataset.filter.BaseAutocompleteClayDataSetFilter;
+import com.liferay.dataset.filter.ClayDataSetFilter;
+import com.liferay.dataset.filter.ClayDataSetFilterContextContributor;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 

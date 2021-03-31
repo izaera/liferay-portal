@@ -12,10 +12,10 @@
  * details.
  */
 
-package com.liferay.dataset.taglib.internal.filter;
+package com.liferay.dataset.internal.filter;
 
-import com.liferay.dataset.taglib.filter.ClayDataSetFilterContextContributor;
-import com.liferay.dataset.taglib.filter.ClayDataSetFilterContextContributorRegistry;
+import com.liferay.dataset.filter.ClayDataSetFilterContextContributor;
+import com.liferay.dataset.filter.ClayDataSetFilterContextContributorRegistry;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerCustomizerFactory;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerCustomizerFactory.ServiceWrapper;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;

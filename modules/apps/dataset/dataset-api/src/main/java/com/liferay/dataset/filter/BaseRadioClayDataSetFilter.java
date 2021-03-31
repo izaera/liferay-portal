@@ -12,17 +12,34 @@
  * details.
  */
 
-package com.liferay.dataset.taglib.filter;
+package com.liferay.dataset.filter;
 
+import com.liferay.portal.kernel.util.ResourceBundleUtil;
+
+import java.util.List;
 import java.util.Locale;
-import java.util.Map;
+import java.util.ResourceBundle;
 
 /**
  * @author Marco Leo
  */
-public interface ClayDataSetFilterContextContributor {
+public abstract class BaseRadioClayDataSetFilter implements ClayDataSetFilter {
 
-	public Map<String, Object> getClayDataSetFilterContext(
-		ClayDataSetFilter clayDataSetFilter, Locale locale);
+	public String getOperator() {
+		return "eq";
+	}
+
+	public abstract List<RadioClayDataSetFilterItem>
+		getRadioClayDataSetFilterItems(Locale locale);
+
+	public ResourceBundle getResourceBundle(Locale locale) {
+		return ResourceBundleUtil.getBundle(
+			"content.Language", locale, getClass());
+	}
+
+	@Override
+	public String getType() {
+		return "radio";
+	}
 
 }
