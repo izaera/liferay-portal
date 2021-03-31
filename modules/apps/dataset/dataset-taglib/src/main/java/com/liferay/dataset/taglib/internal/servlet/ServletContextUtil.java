@@ -16,16 +16,9 @@ package com.liferay.dataset.taglib.internal.servlet;
 
 import com.liferay.dataset.taglib.ClayDataSetDisplayViewSerializer;
 import com.liferay.dataset.taglib.filter.ClayDataSetFilterSerializer;
-import com.liferay.dataset.taglib.servlet.taglib.DataSetDisplayTag;
-import com.liferay.petra.string.StringBundler;
-import com.liferay.petra.string.StringPool;
-import com.liferay.portal.kernel.theme.PortletDisplay;
-import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.Portal;
-import com.liferay.portal.kernel.util.WebKeys;
 
 import javax.servlet.ServletContext;
-import javax.servlet.http.HttpServletRequest;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -35,33 +28,6 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(service = {})
 public class ServletContextUtil {
-
-	public static final String getClayDataSetDisplaySettingsNamespace(
-		HttpServletRequest httpServletRequest, String id) {
-
-		StringBundler sb = new StringBundler(7);
-
-		sb.append(DataSetDisplayTag.class.getName());
-		sb.append(StringPool.POUND);
-
-		ThemeDisplay themeDisplay =
-			(ThemeDisplay)httpServletRequest.getAttribute(
-				WebKeys.THEME_DISPLAY);
-
-		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
-
-		String portletNamespace = _portal.getPortletNamespace(
-			portletDisplay.getId());
-
-		sb.append(portletNamespace);
-
-		sb.append(StringPool.POUND);
-		sb.append(themeDisplay.getPlid());
-		sb.append(StringPool.POUND);
-		sb.append(id);
-
-		return sb.toString();
-	}
 
 	public static final ClayDataSetDisplayViewSerializer
 		getClayDataSetDisplayViewSerializer() {
@@ -77,6 +43,10 @@ public class ServletContextUtil {
 
 	public static final String getContextPath() {
 		return _servletContext.getContextPath();
+	}
+
+	public static final Portal getPortal() {
+		return _portal;
 	}
 
 	public static final ServletContext getServletContext() {

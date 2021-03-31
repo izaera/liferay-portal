@@ -14,6 +14,7 @@
 
 package com.liferay.dataset.taglib.servlet.taglib;
 
+import com.liferay.dataset.DisplaySettingsNamespaceUtil;
 import com.liferay.dataset.taglib.ClayDataSetDisplayViewSerializer;
 import com.liferay.dataset.taglib.filter.ClayDataSetFilterSerializer;
 import com.liferay.dataset.taglib.internal.js.loader.modules.extender.npm.NPMResolverProvider;
@@ -55,8 +56,7 @@ public class HeadlessDataSetDisplayTag extends IncludeTag {
 	public int doStartTag() throws JspException {
 		try {
 			_appURL =
-				PortalUtil.getPortalURL(request) +
-					"/o/dataset-taglib/app";
+				PortalUtil.getPortalURL(request) + "/o/dataset-taglib/app";
 
 			if (_creationMenu == null) {
 				_creationMenu = new CreationMenu();
@@ -395,8 +395,8 @@ public class HeadlessDataSetDisplayTag extends IncludeTag {
 			PortletPreferencesFactoryUtil.getPortalPreferences(request);
 
 		String clayDataSetDisplaySettingsNamespace =
-			ServletContextUtil.getClayDataSetDisplaySettingsNamespace(
-				request, _id);
+			DisplaySettingsNamespaceUtil.getClayDataSetDisplaySettingsNamespace(
+				ServletContextUtil.getPortal(), request, _id);
 
 		_activeViewSettingsJSON = portalPreferences.getValue(
 			clayDataSetDisplaySettingsNamespace, "activeViewSettingsJSON");

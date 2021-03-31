@@ -1,3 +1,6 @@
 Bundle-Name: Liferay Dataset API
 Bundle-SymbolicName: com.liferay.dataset.api
 Bundle-Version: 1.0.0
+Export-Package:\
+	com.liferay.dataset,\
+	com.liferay.dataset.provider

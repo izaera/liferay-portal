@@ -14,6 +14,7 @@
 
 package com.liferay.dataset.taglib.servlet.taglib;
 
+import com.liferay.dataset.DisplaySettingsNamespaceUtil;
 import com.liferay.dataset.taglib.ClayDataSetDisplayViewSerializer;
 import com.liferay.dataset.taglib.internal.js.loader.modules.extender.npm.NPMResolverProvider;
 import com.liferay.dataset.taglib.internal.servlet.ServletContextUtil;
@@ -59,11 +60,6 @@ import javax.servlet.jsp.PageContext;
 public class DataSetDisplayTag extends IncludeTag {
 
 	@Override
-	public void setServletContext(ServletContext servletContext) {
-		super.setServletContext(servletContext);
-	}
-
-	@Override
 	public int doEndTag() throws JspException {
 		return super.doEndTag();
 	}
@@ -79,8 +75,7 @@ public class DataSetDisplayTag extends IncludeTag {
 
 		try {
 			_appURL =
-				PortalUtil.getPortalURL(request) +
-					"/o/dataset-taglib/app";
+				PortalUtil.getPortalURL(request) + "/o/dataset-taglib/app";
 
 			StringBundler sb = new StringBundler(
 				11 + (_contextParams.size() * 4));
@@ -300,6 +295,11 @@ public class DataSetDisplayTag extends IncludeTag {
 		_selectionType = selectionType;
 	}
 
+	@Override
+	public void setServletContext(ServletContext servletContext) {
+		super.setServletContext(servletContext);
+	}
+
 	public void setShowManagementBar(boolean showManagementBar) {
 		_showManagementBar = showManagementBar;
 	}
@@ -435,8 +435,8 @@ public class DataSetDisplayTag extends IncludeTag {
 			PortletPreferencesFactoryUtil.getPortalPreferences(request);
 
 		String clayDataSetDisplaySettingsNamespace =
-			ServletContextUtil.getClayDataSetDisplaySettingsNamespace(
-				request, _id);
+			DisplaySettingsNamespaceUtil.getClayDataSetDisplaySettingsNamespace(
+				ServletContextUtil.getPortal(), request, _id);
 
 		_activeViewSettingsJSON = portalPreferences.getValue(
 			clayDataSetDisplaySettingsNamespace, "activeViewSettingsJSON");

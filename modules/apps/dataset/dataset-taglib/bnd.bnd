@@ -6,8 +6,6 @@ Export-Package:\
 	com.liferay.dataset.taglib,\
 	com.liferay.dataset.taglib.constants,\
 	com.liferay.dataset.taglib.filter,\
-	com.liferay.dataset.taglib.model,\
-	com.liferay.dataset.taglib.provider,\
 	com.liferay.dataset.taglib.servlet.taglib,\
 	com.liferay.dataset.taglib.servlet.taglib.util,\
 	com.liferay.dataset.taglib.view.cards,\
