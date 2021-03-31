@@ -20,7 +20,7 @@ import com.liferay.commerce.pricing.model.CommercePriceModifier;
 import com.liferay.commerce.pricing.service.CommercePriceModifierService;
 import com.liferay.commerce.pricing.web.internal.frontend.constants.CommercePricingDataSetConstants;
 import com.liferay.commerce.pricing.web.internal.model.PriceModifier;
-import com.liferay.dataset.taglib.ClayDataSetActionProvider;
+import com.liferay.dataset.ClayDataSetActionProvider;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemListBuilder;
 import com.liferay.petra.portlet.url.builder.PortletURLBuilder;

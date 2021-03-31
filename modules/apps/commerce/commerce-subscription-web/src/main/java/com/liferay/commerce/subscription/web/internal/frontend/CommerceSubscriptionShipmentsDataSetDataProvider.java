@@ -30,9 +30,9 @@ import com.liferay.commerce.subscription.web.internal.frontend.constants.Commerc
 import com.liferay.commerce.subscription.web.internal.model.Label;
 import com.liferay.commerce.subscription.web.internal.model.Link;
 import com.liferay.commerce.subscription.web.internal.model.Shipment;
-import com.liferay.dataset.taglib.Filter;
-import com.liferay.dataset.taglib.Pagination;
-import com.liferay.dataset.taglib.provider.ClayDataSetDataProvider;
+import com.liferay.dataset.Filter;
+import com.liferay.dataset.Pagination;
+import com.liferay.dataset.provider.ClayDataSetDataProvider;
 import com.liferay.petra.portlet.url.builder.PortletURLBuilder;
 import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringBundler;

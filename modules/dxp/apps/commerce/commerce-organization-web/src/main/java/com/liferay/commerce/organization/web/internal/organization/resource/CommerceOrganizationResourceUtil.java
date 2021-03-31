@@ -23,7 +23,7 @@ import com.liferay.commerce.organization.web.internal.organization.model.Account
 import com.liferay.commerce.organization.web.internal.organization.model.Organization;
 import com.liferay.commerce.organization.web.internal.organization.model.User;
 import com.liferay.commerce.organization.web.internal.organization.model.UserList;
-import com.liferay.dataset.taglib.Pagination;
+import com.liferay.dataset.Pagination;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;

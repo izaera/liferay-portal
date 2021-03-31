@@ -21,7 +21,7 @@ import com.liferay.commerce.product.definitions.web.internal.security.permission
 import com.liferay.commerce.product.model.CPDefinition;
 import com.liferay.commerce.product.model.CPDefinitionLink;
 import com.liferay.commerce.product.service.CPDefinitionLinkService;
-import com.liferay.dataset.taglib.ClayDataSetActionProvider;
+import com.liferay.dataset.ClayDataSetActionProvider;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemListBuilder;
 import com.liferay.petra.portlet.url.builder.PortletURLBuilder;

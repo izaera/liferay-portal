@@ -18,7 +18,7 @@ import com.liferay.commerce.catalog.web.internal.frontend.constants.CommerceCata
 import com.liferay.commerce.catalog.web.internal.model.Catalog;
 import com.liferay.commerce.product.constants.CPPortletKeys;
 import com.liferay.commerce.product.model.CommerceCatalog;
-import com.liferay.dataset.taglib.ClayDataSetActionProvider;
+import com.liferay.dataset.ClayDataSetActionProvider;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemListBuilder;
 import com.liferay.petra.portlet.url.builder.PortletURLBuilder;

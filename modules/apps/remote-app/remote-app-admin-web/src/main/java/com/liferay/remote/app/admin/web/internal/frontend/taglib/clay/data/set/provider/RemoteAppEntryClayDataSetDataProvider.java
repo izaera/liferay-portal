@@ -14,9 +14,9 @@
 
 package com.liferay.remote.app.admin.web.internal.frontend.taglib.clay.data.set.provider;
 
-import com.liferay.dataset.taglib.Filter;
-import com.liferay.dataset.taglib.Pagination;
-import com.liferay.dataset.taglib.provider.ClayDataSetDataProvider;
+import com.liferay.dataset.Filter;
+import com.liferay.dataset.Pagination;
+import com.liferay.dataset.provider.ClayDataSetDataProvider;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.theme.ThemeDisplay;

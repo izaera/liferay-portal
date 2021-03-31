@@ -15,8 +15,8 @@
 package com.liferay.commerce.order.content.web.internal.frontend;
 
 import com.liferay.commerce.order.content.web.internal.frontend.constants.CommerceOrderDataSetConstants;
-import com.liferay.dataset.taglib.Filter;
-import com.liferay.dataset.taglib.FilterFactory;
+import com.liferay.dataset.Filter;
+import com.liferay.dataset.FilterFactory;
 import com.liferay.portal.kernel.util.ParamUtil;
 
 import javax.servlet.http.HttpServletRequest;

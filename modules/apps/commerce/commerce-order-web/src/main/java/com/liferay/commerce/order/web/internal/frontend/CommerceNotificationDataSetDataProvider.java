@@ -24,9 +24,9 @@ import com.liferay.commerce.notification.service.CommerceNotificationTemplateSer
 import com.liferay.commerce.order.web.internal.frontend.constants.CommerceOrderDataSetConstants;
 import com.liferay.commerce.order.web.internal.model.Notification;
 import com.liferay.commerce.service.CommerceOrderService;
-import com.liferay.dataset.taglib.Filter;
-import com.liferay.dataset.taglib.Pagination;
-import com.liferay.dataset.taglib.provider.ClayDataSetDataProvider;
+import com.liferay.dataset.Filter;
+import com.liferay.dataset.Pagination;
+import com.liferay.dataset.provider.ClayDataSetDataProvider;
 import com.liferay.petra.portlet.url.builder.PortletURLBuilder;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;

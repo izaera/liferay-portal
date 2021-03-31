@@ -22,7 +22,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import com.liferay.commerce.organization.web.internal.organization.model.AccountList;
 import com.liferay.commerce.organization.web.internal.organization.model.Organization;
 import com.liferay.commerce.organization.web.internal.organization.model.UserList;
-import com.liferay.dataset.taglib.Pagination;
+import com.liferay.dataset.Pagination;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.OrganizationConstants;

@@ -15,6 +15,7 @@ dependencies {
 	compileOnly project(":apps:commerce:commerce-shipping-engine-fixed-api")
 	compileOnly project(":apps:commerce:commerce-shipping-engine-fixed-service")
 	compileOnly project(":apps:commerce:commerce-shipping-web")
+	compileOnly project(":apps:dataset:dataset-api")
 	compileOnly project(":apps:dataset:dataset-taglib")
 	compileOnly project(":apps:frontend-taglib:frontend-taglib")
 	compileOnly project(":apps:frontend-taglib:frontend-taglib-clay")

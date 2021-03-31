@@ -20,6 +20,7 @@ dependencies {
 	compileOnly project(":apps:commerce:commerce-product-api")
 	compileOnly project(":apps:commerce:commerce-product-item-selector-api")
 	compileOnly project(":apps:commerce:commerce-taglib")
+	compileOnly project(":apps:dataset:dataset-api")
 	compileOnly project(":apps:dataset:dataset-taglib")
 	compileOnly project(":apps:expando:expando-taglib")
 	compileOnly project(":apps:frontend-taglib:frontend-taglib")

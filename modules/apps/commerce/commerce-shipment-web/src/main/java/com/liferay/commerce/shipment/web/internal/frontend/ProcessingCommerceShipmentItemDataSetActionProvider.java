@@ -23,7 +23,7 @@ import com.liferay.commerce.frontend.model.ShipmentItem;
 import com.liferay.commerce.model.CommerceShipment;
 import com.liferay.commerce.model.CommerceShipmentItem;
 import com.liferay.commerce.service.CommerceShipmentItemService;
-import com.liferay.dataset.taglib.ClayDataSetActionProvider;
+import com.liferay.dataset.ClayDataSetActionProvider;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemListBuilder;
 import com.liferay.petra.portlet.url.builder.PortletURLBuilder;

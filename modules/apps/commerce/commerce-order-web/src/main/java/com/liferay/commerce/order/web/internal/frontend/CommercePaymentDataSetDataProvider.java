@@ -23,9 +23,9 @@ import com.liferay.commerce.order.web.internal.frontend.constants.CommerceOrderD
 import com.liferay.commerce.order.web.internal.model.Payment;
 import com.liferay.commerce.service.CommerceOrderPaymentLocalService;
 import com.liferay.commerce.service.CommerceOrderService;
-import com.liferay.dataset.taglib.Filter;
-import com.liferay.dataset.taglib.Pagination;
-import com.liferay.dataset.taglib.provider.ClayDataSetDataProvider;
+import com.liferay.dataset.Filter;
+import com.liferay.dataset.Pagination;
+import com.liferay.dataset.provider.ClayDataSetDataProvider;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;

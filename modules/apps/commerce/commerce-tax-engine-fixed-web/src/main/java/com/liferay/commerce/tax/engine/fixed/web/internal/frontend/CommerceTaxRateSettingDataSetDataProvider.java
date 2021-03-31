@@ -27,9 +27,9 @@ import com.liferay.commerce.tax.engine.fixed.service.CommerceTaxFixedRateAddress
 import com.liferay.commerce.tax.engine.fixed.web.internal.frontend.constants.CommerceTaxRateSettingDataSetConstants;
 import com.liferay.commerce.tax.engine.fixed.web.internal.model.TaxRateSetting;
 import com.liferay.commerce.tax.model.CommerceTaxMethod;
-import com.liferay.dataset.taglib.Filter;
-import com.liferay.dataset.taglib.Pagination;
-import com.liferay.dataset.taglib.provider.ClayDataSetDataProvider;
+import com.liferay.dataset.Filter;
+import com.liferay.dataset.Pagination;
+import com.liferay.dataset.provider.ClayDataSetDataProvider;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.Country;

@@ -18,7 +18,7 @@ import com.liferay.commerce.discount.model.CommerceDiscount;
 import com.liferay.commerce.pricing.constants.CommercePricingPortletKeys;
 import com.liferay.commerce.pricing.web.internal.frontend.constants.CommercePricingDataSetConstants;
 import com.liferay.commerce.pricing.web.internal.model.PricingClassDiscount;
-import com.liferay.dataset.taglib.ClayDataSetActionProvider;
+import com.liferay.dataset.ClayDataSetActionProvider;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemListBuilder;
 import com.liferay.petra.portlet.url.builder.PortletURLBuilder;

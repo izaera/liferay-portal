@@ -15,11 +15,11 @@
 package com.liferay.commerce.organization.web.internal.frontend;
 
 import com.liferay.commerce.organization.web.internal.model.User;
-import com.liferay.dataset.taglib.Filter;
-import com.liferay.dataset.taglib.Pagination;
-import com.liferay.dataset.taglib.ClayDataSetActionProvider;
+import com.liferay.dataset.Filter;
+import com.liferay.dataset.Pagination;
+import com.liferay.dataset.ClayDataSetActionProvider;
 import com.liferay.dataset.taglib.ClayDataSetDisplayView;
-import com.liferay.dataset.taglib.provider.ClayDataSetDataProvider;
+import com.liferay.dataset.provider.ClayDataSetDataProvider;
 import com.liferay.dataset.taglib.view.table.BaseTableClayDataSetDisplayView;
 import com.liferay.dataset.taglib.view.table.ClayTableSchema;
 import com.liferay.dataset.taglib.view.table.ClayTableSchemaBuilder;

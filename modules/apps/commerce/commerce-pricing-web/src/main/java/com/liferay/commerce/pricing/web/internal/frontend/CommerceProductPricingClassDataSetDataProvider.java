@@ -19,9 +19,9 @@ import com.liferay.commerce.pricing.service.CommercePricingClassCPDefinitionRelS
 import com.liferay.commerce.pricing.service.CommercePricingClassService;
 import com.liferay.commerce.pricing.web.internal.frontend.constants.CommercePricingDataSetConstants;
 import com.liferay.commerce.pricing.web.internal.model.ProductPricingClass;
-import com.liferay.dataset.taglib.Filter;
-import com.liferay.dataset.taglib.Pagination;
-import com.liferay.dataset.taglib.provider.ClayDataSetDataProvider;
+import com.liferay.dataset.Filter;
+import com.liferay.dataset.Pagination;
+import com.liferay.dataset.provider.ClayDataSetDataProvider;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.theme.ThemeDisplay;

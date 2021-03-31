@@ -22,11 +22,11 @@ import com.liferay.commerce.shipping.engine.fixed.model.CommerceShippingFixedOpt
 import com.liferay.commerce.shipping.engine.fixed.model.CommerceShippingFixedOptionRel;
 import com.liferay.commerce.shipping.engine.fixed.service.CommerceShippingFixedOptionRelService;
 import com.liferay.commerce.shipping.engine.fixed.web.internal.model.ShippingFixedOptionSetting;
-import com.liferay.dataset.taglib.Filter;
-import com.liferay.dataset.taglib.Pagination;
-import com.liferay.dataset.taglib.ClayDataSetActionProvider;
+import com.liferay.dataset.Filter;
+import com.liferay.dataset.Pagination;
+import com.liferay.dataset.ClayDataSetActionProvider;
 import com.liferay.dataset.taglib.ClayDataSetDisplayView;
-import com.liferay.dataset.taglib.provider.ClayDataSetDataProvider;
+import com.liferay.dataset.provider.ClayDataSetDataProvider;
 import com.liferay.dataset.taglib.view.table.BaseTableClayDataSetDisplayView;
 import com.liferay.dataset.taglib.view.table.ClayTableSchema;
 import com.liferay.dataset.taglib.view.table.ClayTableSchemaBuilder;
