@@ -17,9 +17,9 @@ package com.liferay.commerce.product.definitions.web.internal.frontend.taglib.cl
 import com.liferay.commerce.product.definitions.web.internal.frontend.constants.CommerceProductDataSetConstants;
 import com.liferay.commerce.product.type.CPType;
 import com.liferay.commerce.product.type.CPTypeServicesTracker;
-import com.liferay.dataset.taglib.filter.BaseRadioClayDataSetFilter;
-import com.liferay.dataset.taglib.filter.ClayDataSetFilter;
-import com.liferay.dataset.taglib.filter.RadioClayDataSetFilterItem;
+import com.liferay.dataset.filter.BaseRadioClayDataSetFilter;
+import com.liferay.dataset.filter.ClayDataSetFilter;
+import com.liferay.dataset.filter.RadioClayDataSetFilterItem;
 
 import java.util.ArrayList;
 import java.util.List;

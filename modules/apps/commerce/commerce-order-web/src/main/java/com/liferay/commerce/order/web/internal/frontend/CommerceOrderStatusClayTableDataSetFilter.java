@@ -17,9 +17,9 @@ package com.liferay.commerce.order.web.internal.frontend;
 import com.liferay.commerce.order.status.CommerceOrderStatus;
 import com.liferay.commerce.order.status.CommerceOrderStatusRegistry;
 import com.liferay.commerce.order.web.internal.frontend.constants.CommerceOrderDataSetConstants;
-import com.liferay.dataset.taglib.filter.BaseCheckBoxClayDataSetFilter;
-import com.liferay.dataset.taglib.filter.CheckBoxClayDataSetFilterItem;
-import com.liferay.dataset.taglib.filter.ClayDataSetFilter;
+import com.liferay.dataset.filter.BaseCheckBoxClayDataSetFilter;
+import com.liferay.dataset.filter.CheckBoxClayDataSetFilterItem;
+import com.liferay.dataset.filter.ClayDataSetFilter;
 
 import java.util.ArrayList;
 import java.util.List;

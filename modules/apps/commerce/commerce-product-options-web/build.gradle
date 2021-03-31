@@ -11,6 +11,7 @@ dependencies {
 	compileOnly project(":apps:commerce:commerce-product-api")
 	compileOnly project(":apps:commerce:commerce-product-service")
 	compileOnly project(":apps:commerce:commerce-taglib")
+	compileOnly project(":apps:dataset:dataset-api")
 	compileOnly project(":apps:dataset:dataset-taglib")
 	compileOnly project(":apps:dynamic-data-mapping:dynamic-data-mapping-api")
 	compileOnly project(":apps:expando:expando-taglib")

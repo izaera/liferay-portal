@@ -15,8 +15,8 @@
 package com.liferay.commerce.product.definitions.web.internal.frontend.taglib.clay.data.set.filter;
 
 import com.liferay.commerce.product.definitions.web.internal.frontend.constants.CommerceProductDataSetConstants;
-import com.liferay.dataset.taglib.filter.BaseAutocompleteClayDataSetFilter;
-import com.liferay.dataset.taglib.filter.ClayDataSetFilter;
+import com.liferay.dataset.filter.BaseAutocompleteClayDataSetFilter;
+import com.liferay.dataset.filter.ClayDataSetFilter;
 
 import org.osgi.service.component.annotations.Component;
 
