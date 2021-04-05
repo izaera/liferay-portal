@@ -20,7 +20,7 @@ import com.liferay.commerce.product.service.CommerceChannelService;
 import com.liferay.commerce.tax.engine.fixed.web.internal.frontend.constants.CommerceTaxRateSettingDataSetConstants;
 import com.liferay.commerce.tax.engine.fixed.web.internal.model.TaxRateSetting;
 import com.liferay.commerce.tax.model.CommerceTaxMethod;
-import com.liferay.dataset.ClayDataSetActionProvider;
+import com.liferay.dataset.DatasetActionProvider;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemListBuilder;
 import com.liferay.petra.portlet.url.builder.PortletURLBuilder;
@@ -55,10 +55,10 @@ import org.osgi.service.component.annotations.Reference;
 		"clay.data.provider.key=" + CommerceTaxRateSettingDataSetConstants.COMMERCE_DATA_SET_KEY_PERCENTAGE_TAX_RATE_SETTING,
 		"clay.data.provider.key=" + CommerceTaxRateSettingDataSetConstants.COMMERCE_DATA_SET_KEY_TAX_RATE_SETTING
 	},
-	service = ClayDataSetActionProvider.class
+	service = DatasetActionProvider.class
 )
 public class CommerceTaxRateSettingDataSetActionProvider
-	implements ClayDataSetActionProvider {
+	implements DatasetActionProvider {
 
 	@Override
 	public List<DropdownItem> getDropdownItems(

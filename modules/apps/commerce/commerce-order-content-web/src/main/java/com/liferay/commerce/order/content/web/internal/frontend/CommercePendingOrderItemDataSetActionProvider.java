@@ -18,7 +18,7 @@ import com.liferay.commerce.model.CommerceOrder;
 import com.liferay.commerce.order.content.web.internal.frontend.constants.CommerceOrderDataSetConstants;
 import com.liferay.commerce.order.content.web.internal.model.OrderItem;
 import com.liferay.commerce.service.CommerceOrderService;
-import com.liferay.dataset.ClayDataSetActionProvider;
+import com.liferay.dataset.DatasetActionProvider;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemListBuilder;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -41,10 +41,10 @@ import org.osgi.service.component.annotations.Reference;
 @Component(
 	enabled = false, immediate = true,
 	property = "clay.data.provider.key=" + CommerceOrderDataSetConstants.COMMERCE_DATA_SET_KEY_PENDING_ORDER_ITEMS,
-	service = ClayDataSetActionProvider.class
+	service = DatasetActionProvider.class
 )
 public class CommercePendingOrderItemDataSetActionProvider
-	implements ClayDataSetActionProvider {
+	implements DatasetActionProvider {
 
 	@Override
 	public List<DropdownItem> getDropdownItems(

@@ -24,7 +24,7 @@ import com.liferay.commerce.tax.service.CommerceTaxMethodService;
 import com.liferay.commerce.util.CommerceTaxEngineRegistry;
 import com.liferay.dataset.Filter;
 import com.liferay.dataset.Pagination;
-import com.liferay.dataset.ClayDataSetActionProvider;
+import com.liferay.dataset.DatasetActionProvider;
 import com.liferay.dataset.ClayDataSetDisplayView;
 import com.liferay.dataset.provider.ClayDataSetDataProvider;
 import com.liferay.dataset.view.table.BaseTableClayDataSetDisplayView;
@@ -64,13 +64,13 @@ import org.osgi.service.component.annotations.Reference;
 		"clay.data.set.display.name=" + CommerceTaxMethodClayTable.NAME
 	},
 	service = {
-		ClayDataSetActionProvider.class, ClayDataSetDataProvider.class,
+		DatasetActionProvider.class, ClayDataSetDataProvider.class,
 		ClayDataSetDisplayView.class
 	}
 )
 public class CommerceTaxMethodClayTable
 	extends BaseTableClayDataSetDisplayView
-	implements ClayDataSetActionProvider, ClayDataSetDataProvider<TaxMethod> {
+	implements DatasetActionProvider, ClayDataSetDataProvider<TaxMethod> {
 
 	public static final String NAME = "tax-methods";
 

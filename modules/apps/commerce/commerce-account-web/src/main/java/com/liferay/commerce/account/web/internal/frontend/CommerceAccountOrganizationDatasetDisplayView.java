@@ -19,7 +19,7 @@ import com.liferay.commerce.account.model.CommerceAccount;
 import com.liferay.commerce.account.model.CommerceAccountOrganizationRel;
 import com.liferay.commerce.account.service.CommerceAccountOrganizationRelService;
 import com.liferay.commerce.account.web.internal.model.Organization;
-import com.liferay.dataset.ClayDataSetActionProvider;
+import com.liferay.dataset.DatasetActionProvider;
 import com.liferay.dataset.ClayDataSetDisplayView;
 import com.liferay.dataset.Filter;
 import com.liferay.dataset.Pagination;
@@ -56,17 +56,17 @@ import org.osgi.service.component.annotations.Reference;
 @Component(
 	enabled = false, immediate = true,
 	property = {
-		"clay.data.provider.key=" + CommerceAccountOrganizationClayDataSetDataSetDisplayView.NAME,
-		"clay.data.set.display.name=" + CommerceAccountOrganizationClayDataSetDataSetDisplayView.NAME
+		"clay.data.provider.key=" + CommerceAccountOrganizationDatasetDisplayView.NAME,
+		"clay.data.set.display.name=" + CommerceAccountOrganizationDatasetDisplayView.NAME
 	},
 	service = {
-		ClayDataSetActionProvider.class, ClayDataSetDataProvider.class,
+		DatasetActionProvider.class, ClayDataSetDataProvider.class,
 		ClayDataSetDisplayView.class
 	}
 )
-public class CommerceAccountOrganizationClayDataSetDataSetDisplayView
+public class CommerceAccountOrganizationDatasetDisplayView
 	extends BaseTableClayDataSetDisplayView
-	implements ClayDataSetActionProvider,
+	implements DatasetActionProvider,
 			   ClayDataSetDataProvider<Organization> {
 
 	public static final String NAME = "commerceAccountOrganizations";

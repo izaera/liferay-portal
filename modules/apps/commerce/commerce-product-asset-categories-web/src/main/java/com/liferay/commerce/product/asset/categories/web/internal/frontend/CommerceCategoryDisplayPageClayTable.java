@@ -23,7 +23,7 @@ import com.liferay.commerce.product.service.CPDisplayLayoutService;
 import com.liferay.commerce.product.service.CommerceChannelService;
 import com.liferay.dataset.Filter;
 import com.liferay.dataset.Pagination;
-import com.liferay.dataset.ClayDataSetActionProvider;
+import com.liferay.dataset.DatasetActionProvider;
 import com.liferay.dataset.ClayDataSetDisplayView;
 import com.liferay.dataset.provider.ClayDataSetDataProvider;
 import com.liferay.dataset.view.table.BaseTableClayDataSetDisplayView;
@@ -70,13 +70,13 @@ import org.osgi.service.component.annotations.Reference;
 		"clay.data.set.display.name=" + CommerceCategoryDisplayPageClayTable.NAME
 	},
 	service = {
-		ClayDataSetActionProvider.class, ClayDataSetDataProvider.class,
+		DatasetActionProvider.class, ClayDataSetDataProvider.class,
 		ClayDataSetDisplayView.class
 	}
 )
 public class CommerceCategoryDisplayPageClayTable
 	extends BaseTableClayDataSetDisplayView
-	implements ClayDataSetActionProvider,
+	implements DatasetActionProvider,
 			   ClayDataSetDataProvider<CategoryDisplayPage> {
 
 	public static final String NAME = "category-display-pages";

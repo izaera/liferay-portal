@@ -20,7 +20,7 @@ import com.liferay.commerce.account.web.internal.model.Address;
 import com.liferay.commerce.constants.CommerceAddressConstants;
 import com.liferay.commerce.model.CommerceAddress;
 import com.liferay.commerce.service.CommerceAddressService;
-import com.liferay.dataset.ClayDataSetActionProvider;
+import com.liferay.dataset.DatasetActionProvider;
 import com.liferay.dataset.ClayDataSetDisplayView;
 import com.liferay.dataset.Filter;
 import com.liferay.dataset.Pagination;
@@ -58,17 +58,17 @@ import org.osgi.service.component.annotations.Reference;
 @Component(
 	enabled = false, immediate = true,
 	property = {
-		"clay.data.provider.key=" + CommerceAccountAddressClayDataSetDataSetDisplayView.NAME,
-		"clay.data.set.display.name=" + CommerceAccountAddressClayDataSetDataSetDisplayView.NAME
+		"clay.data.provider.key=" + CommerceAccountAddressDatasetDisplayView.NAME,
+		"clay.data.set.display.name=" + CommerceAccountAddressDatasetDisplayView.NAME
 	},
 	service = {
-		ClayDataSetActionProvider.class, ClayDataSetDataProvider.class,
+		DatasetActionProvider.class, ClayDataSetDataProvider.class,
 		ClayDataSetDisplayView.class
 	}
 )
-public class CommerceAccountAddressClayDataSetDataSetDisplayView
+public class CommerceAccountAddressDatasetDisplayView
 	extends BaseTableClayDataSetDisplayView
-	implements ClayDataSetActionProvider, ClayDataSetDataProvider<Address> {
+	implements DatasetActionProvider, ClayDataSetDataProvider<Address> {
 
 	public static final String NAME = "commerceAccountAddresses";
 

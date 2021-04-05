@@ -26,8 +26,8 @@ request.setAttribute("view.jsp-filterPerAccount", false);
 
 <div class="commerce-account-container" id="<portlet:namespace />entriesContainer">
 	<dataset:display
-		dataProviderKey="<%= CommerceAccountClayDataSetDataSetDisplayView.NAME %>"
-		id="<%= CommerceAccountClayDataSetDataSetDisplayView.NAME %>"
+		dataProviderKey="<%= CommerceAccountDatasetDisplayView.NAME %>"
+		id="<%= CommerceAccountDatasetDisplayView.NAME %>"
 		itemsPerPage="<%= 10 %>"
 		namespace="<%= liferayPortletResponse.getNamespace() %>"
 		pageNumber="<%= 1 %>"

@@ -23,7 +23,7 @@ import com.liferay.commerce.frontend.model.ShipmentItem;
 import com.liferay.commerce.model.CommerceShipment;
 import com.liferay.commerce.model.CommerceShipmentItem;
 import com.liferay.commerce.service.CommerceShipmentItemService;
-import com.liferay.dataset.ClayDataSetActionProvider;
+import com.liferay.dataset.DatasetActionProvider;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemListBuilder;
 import com.liferay.petra.portlet.url.builder.PortletURLBuilder;
@@ -56,10 +56,10 @@ import org.osgi.service.component.annotations.Reference;
 @Component(
 	enabled = false, immediate = true,
 	property = "clay.data.provider.key=" + CommerceShipmentDataSetConstants.COMMERCE_DATA_SET_KEY_PROCESSING_SHIPMENT_ITEMS,
-	service = ClayDataSetActionProvider.class
+	service = DatasetActionProvider.class
 )
 public class ProcessingCommerceShipmentItemDataSetActionProvider
-	implements ClayDataSetActionProvider {
+	implements DatasetActionProvider {
 
 	@Override
 	public List<DropdownItem> getDropdownItems(

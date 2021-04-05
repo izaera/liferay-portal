@@ -19,7 +19,7 @@ import com.liferay.commerce.inventory.model.CommerceInventoryWarehouse;
 import com.liferay.commerce.inventory.web.internal.frontend.constants.CommerceInventoryDataSetConstants;
 import com.liferay.commerce.inventory.web.internal.model.InventoryItem;
 import com.liferay.commerce.product.constants.CPPortletKeys;
-import com.liferay.dataset.ClayDataSetActionProvider;
+import com.liferay.dataset.DatasetActionProvider;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemListBuilder;
 import com.liferay.petra.portlet.url.builder.PortletURLBuilder;
@@ -53,10 +53,10 @@ import org.osgi.service.component.annotations.Reference;
 @Component(
 	enabled = false, immediate = true,
 	property = "clay.data.provider.key=" + CommerceInventoryDataSetConstants.COMMERCE_DATA_SET_KEY_INVENTORY_ITEMS,
-	service = ClayDataSetActionProvider.class
+	service = DatasetActionProvider.class
 )
-public class CommerceInventoryItemClayDataSetActionProvider
-	implements ClayDataSetActionProvider {
+public class CommerceInventoryItemDatasetActionProvider
+	implements DatasetActionProvider {
 
 	@Override
 	public List<DropdownItem> getDropdownItems(

@@ -30,7 +30,7 @@ import com.liferay.commerce.tax.model.CommerceTaxMethod;
 import com.liferay.commerce.tax.service.CommerceTaxMethodLocalService;
 import com.liferay.dataset.Filter;
 import com.liferay.dataset.Pagination;
-import com.liferay.dataset.ClayDataSetActionProvider;
+import com.liferay.dataset.DatasetActionProvider;
 import com.liferay.dataset.ClayDataSetDisplayView;
 import com.liferay.dataset.provider.ClayDataSetDataProvider;
 import com.liferay.dataset.view.table.BaseTableClayDataSetDisplayView;
@@ -80,13 +80,13 @@ import org.osgi.service.component.annotations.Reference;
 		"clay.data.set.display.name=" + CommerceTaxRateClayTable.NAME
 	},
 	service = {
-		ClayDataSetActionProvider.class, ClayDataSetDataProvider.class,
+		DatasetActionProvider.class, ClayDataSetDataProvider.class,
 		ClayDataSetDisplayView.class
 	}
 )
 public class CommerceTaxRateClayTable
 	extends BaseTableClayDataSetDisplayView
-	implements ClayDataSetActionProvider, ClayDataSetDataProvider<TaxRate> {
+	implements DatasetActionProvider, ClayDataSetDataProvider<TaxRate> {
 
 	public static final String NAME = "tax-rates";
 

@@ -22,7 +22,7 @@ import com.liferay.commerce.product.model.CommerceChannel;
 import com.liferay.commerce.product.service.CommerceChannelService;
 import com.liferay.dataset.Filter;
 import com.liferay.dataset.Pagination;
-import com.liferay.dataset.ClayDataSetActionProvider;
+import com.liferay.dataset.DatasetActionProvider;
 import com.liferay.dataset.ClayDataSetDisplayView;
 import com.liferay.dataset.provider.ClayDataSetDataProvider;
 import com.liferay.dataset.view.table.BaseTableClayDataSetDisplayView;
@@ -63,13 +63,13 @@ import org.osgi.service.component.annotations.Reference;
 		"clay.data.set.display.name=" + CommerceChannelHealthCheckClayTable.NAME
 	},
 	service = {
-		ClayDataSetActionProvider.class, ClayDataSetDataProvider.class,
+		DatasetActionProvider.class, ClayDataSetDataProvider.class,
 		ClayDataSetDisplayView.class
 	}
 )
 public class CommerceChannelHealthCheckClayTable
 	extends BaseTableClayDataSetDisplayView
-	implements ClayDataSetActionProvider, ClayDataSetDataProvider<HealthCheck> {
+	implements DatasetActionProvider, ClayDataSetDataProvider<HealthCheck> {
 
 	public static final String NAME = "channel-health-check";
 

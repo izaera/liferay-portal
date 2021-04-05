@@ -17,9 +17,9 @@ package com.liferay.commerce.inventory.web.internal.frontend;
 import com.liferay.commerce.inventory.constants.CommerceInventoryActionKeys;
 import com.liferay.commerce.inventory.model.CommerceInventoryWarehouse;
 import com.liferay.commerce.inventory.web.internal.frontend.constants.CommerceInventoryDataSetConstants;
-import com.liferay.commerce.inventory.web.internal.model.Replenishment;
+import com.liferay.commerce.inventory.web.internal.model.Warehouse;
 import com.liferay.commerce.product.constants.CPPortletKeys;
-import com.liferay.dataset.ClayDataSetActionProvider;
+import com.liferay.dataset.DatasetActionProvider;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemListBuilder;
 import com.liferay.petra.portlet.url.builder.PortletURLBuilder;
@@ -57,25 +57,25 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	enabled = false, immediate = true,
-	property = "clay.data.provider.key=" + CommerceInventoryDataSetConstants.COMMERCE_DATA_SET_KEY_INVENTORY_REPLENISHMENT,
-	service = ClayDataSetActionProvider.class
+	property = "clay.data.provider.key=" + CommerceInventoryDataSetConstants.COMMERCE_DATA_SET_KEY_INVENTORY_WAREHOUSES,
+	service = DatasetActionProvider.class
 )
-public class CommerceInventoryReplenishmentClayDataSetActionProvider
-	implements ClayDataSetActionProvider {
+public class CommerceInventoryWarehouseDatasetActionProvider
+	implements DatasetActionProvider {
 
 	@Override
 	public List<DropdownItem> getDropdownItems(
 			HttpServletRequest httpServletRequest, long groupId, Object model)
 		throws PortalException {
 
-		Replenishment replenishment = (Replenishment)model;
+		Warehouse warehouse = (Warehouse)model;
 
 		return DropdownItemListBuilder.add(
 			() -> _hasPermission(),
 			dropdownItem -> {
 				dropdownItem.setHref(
-					_getReplenishmentEditURL(
-						replenishment.getCommerceInventoryReplenishmentItemId(),
+					_getWarehouseEditURL(
+						warehouse.getCommerceInventoryWarehouseItemId(),
 						httpServletRequest));
 				dropdownItem.setLabel(
 					LanguageUtil.get(httpServletRequest, "edit"));
@@ -85,8 +85,8 @@ public class CommerceInventoryReplenishmentClayDataSetActionProvider
 			() -> _hasPermission(),
 			dropdownItem -> {
 				dropdownItem.setHref(
-					_getReplenishmentDeleteURL(
-						replenishment.getCommerceInventoryReplenishmentItemId(),
+					_getWarehouseDeleteURL(
+						warehouse.getCommerceInventoryWarehouseItemId(),
 						httpServletRequest));
 				dropdownItem.setLabel(
 					LanguageUtil.get(httpServletRequest, "delete"));
@@ -94,8 +94,8 @@ public class CommerceInventoryReplenishmentClayDataSetActionProvider
 		).build();
 	}
 
-	private String _getReplenishmentDeleteURL(
-		long commerceInventoryReplenishmentItemId,
+	private String _getWarehouseDeleteURL(
+		long commerceInventoryWarehouseItemId,
 		HttpServletRequest httpServletRequest) {
 
 		String redirect = ParamUtil.getString(
@@ -107,19 +107,18 @@ public class CommerceInventoryReplenishmentClayDataSetActionProvider
 				_portal.getOriginalServletRequest(httpServletRequest),
 				CPPortletKeys.COMMERCE_INVENTORY, PortletRequest.ACTION_PHASE)
 		).setActionName(
-			"/commerce_inventory/edit_commerce_inventory_replenishment_item"
+			"/commerce_inventory/edit_commerce_inventory_warehouse_item"
 		).setRedirect(
 			redirect
 		).setParameter(
 			Constants.CMD, Constants.DELETE
 		).setParameter(
-			"commerceInventoryReplenishmentItemId",
-			commerceInventoryReplenishmentItemId
+			"commerceInventoryWarehouseItemId", commerceInventoryWarehouseItemId
 		).buildString();
 	}
 
-	private String _getReplenishmentEditURL(
-		long commerceInventoryReplenishmentItemId,
+	private String _getWarehouseEditURL(
+		long commerceInventoryWarehouseItemId,
 		HttpServletRequest httpServletRequest) {
 
 		ThemeDisplay themeDisplay =
@@ -133,12 +132,11 @@ public class CommerceInventoryReplenishmentClayDataSetActionProvider
 				themeDisplay.getRequest(), portletDisplay.getId(),
 				themeDisplay.getPlid(), PortletRequest.RENDER_PHASE)
 		).setMVCRenderCommandName(
-			"/commerce_inventory/edit_commerce_inventory_replenishment_item"
+			"/commerce_inventory/edit_commerce_inventory_warehouse_item"
 		).setRedirect(
 			themeDisplay.getURLCurrent()
 		).setParameter(
-			"commerceInventoryReplenishmentItemId",
-			commerceInventoryReplenishmentItemId
+			"commerceInventoryWarehouseItemId", commerceInventoryWarehouseItemId
 		).build();
 
 		try {
@@ -162,7 +160,7 @@ public class CommerceInventoryReplenishmentClayDataSetActionProvider
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
-		CommerceInventoryReplenishmentClayDataSetActionProvider.class);
+		CommerceInventoryWarehouseDatasetActionProvider.class);
 
 	@Reference(
 		target = "(model.class.name=com.liferay.commerce.inventory.model.CommerceInventoryWarehouse)"

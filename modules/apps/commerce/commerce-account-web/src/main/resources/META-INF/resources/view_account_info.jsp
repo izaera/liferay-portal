@@ -24,8 +24,8 @@ CommerceAccount commerceAccount = commerceAccountDisplayContext.getCurrentCommer
 
 <dataset:display
 	contextParams='<%= HashMapBuilder.<String, String>put("commerceAccountId", String.valueOf(commerceAccount.getCommerceAccountId())).build() %>'
-	dataProviderKey="<%= CommerceAccountOrganizationClayDataSetDataSetDisplayView.NAME %>"
-	id="<%= CommerceAccountOrganizationClayDataSetDataSetDisplayView.NAME %>"
+	dataProviderKey="<%= CommerceAccountOrganizationDatasetDisplayView.NAME %>"
+	id="<%= CommerceAccountOrganizationDatasetDisplayView.NAME %>"
 	itemsPerPage="<%= 10 %>"
 	namespace="<%= liferayPortletResponse.getNamespace() %>"
 	pageNumber="<%= 1 %>"

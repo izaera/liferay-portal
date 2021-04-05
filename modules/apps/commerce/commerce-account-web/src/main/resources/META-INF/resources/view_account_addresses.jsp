@@ -30,8 +30,8 @@ CommerceAccount commerceAccount = commerceAccountDisplayContext.getCurrentCommer
 			"commerceAccountId", String.valueOf(commerceAccount.getCommerceAccountId())
 		).build()
 	%>'
-	dataProviderKey="<%= CommerceAccountAddressClayDataSetDataSetDisplayView.NAME %>"
-	id="<%= CommerceAccountAddressClayDataSetDataSetDisplayView.NAME %>"
+	dataProviderKey="<%= CommerceAccountAddressDatasetDisplayView.NAME %>"
+	id="<%= CommerceAccountAddressDatasetDisplayView.NAME %>"
 	itemsPerPage="<%= 10 %>"
 	namespace="<%= liferayPortletResponse.getNamespace() %>"
 	pageNumber="<%= 1 %>"

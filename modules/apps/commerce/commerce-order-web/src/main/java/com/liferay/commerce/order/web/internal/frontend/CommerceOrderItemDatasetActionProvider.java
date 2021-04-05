@@ -19,7 +19,7 @@ import com.liferay.commerce.model.CommerceOrder;
 import com.liferay.commerce.order.web.internal.frontend.constants.CommerceOrderDataSetConstants;
 import com.liferay.commerce.order.web.internal.model.OrderItem;
 import com.liferay.commerce.order.web.internal.security.permission.resource.CommerceOrderPermission;
-import com.liferay.dataset.ClayDataSetActionProvider;
+import com.liferay.dataset.DatasetActionProvider;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemListBuilder;
 import com.liferay.petra.portlet.url.builder.PortletURLBuilder;
@@ -54,10 +54,10 @@ import org.osgi.service.component.annotations.Reference;
 @Component(
 	enabled = false, immediate = true,
 	property = "clay.data.provider.key=" + CommerceOrderDataSetConstants.COMMERCE_DATA_SET_KEY_ORDER_ITEMS,
-	service = ClayDataSetActionProvider.class
+	service = DatasetActionProvider.class
 )
-public class CommerceOrderItemClayDataSetActionProvider
-	implements ClayDataSetActionProvider {
+public class CommerceOrderItemDatasetActionProvider
+	implements DatasetActionProvider {
 
 	@Override
 	public List<DropdownItem> getDropdownItems(
@@ -153,7 +153,7 @@ public class CommerceOrderItemClayDataSetActionProvider
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
-		CommerceOrderItemClayDataSetActionProvider.class);
+		CommerceOrderItemDatasetActionProvider.class);
 
 	@Reference
 	private CommerceOrderPermission _commerceOrderPermission;
