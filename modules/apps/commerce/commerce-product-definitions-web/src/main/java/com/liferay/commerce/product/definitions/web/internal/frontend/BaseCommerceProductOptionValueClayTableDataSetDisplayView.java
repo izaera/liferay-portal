@@ -14,8 +14,8 @@
 
 package com.liferay.commerce.product.definitions.web.internal.frontend;
 
-import com.liferay.dataset.taglib.view.table.ClayTableSchemaBuilder;
-import com.liferay.dataset.taglib.view.table.ClayTableSchemaField;
+import com.liferay.dataset.view.table.ClayTableSchemaBuilder;
+import com.liferay.dataset.view.table.ClayTableSchemaField;
 
 /**
  * @author Igor Beslic

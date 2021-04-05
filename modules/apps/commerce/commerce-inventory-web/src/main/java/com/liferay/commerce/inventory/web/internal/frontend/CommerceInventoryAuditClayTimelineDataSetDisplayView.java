@@ -15,8 +15,8 @@
 package com.liferay.commerce.inventory.web.internal.frontend;
 
 import com.liferay.commerce.inventory.web.internal.frontend.constants.CommerceInventoryDataSetConstants;
-import com.liferay.dataset.taglib.ClayDataSetDisplayView;
-import com.liferay.dataset.taglib.view.timeline.BaseTimelineClayDataSetDisplayView;
+import com.liferay.dataset.ClayDataSetDisplayView;
+import com.liferay.dataset.view.timeline.BaseTimelineClayDataSetDisplayView;
 
 import org.osgi.service.component.annotations.Component;
 

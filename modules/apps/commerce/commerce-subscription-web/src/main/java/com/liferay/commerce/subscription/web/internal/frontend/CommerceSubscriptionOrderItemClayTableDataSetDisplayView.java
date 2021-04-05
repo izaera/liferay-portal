@@ -15,11 +15,11 @@
 package com.liferay.commerce.subscription.web.internal.frontend;
 
 import com.liferay.commerce.subscription.web.internal.frontend.constants.CommerceSubscriptionDataSetConstants;
-import com.liferay.dataset.taglib.ClayDataSetDisplayView;
-import com.liferay.dataset.taglib.view.table.BaseTableClayDataSetDisplayView;
-import com.liferay.dataset.taglib.view.table.ClayTableSchema;
-import com.liferay.dataset.taglib.view.table.ClayTableSchemaBuilder;
-import com.liferay.dataset.taglib.view.table.ClayTableSchemaBuilderFactory;
+import com.liferay.dataset.ClayDataSetDisplayView;
+import com.liferay.dataset.view.table.BaseTableClayDataSetDisplayView;
+import com.liferay.dataset.view.table.ClayTableSchema;
+import com.liferay.dataset.view.table.ClayTableSchemaBuilder;
+import com.liferay.dataset.view.table.ClayTableSchemaBuilderFactory;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;

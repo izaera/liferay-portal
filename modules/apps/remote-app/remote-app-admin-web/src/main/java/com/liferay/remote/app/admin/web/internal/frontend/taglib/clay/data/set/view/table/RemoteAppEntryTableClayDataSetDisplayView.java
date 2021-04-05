@@ -14,12 +14,12 @@
 
 package com.liferay.remote.app.admin.web.internal.frontend.taglib.clay.data.set.view.table;
 
-import com.liferay.dataset.taglib.ClayDataSetDisplayView;
-import com.liferay.dataset.taglib.view.table.BaseTableClayDataSetDisplayView;
-import com.liferay.dataset.taglib.view.table.ClayTableSchema;
-import com.liferay.dataset.taglib.view.table.ClayTableSchemaBuilder;
-import com.liferay.dataset.taglib.view.table.ClayTableSchemaBuilderFactory;
-import com.liferay.dataset.taglib.view.table.ClayTableSchemaField;
+import com.liferay.dataset.ClayDataSetDisplayView;
+import com.liferay.dataset.view.table.BaseTableClayDataSetDisplayView;
+import com.liferay.dataset.view.table.ClayTableSchema;
+import com.liferay.dataset.view.table.ClayTableSchemaBuilder;
+import com.liferay.dataset.view.table.ClayTableSchemaBuilderFactory;
+import com.liferay.dataset.view.table.ClayTableSchemaField;
 import com.liferay.remote.app.admin.web.internal.constants.RemoteAppAdminConstants;
 
 import org.osgi.service.component.annotations.Component;
