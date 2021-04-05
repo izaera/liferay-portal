@@ -15,7 +15,7 @@
 package com.liferay.dataset.view.timeline;
 
 import com.liferay.dataset.ClayDataSetDisplayView;
-import com.liferay.dataset.constants.ClayDataSetConstants;
+import com.liferay.dataset.constants.DatasetConstants;
 
 /**
  * @author Marco Leo
@@ -25,7 +25,7 @@ public abstract class BaseTimelineClayDataSetDisplayView
 
 	@Override
 	public String getContentRenderer() {
-		return ClayDataSetConstants.TIMELINE;
+		return DatasetConstants.TIMELINE;
 	}
 
 	public abstract String getDate();
@@ -34,17 +34,17 @@ public abstract class BaseTimelineClayDataSetDisplayView
 
 	@Override
 	public String getLabel() {
-		return ClayDataSetConstants.TIMELINE;
+		return DatasetConstants.TIMELINE;
 	}
 
 	@Override
 	public String getName() {
-		return ClayDataSetConstants.TIMELINE;
+		return DatasetConstants.TIMELINE;
 	}
 
 	@Override
 	public String getThumbnail() {
-		return ClayDataSetConstants.TIMELINE;
+		return DatasetConstants.TIMELINE;
 	}
 
 	public abstract String getTitle();

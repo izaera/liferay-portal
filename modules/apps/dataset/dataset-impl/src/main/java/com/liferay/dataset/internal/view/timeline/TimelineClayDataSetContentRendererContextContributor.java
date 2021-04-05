@@ -16,7 +16,7 @@ package com.liferay.dataset.internal.view.timeline;
 
 import com.liferay.dataset.ClayDataSetContentRendererContextContributor;
 import com.liferay.dataset.ClayDataSetDisplayView;
-import com.liferay.dataset.constants.ClayDataSetConstants;
+import com.liferay.dataset.constants.DatasetConstants;
 import com.liferay.dataset.view.timeline.BaseTimelineClayDataSetDisplayView;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
@@ -31,7 +31,7 @@ import org.osgi.service.component.annotations.Component;
  * @author Marco Leo
  */
 @Component(
-	property = "clay.data.set.content.renderer.name=" + ClayDataSetConstants.TIMELINE,
+	property = "clay.data.set.content.renderer.name=" + DatasetConstants.TIMELINE,
 	service = ClayDataSetContentRendererContextContributor.class
 )
 public class TimelineClayDataSetContentRendererContextContributor

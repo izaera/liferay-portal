@@ -15,7 +15,7 @@
 package com.liferay.dataset.view.table;
 
 import com.liferay.dataset.ClayDataSetDisplayView;
-import com.liferay.dataset.constants.ClayDataSetConstants;
+import com.liferay.dataset.constants.DatasetConstants;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 
 import java.util.Locale;
@@ -31,17 +31,17 @@ public abstract class BaseTableClayDataSetDisplayView
 
 	@Override
 	public String getContentRenderer() {
-		return ClayDataSetConstants.TABLE;
+		return DatasetConstants.TABLE;
 	}
 
 	@Override
 	public String getLabel() {
-		return ClayDataSetConstants.TABLE;
+		return DatasetConstants.TABLE;
 	}
 
 	@Override
 	public String getName() {
-		return ClayDataSetConstants.TABLE;
+		return DatasetConstants.TABLE;
 	}
 
 	public ResourceBundle getResourceBundle(Locale locale) {
@@ -51,7 +51,7 @@ public abstract class BaseTableClayDataSetDisplayView
 
 	@Override
 	public String getThumbnail() {
-		return ClayDataSetConstants.TABLE;
+		return DatasetConstants.TABLE;
 	}
 
 }

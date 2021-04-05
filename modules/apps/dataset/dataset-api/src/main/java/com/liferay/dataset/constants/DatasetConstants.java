@@ -18,7 +18,7 @@ package com.liferay.dataset.constants;
  * @author Marco Leo
  * @author Alessio Antonio Rendina
  */
-public class ClayDataSetConstants {
+public class DatasetConstants {
 
 	public static final String CARDS = "cards";
 

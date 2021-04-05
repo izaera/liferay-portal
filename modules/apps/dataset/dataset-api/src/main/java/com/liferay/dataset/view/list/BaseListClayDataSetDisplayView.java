@@ -15,7 +15,7 @@
 package com.liferay.dataset.view.list;
 
 import com.liferay.dataset.ClayDataSetDisplayView;
-import com.liferay.dataset.constants.ClayDataSetConstants;
+import com.liferay.dataset.constants.DatasetConstants;
 import com.liferay.petra.string.StringPool;
 
 /**
@@ -26,7 +26,7 @@ public abstract class BaseListClayDataSetDisplayView
 
 	@Override
 	public String getContentRenderer() {
-		return ClayDataSetConstants.LIST;
+		return DatasetConstants.LIST;
 	}
 
 	public abstract String getDescription();
@@ -37,12 +37,12 @@ public abstract class BaseListClayDataSetDisplayView
 
 	@Override
 	public String getLabel() {
-		return ClayDataSetConstants.LIST;
+		return DatasetConstants.LIST;
 	}
 
 	@Override
 	public String getName() {
-		return ClayDataSetConstants.LIST;
+		return DatasetConstants.LIST;
 	}
 
 	public String getSticker() {
@@ -55,7 +55,7 @@ public abstract class BaseListClayDataSetDisplayView
 
 	@Override
 	public String getThumbnail() {
-		return ClayDataSetConstants.LIST;
+		return DatasetConstants.LIST;
 	}
 
 	public abstract String getTitle();

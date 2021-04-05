@@ -16,7 +16,7 @@ package com.liferay.dataset.internal.view.table;
 
 import com.liferay.dataset.ClayDataSetContentRendererContextContributor;
 import com.liferay.dataset.ClayDataSetDisplayView;
-import com.liferay.dataset.constants.ClayDataSetConstants;
+import com.liferay.dataset.constants.DatasetConstants;
 import com.liferay.dataset.view.table.BaseTableClayDataSetDisplayView;
 import com.liferay.dataset.view.table.ClayTableSchema;
 import com.liferay.dataset.view.table.ClayTableSchemaField;
@@ -42,7 +42,7 @@ import org.osgi.service.component.annotations.Reference;
  * @author Marco Leo
  */
 @Component(
-	property = "clay.data.set.content.renderer.name=" + ClayDataSetConstants.TABLE,
+	property = "clay.data.set.content.renderer.name=" + DatasetConstants.TABLE,
 	service = ClayDataSetContentRendererContextContributor.class
 )
 public class TableClayDataSetContentRendererContextContributor

@@ -16,7 +16,7 @@ package com.liferay.dataset.internal.view.list;
 
 import com.liferay.dataset.ClayDataSetContentRendererContextContributor;
 import com.liferay.dataset.ClayDataSetDisplayView;
-import com.liferay.dataset.constants.ClayDataSetConstants;
+import com.liferay.dataset.constants.DatasetConstants;
 import com.liferay.dataset.view.list.BaseListClayDataSetDisplayView;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.HashMapBuilder;
@@ -32,7 +32,7 @@ import org.osgi.service.component.annotations.Component;
  * @author Marco Leo
  */
 @Component(
-	property = "clay.data.set.content.renderer.name=" + ClayDataSetConstants.LIST,
+	property = "clay.data.set.content.renderer.name=" + DatasetConstants.LIST,
 	service = ClayDataSetContentRendererContextContributor.class
 )
 public class ListClayDataSetContentRendererContextContributor

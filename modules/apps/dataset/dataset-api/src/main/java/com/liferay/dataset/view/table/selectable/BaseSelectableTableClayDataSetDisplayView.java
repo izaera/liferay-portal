@@ -15,7 +15,7 @@
 package com.liferay.dataset.view.table.selectable;
 
 import com.liferay.dataset.ClayDataSetDisplayView;
-import com.liferay.dataset.constants.ClayDataSetConstants;
+import com.liferay.dataset.constants.DatasetConstants;
 import com.liferay.petra.string.StringPool;
 
 import java.util.Locale;
@@ -28,7 +28,7 @@ public abstract class BaseSelectableTableClayDataSetDisplayView
 
 	@Override
 	public String getContentRenderer() {
-		return ClayDataSetConstants.SELECTABLE_TABLE;
+		return DatasetConstants.SELECTABLE_TABLE;
 	}
 
 	public abstract String getFirstColumnLabel(Locale locale);
@@ -37,12 +37,12 @@ public abstract class BaseSelectableTableClayDataSetDisplayView
 
 	@Override
 	public String getLabel() {
-		return ClayDataSetConstants.SELECTABLE_TABLE;
+		return DatasetConstants.SELECTABLE_TABLE;
 	}
 
 	@Override
 	public String getName() {
-		return ClayDataSetConstants.SELECTABLE_TABLE;
+		return DatasetConstants.SELECTABLE_TABLE;
 	}
 
 	@Override

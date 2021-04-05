@@ -15,7 +15,7 @@
 package com.liferay.dataset.view.cards;
 
 import com.liferay.dataset.ClayDataSetDisplayView;
-import com.liferay.dataset.constants.ClayDataSetConstants;
+import com.liferay.dataset.constants.DatasetConstants;
 import com.liferay.petra.string.StringPool;
 
 /**
@@ -26,7 +26,7 @@ public abstract class BaseCardsClayDataSetDisplayView
 
 	@Override
 	public String getContentRenderer() {
-		return ClayDataSetConstants.CARDS;
+		return DatasetConstants.CARDS;
 	}
 
 	public abstract String getDescription();
@@ -37,7 +37,7 @@ public abstract class BaseCardsClayDataSetDisplayView
 
 	@Override
 	public String getLabel() {
-		return ClayDataSetConstants.CARDS;
+		return DatasetConstants.CARDS;
 	}
 
 	public String getLink() {
@@ -46,7 +46,7 @@ public abstract class BaseCardsClayDataSetDisplayView
 
 	@Override
 	public String getName() {
-		return ClayDataSetConstants.CARDS;
+		return DatasetConstants.CARDS;
 	}
 
 	public String getSticker() {
