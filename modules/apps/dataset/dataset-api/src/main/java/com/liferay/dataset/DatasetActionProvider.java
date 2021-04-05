@@ -24,7 +24,7 @@ import javax.servlet.http.HttpServletRequest;
 /**
  * @author Marco Leo
  */
-public interface ClayDataSetActionProvider {
+public interface DatasetActionProvider {
 
 	public List<DropdownItem> getDropdownItems(
 			HttpServletRequest httpServletRequest, long groupId, Object model)

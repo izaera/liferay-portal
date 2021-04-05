@@ -19,9 +19,9 @@ import java.util.List;
 /**
  * @author Marco Leo
  */
-public interface ClayDataSetActionProviderRegistry {
+public interface DatasetActionProviderRegistry {
 
-	public List<ClayDataSetActionProvider> getClayDataSetActionProviders(
+	public List<DatasetActionProvider> getDatasetActionProviders(
 		String clayDataProviderKey);
 
 }

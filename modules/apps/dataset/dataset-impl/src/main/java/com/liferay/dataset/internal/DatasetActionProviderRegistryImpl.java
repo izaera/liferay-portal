@@ -14,8 +14,8 @@
 
 package com.liferay.dataset.internal;
 
-import com.liferay.dataset.ClayDataSetActionProvider;
-import com.liferay.dataset.ClayDataSetActionProviderRegistry;
+import com.liferay.dataset.DatasetActionProvider;
+import com.liferay.dataset.DatasetActionProviderRegistry;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerCustomizerFactory;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerCustomizerFactory.ServiceWrapper;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
@@ -35,49 +35,49 @@ import org.osgi.service.component.annotations.Deactivate;
 /**
  * @author Marco Leo
  */
-@Component(immediate = true, service = ClayDataSetActionProviderRegistry.class)
-public class ClayDataSetActionProviderRegistryImpl
-	implements ClayDataSetActionProviderRegistry {
+@Component(immediate = true, service = DatasetActionProviderRegistry.class)
+public class DatasetActionProviderRegistryImpl
+	implements DatasetActionProviderRegistry {
 
 	@Override
-	public List<ClayDataSetActionProvider> getClayDataSetActionProviders(
+	public List<DatasetActionProvider> getDatasetActionProviders(
 		String clayDataProviderKey) {
 
-		List<ServiceWrapper<ClayDataSetActionProvider>>
-			clayDataSetActionProviderServiceWrappers =
+		List<ServiceWrapper<DatasetActionProvider>>
+			datasetActionProviderServiceWrappers =
 				_serviceTrackerMap.getService(clayDataProviderKey);
 
-		if (clayDataSetActionProviderServiceWrappers == null) {
+		if (datasetActionProviderServiceWrappers == null) {
 			if (_log.isDebugEnabled()) {
 				_log.debug(
-					"No Clay data set action provider is associated with " +
+					"No data set action provider is associated with " +
 						clayDataProviderKey);
 			}
 
 			return Collections.emptyList();
 		}
 
-		List<ClayDataSetActionProvider> clayDataSetActionProviders =
+		List<DatasetActionProvider> datasetActionProviders =
 			new ArrayList<>();
 
-		for (ServiceWrapper<ClayDataSetActionProvider>
+		for (ServiceWrapper<DatasetActionProvider>
 				tableActionProviderServiceWrapper :
-					clayDataSetActionProviderServiceWrappers) {
+					datasetActionProviderServiceWrappers) {
 
-			clayDataSetActionProviders.add(
+			datasetActionProviders.add(
 				tableActionProviderServiceWrapper.getService());
 		}
 
-		return clayDataSetActionProviders;
+		return datasetActionProviders;
 	}
 
 	@Activate
 	protected void activate(BundleContext bundleContext) {
 		_serviceTrackerMap = ServiceTrackerMapFactory.openMultiValueMap(
-			bundleContext, ClayDataSetActionProvider.class,
+			bundleContext, DatasetActionProvider.class,
 			"clay.data.provider.key",
 			ServiceTrackerCustomizerFactory.
-				<ClayDataSetActionProvider>serviceWrapper(bundleContext));
+				<DatasetActionProvider>serviceWrapper(bundleContext));
 	}
 
 	@Deactivate
@@ -86,10 +86,10 @@ public class ClayDataSetActionProviderRegistryImpl
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
-		ClayDataSetActionProviderRegistryImpl.class);
+		DatasetActionProviderRegistryImpl.class);
 
 	private ServiceTrackerMap
-		<String, List<ServiceWrapper<ClayDataSetActionProvider>>>
+		<String, List<ServiceWrapper<DatasetActionProvider>>>
 			_serviceTrackerMap;
 
 }

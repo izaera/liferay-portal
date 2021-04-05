@@ -19,8 +19,8 @@ import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-import com.liferay.dataset.ClayDataSetActionProvider;
-import com.liferay.dataset.ClayDataSetActionProviderRegistry;
+import com.liferay.dataset.DatasetActionProvider;
+import com.liferay.dataset.DatasetActionProviderRegistry;
 import com.liferay.dataset.ClayDataSetDataJSONFactory;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 
@@ -71,20 +71,20 @@ public class ClayDataSetDataJSONFactoryImpl
 
 		List<ClayDataSetDataRow> clayDataSetDataRows = new ArrayList<>();
 
-		List<ClayDataSetActionProvider> clayDataSetActionProviders =
-			_clayDataSetActionProviderRegistry.getClayDataSetActionProviders(
+		List<DatasetActionProvider> datasetActionProviders =
+			_datasetActionProviderRegistry.getDatasetActionProviders(
 				tableName);
 
 		for (Object item : items) {
 			ClayDataSetDataRow clayDataSetDataRow = new ClayDataSetDataRow(
 				item);
 
-			if (clayDataSetActionProviders != null) {
-				for (ClayDataSetActionProvider clayDataSetActionProvider :
-						clayDataSetActionProviders) {
+			if (datasetActionProviders != null) {
+				for (DatasetActionProvider datasetActionProvider :
+					datasetActionProviders) {
 
 					List<DropdownItem> actionDropdownItems =
-						clayDataSetActionProvider.getDropdownItems(
+						datasetActionProvider.getDropdownItems(
 							httpServletRequest, groupId, item);
 
 					if (actionDropdownItems != null) {
@@ -108,8 +108,7 @@ public class ClayDataSetDataJSONFactoryImpl
 	};
 
 	@Reference
-	private ClayDataSetActionProviderRegistry
-		_clayDataSetActionProviderRegistry;
+	private DatasetActionProviderRegistry _datasetActionProviderRegistry;
 
 	private class ClayDataSetResponse {
 
