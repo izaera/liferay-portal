@@ -14,7 +14,7 @@
 
 package com.liferay.dataset.taglib.internal.servlet;
 
-import com.liferay.dataset.taglib.ClayDataSetDisplayViewSerializer;
+import com.liferay.dataset.ClayDataSetDisplayViewSerializer;
 import com.liferay.dataset.filter.ClayDataSetFilterSerializer;
 import com.liferay.portal.kernel.util.Portal;
 

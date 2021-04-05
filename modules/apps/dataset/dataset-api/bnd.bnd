@@ -3,5 +3,11 @@ Bundle-SymbolicName: com.liferay.dataset.api
 Bundle-Version: 1.0.0
 Export-Package:\
 	com.liferay.dataset,\
+	com.liferay.dataset.constants,\
 	com.liferay.dataset.filter,\
-	com.liferay.dataset.provider
+	com.liferay.dataset.provider,\
+	com.liferay.dataset.view.cards,\
+	com.liferay.dataset.view.list,\
+	com.liferay.dataset.view.table,\
+	com.liferay.dataset.view.table.selectable,\
+	com.liferay.dataset.view.timeline

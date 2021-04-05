@@ -15,7 +15,7 @@
 package com.liferay.dataset.taglib.servlet.taglib;
 
 import com.liferay.dataset.DisplaySettingsNamespaceUtil;
-import com.liferay.dataset.taglib.ClayDataSetDisplayViewSerializer;
+import com.liferay.dataset.ClayDataSetDisplayViewSerializer;
 import com.liferay.dataset.filter.ClayDataSetFilterSerializer;
 import com.liferay.dataset.taglib.internal.js.loader.modules.extender.npm.NPMResolverProvider;
 import com.liferay.dataset.taglib.internal.servlet.ServletContextUtil;
