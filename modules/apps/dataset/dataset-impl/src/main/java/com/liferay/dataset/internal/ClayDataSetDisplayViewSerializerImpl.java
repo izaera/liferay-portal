@@ -53,7 +53,7 @@ public class ClayDataSetDisplayViewSerializerImpl
 				clayDataSetDisplayViews) {
 
 			ResourceBundle resourceBundle = ResourceBundleUtil.getBundle(
-				"content.Language", locale, getClass());
+				"content.Language", locale, clayDataSetDisplayView.getClass());
 
 			JSONObject jsonObject = JSONUtil.put(
 				"contentRenderer", clayDataSetDisplayView.getContentRenderer()
