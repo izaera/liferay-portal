@@ -12,17 +12,24 @@
  * details.
  */
 
-package com.liferay.dataset.ui.view;
+package com.liferay.dataset.internal.data;
 
-import java.util.List;
+import com.liferay.dataset.data.DatasetDataFilter;
 
 /**
  * @author Marco Leo
  */
-public interface DatasetViewContentRendererContextContributorRegistry {
+public class DatasetDataFilterImpl implements DatasetDataFilter {
 
-	public List<DatasetViewContentRendererContextContributor>
-		getDatasetViewContentRendererContextContributors(
-			String datasetViewContentRendererName);
+	@Override
+	public String getKeywords() {
+		return _keywords;
+	}
+
+	public void setKeywords(String keywords) {
+		_keywords = keywords;
+	}
+
+	private String _keywords;
 
 }

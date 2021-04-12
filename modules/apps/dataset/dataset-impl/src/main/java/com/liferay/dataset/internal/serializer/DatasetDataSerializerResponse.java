@@ -12,17 +12,29 @@
  * details.
  */
 
-package com.liferay.dataset.ui.view;
+package com.liferay.dataset.internal.serializer;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
 
 import java.util.List;
 
 /**
- * @author Marco Leo
+ * @author Iván Zaera Avellón
  */
-public interface DatasetViewContentRendererContextContributorRegistry {
+public class DatasetDataSerializerResponse {
 
-	public List<DatasetViewContentRendererContextContributor>
-		getDatasetViewContentRendererContextContributors(
-			String datasetViewContentRendererName);
+	public DatasetDataSerializerResponse(
+		List<DatasetDataSerializerRow> datasetDataSerializerRows,
+		int totalCount) {
+
+		_datasetDataSerializerRows = datasetDataSerializerRows;
+		_totalCount = totalCount;
+	}
+
+	@JsonProperty("items")
+	private final List<DatasetDataSerializerRow> _datasetDataSerializerRows;
+
+	@JsonProperty("totalCount")
+	private final int _totalCount;
 
 }

@@ -12,17 +12,41 @@
  * details.
  */
 
-package com.liferay.dataset.ui.view;
+package com.liferay.dataset.internal.data;
 
-import java.util.List;
+import com.liferay.dataset.data.DatasetDataPagination;
 
 /**
  * @author Marco Leo
  */
-public interface DatasetViewContentRendererContextContributorRegistry {
+public class DatasetDataPaginationImpl implements DatasetDataPagination {
 
-	public List<DatasetViewContentRendererContextContributor>
-		getDatasetViewContentRendererContextContributors(
-			String datasetViewContentRendererName);
+	public DatasetDataPaginationImpl(int pageSize, int page) {
+		_pageSize = pageSize;
+		_page = page;
+	}
+
+	@Override
+	public int getEndPosition() {
+		return _page * _pageSize;
+	}
+
+	@Override
+	public int getPage() {
+		return _page;
+	}
+
+	@Override
+	public int getPageSize() {
+		return _pageSize;
+	}
+
+	@Override
+	public int getStartPosition() {
+		return (_page - 1) * _pageSize;
+	}
+
+	private final int _page;
+	private final int _pageSize;
 
 }

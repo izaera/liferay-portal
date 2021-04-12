@@ -12,17 +12,23 @@
  * details.
  */
 
-package com.liferay.dataset.ui.view;
+package com.liferay.dataset.internal.ui.view.table.schema;
 
-import java.util.List;
+import com.liferay.dataset.ui.view.table.schema.TableDatasetViewSchemaBuilder;
+import com.liferay.dataset.ui.view.table.schema.TableDatasetViewSchemaBuilderFactory;
+
+import org.osgi.service.component.annotations.Component;
 
 /**
  * @author Marco Leo
  */
-public interface DatasetViewContentRendererContextContributorRegistry {
+@Component(service = TableDatasetViewSchemaBuilderFactory.class)
+public class TableDatasetViewSchemaBuilderFactoryImpl
+	implements TableDatasetViewSchemaBuilderFactory {
 
-	public List<DatasetViewContentRendererContextContributor>
-		getDatasetViewContentRendererContextContributors(
-			String datasetViewContentRendererName);
+	@Override
+	public TableDatasetViewSchemaBuilder create() {
+		return new TableDatasetViewSchemaBuilderImpl();
+	}
 
 }

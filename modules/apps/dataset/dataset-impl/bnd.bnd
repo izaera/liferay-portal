@@ -1,0 +1,3 @@
+Bundle-Name: Liferay Dataset Implementation
+Bundle-SymbolicName: com.liferay.dataset.impl
+Bundle-Version: 1.0.0
