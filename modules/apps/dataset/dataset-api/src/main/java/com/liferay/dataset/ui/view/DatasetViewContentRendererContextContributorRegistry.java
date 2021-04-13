@@ -22,7 +22,7 @@ import java.util.List;
 public interface DatasetViewContentRendererContextContributorRegistry {
 
 	public List<DatasetViewContentRendererContextContributor>
-		getDatasetContentRendererContextContributors(
+		getDatasetViewContentRendererContextContributors(
 			String datasetViewContentRendererName);
 
 }
