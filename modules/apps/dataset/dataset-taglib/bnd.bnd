@@ -1,0 +1,12 @@
+Bundle-Name: Liferay Dataset Taglib
+Bundle-SymbolicName: com.liferay.dataset.taglib
+Bundle-Version: 1.0.0
+Provide-Capability:\
+	osgi.extender;\
+		osgi.extender="jsp.taglib";\
+		uri="http://liferay.com/tld/dataset";\
+		version:Version="${Bundle-Version}",\
+	soy;\
+		type="dataset-taglib";\
+		version:Version="${Bundle-Version}"
+Web-ContextPath: /dataset-taglib
