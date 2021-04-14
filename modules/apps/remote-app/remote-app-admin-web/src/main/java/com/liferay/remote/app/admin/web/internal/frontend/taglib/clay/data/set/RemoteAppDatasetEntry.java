@@ -21,9 +21,9 @@ import java.util.Locale;
 /**
  * @author Bruno Basto
  */
-public class RemoteAppClayDataSetEntry {
+public class RemoteAppDatasetEntry {
 
-	public RemoteAppClayDataSetEntry(
+	public RemoteAppDatasetEntry(
 		RemoteAppEntry remoteAppEntry, Locale locale) {
 
 		_remoteAppEntry = remoteAppEntry;

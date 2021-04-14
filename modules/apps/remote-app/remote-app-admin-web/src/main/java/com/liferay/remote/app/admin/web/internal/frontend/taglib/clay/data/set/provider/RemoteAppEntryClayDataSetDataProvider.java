@@ -14,15 +14,16 @@
 
 package com.liferay.remote.app.admin.web.internal.frontend.taglib.clay.data.set.provider;
 
-import com.liferay.frontend.taglib.clay.data.Filter;
-import com.liferay.frontend.taglib.clay.data.Pagination;
+import com.liferay.dataset.data.DatasetDataFilter;
+import com.liferay.dataset.data.DatasetDataPagination;
+import com.liferay.dataset.data.DatasetDataProvider;
 import com.liferay.frontend.taglib.clay.data.set.provider.ClayDataSetDataProvider;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.remote.app.admin.web.internal.constants.RemoteAppAdminConstants;
-import com.liferay.remote.app.admin.web.internal.frontend.taglib.clay.data.set.RemoteAppClayDataSetEntry;
+import com.liferay.remote.app.admin.web.internal.frontend.taglib.clay.data.set.RemoteAppDatasetEntry;
 import com.liferay.remote.app.model.RemoteAppEntry;
 import com.liferay.remote.app.service.RemoteAppEntryLocalService;
 
@@ -40,16 +41,17 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	immediate = true,
-	property = "clay.data.provider.key=" + RemoteAppAdminConstants.REMOTE_APP_ENTRY_DATA_SET_DISPLAY,
-	service = ClayDataSetDataProvider.class
+	property = "dataset.data.provider.key=" + RemoteAppAdminConstants.REMOTE_APP_ENTRY_DATA_SET_DISPLAY,
+	service = DatasetDataProvider.class
 )
 public class RemoteAppEntryClayDataSetDataProvider
-	implements ClayDataSetDataProvider<RemoteAppClayDataSetEntry> {
+	implements DatasetDataProvider<RemoteAppDatasetEntry> {
 
 	@Override
-	public List<RemoteAppClayDataSetEntry> getItems(
-			HttpServletRequest httpServletRequest, Filter filter,
-			Pagination pagination, Sort sort)
+	public List<RemoteAppDatasetEntry> getItems(
+			HttpServletRequest httpServletRequest,
+			DatasetDataFilter datasetDataFilter,
+			DatasetDataPagination datasetDataPagination, Sort sort)
 		throws PortalException {
 
 		ThemeDisplay themeDisplay =
@@ -58,14 +60,15 @@ public class RemoteAppEntryClayDataSetDataProvider
 
 		List<RemoteAppEntry> remoteAppEntries =
 			_remoteAppEntryLocalService.searchRemoteAppEntries(
-				themeDisplay.getCompanyId(), filter.getKeywords(),
-				pagination.getStartPosition(), pagination.getEndPosition(),
+				themeDisplay.getCompanyId(), datasetDataFilter.getKeywords(),
+				datasetDataPagination.getStartPosition(),
+				datasetDataPagination.getEndPosition(),
 				sort);
 
 		Stream<RemoteAppEntry> stream = remoteAppEntries.stream();
 
 		return stream.map(
-			remoteAppEntry -> new RemoteAppClayDataSetEntry(
+			remoteAppEntry -> new RemoteAppDatasetEntry(
 				remoteAppEntry, themeDisplay.getLocale())
 		).collect(
 			Collectors.toList()
@@ -74,7 +77,8 @@ public class RemoteAppEntryClayDataSetDataProvider
 
 	@Override
 	public int getItemsCount(
-			HttpServletRequest httpServletRequest, Filter filter)
+			HttpServletRequest httpServletRequest,
+			DatasetDataFilter datasetDataFilter)
 		throws PortalException {
 
 		ThemeDisplay themeDisplay =
@@ -82,7 +86,7 @@ public class RemoteAppEntryClayDataSetDataProvider
 				WebKeys.THEME_DISPLAY);
 
 		return _remoteAppEntryLocalService.searchRemoteAppEntriesCount(
-			themeDisplay.getCompanyId(), filter.getKeywords());
+			themeDisplay.getCompanyId(), datasetDataFilter.getKeywords());
 	}
 
 	@Reference

@@ -14,11 +14,14 @@
 
 package com.liferay.remote.app.admin.web.internal.frontend.taglib.clay.data.set.view.table;
 
+import com.liferay.dataset.ui.view.DatasetView;
+import com.liferay.dataset.ui.view.table.BaseTableDatasetView;
+import com.liferay.dataset.ui.view.table.schema.TableDatasetViewSchema;
+import com.liferay.dataset.ui.view.table.schema.TableDatasetViewSchemaBuilder;
+import com.liferay.dataset.ui.view.table.schema.TableDatasetViewSchemaBuilderFactory;
+import com.liferay.dataset.ui.view.table.schema.TableDatasetViewSchemaField;
 import com.liferay.frontend.taglib.clay.data.set.ClayDataSetDisplayView;
-import com.liferay.frontend.taglib.clay.data.set.view.table.BaseTableClayDataSetDisplayView;
-import com.liferay.frontend.taglib.clay.data.set.view.table.ClayTableSchema;
 import com.liferay.frontend.taglib.clay.data.set.view.table.ClayTableSchemaBuilder;
-import com.liferay.frontend.taglib.clay.data.set.view.table.ClayTableSchemaBuilderFactory;
 import com.liferay.frontend.taglib.clay.data.set.view.table.ClayTableSchemaField;
 import com.liferay.remote.app.admin.web.internal.constants.RemoteAppAdminConstants;
 
@@ -30,45 +33,47 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	immediate = true,
-	property = "clay.data.set.display.name=" + RemoteAppAdminConstants.REMOTE_APP_ENTRY_DATA_SET_DISPLAY,
-	service = ClayDataSetDisplayView.class
+	property = "dataset.display.name=" + RemoteAppAdminConstants.REMOTE_APP_ENTRY_DATA_SET_DISPLAY,
+	service = DatasetView.class
 )
 public class RemoteAppEntryTableClayDataSetDisplayView
-	extends BaseTableClayDataSetDisplayView {
+	extends BaseTableDatasetView {
 
 	@Override
-	public ClayTableSchema getClayTableSchema() {
-		ClayTableSchemaBuilder clayTableSchemaBuilder =
-			_clayTableSchemaBuilderFactory.create();
+	public TableDatasetViewSchema getTableDatasetViewSchema() {
+		TableDatasetViewSchemaBuilder tableDatasetViewSchemaBuilder =
+			_tableDatasetViewSchemaBuilderFactory.create();
 
 		_addClayTableSchemaField(
-			clayTableSchemaBuilder, "name", "name", "actionLink");
-		_addClayTableSchemaField(clayTableSchemaBuilder, "url", "url");
+			tableDatasetViewSchemaBuilder, "name", "name", "actionLink");
+		_addClayTableSchemaField(tableDatasetViewSchemaBuilder, "url", "url");
 
-		return clayTableSchemaBuilder.build();
+		return tableDatasetViewSchemaBuilder.build();
 	}
 
 	private void _addClayTableSchemaField(
-		ClayTableSchemaBuilder clayTableSchemaBuilder, String fieldName,
-		String label) {
+		TableDatasetViewSchemaBuilder tableDatasetViewSchemaBuilder,
+		String fieldName, String label) {
 
 		_addClayTableSchemaField(
-			clayTableSchemaBuilder, fieldName, label, null);
+			tableDatasetViewSchemaBuilder, fieldName, label, null);
 	}
 
 	private void _addClayTableSchemaField(
-		ClayTableSchemaBuilder clayTableSchemaBuilder, String fieldName,
-		String label, String contentRenderer) {
+		TableDatasetViewSchemaBuilder tableDatasetViewSchemaBuilder,
+		String fieldName, String label, String contentRenderer) {
 
-		ClayTableSchemaField clayTableSchemaField =
-			clayTableSchemaBuilder.addClayTableSchemaField(fieldName, label);
+		TableDatasetViewSchemaField tableDatasetViewSchemaField =
+			tableDatasetViewSchemaBuilder.addTableDatasetViewSchemaField(
+				fieldName, label);
 
 		if (contentRenderer != null) {
-			clayTableSchemaField.setContentRenderer(contentRenderer);
+			tableDatasetViewSchemaField.setContentRenderer(contentRenderer);
 		}
 	}
 
 	@Reference
-	private ClayTableSchemaBuilderFactory _clayTableSchemaBuilderFactory;
+	private TableDatasetViewSchemaBuilderFactory
+		_tableDatasetViewSchemaBuilderFactory;
 
 }

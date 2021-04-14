@@ -14,6 +14,7 @@
 
 package com.liferay.remote.app.admin.web.internal.frontend.taglib.clay.data.set;
 
+import com.liferay.dataset.ui.action.DatasetActionProvider;
 import com.liferay.frontend.taglib.clay.data.set.ClayDataSetActionProvider;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItemListBuilder;
@@ -46,32 +47,32 @@ import org.osgi.service.component.annotations.Reference;
  */
 @Component(
 	immediate = true,
-	property = "clay.data.provider.key=" + RemoteAppAdminConstants.REMOTE_APP_ENTRY_DATA_SET_DISPLAY,
-	service = ClayDataSetActionProvider.class
+	property = "dataset.data.provider.key=" + RemoteAppAdminConstants.REMOTE_APP_ENTRY_DATA_SET_DISPLAY,
+	service = DatasetActionProvider.class
 )
 public class RemoteAppEntryClayDataSetActionProvider
-	implements ClayDataSetActionProvider {
+	implements DatasetActionProvider {
 
 	@Override
 	public List<DropdownItem> getDropdownItems(
 			HttpServletRequest httpServletRequest, long groupId, Object model)
 		throws PortalException {
 
-		RemoteAppClayDataSetEntry remoteAppClayDataSetEntry =
-			(RemoteAppClayDataSetEntry)model;
+		RemoteAppDatasetEntry remoteAppDatasetEntry =
+			(RemoteAppDatasetEntry)model;
 
 		return DropdownItemListBuilder.add(
 			dropdownItem -> _buildEditRemoteAppEntryAction(
-				dropdownItem, httpServletRequest, remoteAppClayDataSetEntry)
+				dropdownItem, httpServletRequest, remoteAppDatasetEntry)
 		).add(
 			dropdownItem -> _buildDeleteRemoteAppEntryAction(
-				dropdownItem, httpServletRequest, remoteAppClayDataSetEntry)
+				dropdownItem, httpServletRequest, remoteAppDatasetEntry)
 		).build();
 	}
 
 	private void _buildDeleteRemoteAppEntryAction(
 		DropdownItem dropdownItem, HttpServletRequest httpServletRequest,
-		RemoteAppClayDataSetEntry remoteAppClayDataSetEntry) {
+		RemoteAppDatasetEntry remoteAppDatasetEntry) {
 
 		dropdownItem.setHref(
 			PortletURLBuilder.create(
@@ -80,7 +81,7 @@ public class RemoteAppEntryClayDataSetActionProvider
 				"/remote_app_admin/delete_remote_app_entry"
 			).setParameter(
 				"remoteAppEntryId",
-				remoteAppClayDataSetEntry.getRemoteAppEntryId()
+				remoteAppDatasetEntry.getRemoteAppEntryId()
 			).buildString());
 
 		dropdownItem.setIcon("times-circle");
@@ -89,14 +90,14 @@ public class RemoteAppEntryClayDataSetActionProvider
 
 	private void _buildEditRemoteAppEntryAction(
 		DropdownItem dropdownItem, HttpServletRequest httpServletRequest,
-		RemoteAppClayDataSetEntry remoteAppClayDataSetEntry) {
+		RemoteAppDatasetEntry remoteAppDatasetEntry) {
 
 		PortletURL editRemoteAppEntryURL = PortletURLBuilder.create(
 			_getRenderURL(httpServletRequest)
 		).setMVCRenderCommandName(
 			"/remote_app_admin/edit_remote_app_entry"
 		).setParameter(
-			"remoteAppEntryId", remoteAppClayDataSetEntry.getRemoteAppEntryId()
+			"remoteAppEntryId", remoteAppDatasetEntry.getRemoteAppEntryId()
 		).build();
 
 		String currentURL = ParamUtil.getString(
