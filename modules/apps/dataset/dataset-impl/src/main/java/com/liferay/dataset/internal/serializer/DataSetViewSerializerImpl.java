@@ -49,7 +49,7 @@ public class DataSetViewSerializerImpl implements DatasetViewSerializer {
 
 		for (DatasetView datasetView : datasetViews) {
 			ResourceBundle resourceBundle = ResourceBundleUtil.getBundle(
-				"content.Language", locale, getClass());
+				"content.Language", locale, datasetView.getClass());
 
 			JSONObject jsonObject = JSONUtil.put(
 				"contentRenderer", datasetView.getContentRendererName()
