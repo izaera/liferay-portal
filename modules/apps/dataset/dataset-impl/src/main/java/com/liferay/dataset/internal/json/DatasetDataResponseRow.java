@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.dataset.internal.serializer;
+package com.liferay.dataset.internal.json;
 
 import com.fasterxml.jackson.annotation.JsonUnwrapped;
 
@@ -24,9 +24,9 @@ import java.util.List;
 /**
  * @author Marco Leo
  */
-public class DatasetDataSerializerRow {
+public class DatasetDataResponseRow {
 
-	public DatasetDataSerializerRow(Object item) {
+	public DatasetDataResponseRow(Object item) {
 		_item = item;
 
 		_actionDropdownItems = new ArrayList<>();

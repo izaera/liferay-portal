@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.dataset.internal.serializer;
+package com.liferay.dataset.internal.json;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -21,18 +21,17 @@ import java.util.List;
 /**
  * @author Iván Zaera Avellón
  */
-public class DatasetDataSerializerResponse {
+public class DatasetDataResponse {
 
-	public DatasetDataSerializerResponse(
-		List<DatasetDataSerializerRow> datasetDataSerializerRows,
-		int totalCount) {
+	public DatasetDataResponse(
+		List<DatasetDataResponseRow> datasetDataResponseRows, int totalCount) {
 
-		_datasetDataSerializerRows = datasetDataSerializerRows;
+		_datasetDataResponseRows = datasetDataResponseRows;
 		_totalCount = totalCount;
 	}
 
 	@JsonProperty("items")
-	private final List<DatasetDataSerializerRow> _datasetDataSerializerRows;
+	private final List<DatasetDataResponseRow> _datasetDataResponseRows;
 
 	@JsonProperty("totalCount")
 	private final int _totalCount;

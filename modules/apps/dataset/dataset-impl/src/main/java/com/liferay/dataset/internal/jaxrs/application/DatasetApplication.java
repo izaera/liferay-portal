@@ -22,8 +22,8 @@ import com.liferay.dataset.data.DatasetDataProviderRegistry;
 import com.liferay.dataset.internal.jaxrs.context.provider.DatasetDataPaginationContextProvider;
 import com.liferay.dataset.internal.jaxrs.context.provider.SortContextProvider;
 import com.liferay.dataset.internal.jaxrs.context.provider.ThemeDisplayContextProvider;
+import com.liferay.dataset.internal.json.DatasetDataResponseJSONFactory;
 import com.liferay.dataset.portlet.ActiveViewSettingsProvider;
-import com.liferay.dataset.serializer.DatasetDataSerializer;
 import com.liferay.dataset.ui.action.DatasetActionProvider;
 import com.liferay.dataset.ui.action.DatasetActionProviderRegistry;
 import com.liferay.portal.kernel.json.JSONFactory;
@@ -105,7 +105,7 @@ public class DatasetApplication extends Application {
 					datasetDataProviderKey);
 
 			return Response.ok(
-				_datasetDataSerializer.create(
+				_datasetDataResponseJSONFactory.serialize(
 					datasetActionProviders, groupId, httpServletRequest,
 					dataSetProvider.getItems(
 						httpServletRequest,
@@ -199,7 +199,7 @@ public class DatasetApplication extends Application {
 	private DatasetDataProviderRegistry _datasetDataProviderRegistry;
 
 	@Reference
-	private DatasetDataSerializer _datasetDataSerializer;
+	private DatasetDataResponseJSONFactory _datasetDataResponseJSONFactory;
 
 	@Reference
 	private JSONFactory _jsonFactory;

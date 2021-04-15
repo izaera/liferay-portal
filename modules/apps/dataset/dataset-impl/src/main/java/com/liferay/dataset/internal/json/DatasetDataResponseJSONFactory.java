@@ -12,13 +12,12 @@
  * details.
  */
 
-package com.liferay.dataset.internal.serializer;
+package com.liferay.dataset.internal.json;
 
 import com.fasterxml.jackson.databind.MapperFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 
-import com.liferay.dataset.serializer.DatasetDataSerializer;
 import com.liferay.dataset.ui.action.DatasetActionProvider;
 import com.liferay.dataset.ui.action.DatasetActionProviderRegistry;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.DropdownItem;
@@ -34,49 +33,34 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * @author Marco Leo
  */
-@Component(service = DatasetDataSerializer.class)
-public class DatasetDataSerializerImpl implements DatasetDataSerializer {
+@Component(service = DatasetDataResponseJSONFactory.class)
+public class DatasetDataResponseJSONFactory {
 
-	@Override
-	public String create(
-			List<DatasetActionProvider> datasetActionProviders, long groupId,
-			HttpServletRequest httpServletRequest, List<Object> items)
-		throws Exception {
-
-		List<DatasetDataSerializerRow> datasetDataSerializerRows =
-			_getDatasetDataSerializerRows(
-				datasetActionProviders, groupId, httpServletRequest, items);
-
-		return _objectMapper.writeValueAsString(datasetDataSerializerRows);
-	}
-
-	@Override
-	public String create(
+	public String serialize(
 			List<DatasetActionProvider> datasetActionProviders, long groupId,
 			HttpServletRequest httpServletRequest, List<Object> items,
 			int itemsCount)
 		throws Exception {
 
-		DatasetDataSerializerResponse datasetDataSerializerResponse =
-			new DatasetDataSerializerResponse(
-				_getDatasetDataSerializerRows(
-					datasetActionProviders, groupId, httpServletRequest, items),
-				itemsCount);
+		DatasetDataResponse datasetDataResponse = new DatasetDataResponse(
+			_getDatasetDataSerializerRows(
+				datasetActionProviders, groupId, httpServletRequest, items),
+			itemsCount);
 
-		return _objectMapper.writeValueAsString(datasetDataSerializerResponse);
+		return _objectMapper.writeValueAsString(datasetDataResponse);
 	}
 
-	private List<DatasetDataSerializerRow> _getDatasetDataSerializerRows(
+	private List<DatasetDataResponseRow> _getDatasetDataSerializerRows(
 			List<DatasetActionProvider> datasetActionProviders, long groupId,
 			HttpServletRequest httpServletRequest, List<Object> items)
 		throws Exception {
 
-		List<DatasetDataSerializerRow> datasetDataSerializerRows =
+		List<DatasetDataResponseRow> datasetDataResponseRows =
 			new ArrayList<>();
 
 		for (Object item : items) {
-			DatasetDataSerializerRow datasetDataSerializerRow =
-				new DatasetDataSerializerRow(item);
+			DatasetDataResponseRow datasetDataResponseRow =
+				new DatasetDataResponseRow(item);
 
 			if (datasetActionProviders != null) {
 				for (DatasetActionProvider datasetActionProvider :
@@ -87,16 +71,16 @@ public class DatasetDataSerializerImpl implements DatasetDataSerializer {
 							httpServletRequest, groupId, item);
 
 					if (dropdownItems != null) {
-						datasetDataSerializerRow.addActionDropdownItems(
+						datasetDataResponseRow.addActionDropdownItems(
 							dropdownItems);
 					}
 				}
 			}
 
-			datasetDataSerializerRows.add(datasetDataSerializerRow);
+			datasetDataResponseRows.add(datasetDataResponseRow);
 		}
 
-		return datasetDataSerializerRows;
+		return datasetDataResponseRows;
 	}
 
 	private static final ObjectMapper _objectMapper = new ObjectMapper() {
