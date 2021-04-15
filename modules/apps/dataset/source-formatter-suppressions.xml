@@ -4,6 +4,7 @@
 	<source-check>
 		<suppress checks="JavaAPISignatureCheck" files="dataset-api/src/main/java/com/liferay/dataset/data/DatasetDataFilterFactory\.java" />
 		<suppress checks="JavaAPISignatureCheck" files="dataset-api/src/main/java/com/liferay/dataset/data/DatasetDataProvider\.java" />
+		<suppress checks="JavaAPISignatureCheck" files="dataset-api/src/main/java/com/liferay/dataset/ui/ActiveViewSettingsProvider\.java" />
 		<suppress checks="JavaAPISignatureCheck" files="dataset-impl/src/main/java/com/liferay/dataset/internal/json/DatasetDataResponseJSONFactory\.java" />
 	</source-check>
 </suppressions>

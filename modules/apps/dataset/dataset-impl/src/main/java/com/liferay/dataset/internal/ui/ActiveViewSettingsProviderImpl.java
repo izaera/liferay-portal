@@ -12,9 +12,9 @@
  * details.
  */
 
-package com.liferay.dataset.internal.portlet;
+package com.liferay.dataset.internal.ui;
 
-import com.liferay.dataset.portlet.ActiveViewSettingsProvider;
+import com.liferay.dataset.ui.ActiveViewSettingsProvider;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.portlet.PortalPreferences;

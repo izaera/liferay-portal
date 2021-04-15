@@ -12,7 +12,7 @@
  * details.
  */
 
-package com.liferay.dataset.portlet;
+package com.liferay.dataset.ui;
 
 import javax.servlet.http.HttpServletRequest;
 

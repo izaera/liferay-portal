@@ -23,7 +23,7 @@ import com.liferay.dataset.internal.jaxrs.context.provider.DatasetDataPagination
 import com.liferay.dataset.internal.jaxrs.context.provider.SortContextProvider;
 import com.liferay.dataset.internal.jaxrs.context.provider.ThemeDisplayContextProvider;
 import com.liferay.dataset.internal.json.DatasetDataResponseJSONFactory;
-import com.liferay.dataset.portlet.ActiveViewSettingsProvider;
+import com.liferay.dataset.ui.ActiveViewSettingsProvider;
 import com.liferay.dataset.ui.action.DatasetActionProvider;
 import com.liferay.dataset.ui.action.DatasetActionProviderRegistry;
 import com.liferay.portal.kernel.json.JSONFactory;

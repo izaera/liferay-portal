@@ -14,10 +14,10 @@
 
 package com.liferay.dataset.taglib.servlet.taglib;
 
-import com.liferay.dataset.portlet.ActiveViewSettingsProvider;
 import com.liferay.dataset.taglib.internal.json.DataSetViewsContextJSONFactory;
 import com.liferay.dataset.taglib.internal.servlet.ServletContextUtil;
 import com.liferay.dataset.taglib.internal.util.ServicesProvider;
+import com.liferay.dataset.ui.ActiveViewSettingsProvider;
 import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
 import com.liferay.frontend.taglib.clay.data.set.model.ClayPaginationEntry;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.CreationMenu;

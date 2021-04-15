@@ -14,8 +14,8 @@
 
 package com.liferay.dataset.taglib.internal.util;
 
-import com.liferay.dataset.portlet.ActiveViewSettingsProvider;
 import com.liferay.dataset.taglib.internal.json.DataSetViewsContextJSONFactory;
+import com.liferay.dataset.ui.ActiveViewSettingsProvider;
 import com.liferay.dataset.ui.filter.DatasetFilterSerializer;
 import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
 
