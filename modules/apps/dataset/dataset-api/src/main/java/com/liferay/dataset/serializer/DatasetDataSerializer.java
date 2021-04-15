@@ -14,6 +14,8 @@
 
 package com.liferay.dataset.serializer;
 
+import com.liferay.dataset.ui.action.DatasetActionProvider;
+
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
@@ -24,13 +26,14 @@ import javax.servlet.http.HttpServletRequest;
 public interface DatasetDataSerializer {
 
 	public String create(
-			long groupId, String datasetDataProviderKey, List<Object> items,
-			HttpServletRequest httpServletRequest)
+			List<DatasetActionProvider> datasetActionProviders, long groupId,
+			HttpServletRequest httpServletRequest, List<Object> items)
 		throws Exception;
 
 	public String create(
-			long groupId, String datasetDataProviderKey, List<Object> items,
-			int itemsCount, HttpServletRequest httpServletRequest)
+			List<DatasetActionProvider> datasetActionProviders, long groupId,
+			HttpServletRequest httpServletRequest, List<Object> items,
+			int itemsCount)
 		throws Exception;
 
 }

@@ -39,43 +39,40 @@ public class DatasetDataSerializerImpl implements DatasetDataSerializer {
 
 	@Override
 	public String create(
-			long groupId, String datasetDataProviderKey, List<Object> items,
-			HttpServletRequest httpServletRequest)
+			List<DatasetActionProvider> datasetActionProviders, long groupId,
+			HttpServletRequest httpServletRequest, List<Object> items)
 		throws Exception {
 
 		List<DatasetDataSerializerRow> datasetDataSerializerRows =
 			_getDatasetDataSerializerRows(
-				items, datasetDataProviderKey, httpServletRequest, groupId);
+				datasetActionProviders, groupId, httpServletRequest, items);
 
 		return _objectMapper.writeValueAsString(datasetDataSerializerRows);
 	}
 
 	@Override
 	public String create(
-			long groupId, String datasetDataProviderKey, List<Object> items,
-			int itemsCount, HttpServletRequest httpServletRequest)
+			List<DatasetActionProvider> datasetActionProviders, long groupId,
+			HttpServletRequest httpServletRequest, List<Object> items,
+			int itemsCount)
 		throws Exception {
 
 		DatasetDataSerializerResponse datasetDataSerializerResponse =
 			new DatasetDataSerializerResponse(
 				_getDatasetDataSerializerRows(
-					items, datasetDataProviderKey, httpServletRequest, groupId),
+					datasetActionProviders, groupId, httpServletRequest, items),
 				itemsCount);
 
 		return _objectMapper.writeValueAsString(datasetDataSerializerResponse);
 	}
 
 	private List<DatasetDataSerializerRow> _getDatasetDataSerializerRows(
-			List<Object> items, String datasetDataProviderKey,
-			HttpServletRequest httpServletRequest, long groupId)
+			List<DatasetActionProvider> datasetActionProviders, long groupId,
+			HttpServletRequest httpServletRequest, List<Object> items)
 		throws Exception {
 
 		List<DatasetDataSerializerRow> datasetDataSerializerRows =
 			new ArrayList<>();
-
-		List<DatasetActionProvider> datasetActionProviders =
-			_datasetActionProviderRegistry.getDatasetActionProviders(
-				datasetDataProviderKey);
 
 		for (Object item : items) {
 			DatasetDataSerializerRow datasetDataSerializerRow =
