@@ -12,9 +12,8 @@
  * details.
  */
 
-package com.liferay.dataset.internal.serializer;
+package com.liferay.dataset.taglib.internal.json;
 
-import com.liferay.dataset.serializer.DatasetViewSerializer;
 import com.liferay.dataset.ui.view.DatasetView;
 import com.liferay.dataset.ui.view.DatasetViewContentRendererContextContributor;
 import com.liferay.dataset.ui.view.DatasetViewContentRendererContextContributorRegistry;
@@ -35,13 +34,12 @@ import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
 /**
- * @author Marco Leo
+ * @author Iván Zaera Avellón
  */
-@Component(service = DatasetViewSerializer.class)
-public class DataSetViewSerializerImpl implements DatasetViewSerializer {
+@Component(service = DataSetViewsContextJSONFactory.class)
+public class DataSetViewsContextJSONFactory {
 
-	@Override
-	public JSONArray serialize(String datasetDisplayName, Locale locale) {
+	public JSONArray createJSONArray(String datasetDisplayName, Locale locale) {
 		JSONArray jsonArray = _jsonFactory.createJSONArray();
 
 		List<DatasetView> datasetViews = _datasetViewRegistry.getDatasetViews(

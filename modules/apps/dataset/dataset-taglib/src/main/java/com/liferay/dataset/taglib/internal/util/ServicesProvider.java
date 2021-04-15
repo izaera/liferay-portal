@@ -15,7 +15,7 @@
 package com.liferay.dataset.taglib.internal.util;
 
 import com.liferay.dataset.portlet.ActiveViewSettingsProvider;
-import com.liferay.dataset.serializer.DatasetViewSerializer;
+import com.liferay.dataset.taglib.internal.json.DataSetViewsContextJSONFactory;
 import com.liferay.dataset.ui.filter.DatasetFilterSerializer;
 import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
 
@@ -36,8 +36,10 @@ public class ServicesProvider {
 		return _datasetFilterSerializer;
 	}
 
-	public static DatasetViewSerializer getDatasetViewSerializer() {
-		return _datasetViewSerializer;
+	public static DataSetViewsContextJSONFactory
+		getDataSetViewsContextJSONFactory() {
+
+		return _dataSetViewsContextJSONFactory;
 	}
 
 	public static NPMResolver getNPMResolver() {
@@ -59,10 +61,10 @@ public class ServicesProvider {
 	}
 
 	@Reference(unbind = "-")
-	protected void setDatasetViewSerializer(
-		DatasetViewSerializer datasetViewSerializer) {
+	protected void setDataSetViewsContextJSONFactory(
+		DataSetViewsContextJSONFactory dataSetViewsContextJSONFactory) {
 
-		_datasetViewSerializer = datasetViewSerializer;
+		_dataSetViewsContextJSONFactory = dataSetViewsContextJSONFactory;
 	}
 
 	@Reference(unbind = "-")
@@ -72,7 +74,8 @@ public class ServicesProvider {
 
 	private static ActiveViewSettingsProvider _activeViewSettingsProvider;
 	private static DatasetFilterSerializer _datasetFilterSerializer;
-	private static DatasetViewSerializer _datasetViewSerializer;
+	private static DataSetViewsContextJSONFactory
+		_dataSetViewsContextJSONFactory;
 	private static NPMResolver _npmResolver;
 
 }

@@ -15,7 +15,7 @@
 package com.liferay.dataset.taglib.servlet.taglib;
 
 import com.liferay.dataset.portlet.ActiveViewSettingsProvider;
-import com.liferay.dataset.serializer.DatasetViewSerializer;
+import com.liferay.dataset.taglib.internal.json.DataSetViewsContextJSONFactory;
 import com.liferay.dataset.taglib.internal.servlet.ServletContextUtil;
 import com.liferay.dataset.taglib.internal.util.ServicesProvider;
 import com.liferay.dataset.taglib.servlet.taglib.util.DatasetActionDropdownItem;
@@ -214,7 +214,8 @@ public class HeadlessDatasetTag extends IncludeTag {
 
 	@Override
 	public void setPageContext(PageContext pageContext) {
-		_datasetViewSerializer = ServicesProvider.getDatasetViewSerializer();
+		_dataSetViewsContextJSONFactory =
+			ServicesProvider.getDataSetViewsContextJSONFactory();
 		_datasetFilterSerializer =
 			ServicesProvider.getDatasetFilterSerializer();
 
@@ -278,7 +279,7 @@ public class HeadlessDatasetTag extends IncludeTag {
 		_datasetFiltersContext = null;
 		_datasetFilterSerializer = null;
 		_datasetViewsContext = null;
-		_datasetViewSerializer = null;
+		_dataSetViewsContextJSONFactory = null;
 		_formId = null;
 		_id = null;
 		_itemsPerPage = 0;
@@ -410,7 +411,7 @@ public class HeadlessDatasetTag extends IncludeTag {
 	}
 
 	private void _setDatasetViewsContext() {
-		_datasetViewsContext = _datasetViewSerializer.serialize(
+		_datasetViewsContext = _dataSetViewsContextJSONFactory.createJSONArray(
 			_id, PortalUtil.getLocale(request));
 	}
 
@@ -431,7 +432,7 @@ public class HeadlessDatasetTag extends IncludeTag {
 	private Object _datasetFiltersContext;
 	private DatasetFilterSerializer _datasetFilterSerializer;
 	private Object _datasetViewsContext;
-	private DatasetViewSerializer _datasetViewSerializer;
+	private DataSetViewsContextJSONFactory _dataSetViewsContextJSONFactory;
 	private String _formId;
 	private String _id;
 	private int _itemsPerPage;

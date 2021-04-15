@@ -15,7 +15,7 @@
 package com.liferay.dataset.taglib.servlet.taglib;
 
 import com.liferay.dataset.portlet.ActiveViewSettingsProvider;
-import com.liferay.dataset.serializer.DatasetViewSerializer;
+import com.liferay.dataset.taglib.internal.json.DataSetViewsContextJSONFactory;
 import com.liferay.dataset.taglib.internal.servlet.ServletContextUtil;
 import com.liferay.dataset.taglib.internal.util.ServicesProvider;
 import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
@@ -256,7 +256,8 @@ public class DatasetTag extends IncludeTag {
 
 	@Override
 	public void setPageContext(PageContext pageContext) {
-		_datasetViewSerializer = ServicesProvider.getDatasetViewSerializer();
+		_dataSetViewsContextJSONFactory =
+			ServicesProvider.getDataSetViewsContextJSONFactory();
 
 		super.setPageContext(pageContext);
 
@@ -317,7 +318,7 @@ public class DatasetTag extends IncludeTag {
 		_creationMenu = new CreationMenu();
 		_datasetDataProviderKey = null;
 		_datasetViewsContext = null;
-		_datasetViewSerializer = null;
+		_dataSetViewsContextJSONFactory = null;
 		_deltaParam = null;
 		_formId = null;
 		_id = null;
@@ -429,7 +430,7 @@ public class DatasetTag extends IncludeTag {
 	}
 
 	private void _setDatasetViewsContext() {
-		_datasetViewsContext = _datasetViewSerializer.serialize(
+		_datasetViewsContext = _dataSetViewsContextJSONFactory.createJSONArray(
 			_id, PortalUtil.getLocale(request));
 	}
 
@@ -447,7 +448,7 @@ public class DatasetTag extends IncludeTag {
 	private CreationMenu _creationMenu = new CreationMenu();
 	private String _datasetDataProviderKey;
 	private Object _datasetViewsContext;
-	private DatasetViewSerializer _datasetViewSerializer;
+	private DataSetViewsContextJSONFactory _dataSetViewsContextJSONFactory;
 	private String _deltaParam;
 	private String _formId;
 	private String _id;
