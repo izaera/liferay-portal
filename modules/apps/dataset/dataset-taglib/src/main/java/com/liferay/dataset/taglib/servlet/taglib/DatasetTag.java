@@ -73,8 +73,6 @@ public class DatasetTag extends IncludeTag {
 
 			sb.append(_appURL);
 			sb.append("/dataset/");
-			sb.append(_id);
-			sb.append(StringPool.FORWARD_SLASH);
 			sb.append(_datasetDataProviderKey);
 			sb.append("?groupId=");
 			sb.append(themeDisplay.getScopeGroupId());

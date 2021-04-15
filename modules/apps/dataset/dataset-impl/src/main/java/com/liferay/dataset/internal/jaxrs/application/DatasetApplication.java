@@ -24,6 +24,8 @@ import com.liferay.dataset.internal.jaxrs.context.provider.SortContextProvider;
 import com.liferay.dataset.internal.jaxrs.context.provider.ThemeDisplayContextProvider;
 import com.liferay.dataset.portlet.ActiveViewSettingsProvider;
 import com.liferay.dataset.serializer.DatasetDataSerializer;
+import com.liferay.dataset.ui.action.DatasetActionProvider;
+import com.liferay.dataset.ui.action.DatasetActionProviderRegistry;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
@@ -33,6 +35,7 @@ import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -70,11 +73,10 @@ import org.osgi.service.jaxrs.whiteboard.JaxrsWhiteboardConstants;
 public class DatasetApplication extends Application {
 
 	@GET
-	@Path("/dataset/{tableName}/{datasetDataProviderKey}")
+	@Path("/dataset/{datasetDataProviderKey}")
 	@Produces(MediaType.APPLICATION_JSON)
 	public Response getDatasetData(
 		@PathParam("datasetDataProviderKey") String datasetDataProviderKey,
-		@PathParam("tableName") String tableName,
 		@QueryParam("groupId") long groupId, @QueryParam("plid") long plid,
 		@QueryParam("portletId") String portletId,
 		@Context HttpServletRequest httpServletRequest,
@@ -98,17 +100,20 @@ public class DatasetApplication extends Application {
 				_datasetDataFilterFactoryRegistry.getDatasetDataFilterFactory(
 					datasetDataProviderKey);
 
+			List<DatasetActionProvider> datasetActionProviders =
+				_datasetActionProviderRegistry.getDatasetActionProviders(
+					datasetDataProviderKey);
+
 			return Response.ok(
 				_datasetDataSerializer.create(
-					groupId, tableName,
+					datasetActionProviders, groupId, httpServletRequest,
 					dataSetProvider.getItems(
 						httpServletRequest,
 						datasetDataFilterFactory.create(httpServletRequest),
 						datasetDataPagination, sort),
 					dataSetProvider.getItemsCount(
 						httpServletRequest,
-						datasetDataFilterFactory.create(httpServletRequest)),
-					httpServletRequest),
+						datasetDataFilterFactory.create(httpServletRequest))),
 				MediaType.APPLICATION_JSON
 			).build();
 		}
@@ -179,6 +184,9 @@ public class DatasetApplication extends Application {
 
 	@Reference
 	private ActiveViewSettingsProvider _activeViewSettingsProvider;
+
+	@Reference
+	private DatasetActionProviderRegistry _datasetActionProviderRegistry;
 
 	@Reference
 	private DatasetDataFilterFactoryRegistry _datasetDataFilterFactoryRegistry;
