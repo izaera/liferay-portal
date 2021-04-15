@@ -3,6 +3,7 @@ Bundle-SymbolicName: com.liferay.dataset.api
 Bundle-Version: 1.0.0
 Export-Package:\
 	com.liferay.dataset.data,\
+	com.liferay.dataset.portlet,\
 	com.liferay.dataset.serializer,\
 	com.liferay.dataset.ui.action,\
 	com.liferay.dataset.ui.filter,\

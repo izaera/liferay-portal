@@ -12,10 +12,13 @@
  * details.
  */
 
-package com.liferay.dataset.taglib.internal.util;
+package com.liferay.dataset.internal.portlet;
 
+import com.liferay.dataset.portlet.ActiveViewSettingsProvider;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.portlet.PortalPreferences;
+import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.theme.PortletDisplay;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.Portal;
@@ -29,16 +32,43 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * @author Iván Zaera Avellón
  */
-@Component(service = {})
-public class DatasetDisplaySettingsNamespaceUtil {
+@Component(service = ActiveViewSettingsProvider.class)
+public class ActiveViewSettingsProviderImpl
+	implements ActiveViewSettingsProvider {
 
-	public static final String getDatasetDisplaySettingsNamespace(
+	@Override
+	public String getActiveViewSettingsJSON(
 		HttpServletRequest httpServletRequest, String id) {
 
-		StringBundler sb = new StringBundler(8);
+		PortalPreferences portalPreferences =
+			PortletPreferencesFactoryUtil.getPortalPreferences(
+				httpServletRequest);
 
-		sb.append("com.liferay.frontend.taglib.clay.servlet.taglib.");
-		sb.append("DataSetDisplayTag");
+		return portalPreferences.getValue(
+			_getNamespace(httpServletRequest, id), "activeViewSettingsJSON",
+			"{}");
+	}
+
+	@Override
+	public void setActiveViewSettingsJSON(
+		HttpServletRequest httpServletRequest, String id,
+		String activeViewSettingsJSON) {
+
+		PortalPreferences portalPreferences =
+			PortletPreferencesFactoryUtil.getPortalPreferences(
+				httpServletRequest);
+
+		portalPreferences.setValue(
+			_getNamespace(httpServletRequest, id), "activeViewSettingsJSON",
+			activeViewSettingsJSON);
+	}
+
+	private String _getNamespace(
+		HttpServletRequest httpServletRequest, String id) {
+
+		StringBundler sb = new StringBundler(7);
+
+		sb.append("com.liferay.dataset.active.view.settings");
 		sb.append(StringPool.POUND);
 
 		ThemeDisplay themeDisplay =
@@ -60,11 +90,7 @@ public class DatasetDisplaySettingsNamespaceUtil {
 		return sb.toString();
 	}
 
-	@Reference(unbind = "-")
-	protected void setPortal(Portal portal) {
-		_portal = portal;
-	}
-
-	private static Portal _portal;
+	@Reference
+	private Portal _portal;
 
 }
