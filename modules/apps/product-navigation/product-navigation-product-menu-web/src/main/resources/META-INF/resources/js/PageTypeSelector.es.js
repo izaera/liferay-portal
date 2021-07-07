@@ -59,6 +59,11 @@ function PageTypeSelector({
 			{siteNavigationMenuEnabled ? (
 				<ClayDropDown
 					active={pageTypeDropdownActive}
+					menuElementAttrs={{
+						containerProps: {
+							className: 'cadmin',
+						},
+					}}
 					onActiveChange={setPageTypeDropdownActive}
 					trigger={
 						<ClayButton
