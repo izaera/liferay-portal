@@ -23,6 +23,12 @@ DLAdminManagementToolbarDisplayContext dlAdminManagementToolbarDisplayContext = 
 DLViewDisplayContext dlViewDisplayContext = new DLViewDisplayContext(dlAdminDisplayContext, request, renderRequest, renderResponse);
 %>
 
+<liferay-frontend:stylesheet bundle="com.liferay.frontend.taglib" css="kk.css" />
+
+<div class="kk">
+	LILI LOLO
+</div>
+
 <liferay-ui:success key='<%= portletDisplay.getId() + "requestProcessed" %>' message="your-request-completed-successfully" />
 
 <c:choose>
