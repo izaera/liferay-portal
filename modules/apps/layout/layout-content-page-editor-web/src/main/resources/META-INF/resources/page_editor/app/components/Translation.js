@@ -195,6 +195,9 @@ export default function Translation({
 			hasRightSymbols
 			menuElementAttrs={{
 				className: 'page-editor__translation',
+				containerProps: {
+					className: 'cadmin',
+				},
 			}}
 			onActiveChange={setActive}
 			trigger={
