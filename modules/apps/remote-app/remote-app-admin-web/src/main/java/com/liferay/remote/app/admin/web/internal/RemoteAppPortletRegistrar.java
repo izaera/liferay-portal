@@ -14,13 +14,23 @@
 
 package com.liferay.remote.app.admin.web.internal;
 
+import com.liferay.frontend.js.loader.modules.extender.npm.JSPackage;
+import com.liferay.frontend.js.loader.modules.extender.npm.NPMRegistry;
+import com.liferay.frontend.js.loader.modules.extender.npm.NPMRegistryUpdate;
+import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.LocalizationUtil;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.remote.app.admin.web.internal.portlet.RemoteAppPortlet;
 import com.liferay.remote.app.model.RemoteAppEntry;
 import com.liferay.remote.app.service.RemoteAppEntryLocalService;
 
+import java.io.InputStream;
+
+import java.util.Collections;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -48,6 +58,8 @@ public class RemoteAppPortletRegistrar {
 	protected void activate(BundleContext bundleContext) {
 		_bundleContext = bundleContext;
 
+		_jsPackage = _npmResolver.getJSPackage();
+
 		if (_log.isInfoEnabled()) {
 			_log.info("Starting remote app entries");
 		}
@@ -74,7 +86,46 @@ public class RemoteAppPortletRegistrar {
 	@Reference
 	protected RemoteAppEntryLocalService remoteAppEntryLocalService;
 
+	private static String _loadTemplate(String name) {
+		try (InputStream inputStream =
+				RemoteAppPortletRegistrar.class.getResourceAsStream(
+					"dependencies/" + name)) {
+
+			return StringUtil.read(inputStream);
+		}
+		catch (Exception exception) {
+			_log.error("Unable to read template " + name, exception);
+		}
+
+		return StringPool.BLANK;
+	}
+
 	private void _registerPortlet(RemoteAppEntry remoteAppEntry) {
+		NPMRegistryUpdate update = _npmRegistry.update();
+
+		String nameDefaultLanguageId = LocalizationUtil.getDefaultLanguageId(
+			remoteAppEntry.getName());
+
+		String moduleName = remoteAppEntry.getName(nameDefaultLanguageId);
+
+		if (moduleName.startsWith(StringPool.SLASH)) {
+			moduleName = moduleName.substring(1);
+		}
+
+		update.registerJSModule(
+			_jsPackage, moduleName, Collections.emptyList(),
+			StringUtil.replace(
+				_TPL_JAVA_SCRIPT, new String[] {
+					"[$PACKAGE$]", "[$MODULE$]", "[$URL$]"
+				},
+				new String[] {
+					_jsPackage.getResolvedId(), moduleName,
+					remoteAppEntry.getUrl()
+				}),
+			null);
+
+		update.finish();
+		/*
 		RemoteAppPortlet remoteAppPortlet = new RemoteAppPortlet(
 			remoteAppEntry);
 
@@ -94,9 +145,11 @@ public class RemoteAppPortletRegistrar {
 		if (_log.isInfoEnabled()) {
 			_log.info("Started remote app entry " + remoteAppPortlet.getName());
 		}
+		*/
 	}
 
 	private void _unregisterPortlet(long remoteAppEntryId) {
+		/*
 		RemoteAppPortlet remoteAppPortlet = _remoteAppPortlets.remove(
 			remoteAppEntryId);
 
@@ -108,12 +161,27 @@ public class RemoteAppPortletRegistrar {
 					"Stopped remote app entry " + remoteAppPortlet.getName());
 			}
 		}
+		*/
 	}
+
+	private static final String _TPL_JAVA_SCRIPT;
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		RemoteAppPortletRegistrar.class);
 
+	static {
+		_TPL_JAVA_SCRIPT = _loadTemplate("amd.module.js.tpl");
+	}
+
 	private BundleContext _bundleContext;
+	private JSPackage _jsPackage;
+
+	@Reference
+	private NPMRegistry _npmRegistry;
+
+	@Reference
+	private NPMResolver _npmResolver;
+
 	private final ConcurrentMap<Long, RemoteAppPortlet> _remoteAppPortlets =
 		new ConcurrentHashMap<>();
 
