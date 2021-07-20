@@ -82,7 +82,8 @@ public class RemoteAppEntryModelImpl
 		{"remoteAppEntryId", Types.BIGINT}, {"companyId", Types.BIGINT},
 		{"userId", Types.BIGINT}, {"userName", Types.VARCHAR},
 		{"createDate", Types.TIMESTAMP}, {"modifiedDate", Types.TIMESTAMP},
-		{"name", Types.VARCHAR}, {"url", Types.VARCHAR}
+		{"name", Types.VARCHAR}, {"type_", Types.VARCHAR},
+		{"url", Types.VARCHAR}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -98,11 +99,12 @@ public class RemoteAppEntryModelImpl
 		TABLE_COLUMNS_MAP.put("createDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("modifiedDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("name", Types.VARCHAR);
+		TABLE_COLUMNS_MAP.put("type_", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("url", Types.VARCHAR);
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table RemoteAppEntry (mvccVersion LONG default 0 not null,uuid_ VARCHAR(75) null,remoteAppEntryId LONG not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,name STRING null,url VARCHAR(75) null)";
+		"create table RemoteAppEntry (mvccVersion LONG default 0 not null,uuid_ VARCHAR(75) null,remoteAppEntryId LONG not null primary key,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,name STRING null,type_ VARCHAR(75) null,url VARCHAR(1024) null)";
 
 	public static final String TABLE_SQL_DROP = "drop table RemoteAppEntry";
 
@@ -322,6 +324,10 @@ public class RemoteAppEntryModelImpl
 		attributeSetterBiConsumers.put(
 			"name",
 			(BiConsumer<RemoteAppEntry, String>)RemoteAppEntry::setName);
+		attributeGetterFunctions.put("type", RemoteAppEntry::getType);
+		attributeSetterBiConsumers.put(
+			"type",
+			(BiConsumer<RemoteAppEntry, String>)RemoteAppEntry::setType);
 		attributeGetterFunctions.put("url", RemoteAppEntry::getUrl);
 		attributeSetterBiConsumers.put(
 			"url", (BiConsumer<RemoteAppEntry, String>)RemoteAppEntry::setUrl);
@@ -602,6 +608,25 @@ public class RemoteAppEntryModelImpl
 	}
 
 	@Override
+	public String getType() {
+		if (_type == null) {
+			return "";
+		}
+		else {
+			return _type;
+		}
+	}
+
+	@Override
+	public void setType(String type) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_type = type;
+	}
+
+	@Override
 	public String getUrl() {
 		if (_url == null) {
 			return "";
@@ -790,6 +815,7 @@ public class RemoteAppEntryModelImpl
 		remoteAppEntryImpl.setCreateDate(getCreateDate());
 		remoteAppEntryImpl.setModifiedDate(getModifiedDate());
 		remoteAppEntryImpl.setName(getName());
+		remoteAppEntryImpl.setType(getType());
 		remoteAppEntryImpl.setUrl(getUrl());
 
 		remoteAppEntryImpl.resetOriginalValues();
@@ -919,6 +945,14 @@ public class RemoteAppEntryModelImpl
 			remoteAppEntryCacheModel.name = null;
 		}
 
+		remoteAppEntryCacheModel.type = getType();
+
+		String type = remoteAppEntryCacheModel.type;
+
+		if ((type != null) && (type.length() == 0)) {
+			remoteAppEntryCacheModel.type = null;
+		}
+
 		remoteAppEntryCacheModel.url = getUrl();
 
 		String url = remoteAppEntryCacheModel.url;
@@ -1011,6 +1045,7 @@ public class RemoteAppEntryModelImpl
 	private boolean _setModifiedDate;
 	private String _name;
 	private String _nameCurrentLanguageId;
+	private String _type;
 	private String _url;
 
 	public <T> T getColumnValue(String columnName) {
@@ -1051,6 +1086,7 @@ public class RemoteAppEntryModelImpl
 		_columnOriginalValues.put("createDate", _createDate);
 		_columnOriginalValues.put("modifiedDate", _modifiedDate);
 		_columnOriginalValues.put("name", _name);
+		_columnOriginalValues.put("type_", _type);
 		_columnOriginalValues.put("url", _url);
 	}
 
@@ -1060,6 +1096,7 @@ public class RemoteAppEntryModelImpl
 		Map<String, String> attributeNames = new HashMap<>();
 
 		attributeNames.put("uuid_", "uuid");
+		attributeNames.put("type_", "type");
 
 		_attributeNames = Collections.unmodifiableMap(attributeNames);
 	}
@@ -1093,7 +1130,9 @@ public class RemoteAppEntryModelImpl
 
 		columnBitmasks.put("name", 256L);
 
-		columnBitmasks.put("url", 512L);
+		columnBitmasks.put("type_", 512L);
+
+		columnBitmasks.put("url", 1024L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}

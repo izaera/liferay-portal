@@ -77,7 +77,7 @@ public class RemoteAppEntryCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(21);
+		StringBundler sb = new StringBundler(23);
 
 		sb.append("{mvccVersion=");
 		sb.append(mvccVersion);
@@ -97,6 +97,8 @@ public class RemoteAppEntryCacheModel
 		sb.append(modifiedDate);
 		sb.append(", name=");
 		sb.append(name);
+		sb.append(", type=");
+		sb.append(type);
 		sb.append(", url=");
 		sb.append(url);
 		sb.append("}");
@@ -149,6 +151,13 @@ public class RemoteAppEntryCacheModel
 			remoteAppEntryImpl.setName(name);
 		}
 
+		if (type == null) {
+			remoteAppEntryImpl.setType("");
+		}
+		else {
+			remoteAppEntryImpl.setType(type);
+		}
+
 		if (url == null) {
 			remoteAppEntryImpl.setUrl("");
 		}
@@ -175,6 +184,7 @@ public class RemoteAppEntryCacheModel
 		createDate = objectInput.readLong();
 		modifiedDate = objectInput.readLong();
 		name = objectInput.readUTF();
+		type = objectInput.readUTF();
 		url = objectInput.readUTF();
 	}
 
@@ -212,6 +222,13 @@ public class RemoteAppEntryCacheModel
 			objectOutput.writeUTF(name);
 		}
 
+		if (type == null) {
+			objectOutput.writeUTF("");
+		}
+		else {
+			objectOutput.writeUTF(type);
+		}
+
 		if (url == null) {
 			objectOutput.writeUTF("");
 		}
@@ -229,6 +246,7 @@ public class RemoteAppEntryCacheModel
 	public long createDate;
 	public long modifiedDate;
 	public String name;
+	public String type;
 	public String url;
 
 }

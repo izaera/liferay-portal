@@ -140,6 +140,8 @@ public class RemoteAppEntryPersistenceTest {
 
 		newRemoteAppEntry.setName(RandomTestUtil.randomString());
 
+		newRemoteAppEntry.setType(RandomTestUtil.randomString());
+
 		newRemoteAppEntry.setUrl(RandomTestUtil.randomString());
 
 		_remoteAppEntries.add(_persistence.update(newRemoteAppEntry));
@@ -171,6 +173,8 @@ public class RemoteAppEntryPersistenceTest {
 			Time.getShortTimestamp(newRemoteAppEntry.getModifiedDate()));
 		Assert.assertEquals(
 			existingRemoteAppEntry.getName(), newRemoteAppEntry.getName());
+		Assert.assertEquals(
+			existingRemoteAppEntry.getType(), newRemoteAppEntry.getType());
 		Assert.assertEquals(
 			existingRemoteAppEntry.getUrl(), newRemoteAppEntry.getUrl());
 	}
@@ -230,7 +234,7 @@ public class RemoteAppEntryPersistenceTest {
 			"RemoteAppEntry", "mvccVersion", true, "uuid", true,
 			"remoteAppEntryId", true, "companyId", true, "userId", true,
 			"userName", true, "createDate", true, "modifiedDate", true, "name",
-			true, "url", true);
+			true, "type", true, "url", true);
 	}
 
 	@Test
@@ -530,6 +534,8 @@ public class RemoteAppEntryPersistenceTest {
 		remoteAppEntry.setModifiedDate(RandomTestUtil.nextDate());
 
 		remoteAppEntry.setName(RandomTestUtil.randomString());
+
+		remoteAppEntry.setType(RandomTestUtil.randomString());
 
 		remoteAppEntry.setUrl(RandomTestUtil.randomString());
 

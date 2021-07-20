@@ -18,6 +18,7 @@ import com.liferay.frontend.taglib.clay.data.Filter;
 import com.liferay.frontend.taglib.clay.data.Pagination;
 import com.liferay.frontend.taglib.clay.data.set.provider.ClayDataSetDataProvider;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.resource.bundle.ResourceBundleLoader;
 import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -27,6 +28,7 @@ import com.liferay.remote.app.model.RemoteAppEntry;
 import com.liferay.remote.app.service.RemoteAppEntryLocalService;
 
 import java.util.List;
+import java.util.ResourceBundle;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -34,6 +36,8 @@ import javax.servlet.http.HttpServletRequest;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+import org.osgi.service.component.annotations.ReferencePolicy;
+import org.osgi.service.component.annotations.ReferencePolicyOption;
 
 /**
  * @author Bruno Basto
@@ -64,9 +68,12 @@ public class RemoteAppEntryClayDataSetDataProvider
 
 		Stream<RemoteAppEntry> stream = remoteAppEntries.stream();
 
+		ResourceBundle resourceBundle =
+			_resourceBundleLoader.loadResourceBundle(themeDisplay.getLocale());
+
 		return stream.map(
 			remoteAppEntry -> new RemoteAppClayDataSetEntry(
-				remoteAppEntry, themeDisplay.getLocale())
+				remoteAppEntry, themeDisplay.getLocale(), resourceBundle)
 		).collect(
 			Collectors.toList()
 		);
@@ -87,5 +94,12 @@ public class RemoteAppEntryClayDataSetDataProvider
 
 	@Reference
 	private RemoteAppEntryLocalService _remoteAppEntryLocalService;
+
+	@Reference(
+		policy = ReferencePolicy.DYNAMIC,
+		policyOption = ReferencePolicyOption.GREEDY,
+		target = "(bundle.symbolic.name=com.liferay.remote.app.admin.web)"
+	)
+	private volatile ResourceBundleLoader _resourceBundleLoader;
 
 }
