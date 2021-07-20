@@ -55,7 +55,7 @@ public class DeleteRemoteAppEntryMVCActionCommand extends BaseMVCActionCommand {
 			actionRequest, "remoteAppEntryId");
 
 		try {
-			_remoteAppPortletRegistrar.unregisterPortlet(
+			_remoteAppPortletRegistrar.unregister(
 				_remoteAppEntryLocalService.getRemoteAppEntry(
 					remoteAppEntryId));
 
