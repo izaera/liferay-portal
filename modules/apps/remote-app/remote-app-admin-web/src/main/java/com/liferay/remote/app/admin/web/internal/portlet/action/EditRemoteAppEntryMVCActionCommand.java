@@ -77,7 +77,7 @@ public class EditRemoteAppEntryMVCActionCommand extends BaseMVCActionCommand {
 						serviceContext.getUserId(), nameMap, type, url,
 						serviceContext);
 
-				_remoteAppPortletRegistrar.registerPortlet(remoteAppEntry);
+				_remoteAppPortletRegistrar.register(remoteAppEntry);
 			}
 			else if (cmd.equals(Constants.UPDATE)) {
 				long remoteAppEntryId = ParamUtil.getLong(
@@ -87,9 +87,9 @@ public class EditRemoteAppEntryMVCActionCommand extends BaseMVCActionCommand {
 					_remoteAppEntryLocalService.updateRemoteAppEntry(
 						remoteAppEntryId, nameMap, type, url, serviceContext);
 
-				_remoteAppPortletRegistrar.unregisterPortlet(remoteAppEntry);
+				_remoteAppPortletRegistrar.unregister(remoteAppEntry);
 
-				_remoteAppPortletRegistrar.registerPortlet(remoteAppEntry);
+				_remoteAppPortletRegistrar.register(remoteAppEntry);
 			}
 
 			if (Validator.isNotNull(redirect)) {
