@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.remote.app.admin.web.internal.portlet.JSPortlet;
 import com.liferay.remote.app.admin.web.internal.portlet.RemoteAppPortlet;
+import com.liferay.remote.app.constants.RemoteAppConstants;
 import com.liferay.remote.app.model.RemoteAppEntry;
 import com.liferay.remote.app.service.RemoteAppEntryLocalService;
 
@@ -120,7 +121,9 @@ public class RemoteAppPortletRegistrar {
 	private void _register(
 		NPMRegistryUpdate update, RemoteAppEntry remoteAppEntry) {
 
-		if ("js-portlet".equals(remoteAppEntry.getType())) {
+		String type = remoteAppEntry.getType();
+
+		if (type.equals(RemoteAppConstants.TYPE_JS_PORTLET)) {
 			String moduleName =
 				"js-portlet/" + remoteAppEntry.getRemoteAppEntryId();
 
@@ -139,7 +142,7 @@ public class RemoteAppPortletRegistrar {
 
 			_registerJSPortlet(remoteAppEntry, moduleName);
 		}
-		else if ("remote-app".equals(remoteAppEntry.getType())) {
+		else if (type.equals(RemoteAppConstants.TYPE_REMOTE_APP)) {
 			_registerRemoteAppPortlet(remoteAppEntry);
 		}
 	}

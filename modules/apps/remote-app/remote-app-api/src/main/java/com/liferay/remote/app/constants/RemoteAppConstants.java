@@ -12,28 +12,15 @@
  * details.
  */
 
-package com.liferay.remote.app.model.impl;
-
-import com.liferay.portal.kernel.util.Validator;
-import com.liferay.remote.app.constants.RemoteAppConstants;
+package com.liferay.remote.app.constants;
 
 /**
- * @author Brian Wing Shun Chan
+ * @author Iván Zaera Avellón
  */
-public class RemoteAppEntryImpl extends RemoteAppEntryBaseImpl {
+public class RemoteAppConstants {
 
-	public RemoteAppEntryImpl() {
-	}
+	public static final String TYPE_JS_PORTLET = "js-portlet";
 
-	@Override
-	public String getType() {
-		String type = super.getType();
-
-		if (Validator.isNull(type)) {
-			type = RemoteAppConstants.TYPE_REMOTE_APP;
-		}
-
-		return type;
-	}
+	public static final String TYPE_REMOTE_APP = "remote-app";
 
 }

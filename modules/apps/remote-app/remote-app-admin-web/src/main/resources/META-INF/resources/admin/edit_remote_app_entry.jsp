@@ -52,8 +52,8 @@ renderResponse.setTitle((remoteAppEntry == null) ? LanguageUtil.get(request, "ne
 				</aui:field-wrapper>
 
 				<aui:select name="type">
-					<aui:option label="remote-app" value="remote-app" />
-					<aui:option label="js-portlet" value="js-portlet" />
+					<aui:option label="<%= RemoteAppConstants.TYPE_REMOTE_APP %>" value="<%= RemoteAppConstants.TYPE_REMOTE_APP %>" />
+					<aui:option label="<%= RemoteAppConstants.TYPE_JS_PORTLET %>" value="<%= RemoteAppConstants.TYPE_JS_PORTLET %>" />
 				</aui:select>
 
 				<aui:input name="url">

@@ -23,4 +23,5 @@ page import="com.liferay.portal.kernel.util.ParamUtil" %><%@
 page import="com.liferay.remote.app.admin.web.internal.constants.RemoteAppAdminConstants" %><%@
 page import="com.liferay.remote.app.admin.web.internal.constants.RemoteAppAdminWebKeys" %><%@
 page import="com.liferay.remote.app.admin.web.internal.display.context.RemoteAppAdminDisplayContext" %><%@
+page import="com.liferay.remote.app.constants.RemoteAppConstants" %><%@
 page import="com.liferay.remote.app.exception.DuplicateRemoteAppEntryURLException" %>
