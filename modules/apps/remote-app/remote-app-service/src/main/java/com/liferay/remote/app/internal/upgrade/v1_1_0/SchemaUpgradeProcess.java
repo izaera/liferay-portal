@@ -12,22 +12,23 @@
  * details.
  */
 
-package com.liferay.remote.app.internal.upgrade;
+package com.liferay.remote.app.internal.upgrade.v1_1_0;
 
-import com.liferay.portal.upgrade.registry.UpgradeStepRegistrator;
-import com.liferay.remote.app.internal.upgrade.v1_1_0.SchemaUpgradeProcess;
-
-import org.osgi.service.component.annotations.Component;
+import com.liferay.portal.kernel.upgrade.UpgradeProcess;
+import com.liferay.portal.kernel.util.StringUtil;
 
 /**
- * @author Iván Zaera
+ * @author Iván Zaera Avellón
  */
-@Component(immediate = true, service = UpgradeStepRegistrator.class)
-public class RemoteAppServiceUpgrade implements UpgradeStepRegistrator {
+public class SchemaUpgradeProcess extends UpgradeProcess {
 
 	@Override
-	public void register(Registry registry) {
-		registry.register("1.0.0", "1.1.0", new SchemaUpgradeProcess());
+	protected void doUpgrade() throws Exception {
+		String template = StringUtil.read(
+			SchemaUpgradeProcess.class.getResourceAsStream(
+				"dependencies/update.sql"));
+
+		runSQLTemplateString(template, false);
 	}
 
 }
