@@ -26,12 +26,14 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.remote.app.admin.web.internal.portlet.JSPortlet;
 import com.liferay.remote.app.admin.web.internal.portlet.RemoteAppPortlet;
+import com.liferay.remote.app.constants.RemoteAppConstants;
 import com.liferay.remote.app.model.RemoteAppEntry;
 import com.liferay.remote.app.service.RemoteAppEntryLocalService;
 
 import java.io.InputStream;
 
 import java.util.Collections;
+import java.util.Objects;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentMap;
 
@@ -120,9 +122,12 @@ public class RemoteAppPortletRegistrar {
 	private void _register(
 		NPMRegistryUpdate update, RemoteAppEntry remoteAppEntry) {
 
-		if ("js-portlet".equals(remoteAppEntry.getType())) {
+		if (Objects.equals(
+				RemoteAppConstants.TYPE_JS_PORTLET, remoteAppEntry.getType())) {
+
 			String moduleName =
-				"js-portlet/" + remoteAppEntry.getRemoteAppEntryId();
+				RemoteAppConstants.TYPE_JS_PORTLET + StringPool.SLASH +
+					remoteAppEntry.getRemoteAppEntryId();
 
 			_jsModules.put(
 				remoteAppEntry.getRemoteAppEntryId(),
@@ -139,7 +144,10 @@ public class RemoteAppPortletRegistrar {
 
 			_registerJSPortlet(remoteAppEntry, moduleName);
 		}
-		else if ("remote-app".equals(remoteAppEntry.getType())) {
+		else if (Objects.equals(
+					RemoteAppConstants.TYPE_REMOTE_APP,
+					remoteAppEntry.getType())) {
+
 			_registerRemoteAppPortlet(remoteAppEntry);
 		}
 	}
