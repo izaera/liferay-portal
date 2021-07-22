@@ -64,6 +64,7 @@ public class EditRemoteAppEntryMVCActionCommand extends BaseMVCActionCommand {
 
 		Map<Locale, String> nameMap = LocalizationUtil.getLocalizationMap(
 			actionRequest, "name");
+		String type = ParamUtil.getString(actionRequest, "type");
 		String url = ParamUtil.getString(actionRequest, "url");
 
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(
@@ -73,7 +74,7 @@ public class EditRemoteAppEntryMVCActionCommand extends BaseMVCActionCommand {
 			if (cmd.equals(Constants.ADD)) {
 				RemoteAppEntry remoteAppEntry =
 					_remoteAppEntryLocalService.addRemoteAppEntry(
-						serviceContext.getUserId(), nameMap, url,
+						serviceContext.getUserId(), nameMap, type, url,
 						serviceContext);
 
 				_remoteAppPortletRegistrar.registerPortlet(remoteAppEntry);
@@ -84,7 +85,7 @@ public class EditRemoteAppEntryMVCActionCommand extends BaseMVCActionCommand {
 
 				RemoteAppEntry remoteAppEntry =
 					_remoteAppEntryLocalService.updateRemoteAppEntry(
-						remoteAppEntryId, nameMap, url, serviceContext);
+						remoteAppEntryId, nameMap, type, url, serviceContext);
 
 				_remoteAppPortletRegistrar.unregisterPortlet(remoteAppEntry);
 

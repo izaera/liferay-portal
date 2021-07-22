@@ -69,7 +69,7 @@ public interface RemoteAppEntryLocalService
 	 */
 	@Indexable(type = IndexableType.REINDEX)
 	public RemoteAppEntry addRemoteAppEntry(
-			long userId, Map<Locale, String> nameMap, String url,
+			long userId, Map<Locale, String> nameMap, String type, String url,
 			ServiceContext serviceContext)
 		throws PortalException;
 
@@ -304,8 +304,8 @@ public interface RemoteAppEntryLocalService
 
 	@Indexable(type = IndexableType.REINDEX)
 	public RemoteAppEntry updateRemoteAppEntry(
-			long remoteAppEntryId, Map<Locale, String> nameMap, String url,
-			ServiceContext serviceContext)
+			long remoteAppEntryId, Map<Locale, String> nameMap, String type,
+			String url, ServiceContext serviceContext)
 		throws PortalException;
 
 	/**

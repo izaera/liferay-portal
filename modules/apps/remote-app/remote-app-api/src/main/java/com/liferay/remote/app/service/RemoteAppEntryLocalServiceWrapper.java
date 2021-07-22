@@ -36,12 +36,12 @@ public class RemoteAppEntryLocalServiceWrapper
 	@Override
 	public com.liferay.remote.app.model.RemoteAppEntry addRemoteAppEntry(
 			long userId, java.util.Map<java.util.Locale, String> nameMap,
-			String url,
+			String type, String url,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _remoteAppEntryLocalService.addRemoteAppEntry(
-			userId, nameMap, url, serviceContext);
+			userId, nameMap, type, url, serviceContext);
 	}
 
 	/**
@@ -387,12 +387,13 @@ public class RemoteAppEntryLocalServiceWrapper
 	@Override
 	public com.liferay.remote.app.model.RemoteAppEntry updateRemoteAppEntry(
 			long remoteAppEntryId,
-			java.util.Map<java.util.Locale, String> nameMap, String url,
+			java.util.Map<java.util.Locale, String> nameMap, String type,
+			String url,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _remoteAppEntryLocalService.updateRemoteAppEntry(
-			remoteAppEntryId, nameMap, url, serviceContext);
+			remoteAppEntryId, nameMap, type, url, serviceContext);
 	}
 
 	/**

@@ -42,6 +42,7 @@ public class RemoteAppEntrySoap implements Serializable {
 		soapModel.setCreateDate(model.getCreateDate());
 		soapModel.setModifiedDate(model.getModifiedDate());
 		soapModel.setName(model.getName());
+		soapModel.setType(model.getType());
 		soapModel.setUrl(model.getUrl());
 
 		return soapModel;
@@ -173,6 +174,14 @@ public class RemoteAppEntrySoap implements Serializable {
 		_name = name;
 	}
 
+	public String getType() {
+		return _type;
+	}
+
+	public void setType(String type) {
+		_type = type;
+	}
+
 	public String getUrl() {
 		return _url;
 	}
@@ -190,6 +199,7 @@ public class RemoteAppEntrySoap implements Serializable {
 	private Date _createDate;
 	private Date _modifiedDate;
 	private String _name;
+	private String _type;
 	private String _url;
 
 }

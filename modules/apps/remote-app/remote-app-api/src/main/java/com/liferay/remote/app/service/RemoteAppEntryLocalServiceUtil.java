@@ -46,12 +46,13 @@ public class RemoteAppEntryLocalServiceUtil {
 	 * Never modify this class directly. Add custom service methods to <code>com.liferay.remote.app.service.impl.RemoteAppEntryLocalServiceImpl</code> and rerun ServiceBuilder to regenerate this class.
 	 */
 	public static RemoteAppEntry addRemoteAppEntry(
-			long userId, Map<java.util.Locale, String> nameMap, String url,
+			long userId, Map<java.util.Locale, String> nameMap, String type,
+			String url,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws PortalException {
 
 		return getService().addRemoteAppEntry(
-			userId, nameMap, url, serviceContext);
+			userId, nameMap, type, url, serviceContext);
 	}
 
 	/**
@@ -346,12 +347,12 @@ public class RemoteAppEntryLocalServiceUtil {
 
 	public static RemoteAppEntry updateRemoteAppEntry(
 			long remoteAppEntryId, Map<java.util.Locale, String> nameMap,
-			String url,
+			String type, String url,
 			com.liferay.portal.kernel.service.ServiceContext serviceContext)
 		throws PortalException {
 
 		return getService().updateRemoteAppEntry(
-			remoteAppEntryId, nameMap, url, serviceContext);
+			remoteAppEntryId, nameMap, type, url, serviceContext);
 	}
 
 	/**

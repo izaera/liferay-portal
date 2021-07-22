@@ -309,6 +309,21 @@ public interface RemoteAppEntryModel
 	public void setNameMap(Map<Locale, String> nameMap, Locale defaultLocale);
 
 	/**
+	 * Returns the type of this remote app entry.
+	 *
+	 * @return the type of this remote app entry
+	 */
+	@AutoEscape
+	public String getType();
+
+	/**
+	 * Sets the type of this remote app entry.
+	 *
+	 * @param type the type of this remote app entry
+	 */
+	public void setType(String type);
+
+	/**
 	 * Returns the url of this remote app entry.
 	 *
 	 * @return the url of this remote app entry

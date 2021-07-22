@@ -59,7 +59,7 @@ public class RemoteAppEntryLocalServiceImpl
 	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public RemoteAppEntry addRemoteAppEntry(
-			long userId, Map<Locale, String> nameMap, String url,
+			long userId, Map<Locale, String> nameMap, String type, String url,
 			ServiceContext serviceContext)
 		throws PortalException {
 
@@ -79,6 +79,7 @@ public class RemoteAppEntryLocalServiceImpl
 		remoteAppEntry.setUserId(user.getUserId());
 		remoteAppEntry.setUserName(user.getFullName());
 		remoteAppEntry.setNameMap(nameMap);
+		remoteAppEntry.setType(type);
 		remoteAppEntry.setUrl(url);
 
 		return remoteAppEntryPersistence.update(remoteAppEntry);
@@ -108,8 +109,8 @@ public class RemoteAppEntryLocalServiceImpl
 	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public RemoteAppEntry updateRemoteAppEntry(
-			long remoteAppEntryId, Map<Locale, String> nameMap, String url,
-			ServiceContext serviceContext)
+			long remoteAppEntryId, Map<Locale, String> nameMap, String type,
+			String url, ServiceContext serviceContext)
 		throws PortalException {
 
 		validate(serviceContext.getCompanyId(), remoteAppEntryId, url);
@@ -118,6 +119,7 @@ public class RemoteAppEntryLocalServiceImpl
 			remoteAppEntryPersistence.findByPrimaryKey(remoteAppEntryId);
 
 		remoteAppEntry.setNameMap(nameMap);
+		remoteAppEntry.setType(type);
 		remoteAppEntry.setUrl(url);
 
 		return remoteAppEntryPersistence.update(remoteAppEntry);
