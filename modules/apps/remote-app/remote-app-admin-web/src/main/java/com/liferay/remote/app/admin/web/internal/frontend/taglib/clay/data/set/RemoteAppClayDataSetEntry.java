@@ -14,9 +14,10 @@
 
 package com.liferay.remote.app.admin.web.internal.frontend.taglib.clay.data.set;
 
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.remote.app.model.RemoteAppEntry;
 
-import java.util.Locale;
+import java.util.ResourceBundle;
 
 /**
  * @author Bruno Basto
@@ -24,25 +25,29 @@ import java.util.Locale;
 public class RemoteAppClayDataSetEntry {
 
 	public RemoteAppClayDataSetEntry(
-		RemoteAppEntry remoteAppEntry, Locale locale) {
+		RemoteAppEntry remoteAppEntry, ResourceBundle resourceBundle) {
 
 		_remoteAppEntry = remoteAppEntry;
-		_locale = locale;
+		_resourceBundle = resourceBundle;
 	}
 
 	public String getName() {
-		return _remoteAppEntry.getName(_locale);
+		return _remoteAppEntry.getName(_resourceBundle.getLocale());
 	}
 
 	public long getRemoteAppEntryId() {
 		return _remoteAppEntry.getRemoteAppEntryId();
 	}
 
+	public String getType() {
+		return LanguageUtil.get(_resourceBundle, _remoteAppEntry.getType());
+	}
+
 	public String getURL() {
 		return _remoteAppEntry.getUrl();
 	}
 
-	private final Locale _locale;
 	private final RemoteAppEntry _remoteAppEntry;
+	private final ResourceBundle _resourceBundle;
 
 }

@@ -52,6 +52,7 @@ public class RemoteAppEntryWrapper
 		attributes.put("createDate", getCreateDate());
 		attributes.put("modifiedDate", getModifiedDate());
 		attributes.put("name", getName());
+		attributes.put("type", getType());
 		attributes.put("url", getUrl());
 
 		return attributes;
@@ -111,6 +112,12 @@ public class RemoteAppEntryWrapper
 
 		if (name != null) {
 			setName(name);
+		}
+
+		String type = (String)attributes.get("type");
+
+		if (type != null) {
+			setType(type);
 		}
 
 		String url = (String)attributes.get("url");
@@ -294,6 +301,16 @@ public class RemoteAppEntryWrapper
 	@Override
 	public long getRemoteAppEntryId() {
 		return model.getRemoteAppEntryId();
+	}
+
+	/**
+	 * Returns the type of this remote app entry.
+	 *
+	 * @return the type of this remote app entry
+	 */
+	@Override
+	public String getType() {
+		return model.getType();
 	}
 
 	/**
@@ -507,6 +524,16 @@ public class RemoteAppEntryWrapper
 	@Override
 	public void setRemoteAppEntryId(long remoteAppEntryId) {
 		model.setRemoteAppEntryId(remoteAppEntryId);
+	}
+
+	/**
+	 * Sets the type of this remote app entry.
+	 *
+	 * @param type the type of this remote app entry
+	 */
+	@Override
+	public void setType(String type) {
+		model.setType(type);
 	}
 
 	/**

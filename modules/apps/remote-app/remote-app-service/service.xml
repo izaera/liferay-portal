@@ -20,6 +20,7 @@
 		<!-- Other fields -->
 
 		<column localized="true" name="name" type="String" uad-nonanonymizable="true" />
+		<column name="type" type="String" uad-nonanonymizable="true" />
 		<column name="url" type="String" uad-nonanonymizable="true" />
 
 		<!-- Order -->
