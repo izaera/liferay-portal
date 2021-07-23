@@ -24,8 +24,8 @@ import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.StringUtil;
-import com.liferay.remote.app.admin.web.internal.portlet.JSPortlet;
 import com.liferay.remote.app.admin.web.internal.portlet.RemoteAppPortlet;
+import com.liferay.remote.app.admin.web.internal.portlet.RemoteJSPortlet;
 import com.liferay.remote.app.constants.RemoteAppConstants;
 import com.liferay.remote.app.model.RemoteAppEntry;
 import com.liferay.remote.app.service.RemoteAppEntryLocalService;
@@ -155,24 +155,24 @@ public class RemoteAppPortletRegistrar {
 	private void _registerJSPortlet(
 		RemoteAppEntry remoteAppEntry, String moduleName) {
 
-		JSPortlet jsPortlet = new JSPortlet(
+		RemoteJSPortlet remoteJSPortlet = new RemoteJSPortlet(
 			_jsPackage, moduleName, remoteAppEntry);
 
 		long remoteAppEntryId = remoteAppEntry.getRemoteAppEntryId();
 
-		JSPortlet existingJSPortlet = _jsPortlets.putIfAbsent(
-			remoteAppEntryId, jsPortlet);
+		RemoteJSPortlet existingRemoteJSPortlet = _remoteJSPortlets.putIfAbsent(
+			remoteAppEntryId, remoteJSPortlet);
 
-		if (existingJSPortlet != null) {
+		if (existingRemoteJSPortlet != null) {
 			throw new IllegalStateException(
 				"Remote app entry " + remoteAppEntryId +
 					" is already registered");
 		}
 
-		jsPortlet.register(_bundleContext);
+		remoteJSPortlet.register(_bundleContext);
 
 		if (_log.isInfoEnabled()) {
-			_log.info("Started js portlet " + jsPortlet.getName());
+			_log.info("Started js portlet " + remoteJSPortlet.getName());
 		}
 	}
 
@@ -206,7 +206,7 @@ public class RemoteAppPortletRegistrar {
 			update.unregisterJSModule(jsModule);
 		}
 
-		if (_jsPortlets.containsKey(remoteAppEntryId)) {
+		if (_remoteJSPortlets.containsKey(remoteAppEntryId)) {
 			_unregisterJSPortlet(remoteAppEntryId);
 		}
 
@@ -216,13 +216,14 @@ public class RemoteAppPortletRegistrar {
 	}
 
 	private void _unregisterJSPortlet(long remoteAppEntryId) {
-		JSPortlet jsPortlet = _jsPortlets.remove(remoteAppEntryId);
+		RemoteJSPortlet remoteJSPortlet = _remoteJSPortlets.remove(
+			remoteAppEntryId);
 
-		if (jsPortlet != null) {
-			jsPortlet.unregister();
+		if (remoteJSPortlet != null) {
+			remoteJSPortlet.unregister();
 
 			if (_log.isInfoEnabled()) {
-				_log.info("Stopped JS portlet " + jsPortlet.getName());
+				_log.info("Stopped JS portlet " + remoteJSPortlet.getName());
 			}
 		}
 	}
@@ -251,8 +252,6 @@ public class RemoteAppPortletRegistrar {
 	private final ConcurrentMap<Long, JSModule> _jsModules =
 		new ConcurrentHashMap<>();
 	private JSPackage _jsPackage;
-	private final ConcurrentMap<Long, JSPortlet> _jsPortlets =
-		new ConcurrentHashMap<>();
 
 	@Reference
 	private NPMRegistry _npmRegistry;
@@ -261,6 +260,8 @@ public class RemoteAppPortletRegistrar {
 	private NPMResolver _npmResolver;
 
 	private final ConcurrentMap<Long, RemoteAppPortlet> _remoteAppPortlets =
+		new ConcurrentHashMap<>();
+	private final ConcurrentMap<Long, RemoteJSPortlet> _remoteJSPortlets =
 		new ConcurrentHashMap<>();
 
 }

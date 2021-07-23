@@ -46,9 +46,9 @@ import org.osgi.framework.ServiceRegistration;
 /**
  * @author Iván Zaera Avellón
  */
-public class JSPortlet extends MVCPortlet {
+public class RemoteJSPortlet extends MVCPortlet {
 
-	public JSPortlet(
+	public RemoteJSPortlet(
 		JSPackage jsPackage, String moduleName, RemoteAppEntry remoteAppEntry) {
 
 		_jsPackage = jsPackage;
@@ -138,8 +138,9 @@ public class JSPortlet extends MVCPortlet {
 	}
 
 	private static String _loadTemplate(String name) {
-		try (InputStream inputStream = JSPortlet.class.getResourceAsStream(
-				"dependencies/" + name)) {
+		try (InputStream inputStream =
+				RemoteJSPortlet.class.getResourceAsStream(
+					"dependencies/" + name)) {
 
 			return StringUtil.read(inputStream);
 		}
@@ -183,7 +184,8 @@ public class JSPortlet extends MVCPortlet {
 
 	private static final String _TPL_JAVA_SCRIPT;
 
-	private static final Log _log = LogFactoryUtil.getLog(JSPortlet.class);
+	private static final Log _log = LogFactoryUtil.getLog(
+		RemoteJSPortlet.class);
 
 	static {
 		_TPL_HTML = _loadTemplate("bootstrap.html.tpl");
