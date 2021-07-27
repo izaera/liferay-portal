@@ -32,20 +32,24 @@ import com.liferay.portal.kernel.util.Localization;
 import com.liferay.portal.kernel.util.LocalizationUtil;
 import com.liferay.remote.app.model.RemoteCustomElementEntry;
 import com.liferay.remote.app.service.RemoteCustomElementEntryLocalService;
-import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
+
+import java.util.Locale;
 
 import javax.portlet.PortletRequest;
 import javax.portlet.PortletResponse;
-import java.util.Locale;
+
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Iván Zaera Avellón
  */
 @Component(immediate = true, service = Indexer.class)
-public class RemoteCustomElementEntryIndexer extends BaseIndexer<RemoteCustomElementEntry> {
+public class RemoteCustomElementEntryIndexer
+	extends BaseIndexer<RemoteCustomElementEntry> {
 
-	public static final String CLASS_NAME = RemoteCustomElementEntry.class.getName();
+	public static final String CLASS_NAME =
+		RemoteCustomElementEntry.class.getName();
 
 	@Override
 	public String getClassName() {
@@ -64,32 +68,40 @@ public class RemoteCustomElementEntryIndexer extends BaseIndexer<RemoteCustomEle
 	}
 
 	@Override
-	protected void doDelete(RemoteCustomElementEntry remoteCustomElementEntry) throws Exception {
+	protected void doDelete(RemoteCustomElementEntry remoteCustomElementEntry)
+		throws Exception {
+
 		deleteDocument(
 			remoteCustomElementEntry.getCompanyId(),
 			remoteCustomElementEntry.getRemoteCustomElementEntryId());
 	}
 
 	@Override
-	protected Document doGetDocument(RemoteCustomElementEntry remoteCustomElementEntry)
+	protected Document doGetDocument(
+			RemoteCustomElementEntry remoteCustomElementEntry)
 		throws Exception {
 
 		if (_log.isDebugEnabled()) {
-			_log.debug("Indexing remote custom element entry " + remoteCustomElementEntry);
+			_log.debug(
+				"Indexing remote custom element entry " +
+					remoteCustomElementEntry);
 		}
 
-		Document document = getBaseModelDocument(CLASS_NAME, remoteCustomElementEntry);
+		Document document = getBaseModelDocument(
+			CLASS_NAME, remoteCustomElementEntry);
 
 		Localization localization = getLocalization();
 
 		String[] nameAvailableLanguageIds =
-			localization.getAvailableLanguageIds(remoteCustomElementEntry.getName());
+			localization.getAvailableLanguageIds(
+				remoteCustomElementEntry.getName());
 
 		String nameDefaultLanguageId = LocalizationUtil.getDefaultLanguageId(
 			remoteCustomElementEntry.getName());
 
 		for (String nameAvailableLanguageId : nameAvailableLanguageIds) {
-			String name = remoteCustomElementEntry.getName(nameAvailableLanguageId);
+			String name = remoteCustomElementEntry.getName(
+				nameAvailableLanguageId);
 
 			if (nameDefaultLanguageId.equals(nameAvailableLanguageId)) {
 				document.addText(Field.NAME, name);
@@ -104,7 +116,9 @@ public class RemoteCustomElementEntryIndexer extends BaseIndexer<RemoteCustomEle
 		document.addText(Field.URL, remoteCustomElementEntry.getUrl());
 
 		if (_log.isDebugEnabled()) {
-			_log.debug("Document " + remoteCustomElementEntry + " indexed successfully");
+			_log.debug(
+				"Document " + remoteCustomElementEntry +
+					" indexed successfully");
 		}
 
 		return document;
@@ -123,7 +137,9 @@ public class RemoteCustomElementEntryIndexer extends BaseIndexer<RemoteCustomEle
 	}
 
 	@Override
-	protected void doReindex(RemoteCustomElementEntry remoteCustomElementEntry) throws Exception {
+	protected void doReindex(RemoteCustomElementEntry remoteCustomElementEntry)
+		throws Exception {
+
 		_indexWriterHelper.updateDocument(
 			getSearchEngineId(), remoteCustomElementEntry.getCompanyId(),
 			getDocument(remoteCustomElementEntry), isCommitImmediately());
@@ -131,7 +147,9 @@ public class RemoteCustomElementEntryIndexer extends BaseIndexer<RemoteCustomEle
 
 	@Override
 	protected void doReindex(String className, long classPK) throws Exception {
-		doReindex(_remoteCustomElementEntryLocalService.getRemoteCustomElementEntry(classPK));
+		doReindex(
+			_remoteCustomElementEntryLocalService.getRemoteCustomElementEntry(
+				classPK));
 	}
 
 	@Override
@@ -156,7 +174,8 @@ public class RemoteCustomElementEntryIndexer extends BaseIndexer<RemoteCustomEle
 		throws PortalException {
 
 		IndexableActionableDynamicQuery indexableActionableDynamicQuery =
-			_remoteCustomElementEntryLocalService.getIndexableActionableDynamicQuery();
+			_remoteCustomElementEntryLocalService.
+				getIndexableActionableDynamicQuery();
 
 		indexableActionableDynamicQuery.setCompanyId(companyId);
 		indexableActionableDynamicQuery.setPerformActionMethod(
@@ -166,10 +185,14 @@ public class RemoteCustomElementEntryIndexer extends BaseIndexer<RemoteCustomEle
 						getDocument(remoteCustomElementEntry));
 				}
 				catch (PortalException portalException) {
+					long remoteCustomElementEntryId =
+						remoteCustomElementEntry.
+							getRemoteCustomElementEntryId();
+
 					if (_log.isWarnEnabled()) {
 						_log.warn(
 							"Unable to index remote custom element entry " +
-								remoteCustomElementEntry.getRemoteCustomElementEntryId(),
+								remoteCustomElementEntryId,
 							portalException);
 					}
 				}
@@ -188,6 +211,7 @@ public class RemoteCustomElementEntryIndexer extends BaseIndexer<RemoteCustomEle
 	private Localization _localization;
 
 	@Reference
-	private RemoteCustomElementEntryLocalService _remoteCustomElementEntryLocalService;
+	private RemoteCustomElementEntryLocalService
+		_remoteCustomElementEntryLocalService;
 
 }
