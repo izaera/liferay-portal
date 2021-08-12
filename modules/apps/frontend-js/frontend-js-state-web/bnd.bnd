@@ -1,4 +1,6 @@
 Bundle-Name: Liferay Frontend JS State Web
 Bundle-SymbolicName: com.liferay.frontend.js.state.web
 Bundle-Version: 1.0.6
+Liferay-JS-Submodules-Bridge:\
+	frontend-js-state-web
 Web-ContextPath: /frontend-js-state-web

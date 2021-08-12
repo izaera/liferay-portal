@@ -1,4 +1,6 @@
 Bundle-Name: Liferay Frontend JS React Web
 Bundle-SymbolicName: com.liferay.frontend.js.react.web
 Bundle-Version: 5.0.8
+Liferay-JS-Submodules-Bridge:\
+	frontend-js-react-web
 Web-ContextPath: /frontend-js-react-web

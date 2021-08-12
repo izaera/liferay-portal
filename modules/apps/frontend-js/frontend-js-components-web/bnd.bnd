@@ -1,4 +1,6 @@
 Bundle-Name: Liferay Frontend JS Components Web
 Bundle-SymbolicName: com.liferay.frontend.js.components.web
 Bundle-Version: 2.0.7
+Liferay-JS-Submodules-Bridge:\
+	frontend-js-components-web
 Web-ContextPath: /frontend-js-components-web

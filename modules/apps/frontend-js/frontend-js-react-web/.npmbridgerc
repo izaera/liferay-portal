@@ -1,0 +1,15 @@
+{
+    "frontend-js-react-web": {
+        "dest-mod-name-mapper": {
+            "from": "(.*)\\.js$",
+            "to": "bridge/frontend-js-react-web/$1"
+        },
+        "file-globs": "**/*.js,!**/bridge",
+        "input": "build/node/packageRunBuild/resources",
+        "output": "build/node/packageRunBuild/resources/bridge/frontend-js-react-web",
+        "src-mod-name-mapper": {
+            "from": "(.*)\\.js$",
+            "to": "frontend-js-react-web/$1"
+        }
+    }
+}
