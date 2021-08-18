@@ -12,15 +12,12 @@
  * details.
  */
 
-module.exports = {
-	build: {
-		bundler: {
-			exclude: {
-				lodash: false,
-			},
-			ignore: [
-				'**/legacy/config.js',
-			],
+(function () {
+	AUI().applyConfig({
+		groups: {
+			react: {
+				mainModule: '@liferay/frontend-js-react-web@' + MODULE_VERSION + '/js/index'
+			}
 		},
-	},
-};
+	});
+})();

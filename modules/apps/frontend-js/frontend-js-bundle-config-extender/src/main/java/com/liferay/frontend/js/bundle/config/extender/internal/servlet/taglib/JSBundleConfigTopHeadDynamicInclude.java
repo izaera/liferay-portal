@@ -16,6 +16,8 @@ package com.liferay.frontend.js.bundle.config.extender.internal.servlet.taglib;
 
 import com.liferay.frontend.js.bundle.config.extender.internal.JSBundleConfigTracker;
 import com.liferay.petra.string.StringBundler;
+import com.liferay.portal.kernel.json.JSONFactory;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.servlet.taglib.BaseDynamicInclude;
@@ -88,6 +90,11 @@ public class JSBundleConfigTopHeadDynamicInclude extends BaseDynamicInclude {
 							servletContext.getContextPath(), "';"));
 
 					stringWriter.write(
+						StringBundler.concat(
+							"var MODULE_VERSION='", _getModuleVersion(jsConfig),
+							"';"));
+
+					stringWriter.write(
 						StringUtil.removeSubstring(
 							StringUtil.read(inputStream),
 							"//# sourceMappingURL=config.js.map"));
@@ -128,6 +135,24 @@ public class JSBundleConfigTopHeadDynamicInclude extends BaseDynamicInclude {
 		_jsBundleConfigTracker = jsBundleConfigTracker;
 	}
 
+	private String _getModuleVersion(JSBundleConfigTracker.JSConfig jsConfig) {
+		ServletContext servletContext = jsConfig.getServletContext();
+
+		try {
+			URL url = servletContext.getResource("package.json");
+
+			try (InputStream inputStream = url.openStream()) {
+				JSONObject jsonObject = _jsonFactory.createJSONObject(
+					StringUtil.read(inputStream));
+
+				return jsonObject.getString("version");
+			}
+		}
+		catch (Exception exception) {
+			throw new RuntimeException(exception);
+		}
+	}
+
 	private boolean _isStale() {
 		if (_jsBundleConfigTracker.getLastModified() >
 				_objectValuePair.getKey()) {
@@ -151,6 +176,10 @@ public class JSBundleConfigTopHeadDynamicInclude extends BaseDynamicInclude {
 		JSBundleConfigTopHeadDynamicInclude.class);
 
 	private JSBundleConfigTracker _jsBundleConfigTracker;
+
+	@Reference
+	private JSONFactory _jsonFactory;
+
 	private volatile ObjectValuePair<Long, String> _objectValuePair =
 		new ObjectValuePair<>(0L, null);
 

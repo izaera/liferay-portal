@@ -12,15 +12,12 @@
  * details.
  */
 
-module.exports = {
-	build: {
-		bundler: {
-			exclude: {
-				lodash: false,
-			},
-			ignore: [
-				'**/legacy/config.js',
-			],
+(function () {
+	AUI().applyConfig({
+		groups: {
+			components: {
+				mainModule: 'frontend-js-components-web@' + MODULE_VERSION + '/index'
+			}
 		},
-	},
-};
+	});
+})();
