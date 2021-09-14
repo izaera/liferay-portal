@@ -19,8 +19,6 @@
 <%@ page import="com.liferay.portal.kernel.bean.BeanParamUtil" %><%@
 page import="com.liferay.portal.kernel.bean.BeanPropertiesUtil" %><%@
 page import="com.liferay.portal.kernel.language.LanguageUtil" %><%@
-page import="com.liferay.portal.kernel.util.ParamUtil" %><%@
-page import="com.liferay.remote.app.constants.RemoteAppConstants" %><%@
 page import="com.liferay.remote.app.exception.DuplicateRemoteAppEntryException" %><%@
 page import="com.liferay.remote.app.exception.InvalidRemoteAppEntryTypeException" %><%@
 page import="com.liferay.remote.app.web.internal.constants.RemoteAppAdminConstants" %><%@
