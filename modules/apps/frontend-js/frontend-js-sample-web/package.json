@@ -8,7 +8,7 @@
 		"react": "16.12.0",
 		"react-dom": "16.12.0"
 	},
-	"main": "js/App.es",
+	"main": "js/index.js",
 	"name": "@liferay/frontend-js-sample-web",
 	"scripts": {
 		"build": "liferay-npm-scripts build",

@@ -34,38 +34,6 @@
 
 		<button id="test-button-react">Increment react</button>
 
-		<aui:script require="@liferay/frontend-js-state-web/index as StateModule, @liferay/frontend-js-sample-web/js/sharedState as SharedState">
-			const buttonElementJSP = document.getElementById('test-button-jsp');
-			const buttonElementReact = document.getElementById('test-button-react');
-			const counterElement = document.getElementById('test-counter-jsp');
-			const nameElement = document.getElementById('test-name');
-
-			const State = StateModule.State;
-
-			const counterAtom = State.atom('test-counter-jsp', 0);
-
-			State.subscribe(counterAtom, (newVal) => {
-				counterElement.innerText = newVal;
-			});
-
-			State.subscribe(SharedState.userAtom, (event) => {
-				nameElement.innerText = event.name;
-			});
-
-			if (buttonElementJSP) {
-				buttonElementJSP.addEventListener('click', () => {
-					State.write(counterAtom, State.read(counterAtom) + 1);
-				});
-			}
-
-			if (buttonElementReact) {
-				buttonElementReact.addEventListener('click', () => {
-					State.write(
-						SharedState.counterAtomReact,
-						State.read(SharedState.counterAtomReact) + 1
-					);
-				});
-			}
-		</aui:script>
+		<aui:script require="<%= npmResolvedPackageName %>" />
 	</div>
 </div>
