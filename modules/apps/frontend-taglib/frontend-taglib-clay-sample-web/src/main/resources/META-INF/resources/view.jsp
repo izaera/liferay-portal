@@ -16,25 +16,6 @@
 
 <%@ include file="/init.jsp" %>
 
-<liferay-ui:tabs
-	names="Alerts,Badges,Buttons,Cards,Dropdowns,Form Elements,Icons,Labels,Links,Management Toolbars,Navigation Bars,Pagination Bars,Progress Bars,Stickers"
-	refresh="<%= false %>"
->
+<div id="perico"></div>
 
-	<%
-	String[] sections = {"alerts", "badges", "buttons", "cards", "dropdowns", "form_elements", "icons", "labels", "links", "management_toolbars", "navigation_bars", "pagination_bars", "progress_bars", "stickers"};
-
-	for (int i = 0; i < sections.length; i++) {
-	%>
-
-		<liferay-ui:section>
-			<clay:container-fluid>
-				<liferay-util:include page='<%= "/partials/" + sections[i] + ".jsp" %>' servletContext="<%= application %>" />
-			</clay:container-fluid>
-		</liferay-ui:section>
-
-	<%
-	}
-	%>
-
-</liferay-ui:tabs>
+<script src="/o/frontend-taglib-clay-sample-web/index.js" type="module" />
