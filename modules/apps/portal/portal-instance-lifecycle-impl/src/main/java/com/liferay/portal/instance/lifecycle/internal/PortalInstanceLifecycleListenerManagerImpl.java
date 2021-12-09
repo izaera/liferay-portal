@@ -47,7 +47,7 @@ public class PortalInstanceLifecycleListenerManagerImpl
 	@Override
 	public void initializeCompany(Company company) {
 		for (PortalInstanceLifecycleListener portalInstanceLifecycleListener :
-			_portalInstanceLifecycleListeners) {
+				_portalInstanceLifecycleListeners) {
 
 			initializeCompany(portalInstanceLifecycleListener, company);
 		}
@@ -131,8 +131,7 @@ public class PortalInstanceLifecycleListenerManagerImpl
 		}
 
 		try {
-			portalInstanceLifecycleListener.portalInstanceInitialized(
-				company);
+			portalInstanceLifecycleListener.portalInstanceInitialized(company);
 		}
 		catch (Exception exception) {
 			if (_log.isWarnEnabled()) {
