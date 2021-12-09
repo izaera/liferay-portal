@@ -87,10 +87,6 @@ public class RemoteAppEntryLocalServiceUtil {
 		return getService().addRemoteAppEntry(remoteAppEntry);
 	}
 
-	public static int countByCompanyId(long companyId) throws PortalException {
-		return getService().countByCompanyId(companyId);
-	}
-
 	/**
 	 * @throws PortalException
 	 */
@@ -324,6 +320,12 @@ public class RemoteAppEntryLocalServiceUtil {
 	 */
 	public static int getRemoteAppEntriesCount() {
 		return getService().getRemoteAppEntriesCount();
+	}
+
+	public static int getRemoteAppEntriesCount(long companyId)
+		throws PortalException {
+
+		return getService().getRemoteAppEntriesCount(companyId);
 	}
 
 	/**
