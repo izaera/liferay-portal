@@ -2140,7 +2140,8 @@ public class BundleSiteInitializer implements SiteInitializer {
 						jsonObject.getBoolean("instanceable"),
 						_toMap(jsonObject.getString("name_i18n")),
 						jsonObject.getString("portletCategoryName"),
-						sb.toString(), StringPool.BLANK);
+						sb.toString(), StringPool.BLANK,
+						WorkflowConstants.STATUS_APPROVED);
 
 			remoteAppEntryIdsStringUtilReplaceValues.put(
 				"REMOTE_APP_ENTRY_ID:" +
