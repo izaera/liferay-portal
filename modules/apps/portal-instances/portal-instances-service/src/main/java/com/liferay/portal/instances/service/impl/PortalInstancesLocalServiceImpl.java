@@ -19,6 +19,7 @@ import com.liferay.portal.aop.AopService;
 import com.liferay.portal.instances.service.base.PortalInstancesLocalServiceBaseImpl;
 import com.liferay.portal.kernel.cluster.Clusterable;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.instance.lifecycle.PortalInstanceLifecycleManager;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Company;
@@ -185,6 +186,8 @@ public class PortalInstancesLocalServiceImpl
 				group.getGroupId(), false, new ServiceContext());
 
 			siteInitializer.initialize(group.getGroupId());
+
+			_portalInstanceLifecycleManager.initializeCompany(company);
 		}
 		finally {
 			PermissionThreadLocal.setPermissionChecker(
@@ -395,6 +398,9 @@ public class PortalInstancesLocalServiceImpl
 
 	@Reference
 	private Portal _portal;
+
+	@Reference
+	private PortalInstanceLifecycleManager _portalInstanceLifecycleManager;
 
 	@Reference
 	private PortletLocalService _portletLocalService;
