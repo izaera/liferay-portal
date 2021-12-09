@@ -36,7 +36,7 @@ public class RemoteAppPortalInstanceLifecycleListener
 	extends BasePortalInstanceLifecycleListener {
 
 	@Override
-	public void portalInstanceRegistered(Company company) throws Exception {
+	public void portalInstanceInitialized(Company company) throws Exception {
 
 		// TODO Move to an upgrade process for existing companies. For new
 		// companies, use a model listener.
