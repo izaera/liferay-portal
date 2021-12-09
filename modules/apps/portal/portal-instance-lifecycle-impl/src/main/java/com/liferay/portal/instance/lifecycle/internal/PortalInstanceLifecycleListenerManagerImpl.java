@@ -45,6 +45,15 @@ public class PortalInstanceLifecycleListenerManagerImpl
 	implements PortalInstanceLifecycleManager {
 
 	@Override
+	public void initializeCompany(Company company) {
+		for (PortalInstanceLifecycleListener portalInstanceLifecycleListener :
+			_portalInstanceLifecycleListeners) {
+
+			initializeCompany(portalInstanceLifecycleListener, company);
+		}
+	}
+
+	@Override
 	public void preunregisterCompany(Company company) {
 		for (PortalInstanceLifecycleListener portalInstanceLifecycleListener :
 				_portalInstanceLifecycleListeners) {
@@ -105,6 +114,33 @@ public class PortalInstanceLifecycleListenerManagerImpl
 			company -> registerCompany(
 				portalInstanceLifecycleListener, company),
 			new ArrayList<Company>(_companies));
+	}
+
+	protected void initializeCompany(
+		PortalInstanceLifecycleListener portalInstanceLifecycleListener,
+		Company company) {
+
+		if (!(portalInstanceLifecycleListener instanceof Clusterable) &&
+			!clusterMasterExecutor.isMaster()) {
+
+			if (_log.isDebugEnabled()) {
+				_log.debug("Skipping " + portalInstanceLifecycleListener);
+			}
+
+			return;
+		}
+
+		try {
+			portalInstanceLifecycleListener.portalInstanceInitialized(
+				company);
+		}
+		catch (Exception exception) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(
+					"Unable to initialize portal instance " + company,
+					exception);
+			}
+		}
 	}
 
 	protected void preunregisterCompany(

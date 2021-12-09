@@ -19,6 +19,7 @@ import com.liferay.portal.aop.AopService;
 import com.liferay.portal.instances.service.base.PortalInstancesLocalServiceBaseImpl;
 import com.liferay.portal.kernel.cluster.Clusterable;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.instance.lifecycle.PortalInstanceLifecycleManager;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Company;
@@ -112,62 +113,65 @@ public class PortalInstancesLocalServiceImpl
 
 		PortalInstances.initCompany(servletContext, company.getWebId());
 
-		if (Validator.isNull(siteInitializerKey)) {
-			return;
+		if (Validator.isNotNull(siteInitializerKey)) {
+			SiteInitializer siteInitializer =
+				_siteInitializerRegistry.getSiteInitializer(siteInitializerKey);
+
+			if (siteInitializer == null) {
+				throw new PortalException(
+					"Invalid site initializer key " + siteInitializerKey);
+			}
+
+			PermissionChecker currentThreadPermissionChecker =
+				PermissionThreadLocal.getPermissionChecker();
+			String currentThreadPrincipalName = PrincipalThreadLocal.getName();
+			ServiceContext currentThreadServiceContext =
+				ServiceContextThreadLocal.getServiceContext();
+
+			try (SafeCloseable safeCloseable =
+					CompanyThreadLocal.setInitializingPortalInstance(true)) {
+
+				Role role = _roleLocalService.fetchRole(
+					companyId, RoleConstants.ADMINISTRATOR);
+
+				List<User> users = _userLocalService.getRoleUsers(
+					role.getRoleId());
+
+				User user = users.get(0);
+
+				PermissionChecker permissionChecker =
+					_permissionCheckerFactory.create(user);
+
+				PermissionThreadLocal.setPermissionChecker(permissionChecker);
+
+				PrincipalThreadLocal.setName(user.getUserId());
+
+				Group group = _groupLocalService.getGroup(
+					company.getCompanyId(), GroupConstants.GUEST);
+
+				ServiceContextThreadLocal.pushServiceContext(
+					_populateServiceContext(
+						company, group,
+						currentThreadServiceContext.getRequest(),
+						permissionChecker,
+						(ServiceContext)currentThreadServiceContext.clone(),
+						user));
+
+				_layoutLocalService.deleteLayouts(
+					group.getGroupId(), false, new ServiceContext());
+
+				siteInitializer.initialize(group.getGroupId());
+			}
+			finally {
+				PermissionThreadLocal.setPermissionChecker(
+					currentThreadPermissionChecker);
+				PrincipalThreadLocal.setName(currentThreadPrincipalName);
+				ServiceContextThreadLocal.pushServiceContext(
+					currentThreadServiceContext);
+			}
 		}
 
-		SiteInitializer siteInitializer =
-			_siteInitializerRegistry.getSiteInitializer(siteInitializerKey);
-
-		if (siteInitializer == null) {
-			throw new PortalException(
-				"Invalid site initializer key " + siteInitializerKey);
-		}
-
-		PermissionChecker currentThreadPermissionChecker =
-			PermissionThreadLocal.getPermissionChecker();
-		String currentThreadPrincipalName = PrincipalThreadLocal.getName();
-		ServiceContext currentThreadServiceContext =
-			ServiceContextThreadLocal.getServiceContext();
-
-		try (SafeCloseable safeCloseable =
-				CompanyThreadLocal.setInitializingPortalInstance(true)) {
-
-			Role role = _roleLocalService.fetchRole(
-				companyId, RoleConstants.ADMINISTRATOR);
-
-			List<User> users = _userLocalService.getRoleUsers(role.getRoleId());
-
-			User user = users.get(0);
-
-			PermissionChecker permissionChecker =
-				_permissionCheckerFactory.create(user);
-
-			PermissionThreadLocal.setPermissionChecker(permissionChecker);
-
-			PrincipalThreadLocal.setName(user.getUserId());
-
-			Group group = _groupLocalService.getGroup(
-				company.getCompanyId(), GroupConstants.GUEST);
-
-			ServiceContextThreadLocal.pushServiceContext(
-				_populateServiceContext(
-					company, group, currentThreadServiceContext.getRequest(),
-					permissionChecker,
-					(ServiceContext)currentThreadServiceContext.clone(), user));
-
-			_layoutLocalService.deleteLayouts(
-				group.getGroupId(), false, new ServiceContext());
-
-			siteInitializer.initialize(group.getGroupId());
-		}
-		finally {
-			PermissionThreadLocal.setPermissionChecker(
-				currentThreadPermissionChecker);
-			PrincipalThreadLocal.setName(currentThreadPrincipalName);
-			ServiceContextThreadLocal.pushServiceContext(
-				currentThreadServiceContext);
-		}
+		_portalInstanceLifecycleManager.initializeCompany(company);
 	}
 
 	@Override
@@ -314,6 +318,9 @@ public class PortalInstancesLocalServiceImpl
 
 	@Reference
 	private Portal _portal;
+
+	@Reference
+	private PortalInstanceLifecycleManager _portalInstanceLifecycleManager;
 
 	@Reference
 	private RoleLocalService _roleLocalService;
