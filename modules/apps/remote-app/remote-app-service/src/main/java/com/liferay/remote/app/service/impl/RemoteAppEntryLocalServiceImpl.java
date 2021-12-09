@@ -94,7 +94,7 @@ public class RemoteAppEntryLocalServiceImpl
 			String customElementURLs, String description,
 			String friendlyURLMapping, boolean instanceable,
 			Map<Locale, String> nameMap, String portletCategoryName,
-			String properties, String sourceCodeURL)
+			String properties, String sourceCodeURL, int status)
 		throws PortalException {
 
 		long remoteAppEntryId = counterLocalService.increment();
@@ -138,7 +138,7 @@ public class RemoteAppEntryLocalServiceImpl
 		remoteAppEntry.setProperties(properties);
 		remoteAppEntry.setSourceCodeURL(sourceCodeURL);
 		remoteAppEntry.setType(RemoteAppConstants.TYPE_CUSTOM_ELEMENT);
-		remoteAppEntry.setStatus(WorkflowConstants.STATUS_DRAFT);
+		remoteAppEntry.setStatus(status);
 		remoteAppEntry.setStatusByUserId(userId);
 		remoteAppEntry.setStatusDate(new Date());
 
@@ -204,7 +204,7 @@ public class RemoteAppEntryLocalServiceImpl
 			String customElementURLs, String description,
 			String friendlyURLMapping, boolean instanceable,
 			Map<Locale, String> nameMap, String portletCategoryName,
-			String properties, String sourceCodeURL)
+			String properties, String sourceCodeURL, int status)
 		throws PortalException {
 
 		User user = _userLocalService.getUser(userId);
@@ -226,7 +226,7 @@ public class RemoteAppEntryLocalServiceImpl
 			externalReferenceCode, userId, customElementCSSURLs,
 			customElementHTMLElementName, customElementURLs, description,
 			friendlyURLMapping, instanceable, nameMap, portletCategoryName,
-			properties, sourceCodeURL);
+			properties, sourceCodeURL, status);
 	}
 
 	@Override
@@ -511,6 +511,10 @@ public class RemoteAppEntryLocalServiceImpl
 	private RemoteAppEntry _startWorkflowInstance(
 			long userId, RemoteAppEntry remoteAppEntry)
 		throws PortalException {
+
+		if (remoteAppEntry.getStatus() == WorkflowConstants.STATUS_APPROVED) {
+			return remoteAppEntry;
+		}
 
 		return WorkflowHandlerRegistryUtil.startWorkflowInstance(
 			remoteAppEntry.getCompanyId(), WorkflowConstants.DEFAULT_GROUP_ID,
