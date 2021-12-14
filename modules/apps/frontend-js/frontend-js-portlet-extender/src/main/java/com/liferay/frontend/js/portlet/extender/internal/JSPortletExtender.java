@@ -40,6 +40,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import javax.portlet.Portlet;
@@ -119,6 +120,20 @@ public class JSPortletExtender {
 				properties.put(key, value);
 			}
 		}
+	}
+
+	private String _getPackageModule(JSONObject packageJSONObject) {
+		String mainModuleName = packageJSONObject.getString("module");
+
+		if (Validator.isNull(mainModuleName)) {
+			mainModuleName = "./index.js";
+		}
+
+		if (!mainModuleName.endsWith(".js")) {
+			mainModuleName = mainModuleName + ".js";
+		}
+
+		return mainModuleName;
 	}
 
 	private String _getPortletName(JSONObject packageJSONObject) {
@@ -220,12 +235,16 @@ public class JSPortletExtender {
 
 		String packageVersion = packageJSONObject.getString("version");
 
+		boolean packageTypeModule = Objects.equals(
+			packageJSONObject.getString("type"), "module");
+
 		return bundleContext.registerService(
 			new String[] {
 				ManagedService.class.getName(), Portlet.class.getName()
 			},
 			new JSPortlet(
-				_jsonFactory, packageName, packageVersion,
+				_jsonFactory, _getPackageModule(packageJSONObject), packageName,
+				packageVersion, packageTypeModule,
 				portletPreferencesFieldNames),
 			properties);
 	}

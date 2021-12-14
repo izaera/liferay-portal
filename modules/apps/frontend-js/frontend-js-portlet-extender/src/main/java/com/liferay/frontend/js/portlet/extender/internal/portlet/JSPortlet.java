@@ -50,12 +50,15 @@ import org.osgi.service.cm.ManagedService;
 public class JSPortlet extends MVCPortlet implements ManagedService {
 
 	public JSPortlet(
-		JSONFactory jsonFactory, String packageName, String packageVersion,
+		JSONFactory jsonFactory, String packageModule, String packageName,
+		String packageVersion, boolean packageTypeModule,
 		Set<String> portletPreferencesFieldNames) {
 
 		_jsonFactory = jsonFactory;
+		_packageModule = packageModule;
 		_packageName = packageName;
 		_packageVersion = packageVersion;
+		_packageTypeModule = packageTypeModule;
 		_portletPreferencesFieldNames = portletPreferencesFieldNames;
 	}
 
@@ -71,21 +74,26 @@ public class JSPortlet extends MVCPortlet implements ManagedService {
 
 			printWriter.print(
 				StringUtil.replace(
-					_TPL_HTML, new String[] {"[$PORTLET_ELEMENT_ID$]"},
-					new String[] {portletElementId}));
+					_packageTypeModule ? _TPL_MODULE_HTML : _TPL_HTML,
+					new String[] {"[$CONTEXT_PATH$]", "[$PORTLET_ELEMENT_ID$]"},
+					new String[] {
+						renderRequest.getContextPath(), portletElementId
+					}));
 
 			printWriter.print(
 				StringUtil.replace(
-					_TPL_JAVA_SCRIPT,
+					_packageTypeModule ? _TPL_MODULE_JAVA_SCRIPT :
+						_TPL_JAVA_SCRIPT,
 					new String[] {
-						"[$CONTEXT_PATH$]", "[$PACKAGE_NAME$]",
-						"[$PACKAGE_VERSION$]", "[$PORTLET_ELEMENT_ID$]",
+						"[$CONTEXT_PATH$]", "[$PACKAGE_MODULE$]",
+						"[$PACKAGE_NAME$]", "[$PACKAGE_VERSION$]",
+						"[$PORTLET_ELEMENT_ID$]",
 						"[$PORTLET_INSTANCE_CONFIGURATION$]",
 						"[$PORTLET_NAMESPACE$]", "[$SYSTEM_CONFIGURATION$]"
 					},
 					new String[] {
-						renderRequest.getContextPath(), _packageName,
-						_packageVersion, portletElementId,
+						renderRequest.getContextPath(), _packageModule,
+						_packageName, _packageVersion, portletElementId,
 						_getPortletInstanceConfiguration(renderRequest),
 						renderResponse.getNamespace(), _getSystemConfiguration()
 					}));
@@ -192,17 +200,25 @@ public class JSPortlet extends MVCPortlet implements ManagedService {
 
 	private static final String _TPL_JAVA_SCRIPT;
 
+	private static final String _TPL_MODULE_HTML;
+
+	private static final String _TPL_MODULE_JAVA_SCRIPT;
+
 	private static final Log _log = LogFactoryUtil.getLog(JSPortlet.class);
 
 	static {
 		_TPL_HTML = _loadTemplate("bootstrap.html.tpl");
 		_TPL_JAVA_SCRIPT = _loadTemplate("bootstrap.js.tpl");
+		_TPL_MODULE_HTML = _loadTemplate("bootstrap-module.html.tpl");
+		_TPL_MODULE_JAVA_SCRIPT = _loadTemplate("bootstrap-module.js.tpl");
 	}
 
 	private final AtomicReference<Map<String, Object>> _configuration =
 		new AtomicReference<>();
 	private final JSONFactory _jsonFactory;
+	private final String _packageModule;
 	private final String _packageName;
+	private final boolean _packageTypeModule;
 	private final String _packageVersion;
 	private final Set<String> _portletPreferencesFieldNames;
 
