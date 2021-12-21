@@ -129,9 +129,15 @@ public class JSPortletExtenderTopHeadDynamicInclude extends BaseDynamicInclude {
 				sb.append("    \"");
 				sb.append(key);
 				sb.append("\": \"");
-				sb.append(entry.getKey());
-				sb.append(StringPool.SLASH);
-				sb.append(jsonObject.getString(key));
+
+				String value = jsonObject.getString(key);
+
+				if (value.startsWith(StringPool.PERIOD)) {
+					sb.append(entry.getKey());
+					sb.append(StringPool.SLASH);
+				}
+
+				sb.append(value);
 				sb.append(StringPool.QUOTE);
 			}
 

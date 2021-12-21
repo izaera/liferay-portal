@@ -273,14 +273,29 @@ public class JSPortletExtender {
 				public ServiceRegistration<?> addingBundle(
 					Bundle bundle, BundleEvent bundleEvent) {
 
-					if (!_optIn(bundle)) {
-						return null;
-					}
-
 					JSONObject packageJSONObject = _parse(
 						bundle.getEntry("META-INF/resources/package.json"));
 
 					if (packageJSONObject == null) {
+						return null;
+					}
+
+					// TODO: move importmap.json.tpl to META-INF or root of the
+					// JAR (needs tweaking the js-toolkit)
+
+					// TODO: move this registration to a different tracker,
+					// since it is not related to JS portlets at all
+
+					JSONObject importmapJSONObject = _parse(
+						bundle.getEntry("META-INF/resources/importmap.json"));
+
+					if (importmapJSONObject != null) {
+						_jsPortletExtenderTopHeadDynamicInclude.register(
+							_getWebContextPath(packageJSONObject),
+							importmapJSONObject);
+					}
+
+					if (!_optIn(bundle)) {
 						return null;
 					}
 
@@ -313,18 +328,6 @@ public class JSPortletExtender {
 						_registerConfigurationActionService(
 							bundleContext, packageJSONObject,
 							portletPreferencesJSONObject);
-					}
-
-					// TODO: move importmap.json.tpl to META-INF or root of the
-					// JAR (needs tweaking the js-toolkit)
-
-					JSONObject importmapJSONObject = _parse(
-						bundle.getEntry("META-INF/resources/importmap.json"));
-
-					if (importmapJSONObject != null) {
-						_jsPortletExtenderTopHeadDynamicInclude.register(
-							_getWebContextPath(packageJSONObject),
-							importmapJSONObject);
 					}
 
 					return serviceRegistration;
