@@ -14,6 +14,8 @@
 
 package com.liferay.frontend.js.importmap.extender.internal.servlet.taglib;
 
+import com.liferay.frontend.js.importmap.extender.JSImportMapRegistration;
+import com.liferay.frontend.js.importmap.extender.JSImportmapRegistry;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONFactory;
@@ -49,9 +51,12 @@ import org.osgi.util.tracker.BundleTrackerCustomizer;
 /**
  * @author Iván Zaera Avellón
  */
-@Component(immediate = true, service = DynamicInclude.class)
+@Component(
+	immediate = true,
+	service = {DynamicInclude.class, JSImportmapRegistry.class}
+)
 public class JSImportmapExtenderTopHeadDynamicInclude
-	extends BaseDynamicInclude {
+	extends BaseDynamicInclude implements JSImportmapRegistry {
 
 	@Override
 	public void include(
@@ -65,8 +70,8 @@ public class JSImportmapExtenderTopHeadDynamicInclude
 
 		printWriter.println(
 			StringUtil.replace(
-				_TPL_IMPORTMAP_JSON, new String[] {"[$SCOPES$]"},
-				new String[] {_scopes}));
+				_TPL_IMPORTMAP_JSON, new String[] {"[$GLOBAL$]", "[$SCOPES$]"},
+				new String[] {_global, _scopes}));
 
 		printWriter.println("</script>");
 
@@ -83,16 +88,46 @@ public class JSImportmapExtenderTopHeadDynamicInclude
 		dynamicIncludeRegistry.register("/html/common/themes/top_head.jsp#pre");
 	}
 
-	public synchronized void register(
-		String webContextPath, JSONObject importmapJSONObject) {
+	@Override
+	public synchronized JSImportMapRegistration register(
+		JSONObject jsonObject) {
 
-		_importmaps.put(webContextPath, importmapJSONObject);
+		long globalId = _nextGlobalId++;
 
-		_recomputeScopes();
+		_globalImportmaps.put(globalId, jsonObject);
+
+		_recomputeGlobal();
+
+		return new JSImportMapRegistration() {
+
+			@Override
+			public void unregister() {
+				synchronized (JSImportmapExtenderTopHeadDynamicInclude.this) {
+					_globalImportmaps.remove(globalId);
+				}
+			}
+
+		};
 	}
 
-	public synchronized void unregister(String webContextPath) {
-		_importmaps.remove(webContextPath);
+	@Override
+	public synchronized JSImportMapRegistration register(
+		String webContextPath, JSONObject jsonObject) {
+
+		_scopedImportmaps.put(webContextPath, jsonObject);
+
+		_recomputeScopes();
+
+		return new JSImportMapRegistration() {
+
+			@Override
+			public void unregister() {
+				synchronized (JSImportmapExtenderTopHeadDynamicInclude.this) {
+					_scopedImportmaps.remove(webContextPath);
+				}
+			}
+
+		};
 	}
 
 	@Activate
@@ -148,10 +183,32 @@ public class JSImportmapExtenderTopHeadDynamicInclude
 		}
 	}
 
+	private synchronized void _recomputeGlobal() {
+		StringBundler sb = new StringBundler();
+
+		for (JSONObject jsonObject : _globalImportmaps.values()) {
+			for (String key : jsonObject.keySet()) {
+				if (sb.length() > 0) {
+					sb.append(",\n");
+				}
+
+				sb.append("  \"");
+				sb.append(key);
+				sb.append("\": \"");
+				sb.append(jsonObject.getString(key));
+				sb.append(StringPool.QUOTE);
+			}
+		}
+
+		_global = sb.toString();
+	}
+
 	private synchronized void _recomputeScopes() {
 		StringBundler sb = new StringBundler();
 
-		for (Map.Entry<String, JSONObject> entry : _importmaps.entrySet()) {
+		for (Map.Entry<String, JSONObject> entry :
+				_scopedImportmaps.entrySet()) {
+
 			if (sb.length() != 0) {
 				sb.append(",\n");
 			}
@@ -202,62 +259,68 @@ public class JSImportmapExtenderTopHeadDynamicInclude
 		_TPL_IMPORTMAP_JSON = _loadTemplate("importmap.json.tpl");
 	}
 
-	private BundleTracker<String> _bundleTracker;
+	private BundleTracker<JSImportMapRegistration> _bundleTracker;
 
-	private final BundleTrackerCustomizer<String> _bundleTrackerCustomizer =
-		new BundleTrackerCustomizer<String>() {
+	private final BundleTrackerCustomizer<JSImportMapRegistration>
+		_bundleTrackerCustomizer =
+			new BundleTrackerCustomizer<JSImportMapRegistration>() {
 
-			@Override
-			public String addingBundle(Bundle bundle, BundleEvent bundleEvent) {
-				JSONObject packageJSONObject = _parse(
-					bundle.getEntry("META-INF/resources/package.json"));
+				@Override
+				public JSImportMapRegistration addingBundle(
+					Bundle bundle, BundleEvent bundleEvent) {
 
-				if (packageJSONObject == null) {
-					return null;
+					JSONObject packageJSONObject = _parse(
+						bundle.getEntry("META-INF/resources/package.json"));
+
+					if (packageJSONObject == null) {
+						return null;
+					}
+
+					// TODO: move importmap.json.tpl to META-INF or root of the
+					// JAR (needs tweaking the js-toolkit)
+
+					JSONObject importmapJSONObject = _parse(
+						bundle.getEntry("META-INF/resources/importmap.json"));
+
+					if (importmapJSONObject == null) {
+						return null;
+					}
+
+					String webContextPath = _getWebContextPath(
+						packageJSONObject);
+
+					if (webContextPath == null) {
+						return null;
+					}
+
+					return JSImportmapExtenderTopHeadDynamicInclude.this.
+						register(webContextPath, importmapJSONObject);
 				}
 
-				// TODO: move importmap.json.tpl to META-INF or root of the
-				// JAR (needs tweaking the js-toolkit)
-
-				JSONObject importmapJSONObject = _parse(
-					bundle.getEntry("META-INF/resources/importmap.json"));
-
-				if (importmapJSONObject == null) {
-					return null;
+				@Override
+				public void modifiedBundle(
+					Bundle bundle, BundleEvent bundleEvent,
+					JSImportMapRegistration jsImportMapRegistration) {
 				}
 
-				String webContextPath = _getWebContextPath(packageJSONObject);
+				@Override
+				public void removedBundle(
+					Bundle bundle, BundleEvent bundleEvent,
+					JSImportMapRegistration jsImportMapRegistration) {
 
-				if (webContextPath == null) {
-					return null;
+					jsImportMapRegistration.unregister();
 				}
 
-				JSImportmapExtenderTopHeadDynamicInclude.this.register(
-					webContextPath, importmapJSONObject);
+			};
 
-				return webContextPath;
-			}
-
-			@Override
-			public void modifiedBundle(
-				Bundle bundle, BundleEvent bundleEvent, String webContextPath) {
-			}
-
-			@Override
-			public void removedBundle(
-				Bundle bundle, BundleEvent bundleEvent, String webContextPath) {
-
-				JSImportmapExtenderTopHeadDynamicInclude.this.unregister(
-					webContextPath);
-			}
-
-		};
-
-	private final Map<String, JSONObject> _importmaps = new HashMap<>();
+	private String _global = "";
+	private final Map<Long, JSONObject> _globalImportmaps = new HashMap<>();
 
 	@Reference
 	private JSONFactory _jsonFactory;
 
+	private long _nextGlobalId;
+	private final Map<String, JSONObject> _scopedImportmaps = new HashMap<>();
 	private String _scopes = "";
 
 }

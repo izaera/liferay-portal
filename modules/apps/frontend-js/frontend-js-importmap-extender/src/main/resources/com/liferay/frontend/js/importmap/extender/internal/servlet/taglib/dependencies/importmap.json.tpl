@@ -1,4 +1,7 @@
 {
+"imports": {
+[$GLOBAL$]
+},
 "scopes": {
 [$SCOPES$]
 }
