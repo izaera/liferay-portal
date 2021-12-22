@@ -19,7 +19,6 @@ import com.liferay.dynamic.data.mapping.form.values.factory.DDMFormValuesFactory
 import com.liferay.dynamic.data.mapping.util.DDM;
 import com.liferay.frontend.js.portlet.extender.internal.portlet.JSPortlet;
 import com.liferay.frontend.js.portlet.extender.internal.portlet.action.PortletExtenderConfigurationAction;
-import com.liferay.frontend.js.portlet.extender.internal.servlet.taglib.JSPortletExtenderTopHeadDynamicInclude;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONArray;
@@ -154,15 +153,6 @@ public class JSPortletExtender {
 		return portletName;
 	}
 
-	private String _getWebContextPath(JSONObject packageJSONObject) {
-
-		// TODO: compute web context path correctly
-
-		return StringBundler.concat(
-			"/o/", packageJSONObject.getString("name"), "-",
-			packageJSONObject.getString("version"));
-	}
-
 	private boolean _optIn(Bundle bundle) {
 		BundleWiring bundleWiring = bundle.adapt(BundleWiring.class);
 
@@ -273,28 +263,6 @@ public class JSPortletExtender {
 				public ServiceRegistration<?> addingBundle(
 					Bundle bundle, BundleEvent bundleEvent) {
 
-					JSONObject packageJSONObject = _parse(
-						bundle.getEntry("META-INF/resources/package.json"));
-
-					if (packageJSONObject == null) {
-						return null;
-					}
-
-					// TODO: move importmap.json.tpl to META-INF or root of the
-					// JAR (needs tweaking the js-toolkit)
-
-					// TODO: move this registration to a different tracker,
-					// since it is not related to JS portlets at all
-
-					JSONObject importmapJSONObject = _parse(
-						bundle.getEntry("META-INF/resources/importmap.json"));
-
-					if (importmapJSONObject != null) {
-						_jsPortletExtenderTopHeadDynamicInclude.register(
-							_getWebContextPath(packageJSONObject),
-							importmapJSONObject);
-					}
-
 					if (!_optIn(bundle)) {
 						return null;
 					}
@@ -317,6 +285,13 @@ public class JSPortletExtender {
 							portletPreferencesFieldNames.add(
 								jsonObject.getString("name"));
 						}
+					}
+
+					JSONObject packageJSONObject = _parse(
+						bundle.getEntry("META-INF/resources/package.json"));
+
+					if (packageJSONObject == null) {
+						return null;
 					}
 
 					ServiceRegistration<?> serviceRegistration =
@@ -345,14 +320,6 @@ public class JSPortletExtender {
 					ServiceRegistration<?> serviceRegistration) {
 
 					serviceRegistration.unregister();
-
-					JSONObject packageJSONObject = _parse(
-						bundle.getEntry("META-INF/resources/package.json"));
-
-					if (packageJSONObject != null) {
-						_jsPortletExtenderTopHeadDynamicInclude.unregister(
-							_getWebContextPath(packageJSONObject));
-					}
 				}
 
 			};
@@ -368,9 +335,5 @@ public class JSPortletExtender {
 
 	@Reference
 	private JSONFactory _jsonFactory;
-
-	@Reference
-	private JSPortletExtenderTopHeadDynamicInclude
-		_jsPortletExtenderTopHeadDynamicInclude;
 
 }
