@@ -133,11 +133,11 @@ public class RemoteAppEntryDeployerImpl implements RemoteAppEntryDeployer {
 				remoteAppEntry.getType(),
 				RemoteAppConstants.TYPE_CUSTOM_ELEMENT)) {
 
-			String customElementURLs = remoteAppEntry.getCustomElementURLs();
+			//String customElementURLs = remoteAppEntry.getCustomElementURLs();
 
-			dictionary.put(
-				"com.liferay.portlet.footer-portal-javascript",
-				customElementURLs.split(StringPool.NEW_LINE));
+			//dictionary.put(
+			//	"com.liferay.portlet.footer-portal-javascript",
+			//	customElementURLs.split(StringPool.NEW_LINE));
 
 			String customElementCSSURLs =
 				remoteAppEntry.getCustomElementCSSURLs();

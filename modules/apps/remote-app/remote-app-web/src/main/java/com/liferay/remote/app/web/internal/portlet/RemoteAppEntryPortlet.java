@@ -119,6 +119,20 @@ public class RemoteAppEntryPortlet extends MVCPortlet {
 
 		PrintWriter printWriter = renderResponse.getWriter();
 
+		String customElementURLs = _remoteAppEntry.getCustomElementURLs();
+
+		for (String customElementURL :
+				customElementURLs.split(StringPool.NEW_LINE)) {
+
+			if (!customElementURL.endsWith(".js")) {
+				continue;
+			}
+
+			printWriter.println(
+				"<script type=\"module\" src=\"" + customElementURL +
+					"\"></script>");
+		}
+
 		printWriter.print(StringPool.LESS_THAN);
 		printWriter.print(_remoteAppEntry.getCustomElementHTMLElementName());
 
