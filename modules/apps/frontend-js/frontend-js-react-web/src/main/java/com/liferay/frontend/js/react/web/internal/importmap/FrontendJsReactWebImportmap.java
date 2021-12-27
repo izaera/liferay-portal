@@ -14,7 +14,7 @@
 
 package com.liferay.frontend.js.react.web.internal.importmap;
 
-import com.liferay.frontend.js.importmap.extender.JSImportmapRegistry;
+import com.liferay.frontend.js.importmap.extender.JSImportmap;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.json.JSONObject;
 
@@ -27,26 +27,28 @@ import org.osgi.service.component.annotations.Reference;
 /**
  * @author Iván Zaera Avellón
  */
-@Component(immediate = true, service = {})
-public class FrontendJsReactWebImportmapRegistrar {
+@Component(immediate = true, service = JSImportmap.class)
+public class FrontendJsReactWebImportmap implements JSImportmap {
+
+	@Override
+	public JSONObject getImportmap() {
+		return _importmapJSONObject;
+	}
 
 	@Activate
 	protected void activate() {
-		JSONObject jsonObject = _jsonFactory.createJSONObject();
+		_importmapJSONObject = _jsonFactory.createJSONObject();
 
 		String contextPath = _servletContext.getContextPath();
 
-		jsonObject.put(
+		_importmapJSONObject.put(
 			"react", contextPath + "/__liferay__/amd2esm/react.js"
 		).put(
 			"react-dom", contextPath + "/__liferay__/amd2esm/react-dom.js"
 		);
-
-		_jsImportmapRegistry.register(jsonObject);
 	}
 
-	@Reference
-	private JSImportmapRegistry _jsImportmapRegistry;
+	private JSONObject _importmapJSONObject;
 
 	@Reference
 	private JSONFactory _jsonFactory;

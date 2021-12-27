@@ -12,17 +12,13 @@
  * details.
  */
 
-package com.liferay.frontend.js.importmap.extender;
-
-import com.liferay.portal.kernel.json.JSONObject;
+package com.liferay.frontend.js.importmap.extender.internal.servlet.taglib;
 
 /**
  * @author Iván Zaera Avellón
  */
-public interface JSImportmapRegistry {
+public interface JSImportmapRegistration {
 
-	public JSImportMapRegistration register(JSONObject jsonObject);
-
-	public JSImportMapRegistration register(String webContextPath, JSONObject jsonObject);
+	public void unregister();
 
 }

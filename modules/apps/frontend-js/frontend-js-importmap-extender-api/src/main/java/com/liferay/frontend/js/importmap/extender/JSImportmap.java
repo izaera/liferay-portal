@@ -11,13 +11,20 @@
  * FOR A PARTICULAR PURPOSE. See the GNU Lesser General Public License for more
  * details.
  */
+
 package com.liferay.frontend.js.importmap.extender;
+
+import com.liferay.portal.kernel.json.JSONObject;
 
 /**
  * @author Iván Zaera Avellón
  */
-public interface JSImportMapRegistration {
+public interface JSImportmap {
 
-	public void unregister();
+	public default String getContextPath() {
+		return null;
+	}
+
+	public JSONObject getImportmap();
 
 }

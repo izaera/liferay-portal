@@ -14,14 +14,10 @@
 
 package com.liferay.frontend.js.importmap.extender.internal.servlet.taglib;
 
-import com.liferay.frontend.js.importmap.extender.JSImportMapRegistration;
-import com.liferay.frontend.js.importmap.extender.JSImportmapRegistry;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.json.JSONObject;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.servlet.taglib.BaseDynamicInclude;
 import com.liferay.portal.kernel.servlet.taglib.DynamicInclude;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -30,33 +26,26 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 
-import java.net.URL;
-
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import org.osgi.framework.Bundle;
-import org.osgi.framework.BundleContext;
-import org.osgi.framework.BundleEvent;
-import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
-import org.osgi.util.tracker.BundleTracker;
-import org.osgi.util.tracker.BundleTrackerCustomizer;
 
 /**
  * @author Iván Zaera Avellón
  */
 @Component(
 	immediate = true,
-	service = {DynamicInclude.class, JSImportmapRegistry.class}
+	service = {
+		DynamicInclude.class, JSImportmapExtenderTopHeadDynamicInclude.class
+	}
 )
 public class JSImportmapExtenderTopHeadDynamicInclude
-	extends BaseDynamicInclude implements JSImportmapRegistry {
+	extends BaseDynamicInclude {
 
 	@Override
 	public void include(
@@ -88,61 +77,44 @@ public class JSImportmapExtenderTopHeadDynamicInclude
 		dynamicIncludeRegistry.register("/html/common/themes/top_head.jsp#pre");
 	}
 
-	@Override
-	public synchronized JSImportMapRegistration register(
-		JSONObject jsonObject) {
+	public synchronized JSImportmapRegistration register(
+		String contextPath, JSONObject jsonObject) {
 
-		long globalId = _nextGlobalId++;
+		if (contextPath == null) {
+			long globalId = _nextGlobalId++;
 
-		_globalImportmaps.put(globalId, jsonObject);
+			_globalImportmaps.put(globalId, jsonObject);
 
-		_recomputeGlobal();
+			_recomputeGlobal();
 
-		return new JSImportMapRegistration() {
+			return new JSImportmapRegistration() {
 
-			@Override
-			public void unregister() {
-				synchronized (JSImportmapExtenderTopHeadDynamicInclude.this) {
-					_globalImportmaps.remove(globalId);
+				@Override
+				public void unregister() {
+					synchronized (JSImportmapExtenderTopHeadDynamicInclude.
+						this) {
+
+						_globalImportmaps.remove(globalId);
+					}
 				}
-			}
 
-		};
-	}
+			};
+		}
 
-	@Override
-	public synchronized JSImportMapRegistration register(
-		String webContextPath, JSONObject jsonObject) {
-
-		_scopedImportmaps.put(webContextPath, jsonObject);
+		_scopedImportmaps.put(contextPath, jsonObject);
 
 		_recomputeScopes();
 
-		return new JSImportMapRegistration() {
+		return new JSImportmapRegistration() {
 
 			@Override
 			public void unregister() {
 				synchronized (JSImportmapExtenderTopHeadDynamicInclude.this) {
-					_scopedImportmaps.remove(webContextPath);
+					_scopedImportmaps.remove(contextPath);
 				}
 			}
 
 		};
-	}
-
-	@Activate
-	protected void activate(BundleContext bundleContext) {
-		_bundleTracker = new BundleTracker<>(
-			bundleContext, Bundle.ACTIVE, _bundleTrackerCustomizer);
-
-		_bundleTracker.open();
-	}
-
-	@Deactivate
-	protected void deactivate() {
-		_bundleTracker.close();
-
-		_bundleTracker = null;
 	}
 
 	private static String _loadTemplate(String name) {
@@ -157,30 +129,6 @@ public class JSImportmapExtenderTopHeadDynamicInclude
 		}
 
 		return StringPool.BLANK;
-	}
-
-	private String _getWebContextPath(JSONObject packageJSONObject) {
-
-		// TODO: compute web context path correctly
-
-		return StringBundler.concat(
-			"/o/", packageJSONObject.getString("name"), "-",
-			packageJSONObject.getString("version"));
-	}
-
-	private JSONObject _parse(URL url) {
-		if (url == null) {
-			return null;
-		}
-
-		try (InputStream inputStream = url.openStream()) {
-			return _jsonFactory.createJSONObject(StringUtil.read(inputStream));
-		}
-		catch (Exception exception) {
-			_log.error("Unable to parse " + url, exception);
-
-			return null;
-		}
 	}
 
 	private synchronized void _recomputeGlobal() {
@@ -252,66 +200,9 @@ public class JSImportmapExtenderTopHeadDynamicInclude
 
 	private static final String _TPL_IMPORTMAP_JSON;
 
-	private static final Log _log = LogFactoryUtil.getLog(
-		JSImportmapExtenderTopHeadDynamicInclude.class);
-
 	static {
 		_TPL_IMPORTMAP_JSON = _loadTemplate("importmap.json.tpl");
 	}
-
-	private BundleTracker<JSImportMapRegistration> _bundleTracker;
-
-	private final BundleTrackerCustomizer<JSImportMapRegistration>
-		_bundleTrackerCustomizer =
-			new BundleTrackerCustomizer<JSImportMapRegistration>() {
-
-				@Override
-				public JSImportMapRegistration addingBundle(
-					Bundle bundle, BundleEvent bundleEvent) {
-
-					JSONObject packageJSONObject = _parse(
-						bundle.getEntry("META-INF/resources/package.json"));
-
-					if (packageJSONObject == null) {
-						return null;
-					}
-
-					// TODO: move importmap.json.tpl to META-INF or root of the
-					// JAR (needs tweaking the js-toolkit)
-
-					JSONObject importmapJSONObject = _parse(
-						bundle.getEntry("META-INF/resources/importmap.json"));
-
-					if (importmapJSONObject == null) {
-						return null;
-					}
-
-					String webContextPath = _getWebContextPath(
-						packageJSONObject);
-
-					if (webContextPath == null) {
-						return null;
-					}
-
-					return JSImportmapExtenderTopHeadDynamicInclude.this.
-						register(webContextPath, importmapJSONObject);
-				}
-
-				@Override
-				public void modifiedBundle(
-					Bundle bundle, BundleEvent bundleEvent,
-					JSImportMapRegistration jsImportMapRegistration) {
-				}
-
-				@Override
-				public void removedBundle(
-					Bundle bundle, BundleEvent bundleEvent,
-					JSImportMapRegistration jsImportMapRegistration) {
-
-					jsImportMapRegistration.unregister();
-				}
-
-			};
 
 	private String _global = "";
 	private final Map<Long, JSONObject> _globalImportmaps = new HashMap<>();
