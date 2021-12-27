@@ -14,12 +14,17 @@
 
 package com.liferay.remote.app.web.internal.deployer;
 
+import com.liferay.frontend.js.importmap.extender.JSImportmap;
 import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.json.JSONFactory;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.portlet.ConfigurationAction;
 import com.liferay.portal.kernel.portlet.FriendlyURLMapper;
+import com.liferay.portal.kernel.util.HashMapDictionary;
 import com.liferay.portal.kernel.util.HashMapDictionaryBuilder;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.StreamUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.remote.app.constants.RemoteAppConstants;
 import com.liferay.remote.app.deployer.RemoteAppEntryDeployer;
@@ -28,9 +33,17 @@ import com.liferay.remote.app.web.internal.portlet.RemoteAppEntryFriendlyURLMapp
 import com.liferay.remote.app.web.internal.portlet.RemoteAppEntryPortlet;
 import com.liferay.remote.app.web.internal.portlet.action.RemoteAppEntryConfigurationAction;
 
+import java.io.ByteArrayOutputStream;
+import java.io.InputStream;
+
+import java.net.URL;
+
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Dictionary;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 
 import javax.portlet.Portlet;
@@ -61,6 +74,8 @@ public class RemoteAppEntryDeployerImpl implements RemoteAppEntryDeployer {
 		}
 
 		serviceRegistrations.add(_registerPortlet(remoteAppEntry));
+
+		serviceRegistrations.addAll(_registerJSImportmaps(remoteAppEntry));
 
 		return serviceRegistrations;
 	}
@@ -104,6 +119,73 @@ public class RemoteAppEntryDeployerImpl implements RemoteAppEntryDeployer {
 			HashMapDictionaryBuilder.<String, Object>put(
 				"javax.portlet.name", _getPortletId(remoteAppEntry)
 			).build());
+	}
+
+	private Collection<ServiceRegistration<JSImportmap>> _registerJSImportmaps(
+		RemoteAppEntry remoteAppEntry) {
+
+		Map<String, ServiceRegistration<JSImportmap>>
+			jsImportmapServiceRegistrations = new HashMap<>();
+
+		String customElementURLs = remoteAppEntry.getCustomElementURLs();
+
+		for (String customElementURL :
+				customElementURLs.split(StringPool.NEW_LINE)) {
+
+			int i = customElementURL.lastIndexOf(StringPool.SLASH);
+
+			String contextPath = customElementURL.substring(0, i);
+
+			String importMapURL = contextPath + "/importmap.json";
+
+			if (jsImportmapServiceRegistrations.containsKey(importMapURL)) {
+				continue;
+			}
+
+			try {
+				URL url = new URL(importMapURL);
+
+				ByteArrayOutputStream byteArrayOutputStream =
+					new ByteArrayOutputStream();
+
+				try (InputStream inputStream = url.openStream()) {
+					StreamUtil.transfer(inputStream, byteArrayOutputStream);
+				}
+
+				JSONObject jsonObject = _jsonFactory.createJSONObject(
+					byteArrayOutputStream.toString("UTF-8"));
+
+				ServiceRegistration<JSImportmap>
+					jsImportmapServiceRegistration =
+						_bundleContext.registerService(
+							JSImportmap.class,
+							new JSImportmap() {
+
+								@Override
+								public String getContextPath() {
+									return contextPath;
+								}
+
+								@Override
+								public JSONObject getImportmap() {
+									return jsonObject;
+								}
+
+							},
+							new HashMapDictionary<>());
+
+				jsImportmapServiceRegistrations.put(
+					importMapURL, jsImportmapServiceRegistration);
+			}
+			catch (Exception exception) {
+
+				// Ignore (as importmap.json may not exist)
+
+				exception.printStackTrace();
+			}
+		}
+
+		return jsImportmapServiceRegistrations.values();
 	}
 
 	private ServiceRegistration<Portlet> _registerPortlet(
@@ -167,6 +249,9 @@ public class RemoteAppEntryDeployerImpl implements RemoteAppEntryDeployer {
 	}
 
 	private BundleContext _bundleContext;
+
+	@Reference
+	private JSONFactory _jsonFactory;
 
 	@Reference
 	private NPMResolver _npmResolver;
