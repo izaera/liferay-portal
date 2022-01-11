@@ -17,7 +17,7 @@ package com.liferay.remote.app.internal.upgrade;
 import com.liferay.portal.kernel.service.CompanyLocalService;
 import com.liferay.portal.upgrade.registry.UpgradeStepRegistrator;
 
-import com.liferay.remote.app.internal.model.listener.CompanyModelListener;
+import com.liferay.remote.app.internal.instance.lifecycle.RemoteAppPortalInstanceLifecycleListener;
 import com.liferay.remote.app.internal.upgrade.v2_4_0.SampleRemoteAppEntryUpgradeProcess;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -69,6 +69,6 @@ public class RemoteAppServiceUpgrade implements UpgradeStepRegistrator {
 	private CompanyLocalService _companyLocalService;
 
 	@Reference
-	private CompanyModelListener _companyModelListener;
+	private RemoteAppPortalInstanceLifecycleListener _companyModelListener;
 
 }

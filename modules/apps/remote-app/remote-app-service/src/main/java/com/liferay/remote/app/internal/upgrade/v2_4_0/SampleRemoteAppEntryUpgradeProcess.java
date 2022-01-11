@@ -2,13 +2,13 @@ package com.liferay.remote.app.internal.upgrade.v2_4_0;
 
 import com.liferay.portal.kernel.service.CompanyLocalService;
 import com.liferay.portal.kernel.upgrade.UpgradeProcess;
-import com.liferay.remote.app.internal.model.listener.CompanyModelListener;
+import com.liferay.remote.app.internal.instance.lifecycle.RemoteAppPortalInstanceLifecycleListener;
 
 public class SampleRemoteAppEntryUpgradeProcess extends UpgradeProcess {
 
 	public SampleRemoteAppEntryUpgradeProcess(
 		CompanyLocalService companyLocalService,
-		CompanyModelListener companyModelListener) {
+		RemoteAppPortalInstanceLifecycleListener companyModelListener) {
 
 		_companyLocalService = companyLocalService;
 		_companyModelListener = companyModelListener;
@@ -23,6 +23,6 @@ public class SampleRemoteAppEntryUpgradeProcess extends UpgradeProcess {
 	}
 
 	private final CompanyLocalService _companyLocalService;
-	private final CompanyModelListener _companyModelListener;
+	private final RemoteAppPortalInstanceLifecycleListener _companyModelListener;
 
 }
