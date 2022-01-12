@@ -51,14 +51,14 @@ public class RemoteAppEntryLocalServiceUtil {
 			String customElementURLs, String description,
 			String friendlyURLMapping, boolean instanceable,
 			Map<java.util.Locale, String> nameMap, String portletCategoryName,
-			String properties, String sourceCodeURL)
+			String properties, String sourceCodeURL, int status)
 		throws PortalException {
 
 		return getService().addCustomElementRemoteAppEntry(
 			externalReferenceCode, userId, customElementCSSURLs,
 			customElementHTMLElementName, customElementURLs, description,
 			friendlyURLMapping, instanceable, nameMap, portletCategoryName,
-			properties, sourceCodeURL);
+			properties, sourceCodeURL, status);
 	}
 
 	public static RemoteAppEntry addIFrameRemoteAppEntry(
@@ -79,14 +79,14 @@ public class RemoteAppEntryLocalServiceUtil {
 			String customElementURLs, String description,
 			String friendlyURLMapping, boolean instanceable,
 			Map<java.util.Locale, String> nameMap, String portletCategoryName,
-			String properties, String sourceCodeURL)
+			String properties, String sourceCodeURL, int status)
 		throws PortalException {
 
 		return getService().addOrUpdateCustomElementRemoteAppEntry(
 			externalReferenceCode, userId, customElementCSSURLs,
 			customElementHTMLElementName, customElementURLs, description,
 			friendlyURLMapping, instanceable, nameMap, portletCategoryName,
-			properties, sourceCodeURL);
+			properties, sourceCodeURL, status);
 	}
 
 	/**

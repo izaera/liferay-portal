@@ -47,14 +47,14 @@ public class RemoteAppEntryLocalServiceWrapper
 				boolean instanceable,
 				java.util.Map<java.util.Locale, String> nameMap,
 				String portletCategoryName, String properties,
-				String sourceCodeURL)
+				String sourceCodeURL, int status)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _remoteAppEntryLocalService.addCustomElementRemoteAppEntry(
 			externalReferenceCode, userId, customElementCSSURLs,
 			customElementHTMLElementName, customElementURLs, description,
 			friendlyURLMapping, instanceable, nameMap, portletCategoryName,
-			properties, sourceCodeURL);
+			properties, sourceCodeURL, status);
 	}
 
 	@Override
@@ -80,7 +80,7 @@ public class RemoteAppEntryLocalServiceWrapper
 				boolean instanceable,
 				java.util.Map<java.util.Locale, String> nameMap,
 				String portletCategoryName, String properties,
-				String sourceCodeURL)
+				String sourceCodeURL, int status)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _remoteAppEntryLocalService.
@@ -88,7 +88,7 @@ public class RemoteAppEntryLocalServiceWrapper
 				externalReferenceCode, userId, customElementCSSURLs,
 				customElementHTMLElementName, customElementURLs, description,
 				friendlyURLMapping, instanceable, nameMap, portletCategoryName,
-				properties, sourceCodeURL);
+				properties, sourceCodeURL, status);
 	}
 
 	/**
