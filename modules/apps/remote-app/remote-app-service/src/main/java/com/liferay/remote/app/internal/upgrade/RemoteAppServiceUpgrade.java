@@ -62,13 +62,15 @@ public class RemoteAppServiceUpgrade implements UpgradeStepRegistrator {
 
 		registry.registerInitialUpgradeSteps(
 			new SampleRemoteAppEntryUpgradeProcess(
-				_companyLocalService, _companyModelListener));
+				_companyLocalService,
+				_remoteAppPortalInstanceLifecycleListener));
 	}
 
 	@Reference
 	private CompanyLocalService _companyLocalService;
 
 	@Reference
-	private RemoteAppPortalInstanceLifecycleListener _companyModelListener;
+	private RemoteAppPortalInstanceLifecycleListener
+		_remoteAppPortalInstanceLifecycleListener;
 
 }
