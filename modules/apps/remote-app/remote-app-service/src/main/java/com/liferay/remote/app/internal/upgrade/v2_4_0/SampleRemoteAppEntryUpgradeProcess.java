@@ -25,22 +25,25 @@ public class SampleRemoteAppEntryUpgradeProcess extends UpgradeProcess {
 
 	public SampleRemoteAppEntryUpgradeProcess(
 		CompanyLocalService companyLocalService,
-		RemoteAppPortalInstanceLifecycleListener companyModelListener) {
+		RemoteAppPortalInstanceLifecycleListener
+			remoteAppPortalInstanceLifecycleListener) {
 
 		_companyLocalService = companyLocalService;
-		_companyModelListener = companyModelListener;
+
+		_remoteAppPortalInstanceLifecycleListener =
+			remoteAppPortalInstanceLifecycleListener;
 	}
 
 	@Override
 	protected void doUpgrade() throws Exception {
 		_companyLocalService.forEachCompany(
 			company ->
-				_companyModelListener.addSampleCustomElementRemoteAppEntry(
-					company));
+				_remoteAppPortalInstanceLifecycleListener.
+					addSampleCustomElementRemoteAppEntry(company));
 	}
 
 	private final CompanyLocalService _companyLocalService;
 	private final RemoteAppPortalInstanceLifecycleListener
-		_companyModelListener;
+		_remoteAppPortalInstanceLifecycleListener;
 
 }
