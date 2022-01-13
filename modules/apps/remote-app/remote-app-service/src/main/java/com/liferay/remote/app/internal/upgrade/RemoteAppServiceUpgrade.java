@@ -14,13 +14,9 @@
 
 package com.liferay.remote.app.internal.upgrade;
 
-import com.liferay.portal.kernel.service.CompanyLocalService;
 import com.liferay.portal.upgrade.registry.UpgradeStepRegistrator;
-import com.liferay.remote.app.internal.instance.lifecycle.RemoteAppPortalInstanceLifecycleListener;
-import com.liferay.remote.app.internal.upgrade.v2_4_0.SampleRemoteAppEntryUpgradeProcess;
 
 import org.osgi.service.component.annotations.Component;
-import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Iván Zaera
@@ -58,17 +54,7 @@ public class RemoteAppServiceUpgrade implements UpgradeStepRegistrator {
 		registry.register(
 			"2.3.0", "2.4.0",
 			new com.liferay.remote.app.internal.upgrade.v2_4_0.
-				RemoteAppEntryUpgradeProcess(),
-			new SampleRemoteAppEntryUpgradeProcess(
-				_companyLocalService,
-				_remoteAppPortalInstanceLifecycleListener));
+				RemoteAppEntryUpgradeProcess());
 	}
-
-	@Reference
-	private CompanyLocalService _companyLocalService;
-
-	@Reference
-	private RemoteAppPortalInstanceLifecycleListener
-		_remoteAppPortalInstanceLifecycleListener;
 
 }

@@ -35,6 +35,12 @@ public class RemoteAppServiceInitialUpgradeSteps
 			new SampleRemoteAppEntryUpgradeProcess(
 				_companyLocalService,
 				_remoteAppPortalInstanceLifecycleListener));
+
+		registry.register(
+			"2.4.0", "2.5.0",
+			new SampleRemoteAppEntryUpgradeProcess(
+				_companyLocalService,
+				_remoteAppPortalInstanceLifecycleListener));
 	}
 
 	@Reference
