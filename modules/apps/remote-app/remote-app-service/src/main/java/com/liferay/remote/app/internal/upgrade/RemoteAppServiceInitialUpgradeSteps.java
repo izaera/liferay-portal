@@ -26,39 +26,12 @@ import org.osgi.service.component.annotations.Reference;
  * @author Iván Zaera
  */
 @Component(immediate = true, service = UpgradeStepRegistrator.class)
-public class RemoteAppServiceUpgrade implements UpgradeStepRegistrator {
+public class RemoteAppServiceInitialUpgradeSteps
+	implements UpgradeStepRegistrator {
 
 	@Override
 	public void register(Registry registry) {
-		registry.register(
-			"1.0.0", "1.0.1",
-			new com.liferay.remote.app.internal.upgrade.v1_0_1.
-				RemoteAppEntryUpgradeProcess());
-
-		registry.register(
-			"1.0.1", "2.0.0",
-			new com.liferay.remote.app.internal.upgrade.v2_0_0.
-				RemoteAppEntryUpgradeProcess());
-
-		registry.register(
-			"2.0.0", "2.1.0",
-			new com.liferay.remote.app.internal.upgrade.v2_1_0.
-				ResourcePermissionsUpgradeProcess());
-
-		registry.register(
-			"2.1.0", "2.2.0",
-			new com.liferay.remote.app.internal.upgrade.v2_2_0.
-				RemoteAppEntryUpgradeProcess());
-
-		registry.register(
-			"2.2.0", "2.3.0",
-			new com.liferay.remote.app.internal.upgrade.v2_3_0.
-				RemoteAppEntryUpgradeProcess());
-
-		registry.register(
-			"2.3.0", "2.4.0",
-			new com.liferay.remote.app.internal.upgrade.v2_4_0.
-				RemoteAppEntryUpgradeProcess(),
+		registry.registerInitialUpgradeSteps(
 			new SampleRemoteAppEntryUpgradeProcess(
 				_companyLocalService,
 				_remoteAppPortalInstanceLifecycleListener));
