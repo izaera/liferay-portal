@@ -26,7 +26,9 @@ String portletResource = ParamUtil.getString(request, "portletResource");
 	</aui:a>
 </div>
 
-<aui:script require="frontend-js-web/liferay/delegate/delegate.es as delegateModule,frontend-js-web/liferay/modal/commands/OpenSimpleInputModal.es as openSimpleInputModal">
+<aui:script require="frontend-js-web/index as frontendJsWeb">
+	var {delegate, openSimpleInputModal} = frontendJsWeb;
+
 	function handleCreateAssetListLinkClick(event) {
 		event.preventDefault();
 

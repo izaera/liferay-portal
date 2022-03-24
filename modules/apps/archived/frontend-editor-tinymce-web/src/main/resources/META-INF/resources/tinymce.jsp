@@ -197,18 +197,17 @@ name = HtmlUtil.escapeJS(name);
 					openItemSelectorDialog(itemSelectorDialog);
 				}
 				else {
-					Liferay.Loader.require(
-						'frontend-js-web/liferay/ItemSelectorDialog.es',
-						function (ItemSelectorDialog) {
-							var itemSelectorDialog = new ItemSelectorDialog.default();
+					Liferay.Loader.require('frontend-js-web', function ({
+						ItemSelectorDialog,
+					}) {
+						var itemSelectorDialog = new ItemSelectorDialog();
 
-							window[
-								'<%= name %>'
-							]._itemSelectorDialog = itemSelectorDialog;
+						window[
+							'<%= name %>'
+						]._itemSelectorDialog = itemSelectorDialog;
 
-							openItemSelectorDialog(itemSelectorDialog);
-						}
-					);
+						openItemSelectorDialog(itemSelectorDialog);
+					});
 				}
 			}
 		},

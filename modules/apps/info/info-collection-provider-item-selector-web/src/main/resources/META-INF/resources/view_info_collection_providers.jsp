@@ -145,8 +145,8 @@ SearchContainer<InfoCollectionProvider<?>> searchContainer = infoCollectionProvi
 	</liferay-ui:search-container>
 </clay:container-fluid>
 
-<aui:script require="frontend-js-web/liferay/delegate/delegate.es as delegateModule">
-	var delegate = delegateModule.default;
+<aui:script require="frontend-js-web/index as frontendJsWeb">
+	var {delegate} = frontendJsWeb;
 
 	var selectItemHandler = delegate(
 		document.querySelector('#<portlet:namespace />entriesContainer'),
