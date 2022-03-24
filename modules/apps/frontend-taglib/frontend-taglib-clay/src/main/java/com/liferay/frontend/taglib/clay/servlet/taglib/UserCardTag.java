@@ -147,7 +147,7 @@ public class UserCardTag extends BaseCardTag {
 
 	@Override
 	protected String getHydratedModuleName() {
-		return "frontend-taglib-clay/cards/UserCard";
+		return "{UserCard} from frontend-taglib-clay";
 	}
 
 	@Override

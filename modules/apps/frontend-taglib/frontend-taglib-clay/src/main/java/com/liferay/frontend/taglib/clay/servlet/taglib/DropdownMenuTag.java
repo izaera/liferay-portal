@@ -72,7 +72,7 @@ public class DropdownMenuTag extends ButtonTag {
 			return null;
 		}
 
-		return "frontend-taglib-clay/DropdownMenu";
+		return "{DropdownMenu} from frontend-taglib-clay";
 	}
 
 	@Override
