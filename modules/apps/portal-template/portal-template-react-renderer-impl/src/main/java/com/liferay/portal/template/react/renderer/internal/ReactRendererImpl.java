@@ -15,9 +15,11 @@
 package com.liferay.portal.template.react.renderer.internal;
 
 import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolvedPackageNameUtil;
+import com.liferay.frontend.js.script.DeferredScriptsManager;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.template.react.renderer.ComponentDescriptor;
 import com.liferay.portal.template.react.renderer.ReactRenderer;
+import com.liferay.portal.url.builder.AbsolutePortalURLBuilderFactory;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -43,9 +45,16 @@ public class ReactRendererImpl implements ReactRenderer {
 		throws IOException {
 
 		ReactRendererUtil.renderReact(
-			componentDescriptor, data, httpServletRequest,
+			componentDescriptor, data, _absolutePortalURLBuilderFactory,
+			_deferredScriptsManager, httpServletRequest,
 			NPMResolvedPackageNameUtil.get(_servletContext), _portal, writer);
 	}
+
+	@Reference
+	private AbsolutePortalURLBuilderFactory _absolutePortalURLBuilderFactory;
+
+	@Reference
+	private DeferredScriptsManager _deferredScriptsManager;
 
 	@Reference
 	private Portal _portal;
