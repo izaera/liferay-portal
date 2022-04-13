@@ -37,6 +37,19 @@ import org.osgi.framework.Bundle;
 public interface AbsolutePortalURLBuilder {
 
 	/**
+	 * Returns a URL builder for ES modules. ES modules can usually be found
+	 * inside an OSGi bundle context path, in a subfolder of the '__liferay__'
+	 * folder.
+	 *
+	 * @param  webContextPath
+	 * the web context path containing the ES module (begins with /)
+	 * @param  modulePath the path to the ESM file (begins with /)
+	 * @return a URL builder for ES modules
+	 */
+	public ESModuleAbsolutePortalURLBuilder forESModule(
+		String webContextPath, String modulePath);
+
+	/**
 	 * Returns a URL builder for Portal images. Image resources live in {@code
 	 * com.liferay.portal.kernel.util.Portal#PATH_IMAGE}.
 	 *

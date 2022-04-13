@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.servlet.PortalWebResourceConstants;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.url.builder.AbsolutePortalURLBuilder;
+import com.liferay.portal.url.builder.ESModuleAbsolutePortalURLBuilder;
 import com.liferay.portal.url.builder.ImageAbsolutePortalURLBuilder;
 import com.liferay.portal.url.builder.MainAbsolutePortalURLBuilder;
 import com.liferay.portal.url.builder.ModuleAbsolutePortalURLBuilder;
@@ -57,6 +58,22 @@ public class AbsolutePortalURLBuilderImpl implements AbsolutePortalURLBuilder {
 		_pathImage = _pathContext + Portal.PATH_IMAGE;
 		_pathMain = _pathContext + Portal.PATH_MAIN;
 		_pathModule = _pathContext + Portal.PATH_MODULE;
+	}
+
+	@Override
+	public ESModuleAbsolutePortalURLBuilder forESModule(
+		String webContextPath, String modulePath) {
+
+		return new ESModuleAbsolutePortalURLBuilder() {
+
+			@Override
+			public String build() {
+				return _build(
+					_ignoreCDNHost, _ignorePathProxy, _pathModule,
+					webContextPath + "/__liferay__" + modulePath);
+			}
+
+		};
 	}
 
 	@Override
