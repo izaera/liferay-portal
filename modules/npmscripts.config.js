@@ -382,6 +382,7 @@ module.exports = {
 				'react-dom',
 			],
 			'@liferay/frontend-js-state-web': [],
+			'frontend-js-components-web': [],
 			'frontend-js-web': [],
 			'frontend-taglib-clay': [
 				'@clayui/alert',
