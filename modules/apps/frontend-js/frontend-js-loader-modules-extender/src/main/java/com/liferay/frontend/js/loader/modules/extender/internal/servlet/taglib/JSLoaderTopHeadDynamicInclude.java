@@ -89,7 +89,9 @@ public class JSLoaderTopHeadDynamicInclude extends BaseDynamicInclude {
 		printWriter.write(
 			"};</script><script data-senna-track=\"permanent\" src=\"");
 		printWriter.write(_servletContext.getContextPath());
-		printWriter.write("/loader.js\" type=\"");
+		printWriter.write("/loader.js?t=");
+		printWriter.write(_lastModified);
+		printWriter.write("\" type=\"");
 		printWriter.write(ContentTypes.TEXT_JAVASCRIPT);
 		printWriter.write("\"></script>");
 	}
@@ -105,6 +107,8 @@ public class JSLoaderTopHeadDynamicInclude extends BaseDynamicInclude {
 	protected void activate(Map<String, Object> properties) {
 		_details = ConfigurableUtil.createConfigurable(
 			Details.class, properties);
+
+		_lastModified = String.valueOf(System.currentTimeMillis());
 	}
 
 	private String _getDefaultURLParams(ThemeDisplay themeDisplay) {
@@ -147,6 +151,7 @@ public class JSLoaderTopHeadDynamicInclude extends BaseDynamicInclude {
 	private AbsolutePortalURLBuilderFactory _absolutePortalURLBuilderFactory;
 
 	private volatile Details _details;
+	private volatile String _lastModified;
 
 	@Reference
 	private Portal _portal;
