@@ -45,9 +45,10 @@ public class ReactRendererImpl implements ReactRenderer {
 		throws IOException {
 
 		ReactRendererUtil.renderReact(
-			componentDescriptor, data, _absolutePortalURLBuilderFactory,
+			_absolutePortalURLBuilderFactory, componentDescriptor,
 			_deferredScriptsManager, httpServletRequest,
-			NPMResolvedPackageNameUtil.get(_servletContext), _portal, writer);
+			NPMResolvedPackageNameUtil.get(_servletContext), _portal, data,
+			writer);
 	}
 
 	@Reference

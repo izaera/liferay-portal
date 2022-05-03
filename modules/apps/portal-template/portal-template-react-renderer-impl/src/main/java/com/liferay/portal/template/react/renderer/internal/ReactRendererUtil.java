@@ -44,11 +44,12 @@ import javax.servlet.http.HttpServletRequest;
 public class ReactRendererUtil {
 
 	public static void renderReact(
-			ComponentDescriptor componentDescriptor, Map<String, Object> props,
 			AbsolutePortalURLBuilderFactory absolutePortalURLBuilder,
+			ComponentDescriptor componentDescriptor,
 			DeferredScriptsManager deferredScriptsManager,
 			HttpServletRequest httpServletRequest,
-			String npmResolvedPackageName, Portal portal, Writer writer)
+			String npmResolvedPackageName, Portal portal,
+			Map<String, Object> props, Writer writer)
 		throws IOException {
 
 		String placeholderId = StringUtil.randomId();
@@ -59,11 +60,10 @@ public class ReactRendererUtil {
 
 		if (module.contains(" from ")) {
 			_renderEcmaScript(
-				componentDescriptor, props,
 				absolutePortalURLBuilder.getAbsolutePortalURLBuilder(
 					httpServletRequest),
-				deferredScriptsManager, httpServletRequest, placeholderId,
-				portal, writer);
+				componentDescriptor, deferredScriptsManager, httpServletRequest,
+				placeholderId, portal, props, writer);
 		}
 		else {
 			_renderJavaScript(
@@ -90,8 +90,9 @@ public class ReactRendererUtil {
 	}
 
 	private static Map<String, Object> _prepareProps(
-		ComponentDescriptor componentDescriptor, Map<String, Object> props,
-		HttpServletRequest httpServletRequest, Portal portal) {
+		ComponentDescriptor componentDescriptor,
+		HttpServletRequest httpServletRequest, Portal portal,
+		Map<String, Object> props) {
 
 		Map<String, Object> modifiedProps = null;
 
@@ -141,11 +142,11 @@ public class ReactRendererUtil {
 	}
 
 	private static void _renderEcmaScript(
-			ComponentDescriptor componentDescriptor, Map<String, Object> props,
 			AbsolutePortalURLBuilder absolutePortalURLBuilder,
+			ComponentDescriptor componentDescriptor,
 			DeferredScriptsManager deferredScriptsManager,
 			HttpServletRequest httpServletRequest, String placeholderId,
-			Portal portal, Writer writer)
+			Portal portal, Map<String, Object> props, Writer writer)
 		throws IOException {
 
 		StringBundler javascriptSB = new StringBundler(21);
@@ -206,16 +207,16 @@ public class ReactRendererUtil {
 			javascriptSB.append(
 				jsonSerializer.serializeDeep(
 					_prepareProps(
-						componentDescriptor, props, httpServletRequest,
-						portal)));
+						componentDescriptor, httpServletRequest, portal,
+						props)));
 			javascriptSB.append(")");
 		}
 		else {
 			javascriptSB.append(
 				jsonSerializer.serializeDeep(
 					_prepareProps(
-						componentDescriptor, props, httpServletRequest,
-						portal)));
+						componentDescriptor, httpServletRequest, portal,
+						props)));
 		}
 
 		javascriptSB.append(", '");
@@ -282,16 +283,16 @@ public class ReactRendererUtil {
 			javascriptSB.append(
 				jsonSerializer.serializeDeep(
 					_prepareProps(
-						componentDescriptor, props, httpServletRequest,
-						portal)));
+						componentDescriptor, httpServletRequest, portal,
+						props)));
 			javascriptSB.append(")");
 		}
 		else {
 			javascriptSB.append(
 				jsonSerializer.serializeDeep(
 					_prepareProps(
-						componentDescriptor, props, httpServletRequest,
-						portal)));
+						componentDescriptor, httpServletRequest, portal,
+						props)));
 		}
 
 		javascriptSB.append(", '");

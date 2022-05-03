@@ -34,7 +34,7 @@ import org.osgi.service.component.annotations.Reference;
 @Component(
 	immediate = true,
 	property = {
-		"servlet-context-name=", "servlet-filter-name=React Renderer Filter",
+		"servlet-context-name=", "servlet-filter-name=Deferred Scripts Filter",
 		"url-pattern=*"
 	},
 	service = Filter.class
