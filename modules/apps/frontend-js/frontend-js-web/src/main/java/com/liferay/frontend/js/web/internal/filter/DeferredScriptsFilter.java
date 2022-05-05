@@ -35,7 +35,7 @@ import org.osgi.service.component.annotations.Reference;
 	immediate = true,
 	property = {
 		"servlet-context-name=", "servlet-filter-name=Deferred Scripts Filter",
-		"url-pattern=*"
+		"url-pattern=/*"
 	},
 	service = Filter.class
 )
