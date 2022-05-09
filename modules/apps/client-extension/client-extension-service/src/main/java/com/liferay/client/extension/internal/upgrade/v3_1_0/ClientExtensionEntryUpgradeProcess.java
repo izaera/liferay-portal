@@ -12,24 +12,20 @@
  * details.
  */
 
-package com.liferay.client.extension.internal.upgrade;
+package com.liferay.client.extension.internal.upgrade.v3_1_0;
 
-import com.liferay.portal.upgrade.registry.UpgradeStepRegistrator;
-
-import org.osgi.service.component.annotations.Component;
+import com.liferay.portal.kernel.upgrade.UpgradeProcess;
 
 /**
- * @author Iván Zaera
+ * @author Iván Zaera Avellón
  */
-@Component(immediate = true, service = UpgradeStepRegistrator.class)
-public class ClientExtensionServiceUpgrade implements UpgradeStepRegistrator {
+public class ClientExtensionEntryUpgradeProcess extends UpgradeProcess {
 
 	@Override
-	public void register(Registry registry) {
-		registry.register(
-			"3.0.0", "3.1.0",
-			new com.liferay.client.extension.internal.upgrade.v3_1_0.
-				ClientExtensionEntryUpgradeProcess());
+	protected void doUpgrade() throws Exception {
+		if (!hasColumn("ClientExtensionEntry", "themeJSURLs")) {
+			alterTableAddColumn("ClientExtensionEntry", "themeJSURLs", "TEXT");
+		}
 	}
 
 }
