@@ -26,7 +26,7 @@ ThemeClientExtensions themeClientExtensions = ThemeClientExtensionsUtil.getTheme
 ThemeCSSURLs themeCSSURLs = themeClientExtensions.getThemeCSSURLs(request);
 %>
 
-<link href="<%= themeDisplay.getPathThemeImages() %>/<%= PropsValues.THEME_SHORTCUT_ICON %>" rel="icon" />
+<link href="<%= themeClientExtensions.getFaviconURL(request) %>" rel="icon" />
 
 <%-- Portal CSS --%>
 
