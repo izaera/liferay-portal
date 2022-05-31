@@ -37,4 +37,5 @@
 	name="type"
 	options="<%= editClientExtensionEntryDisplayContext.getTypeSelectOptions() %>"
 	propsTransformer="admin/js/clientExtensionEntryTypeSelectPropsTransformer"
+	value="<%= editClientExtensionEntryDisplayContext.getType() %>"
 />

@@ -12,25 +12,23 @@
  * details.
  */
 
-export default function propsTransformer({portletNamespace, defaultType, ...otherProps}) {
-	return {
-		...otherProps,
-		onChange: (event) => {
-			const {value} = event.currentTarget;
+package com.liferay.client.extension.type.internal;
 
-			document
-				.querySelectorAll(`fieldset[id*='${portletNamespace}_fields_']`)
-				.forEach((fieldset) => {
-					fieldset.classList.add('d-none');
-					fieldset.setAttribute('disabled', true);
+import com.liferay.client.extension.model.ClientExtensionEntry;
+import com.liferay.client.extension.type.CETThemeJS;
 
-					if (fieldset.id.includes('_' + value)) {
-						fieldset.classList.remove('d-none');
-						fieldset.removeAttribute('disabled');
-					}
-				});
-		},
-		defaultValue: defaultType,
-		portletNamespace,
-	};
+/**
+ * @author Iván Zaera Avellón
+ */
+public class CETThemeJSImpl extends BaseCETImpl implements CETThemeJS {
+
+	public CETThemeJSImpl(ClientExtensionEntry clientExtensionEntry) {
+		super(clientExtensionEntry);
+	}
+
+	@Override
+	public String getURLs() {
+		return getString("urls");
+	}
+
 }

@@ -12,25 +12,18 @@
  * details.
  */
 
-export default function propsTransformer({portletNamespace, defaultType, ...otherProps}) {
-	return {
-		...otherProps,
-		onChange: (event) => {
-			const {value} = event.currentTarget;
+package com.liferay.client.extension.type;
 
-			document
-				.querySelectorAll(`fieldset[id*='${portletNamespace}_fields_']`)
-				.forEach((fieldset) => {
-					fieldset.classList.add('d-none');
-					fieldset.setAttribute('disabled', true);
+import org.osgi.annotation.versioning.ProviderType;
 
-					if (fieldset.id.includes('_' + value)) {
-						fieldset.classList.remove('d-none');
-						fieldset.removeAttribute('disabled');
-					}
-				});
-		},
-		defaultValue: defaultType,
-		portletNamespace,
-	};
+/**
+ * @author Iván Zaera Avellón
+ */
+@ProviderType
+public interface CETThemeCSS {
+
+	public String getMainURL();
+
+	public String getClayURL();
+
 }
