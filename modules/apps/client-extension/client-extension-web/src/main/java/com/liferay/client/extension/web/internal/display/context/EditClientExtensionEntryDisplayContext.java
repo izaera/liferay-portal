@@ -20,10 +20,12 @@ import com.liferay.client.extension.exception.ClientExtensionEntryCustomElementH
 import com.liferay.client.extension.exception.ClientExtensionEntryCustomElementURLsException;
 import com.liferay.client.extension.exception.ClientExtensionEntryIFrameURLException;
 import com.liferay.client.extension.model.ClientExtensionEntry;
+import com.liferay.client.extension.type.CETCustomElement;
+import com.liferay.client.extension.type.CETIFrame;
+import com.liferay.client.extension.type.factory.CETFactory;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.SelectOption;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.bean.BeanParamUtil;
-import com.liferay.portal.kernel.bean.BeanPropertiesUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.PortletCategory;
 import com.liferay.portal.kernel.servlet.MultiSessionErrors;
@@ -32,6 +34,7 @@ import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.util.WebAppPool;
 
@@ -50,11 +53,48 @@ import javax.servlet.http.HttpServletRequest;
 public class EditClientExtensionEntryDisplayContext {
 
 	public EditClientExtensionEntryDisplayContext(
-		PortletRequest portletRequest,
-		ClientExtensionEntry clientExtensionEntry) {
+		CETFactory cetFactory, ClientExtensionEntry clientExtensionEntry,
+		PortletRequest portletRequest) {
 
-		_portletRequest = portletRequest;
 		_clientExtensionEntry = clientExtensionEntry;
+		_portletRequest = portletRequest;
+
+		CETCustomElement cetCustomElement = null;
+		boolean customElementUseESM = false;
+		boolean instanceable = false;
+		String portletCategoryName = null;
+
+		if ((clientExtensionEntry != null) &&
+			Objects.equals(
+				clientExtensionEntry.getType(),
+				ClientExtensionEntryConstants.TYPE_CUSTOM_ELEMENT)) {
+
+			cetCustomElement = cetFactory.customElement(clientExtensionEntry);
+
+			customElementUseESM = cetCustomElement.isUseESM();
+			instanceable = cetCustomElement.isInstanceable();
+			portletCategoryName = cetCustomElement.getPortletCategoryName();
+		}
+		else if ((clientExtensionEntry != null) &&
+				 Objects.equals(
+					 clientExtensionEntry.getType(),
+					 ClientExtensionEntryConstants.TYPE_IFRAME)) {
+
+			CETIFrame cetIFrame = cetFactory.iFrame(clientExtensionEntry);
+
+			instanceable = cetIFrame.isInstanceable();
+			portletCategoryName = cetIFrame.getPortletCategoryName();
+		}
+
+		_cetCustomElement = cetCustomElement;
+		_customElementUseESM = customElementUseESM;
+		_instanceable = instanceable;
+
+		if (Validator.isNull(portletCategoryName)) {
+			portletCategoryName = "category.remote-apps";
+		}
+
+		_portletCategoryName = portletCategoryName;
 	}
 
 	public ClientExtensionEntry getClientExtensionEntry() {
@@ -77,12 +117,10 @@ public class EditClientExtensionEntryDisplayContext {
 	public String[] getCustomElementCSSURLs() {
 		String[] customElementCSSURLs = StringPool.EMPTY_ARRAY;
 
-		if (_clientExtensionEntry != null) {
-			String customElementCSSURLsString =
-				_clientExtensionEntry.getCustomElementCSSURLs();
+		if (_cetCustomElement != null) {
+			String cssURLsString = _cetCustomElement.getCSSURLs();
 
-			customElementCSSURLs = customElementCSSURLsString.split(
-				StringPool.NEW_LINE);
+			customElementCSSURLs = cssURLsString.split(StringPool.NEW_LINE);
 		}
 
 		customElementCSSURLs = ParamUtil.getStringValues(
@@ -98,12 +136,10 @@ public class EditClientExtensionEntryDisplayContext {
 	public String[] getCustomElementURLs() {
 		String[] customElementURLs = StringPool.EMPTY_ARRAY;
 
-		if (_clientExtensionEntry != null) {
-			String customElementURLsString =
-				_clientExtensionEntry.getCustomElementURLs();
+		if (_cetCustomElement != null) {
+			String urlsString = _cetCustomElement.getURLs();
 
-			customElementURLs = customElementURLsString.split(
-				StringPool.NEW_LINE);
+			customElementURLs = urlsString.split(StringPool.NEW_LINE);
 		}
 
 		customElementURLs = ParamUtil.getStringValues(
@@ -137,10 +173,6 @@ public class EditClientExtensionEntryDisplayContext {
 		PortletCategory rootPortletCategory = (PortletCategory)WebAppPool.get(
 			themeDisplay.getCompanyId(), WebKeys.PORTLET_CATEGORY);
 
-		String portletCategoryName = BeanPropertiesUtil.getString(
-			_clientExtensionEntry, "portletCategoryName",
-			"category.remote-apps");
-
 		boolean found = false;
 
 		for (PortletCategory portletCategory :
@@ -151,7 +183,7 @@ public class EditClientExtensionEntryDisplayContext {
 					LanguageUtil.get(
 						themeDisplay.getLocale(), portletCategory.getName()),
 					portletCategory.getName(),
-					portletCategoryName.equals(portletCategory.getName())));
+					_portletCategoryName.equals(portletCategory.getName())));
 
 			if (Objects.equals(
 					portletCategory.getName(), "category.remote-apps")) {
@@ -167,7 +199,7 @@ public class EditClientExtensionEntryDisplayContext {
 						themeDisplay.getLocale(), "category.remote-apps"),
 					"category.remote-apps",
 					Objects.equals(
-						portletCategoryName, "category.remote-apps")));
+						_portletCategoryName, "category.remote-apps")));
 		}
 
 		return ListUtil.sort(
@@ -202,9 +234,9 @@ public class EditClientExtensionEntryDisplayContext {
 	}
 
 	public boolean isCustomElementUseESM() {
-		return BeanParamUtil.getBoolean(
-			_clientExtensionEntry, _getHttpServletRequest(),
-			"customElementUseESM");
+		return ParamUtil.getBoolean(
+			_getHttpServletRequest(), "customElementUseESM",
+			_customElementUseESM);
 	}
 
 	public boolean isEditingClientExtensionEntryType(String type) {
@@ -212,8 +244,8 @@ public class EditClientExtensionEntryDisplayContext {
 	}
 
 	public boolean isInstanceable() {
-		return BeanParamUtil.getBoolean(
-			_clientExtensionEntry, _getHttpServletRequest(), "instanceable");
+		return ParamUtil.getBoolean(
+			_getHttpServletRequest(), "instanceable", _instanceable);
 	}
 
 	public boolean isInstanceableDisabled() {
@@ -284,7 +316,11 @@ public class EditClientExtensionEntryDisplayContext {
 			WebKeys.THEME_DISPLAY);
 	}
 
+	private final CETCustomElement _cetCustomElement;
 	private final ClientExtensionEntry _clientExtensionEntry;
+	private final boolean _customElementUseESM;
+	private final boolean _instanceable;
+	private final String _portletCategoryName;
 	private final PortletRequest _portletRequest;
 
 }
