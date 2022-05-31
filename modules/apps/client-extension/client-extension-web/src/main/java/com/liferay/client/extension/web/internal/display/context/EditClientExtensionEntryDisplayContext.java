@@ -294,32 +294,34 @@ public class EditClientExtensionEntryDisplayContext {
 	public List<SelectOption> getTypeSelectOptions() {
 		HttpServletRequest httpServletRequest = _getHttpServletRequest();
 
+		String type = getType();
+
 		return Arrays.asList(
 			new SelectOption(
 				LanguageUtil.get(httpServletRequest, "custom-element"),
 				ClientExtensionEntryConstants.TYPE_CUSTOM_ELEMENT,
-				isEditingClientExtensionEntryType(
-					ClientExtensionEntryConstants.TYPE_CUSTOM_ELEMENT)),
+				Objects.equals(
+					ClientExtensionEntryConstants.TYPE_CUSTOM_ELEMENT, type)),
 			new SelectOption(
 				LanguageUtil.get(httpServletRequest, "iframe"),
 				ClientExtensionEntryConstants.TYPE_IFRAME,
-				isEditingClientExtensionEntryType(
-					ClientExtensionEntryConstants.TYPE_IFRAME)),
+				Objects.equals(
+					ClientExtensionEntryConstants.TYPE_IFRAME, type)),
 			new SelectOption(
 				LanguageUtil.get(httpServletRequest, "theme-css"),
 				ClientExtensionEntryConstants.TYPE_THEME_CSS,
-				isEditingClientExtensionEntryType(
-					ClientExtensionEntryConstants.TYPE_THEME_CSS)),
+				Objects.equals(
+					ClientExtensionEntryConstants.TYPE_THEME_CSS, type)),
 			new SelectOption(
 				LanguageUtil.get(httpServletRequest, "theme-favicon"),
 				ClientExtensionEntryConstants.TYPE_THEME_FAVICON,
-				isEditingClientExtensionEntryType(
-					ClientExtensionEntryConstants.TYPE_THEME_FAVICON)),
+				Objects.equals(
+					ClientExtensionEntryConstants.TYPE_THEME_FAVICON, type)),
 			new SelectOption(
 				LanguageUtil.get(httpServletRequest, "theme-js"),
 				ClientExtensionEntryConstants.TYPE_THEME_JS,
-				isEditingClientExtensionEntryType(
-					ClientExtensionEntryConstants.TYPE_THEME_JS)));
+				Objects.equals(
+					ClientExtensionEntryConstants.TYPE_THEME_JS, type)));
 	}
 
 	public boolean isCustomElementUseESM() {

@@ -12,7 +12,10 @@
  * details.
  */
 
-export default function propsTransformer({portletNamespace, defaultType, ...otherProps}) {
+export default function propsTransformer({
+	portletNamespace,
+	...otherProps
+}) {
 	return {
 		...otherProps,
 		onChange: (event) => {
@@ -30,7 +33,6 @@ export default function propsTransformer({portletNamespace, defaultType, ...othe
 					}
 				});
 		},
-		defaultValue: defaultType,
 		portletNamespace,
 	};
 }
