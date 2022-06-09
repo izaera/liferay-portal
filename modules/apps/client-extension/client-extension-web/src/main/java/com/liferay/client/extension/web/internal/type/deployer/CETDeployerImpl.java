@@ -206,7 +206,7 @@ public class CETDeployerImpl implements CETDeployer {
 		return _bundleContext.registerService(
 			Portlet.class,
 			new ClientExtensionEntryPortlet(
-				cet, cetCustomElement, cetIFrame, _npmResolver),
+				cetCustomElement, cetIFrame, _npmResolver),
 			dictionary);
 	}
 
