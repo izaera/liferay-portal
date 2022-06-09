@@ -15,6 +15,15 @@
 package com.liferay.client.extension.constants;
 
 /**
+ * Constants referring to ClientExtensionEntry types must refer to string values
+ * in camel case format.
+ *
+ * Their names must be all uppercase and start with the prefix "TYPE_".
+ *
+ * This is because we need to use reflection to enumerate these constants in
+ * some parts of the code.
+ *
+ * @review
  * @author Iván Zaera Avellón
  */
 public class ClientExtensionEntryConstants {
