@@ -21,8 +21,6 @@ import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.UnicodePropertiesBuilder;
 
-import java.util.Properties;
-
 import javax.portlet.PortletRequest;
 
 /**
@@ -49,12 +47,12 @@ public class CETThemeFaviconImpl
 
 	public CETThemeFaviconImpl(
 		String baseURL, long companyId, String description,
-		String externalReferenceCode, String name, Properties properties,
-		String sourceCodeURL, UnicodeProperties typeSettingsUnicodeProperties) {
+		String externalReferenceCode, String name, String sourceCodeURL,
+		UnicodeProperties typeSettingsUnicodeProperties) {
 
 		super(
 			baseURL, companyId, description, externalReferenceCode, name,
-			properties, sourceCodeURL, typeSettingsUnicodeProperties);
+			sourceCodeURL, typeSettingsUnicodeProperties);
 	}
 
 	public CETThemeFaviconImpl(

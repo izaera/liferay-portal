@@ -12,30 +12,18 @@
  * details.
  */
 
-package com.liferay.client.extension.type;
+package com.liferay.client.extension.type.facet;
 
-import com.liferay.client.extension.type.facet.CETWithProperties;
+import java.util.Properties;
 
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
- * @author Brian Wing Shun Chan
+ * @author Iván Zaera Avellón
  */
 @ProviderType
-public interface CETCustomElement extends CET, CETWithProperties {
+public interface CETWithProperties {
 
-	public String getCSSURLs();
-
-	public String getFriendlyURLMapping();
-
-	public String getHTMLElementName();
-
-	public String getPortletCategoryName();
-
-	public String getURLs();
-
-	public boolean isInstanceable();
-
-	public boolean isUseESM();
+	public Properties getProperties();
 
 }

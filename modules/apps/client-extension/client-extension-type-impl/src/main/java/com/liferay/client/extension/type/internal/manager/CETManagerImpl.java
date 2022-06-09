@@ -79,14 +79,14 @@ public class CETManagerImpl implements CETManager {
 
 			cet = new CETGlobalCSSImpl(
 				baseURL, companyId, description, externalReferenceCode, name,
-				properties, sourceCodeURL, typeSettingsUnicodeProperties);
+				sourceCodeURL, typeSettingsUnicodeProperties);
 		}
 		else if (Objects.equals(
 					type, ClientExtensionEntryConstants.TYPE_GLOBAL_JS)) {
 
 			cet = new CETGlobalJSImpl(
 				baseURL, companyId, description, externalReferenceCode, name,
-				properties, sourceCodeURL, typeSettingsUnicodeProperties);
+				sourceCodeURL, typeSettingsUnicodeProperties);
 		}
 		else if (Objects.equals(
 					type, ClientExtensionEntryConstants.TYPE_IFRAME)) {
@@ -100,21 +100,21 @@ public class CETManagerImpl implements CETManager {
 
 			cet = new CETThemeCSSImpl(
 				baseURL, companyId, description, externalReferenceCode, name,
-				properties, sourceCodeURL, typeSettingsUnicodeProperties);
+				sourceCodeURL, typeSettingsUnicodeProperties);
 		}
 		else if (Objects.equals(
 					type, ClientExtensionEntryConstants.TYPE_THEME_FAVICON)) {
 
 			cet = new CETThemeFaviconImpl(
 				baseURL, companyId, description, externalReferenceCode, name,
-				properties, sourceCodeURL, typeSettingsUnicodeProperties);
+				sourceCodeURL, typeSettingsUnicodeProperties);
 		}
 		else if (Objects.equals(
 					type, ClientExtensionEntryConstants.TYPE_THEME_JS)) {
 
 			cet = new CETThemeJSImpl(
 				baseURL, companyId, description, externalReferenceCode, name,
-				properties, sourceCodeURL, typeSettingsUnicodeProperties);
+				sourceCodeURL, typeSettingsUnicodeProperties);
 		}
 		else {
 			throw new ClientExtensionEntryTypeException("Invalid type " + type);

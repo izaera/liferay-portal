@@ -14,13 +14,15 @@
 
 package com.liferay.client.extension.type;
 
+import com.liferay.client.extension.type.facet.CETWithProperties;
+
 import org.osgi.annotation.versioning.ProviderType;
 
 /**
  * @author Brian Wing Shun Chan
  */
 @ProviderType
-public interface CETIFrame extends CET {
+public interface CETIFrame extends CET, CETWithProperties {
 
 	public String getFriendlyURLMapping();
 

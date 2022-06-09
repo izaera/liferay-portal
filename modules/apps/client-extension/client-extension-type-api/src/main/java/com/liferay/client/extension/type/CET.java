@@ -15,7 +15,6 @@
 package com.liferay.client.extension.type;
 
 import java.util.Locale;
-import java.util.Properties;
 
 import org.osgi.annotation.versioning.ProviderType;
 
@@ -34,8 +33,6 @@ public interface CET {
 	public String getExternalReferenceCode();
 
 	public String getName(Locale locale);
-
-	public Properties getProperties();
 
 	public String getSourceCodeURL();
 

@@ -17,6 +17,7 @@ package com.liferay.client.extension.type.internal;
 import com.liferay.client.extension.constants.ClientExtensionEntryConstants;
 import com.liferay.client.extension.model.ClientExtensionEntry;
 import com.liferay.client.extension.type.CETIFrame;
+import com.liferay.client.extension.type.internal.facet.CETWithPropertiesUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.UnicodePropertiesBuilder;
@@ -32,6 +33,8 @@ public class CETIFrameImpl extends BaseCETImpl implements CETIFrame {
 
 	public CETIFrameImpl(ClientExtensionEntry clientExtensionEntry) {
 		super(clientExtensionEntry);
+
+		_properties = CETWithPropertiesUtil.getProperties(clientExtensionEntry);
 	}
 
 	public CETIFrameImpl(PortletRequest portletRequest) {
@@ -62,7 +65,9 @@ public class CETIFrameImpl extends BaseCETImpl implements CETIFrame {
 
 		super(
 			baseURL, companyId, description, externalReferenceCode, name,
-			properties, sourceCodeURL, typeSettingsUnicodeProperties);
+			sourceCodeURL, typeSettingsUnicodeProperties);
+
+		_properties = properties;
 	}
 
 	public CETIFrameImpl(UnicodeProperties typeSettingsUnicodeProperties) {
@@ -78,6 +83,11 @@ public class CETIFrameImpl extends BaseCETImpl implements CETIFrame {
 	}
 
 	@Override
+	public Properties getProperties() {
+		return (Properties)_properties.clone();
+	}
+
+	@Override
 	public String getType() {
 		return ClientExtensionEntryConstants.TYPE_IFRAME;
 	}
@@ -89,5 +99,7 @@ public class CETIFrameImpl extends BaseCETImpl implements CETIFrame {
 	public boolean isInstanceable() {
 		return getBoolean("instanceable");
 	}
+
+	private Properties _properties;
 
 }

@@ -16,18 +16,13 @@ package com.liferay.client.extension.type.internal;
 
 import com.liferay.client.extension.model.ClientExtensionEntry;
 import com.liferay.client.extension.type.CET;
-import com.liferay.petra.reflect.ReflectionUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.GetterUtil;
-import com.liferay.portal.kernel.util.PropertiesUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.UnicodePropertiesBuilder;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
-import java.io.IOException;
-
 import java.util.Locale;
-import java.util.Properties;
 
 /**
  * @author Brian Wing Shun Chan
@@ -42,15 +37,6 @@ public abstract class BaseCETImpl implements CET {
 			_description = clientExtensionEntry.getDescription();
 			_externalReferenceCode =
 				clientExtensionEntry.getExternalReferenceCode();
-
-			try {
-				_properties = PropertiesUtil.load(
-					clientExtensionEntry.getProperties());
-			}
-			catch (IOException ioException) {
-				ReflectionUtil.throwException(ioException);
-			}
-
 			_sourceCodeURL = clientExtensionEntry.getSourceCodeURL();
 			_status = clientExtensionEntry.getStatus();
 			_typeSettingsUnicodeProperties = UnicodePropertiesBuilder.create(
@@ -68,8 +54,8 @@ public abstract class BaseCETImpl implements CET {
 
 	public BaseCETImpl(
 		String baseURL, long companyId, String description,
-		String externalReferenceCode, String name, Properties properties,
-		String sourceCodeURL, UnicodeProperties typeSettingsUnicodeProperties) {
+		String externalReferenceCode, String name, String sourceCodeURL,
+		UnicodeProperties typeSettingsUnicodeProperties) {
 
 		this(typeSettingsUnicodeProperties);
 
@@ -78,7 +64,6 @@ public abstract class BaseCETImpl implements CET {
 		_description = description;
 		_externalReferenceCode = externalReferenceCode;
 		_name = name;
-		_properties = properties;
 		_sourceCodeURL = sourceCodeURL;
 
 		_readOnly = true;
@@ -118,11 +103,6 @@ public abstract class BaseCETImpl implements CET {
 	}
 
 	@Override
-	public Properties getProperties() {
-		return (Properties)_properties.clone();
-	}
-
-	@Override
 	public String getSourceCodeURL() {
 		return _sourceCodeURL;
 	}
@@ -158,7 +138,6 @@ public abstract class BaseCETImpl implements CET {
 	private String _description = StringPool.BLANK;
 	private String _externalReferenceCode = StringPool.BLANK;
 	private String _name = StringPool.BLANK;
-	private Properties _properties;
 	private boolean _readOnly;
 	private String _sourceCodeURL = StringPool.BLANK;
 	private int _status = WorkflowConstants.STATUS_APPROVED;

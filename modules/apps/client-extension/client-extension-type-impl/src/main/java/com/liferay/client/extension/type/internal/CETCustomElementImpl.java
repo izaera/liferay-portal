@@ -17,6 +17,7 @@ package com.liferay.client.extension.type.internal;
 import com.liferay.client.extension.constants.ClientExtensionEntryConstants;
 import com.liferay.client.extension.model.ClientExtensionEntry;
 import com.liferay.client.extension.type.CETCustomElement;
+import com.liferay.client.extension.type.internal.facet.CETWithPropertiesUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -35,6 +36,8 @@ public class CETCustomElementImpl
 
 	public CETCustomElementImpl(ClientExtensionEntry clientExtensionEntry) {
 		super(clientExtensionEntry);
+
+		_properties = CETWithPropertiesUtil.getProperties(clientExtensionEntry);
 	}
 
 	public CETCustomElementImpl(PortletRequest portletRequest) {
@@ -82,7 +85,9 @@ public class CETCustomElementImpl
 
 		super(
 			baseURL, companyId, description, externalReferenceCode, name,
-			properties, sourceCodeURL, typeSettingsUnicodeProperties);
+			sourceCodeURL, typeSettingsUnicodeProperties);
+
+		_properties = properties;
 	}
 
 	public CETCustomElementImpl(
@@ -108,6 +113,11 @@ public class CETCustomElementImpl
 	}
 
 	@Override
+	public Properties getProperties() {
+		return (Properties)_properties.clone();
+	}
+
+	@Override
 	public String getType() {
 		return ClientExtensionEntryConstants.TYPE_CUSTOM_ELEMENT;
 	}
@@ -123,5 +133,7 @@ public class CETCustomElementImpl
 	public boolean isUseESM() {
 		return getBoolean("useESM");
 	}
+
+	private Properties _properties;
 
 }
