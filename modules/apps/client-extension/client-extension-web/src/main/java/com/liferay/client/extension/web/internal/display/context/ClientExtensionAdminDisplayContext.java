@@ -14,14 +14,12 @@
 
 package com.liferay.client.extension.web.internal.display.context;
 
+import com.liferay.client.extension.type.util.ClientExtensionEntryTypeUtil;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.CreationMenu;
-import com.liferay.frontend.taglib.clay.servlet.taglib.util.CreationMenuBuilder;
 import com.liferay.petra.portlet.url.builder.PortletURLBuilder;
 import com.liferay.portal.kernel.language.LanguageUtil;
-import com.liferay.portal.kernel.portlet.PortletURLUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 
-import javax.portlet.PortletURL;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
@@ -40,24 +38,30 @@ public class ClientExtensionAdminDisplayContext {
 	}
 
 	public CreationMenu getCreationMenu() {
-		return CreationMenuBuilder.addDropdownItem(
-			dropdownItem -> {
-				dropdownItem.setHref(
-					PortletURLBuilder.createRenderURL(
-						_renderResponse
-					).setMVCRenderCommandName(
-						"/client_extension_admin/edit_client_extension_entry"
-					).setRedirect(
-						_getRedirect()
-					).buildPortletURL());
+		CreationMenu creationMenu = new CreationMenu();
 
-				dropdownItem.setLabel(_getLabel("add-remote-web-app"));
-			}
-		).build();
-	}
+		for (String type : ClientExtensionEntryTypeUtil.getTypes()) {
+			creationMenu.addDropdownItem(
+				dropdownItem -> {
+					dropdownItem.setHref(
+						PortletURLBuilder.createRenderURL(
+							_renderResponse
+						).setMVCRenderCommandName(
+							"/client_extension_admin" +
+								"/edit_client_extension_entry"
+						).setRedirect(
+							_getRedirect()
+						).setParameter(
+							"type", type
+						).buildPortletURL());
 
-	public PortletURL getCurrentPortletURL() {
-		return PortletURLUtil.getCurrent(_renderRequest, _renderResponse);
+					dropdownItem.setLabel(
+						_getLabel(
+							ClientExtensionEntryTypeUtil.getLabelAdd(type)));
+				});
+		}
+
+		return creationMenu;
 	}
 
 	private HttpServletRequest _getHttpServletRequest() {
