@@ -33,14 +33,11 @@ public class CETGlobalCSSImpl extends BaseCETImpl implements CETGlobalCSS {
 	}
 
 	public CETGlobalCSSImpl(PortletRequest portletRequest) {
-
-		// TODO Remove globalCSS* prefix
-
 		this(
 			UnicodePropertiesBuilder.create(
 				true
 			).put(
-				"url", ParamUtil.getString(portletRequest, "globalCSSURL")
+				"url", ParamUtil.getString(portletRequest, "url")
 			).build());
 	}
 
@@ -56,6 +53,11 @@ public class CETGlobalCSSImpl extends BaseCETImpl implements CETGlobalCSS {
 
 	public CETGlobalCSSImpl(UnicodeProperties typeSettingsUnicodeProperties) {
 		super(typeSettingsUnicodeProperties);
+	}
+
+	@Override
+	public String getEditJSP() {
+		return "/admin/edit_global_css.jsp";
 	}
 
 	@Override

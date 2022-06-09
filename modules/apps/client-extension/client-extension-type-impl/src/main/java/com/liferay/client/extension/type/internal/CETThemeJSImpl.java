@@ -33,14 +33,11 @@ public class CETThemeJSImpl extends BaseCETImpl implements CETThemeJS {
 	}
 
 	public CETThemeJSImpl(PortletRequest portletRequest) {
-
-		// TODO Remove themeJS* prefix
-
 		this(
 			UnicodePropertiesBuilder.create(
 				true
 			).put(
-				"url", ParamUtil.getString(portletRequest, "themeJSURL")
+				"url", ParamUtil.getString(portletRequest, "url")
 			).build());
 	}
 
@@ -56,6 +53,11 @@ public class CETThemeJSImpl extends BaseCETImpl implements CETThemeJS {
 
 	public CETThemeJSImpl(UnicodeProperties typeSettingsUnicodeProperties) {
 		super(typeSettingsUnicodeProperties);
+	}
+
+	@Override
+	public String getEditJSP() {
+		return "/admin/edit_theme_js.jsp";
 	}
 
 	@Override

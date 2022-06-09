@@ -34,14 +34,11 @@ public class CETThemeFaviconImpl
 	}
 
 	public CETThemeFaviconImpl(PortletRequest portletRequest) {
-
-		// TODO Remove themeFavicon* prefix
-
 		this(
 			UnicodePropertiesBuilder.create(
 				true
 			).put(
-				"url", ParamUtil.getString(portletRequest, "themeFaviconURL")
+				"url", ParamUtil.getString(portletRequest, "url")
 			).build());
 	}
 
@@ -59,6 +56,11 @@ public class CETThemeFaviconImpl
 		UnicodeProperties typeSettingsUnicodeProperties) {
 
 		super(typeSettingsUnicodeProperties);
+	}
+
+	@Override
+	public String getEditJSP() {
+		return "/admin/edit_theme_favicon.jsp";
 	}
 
 	@Override

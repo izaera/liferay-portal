@@ -30,6 +30,8 @@ public interface CET {
 
 	public String getDescription();
 
+	public String getEditJSP();
+
 	public String getExternalReferenceCode();
 
 	public String getName(Locale locale);

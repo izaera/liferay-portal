@@ -33,18 +33,13 @@ public class CETThemeCSSImpl extends BaseCETImpl implements CETThemeCSS {
 	}
 
 	public CETThemeCSSImpl(PortletRequest portletRequest) {
-
-		// TODO Remove themeCSS* prefix
-
 		this(
 			UnicodePropertiesBuilder.create(
 				true
 			).put(
-				"clayURL",
-				ParamUtil.getString(portletRequest, "themeCSSClayURL")
+				"clayURL", ParamUtil.getString(portletRequest, "clayURL")
 			).put(
-				"mainURL",
-				ParamUtil.getString(portletRequest, "themeCSSMainURL")
+				"mainURL", ParamUtil.getString(portletRequest, "mainURL")
 			).build());
 	}
 
@@ -65,6 +60,11 @@ public class CETThemeCSSImpl extends BaseCETImpl implements CETThemeCSS {
 	@Override
 	public String getClayURL() {
 		return getString("clayURL");
+	}
+
+	@Override
+	public String getEditJSP() {
+		return "/admin/edit_theme_css.jsp";
 	}
 
 	@Override
