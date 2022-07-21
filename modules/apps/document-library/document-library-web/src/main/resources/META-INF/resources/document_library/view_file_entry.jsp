@@ -188,7 +188,7 @@ PortletURL selectFolderURL = itemSelector.getItemSelectorURL(RequestBackedPortle
 
 <portlet:actionURL name="/document_library/edit_entry" var="editEntryURL" />
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />move(
 		selectedItems,
 		parameterName,

@@ -115,7 +115,7 @@ List<CPCatalogEntry> catalogEntries = cpPublisherConfigurationDisplayContext.get
 	</div>
 </div>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />moveSelectionDown(productEntryOrder) {
 		var form = window.document['<portlet:namespace />fm'];
 

@@ -245,7 +245,7 @@ else {
 	});
 </aui:script>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />openPageVariationsDialog() {
 		Liferay.Util.openWindow({
 			dialog: {

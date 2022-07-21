@@ -85,7 +85,7 @@ ContentDashboardAdminConfigurationDisplayContext contentDashboardAdminConfigurat
 	</liferay-frontend:edit-form-footer>
 </liferay-frontend:edit-form>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />saveConfiguration() {
 		var form = document.<portlet:namespace />fm;
 		Liferay.Util.postForm(form, {

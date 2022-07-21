@@ -48,7 +48,7 @@
 	/>
 </div>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />openImportObjectDefinitionModal() {
 		Liferay.componentReady(
 			'<portlet:namespace />importObjectDefinitionModal'

@@ -27,7 +27,7 @@
 	<aui:button type="submit" value="find" />
 </aui:form>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />lookUp() {
 		var form = document.<portlet:namespace />fm;
 

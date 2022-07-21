@@ -100,7 +100,7 @@ renderResponse.setTitle(LanguageUtil.get(request, "import-pages"));
 	/>
 </clay:container-fluid>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />importPages() {
 		<%= uploadProgressId %>.startProgress();
 		<%= importProgressId %>.startProgress();

@@ -143,11 +143,13 @@ boolean hasUnlinkLayoutSetPrototypePermission = PortalPermissionUtil.contains(pe
 	</c:choose>
 </aui:field-wrapper>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />isVisible(currentValue, value) {
 		return currentValue != '';
 	}
+</aui:script>
 
+<aui:script>
 	Liferay.Util.toggleSelectBox(
 		'<portlet:namespace />publicLayoutSetPrototypeId',
 		<portlet:namespace />isVisible,

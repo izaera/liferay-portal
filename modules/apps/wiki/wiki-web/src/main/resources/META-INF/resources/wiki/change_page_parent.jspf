@@ -117,7 +117,7 @@ childPages.remove(wikiPage);
 	</div>
 </aui:form>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />changeParent() {
 		document.<portlet:namespace />changeParentFm.<portlet:namespace /><%= Constants.CMD %>.value =
 			'<%= Constants.CHANGE_PARENT %>';

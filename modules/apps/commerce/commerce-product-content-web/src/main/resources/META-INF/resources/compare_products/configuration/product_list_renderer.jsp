@@ -39,7 +39,7 @@ List<CPContentListRenderer> cpContentListRenderers = cpCompareContentDisplayCont
 	</aui:select>
 </aui:fieldset>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />chooseCPContentListRendererKey() {
 		submitForm(document.<portlet:namespace />fm);
 	}

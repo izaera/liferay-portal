@@ -111,11 +111,13 @@ if (Validator.isNotNull(backURL)) {
 	</div>
 </aui:form>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />saveCommerceCurrency() {
 		submitForm(document.<portlet:namespace />fm);
 	}
+</aui:script>
 
+<aui:script>
 	Liferay.Util.toggleBoxes(
 		'<portlet:namespace />primary',
 		'<portlet:namespace />rateOptions',

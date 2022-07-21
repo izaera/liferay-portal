@@ -68,7 +68,7 @@ else {
 	</aui:button-row>
 </aui:form>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />saveCommerceRegion() {
 		submitForm(document.<portlet:namespace />fm);
 	}

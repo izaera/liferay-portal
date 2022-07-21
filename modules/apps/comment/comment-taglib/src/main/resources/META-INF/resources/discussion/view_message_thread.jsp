@@ -279,9 +279,6 @@ Format dateFormatDateTime = FastDateFormatFactoryUtil.getDateTime(locale, timeZo
 
 							<aui:button cssClass="btn-comment btn-sm" onClick="<%= taglibCancel %>" type="cancel" />
 						</aui:button-row>
-
-						<aui:script>
-						</aui:script>
 					</clay:content-col>
 				</clay:content-row>
 			</div>

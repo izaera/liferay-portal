@@ -181,7 +181,7 @@ renderResponse.setTitle(LanguageUtil.get(request, "specifications"));
 	</div>
 </div>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />deleteCPOptionCategories() {
 		if (
 			confirm(

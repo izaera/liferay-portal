@@ -40,7 +40,7 @@
 	<aui:button cssClass="btn btn-link" id="addClass" value="add-a-css-rule-for-all-portlets-like-this-one" />
 </div>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />insertCustomCSSValue(value) {
 		var customCSSTextarea = document.getElementById(
 			'<portlet:namespace />customCSS'
@@ -67,7 +67,9 @@
 			);
 		}
 	}
+</aui:script>
 
+<aui:script>
 	var <portlet:namespace />addId = document.getElementById(
 		'<portlet:namespace />addId'
 	);

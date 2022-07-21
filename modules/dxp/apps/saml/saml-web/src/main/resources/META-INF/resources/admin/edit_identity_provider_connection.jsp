@@ -144,7 +144,7 @@ else {
 	</aui:button-row>
 </aui:form>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	window['<portlet:namespace />uploadMetadataXml'] = function (selected) {
 		var metadataUrlForm = document.getElementById(
 			'<portlet:namespace />metadataUrlForm'
@@ -162,7 +162,9 @@ else {
 			metadataXmlForm.classList.add('hide');
 		}
 	};
+</aui:script>
 
+<aui:script>
 	<portlet:namespace />uploadMetadataXml(
 		document.getElementById('<portlet:namespace />metadataDeliveryXml').checked
 	);

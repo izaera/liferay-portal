@@ -443,6 +443,49 @@ dateFormatDateTime.setTimeZone(timeZone);
 					<liferay-ui:message key="ports-are-not-initialized-until-the-server-has-processed-a-request" />
 				</div>
 
+				<aui:script globalDeclaration="<%= true %>">
+					function addColumn(row, html) {
+						var cell = row.insertCell(-1);
+
+						cell.innerHTML = html;
+					}
+
+					function getLicenseState(licenseState) {
+						if (licenseState == 2) {
+							return '<span style="color: red;"><liferay-ui:message key="expired" /></span>';
+						}
+						else if (licenseState == 3) {
+							return 'Active';
+						}
+						else if (licenseState == 4) {
+							return '<span style="color: red;"><liferay-ui:message key="inactive" /></span>';
+						}
+						else if ((licenseState == 5) || (licenseState == 6)) {
+							return '<span style="color: red;"><liferay-ui:message key="invalid" /></span>';
+						}
+
+						return '<span style="color: red;"><liferay-ui:message key="absent" /></span>';
+					}
+
+					function validateForm() {
+						var A = AUI();
+
+						if (document.license_fm.productEntryName.value != '') {
+							var checkboxes = A.one(document.license_fm).all('input[type=checkbox]:checked');
+
+							if (!checkboxes || (checkboxes.size() <= 0)) {
+								if (Liferay.FeatureFlags['LPS-148659']) {
+									Liferay.Util.openAlertModal({message: '<liferay-ui:message key="there-are-no-selected-servers-to-register" />'});
+								} else {
+									alert('<liferay-ui:message key="there-are-no-selected-servers-to-register" />');
+								}
+
+								return false;
+							}
+						}
+					}
+				</aui:script>
+
 				<aui:script>
 					Liferay.provide(
 						window,
@@ -580,46 +623,6 @@ dateFormatDateTime.setTimeZone(timeZone);
 					}
 					%>
 
-					function addColumn(row, html) {
-						var cell = row.insertCell(-1);
-
-						cell.innerHTML = html;
-					}
-
-					function getLicenseState(licenseState) {
-						if (licenseState == 2) {
-							return '<span style="color: red;"><liferay-ui:message key="expired" /></span>';
-						}
-						else if (licenseState == 3) {
-							return 'Active';
-						}
-						else if (licenseState == 4) {
-							return '<span style="color: red;"><liferay-ui:message key="inactive" /></span>';
-						}
-						else if ((licenseState == 5) || (licenseState == 6)) {
-							return '<span style="color: red;"><liferay-ui:message key="invalid" /></span>';
-						}
-
-						return '<span style="color: red;"><liferay-ui:message key="absent" /></span>';
-					}
-
-					function validateForm() {
-						var A = AUI();
-
-						if (document.license_fm.productEntryName.value != '') {
-							var checkboxes = A.one(document.license_fm).all('input[type=checkbox]:checked');
-
-							if (!checkboxes || (checkboxes.size() <= 0)) {
-								if (Liferay.FeatureFlags['LPS-148659']) {
-									Liferay.Util.openAlertModal({message: '<liferay-ui:message key="there-are-no-selected-servers-to-register" />'});
-								} else {
-									alert('<liferay-ui:message key="there-are-no-selected-servers-to-register" />');
-								}
-
-								return false;
-							}
-						}
-					}
 				</aui:script>
 			</c:otherwise>
 		</c:choose>

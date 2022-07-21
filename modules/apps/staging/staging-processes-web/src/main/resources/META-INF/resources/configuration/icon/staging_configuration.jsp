@@ -30,7 +30,7 @@ PortletURL portletURL = PortalUtil.getControlPanelPortletURL(request, liveGroup,
 	<portlet:param name="mvcRenderCommandName" value="staging" />
 </liferay-portlet:renderURL>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />openStagingConfigurationPortlet() {
 		var configurationDialog = Liferay.Util.openWindow({
 			dialog: {

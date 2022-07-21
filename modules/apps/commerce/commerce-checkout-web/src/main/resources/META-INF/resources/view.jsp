@@ -118,7 +118,7 @@ CheckoutDisplayContext checkoutDisplayContext = (CheckoutDisplayContext)request.
 							</c:if>
 						</aui:form>
 
-						<aui:script>
+						<aui:script globalDeclaration="<%= true %>">
 							function <portlet:namespace />saveCheckoutStep() {
 								submitForm(document.<portlet:namespace />fm);
 							}

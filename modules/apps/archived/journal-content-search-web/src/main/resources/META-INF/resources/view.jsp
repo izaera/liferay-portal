@@ -38,7 +38,7 @@
 	</div>
 </aui:form>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />search() {
 		var keywords =
 			document.<portlet:namespace />fm.<portlet:namespace />keywords.value;

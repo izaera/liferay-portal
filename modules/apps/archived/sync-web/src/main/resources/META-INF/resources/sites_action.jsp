@@ -68,7 +68,7 @@ String groupId = String.valueOf(group.getGroupId());
 	</c:choose>
 </liferay-ui:icon-menu>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />editDefaultFilePermissions(groupId) {
 
 		<%

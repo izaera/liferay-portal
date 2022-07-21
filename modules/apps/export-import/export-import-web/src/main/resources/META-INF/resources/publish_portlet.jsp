@@ -136,7 +136,7 @@ if (!GroupPermissionUtil.contains(permissionChecker, themeDisplay.getScopeGroup(
 				Liferay.component('<portlet:namespace />ExportImportComponent', exportImport);
 			</aui:script>
 
-			<aui:script>
+			<aui:script globalDeclaration="<%= true %>">
 				function <portlet:namespace />copyFromLive() {
 					var exportImport = Liferay.component(
 						'<portlet:namespace />ExportImportComponent'
@@ -179,7 +179,9 @@ if (!GroupPermissionUtil.contains(permissionChecker, themeDisplay.getScopeGroup(
 						exportImport.showNotification(dateChecker);
 					}
 				}
+			</aui:script>
 
+			<aui:script>
 				Liferay.Util.toggleRadio(
 					'<portlet:namespace />portletMetaDataFilter',
 					'<portlet:namespace />portletMetaDataList'

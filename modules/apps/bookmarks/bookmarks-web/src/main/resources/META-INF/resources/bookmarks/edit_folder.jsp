@@ -185,7 +185,7 @@ renderResponse.setTitle(headerTitle);
 	</aui:form>
 </clay:container-fluid>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />saveFolder() {
 		var form = document.getElementById('<portlet:namespace />fm');
 

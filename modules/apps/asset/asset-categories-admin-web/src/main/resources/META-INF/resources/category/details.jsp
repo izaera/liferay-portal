@@ -214,7 +214,7 @@ renderResponse.setTitle(title);
 	</c:choose>
 </liferay-frontend:edit-form>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />saveAndAddNew() {
 		document.querySelector('#<portlet:namespace />redirect').value =
 			'<%= assetCategoriesDisplayContext.getAddCategoryRedirect() %>';

@@ -57,7 +57,7 @@ long accountId = ParamUtil.getLong(request, "accountId");
 
 	</table>
 
-	<aui:script>
+	<aui:script globalDeclaration="<%= true %>">
 		function <portlet:namespace />onIOFailure(event, id, obj) {
 			Liferay.Mail.setStatus(
 				'error',
@@ -75,7 +75,9 @@ long accountId = ParamUtil.getLong(request, "accountId");
 				Liferay.Mail.loadManageFolders(<%= accountId %>);
 			}
 		}
+	</aui:script>
 
+	<aui:script>
 		Liferay.provide(
 			window,
 			'<portlet:namespace />addFolder',

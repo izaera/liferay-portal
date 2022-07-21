@@ -125,7 +125,7 @@ WorkspaceConnectionDisplayContext workspaceConnectionDisplayContext = (Workspace
 	</clay:sheet>
 </div>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />confirmation(event) {
 		<c:if test="<%= workspaceConnectionDisplayContext.isConnected() %>">
 			if (
@@ -148,7 +148,9 @@ WorkspaceConnectionDisplayContext workspaceConnectionDisplayContext = (Workspace
 
 		tokenButton.disabled = value.length === 0;
 	}
+</aui:script>
 
+<aui:script>
 	<c:if test="<%= !workspaceConnectionDisplayContext.isConnected() %>">
 		<portlet:namespace />validateTokenButton();
 	</c:if>

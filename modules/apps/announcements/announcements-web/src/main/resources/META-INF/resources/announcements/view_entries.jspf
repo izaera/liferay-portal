@@ -45,7 +45,7 @@ if ((searchContainer.getTotal() == 0) && portletName.equals(AnnouncementsPortlet
 }
 %>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />markEntry(entryId) {
 		Liferay.Service(
 			'/announcementsflag/add-flag',

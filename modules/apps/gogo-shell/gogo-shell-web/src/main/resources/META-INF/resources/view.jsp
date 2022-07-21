@@ -65,7 +65,7 @@ String commandOutput = (String)SessionMessages.get(renderRequest, "commandOutput
 	</aui:form>
 </clay:container-fluid>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />executeCommand() {
 		var form = document.getElementById('<portlet:namespace />fm');
 

@@ -74,7 +74,7 @@ renderResponse.setTitle((node == null) ? LanguageUtil.get(request, "new-wiki-nod
 	</aui:form>
 </clay:container-fluid>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />saveNode() {
 		document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value =
 			'<%= (node == null) ? Constants.ADD : Constants.UPDATE %>';

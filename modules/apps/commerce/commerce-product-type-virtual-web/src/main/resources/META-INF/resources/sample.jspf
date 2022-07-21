@@ -163,15 +163,7 @@
 	}
 </aui:script>
 
-<aui:script>
-	AUI().ready('node', 'event', (A) => {
-		selectSampleFileType(A);
-
-		A.one('#<portlet:namespace />useSample').on('click', (b) => {
-			selectSampleFileType(A);
-		});
-	});
-
+<aui:script globalDeclaration="<%= true %>">
 	function selectSampleFileType(A) {
 		var useSampleCheckbox = A.one('#<portlet:namespace />useSample');
 
@@ -191,4 +183,14 @@
 			A.one('#<portlet:namespace />selectSampleFile').attr('disabled', true);
 		}
 	}
+</aui:script>
+
+<aui:script>
+	AUI().ready('node', 'event', (A) => {
+		selectSampleFileType(A);
+
+		A.one('#<portlet:namespace />useSample').on('click', (b) => {
+			selectSampleFileType(A);
+		});
+	});
 </aui:script>

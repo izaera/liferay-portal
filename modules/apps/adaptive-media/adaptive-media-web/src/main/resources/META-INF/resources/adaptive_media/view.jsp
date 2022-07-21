@@ -207,7 +207,7 @@ AMManagementToolbarDisplayContext amManagementToolbarDisplayContext = new AMMana
 	</clay:container-fluid>
 </div>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />adaptRemaining(uuid, backgroundTaskUrl) {
 		var component = Liferay.component(
 			'<portlet:namespace />AdaptRemaining' + uuid

@@ -408,7 +408,7 @@ if (commerceOrder != null) {
 	</div>
 </div>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />viewCommerceOrderShipments(uri) {
 		Liferay.Util.openWindow({
 			dialog: {

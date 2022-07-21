@@ -107,7 +107,7 @@
 	/>
 </liferay-ui:search-container>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />openViewMembersDialog(event) {
 		event.preventDefault();
 

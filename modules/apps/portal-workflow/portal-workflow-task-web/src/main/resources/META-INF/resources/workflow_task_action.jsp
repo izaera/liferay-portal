@@ -150,7 +150,7 @@ PortletURL redirectURL = PortletURLBuilder.createRenderURL(
 	</c:if>
 </aui:script>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />taskAssign(uri) {
 		Liferay.Util.openWindow({
 			dialog: {

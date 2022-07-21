@@ -70,7 +70,7 @@ page import="java.util.Set" %>
 	<link href="<%= PortalUtil.getStaticResourceURL(request, application.getContextPath() + "/css/main.css") %>" rel="stylesheet" type="text/css" />
 </liferay-util:html-top>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />resetPageToWizardMode() {
 		var wizardModeElement = document.querySelector('.wizard-mode');
 
@@ -80,6 +80,8 @@ page import="java.util.Set" %>
 				'none';
 		}
 	}
+</aui:script>
 
+<aui:script>
 	<portlet:namespace />resetPageToWizardMode();
 </aui:script>

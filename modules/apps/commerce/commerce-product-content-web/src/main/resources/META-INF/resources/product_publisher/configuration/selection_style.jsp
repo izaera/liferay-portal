@@ -28,7 +28,7 @@ CPPublisherConfigurationDisplayContext cpPublisherConfigurationDisplayContext = 
 	<aui:input checked="<%= cpPublisherConfigurationDisplayContext.isSelectionStyleDataSource() %>" id="selectionStyleDataSource" label="data-source" name="preferences--selectionStyle--" onChange='<%= liferayPortletResponse.getNamespace() + "chooseSelectionStyle();" %>' type="radio" value="dataSource" />
 </aui:fieldset>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />chooseSelectionStyle() {
 		var form = window.document['<portlet:namespace />fm'];
 

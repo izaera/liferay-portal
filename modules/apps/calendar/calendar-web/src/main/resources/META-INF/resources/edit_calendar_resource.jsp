@@ -154,11 +154,13 @@ if (calendarResource != null) {
 	</aui:fieldset>
 </aui:form>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />updateCalendarResource() {
 		submitForm(document.<portlet:namespace />fm);
 	}
+</aui:script>
 
+<aui:script>
 	<c:choose>
 		<c:when test="<%= CalendarServiceConfigurationValues.CALENDAR_RESOURCE_FORCE_AUTOGENERATE_CODE %>">
 			Liferay.Util.focusFormField(

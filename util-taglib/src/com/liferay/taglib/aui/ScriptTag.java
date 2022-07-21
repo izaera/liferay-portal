@@ -26,8 +26,6 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.taglib.aui.base.BaseScriptTag;
 import com.liferay.taglib.util.PortalIncludeUtil;
 
-import java.util.Objects;
-
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
 import javax.servlet.jsp.PageContext;

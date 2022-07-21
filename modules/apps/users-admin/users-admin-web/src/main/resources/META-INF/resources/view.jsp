@@ -97,7 +97,7 @@ else {
 	</c:when>
 </c:choose>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />deleteOrganization(
 		organizationId,
 		organizationsRedirect

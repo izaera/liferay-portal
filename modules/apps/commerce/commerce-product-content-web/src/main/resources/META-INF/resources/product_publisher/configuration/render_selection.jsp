@@ -26,7 +26,7 @@ CPPublisherConfigurationDisplayContext cpPublisherConfigurationDisplayContext = 
 	<aui:input checked="<%= cpPublisherConfigurationDisplayContext.isRenderSelectionCustomRenderer() %>" id="renderSelectionCustomRenderer" label="use-custom-renderer" name="preferences--renderSelection--" onChange='<%= liferayPortletResponse.getNamespace() + "chooseRenderSelection();" %>' type="radio" value="custom" />
 </aui:fieldset>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />chooseRenderSelection() {
 		var form = window.document['<portlet:namespace />fm'];
 

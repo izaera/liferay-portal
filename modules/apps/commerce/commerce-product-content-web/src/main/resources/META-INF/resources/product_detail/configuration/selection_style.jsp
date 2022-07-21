@@ -26,7 +26,7 @@ CPContentConfigurationDisplayContext cpContentConfigurationDisplayContext = (CPC
 	<aui:input checked="<%= cpContentConfigurationDisplayContext.isSelectionStyleCustomRenderer() %>" id="selectionStyleCustomRenderer" label="use-custom-renderer" name="preferences--selectionStyle--" onChange='<%= liferayPortletResponse.getNamespace() + "chooseSelectionStyle();" %>' type="radio" value="custom" />
 </aui:fieldset>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />chooseSelectionStyle() {
 		submitForm(document.<portlet:namespace />fm);
 	}

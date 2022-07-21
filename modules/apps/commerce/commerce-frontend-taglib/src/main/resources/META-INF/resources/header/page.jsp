@@ -209,6 +209,12 @@ String myWorkflowTasksPortletNamespace = PortalUtil.getPortletNamespace(PortletK
 								<portlet:param name="workflowTaskId" value="<%= String.valueOf(reviewWorkflowTask.getWorkflowTaskId()) %>" />
 							</liferay-portlet:renderURL>
 
+							<aui:script globalDeclaration="<%= true %>">
+								function <%= myWorkflowTasksPortletNamespace %>refreshPortlet() {
+									window.location.reload();
+								}
+							</aui:script>
+
 							<aui:script>
 								document
 									.querySelector('#<portlet:namespace />assign-to-modal-opener')
@@ -228,10 +234,6 @@ String myWorkflowTasksPortletNamespace = PortalUtil.getPortletNamespace(PortletK
 											uri: '<%= HtmlUtil.escapeJS(assignToURL) %>',
 										});
 									});
-
-								function <%= myWorkflowTasksPortletNamespace %>refreshPortlet() {
-									window.location.reload();
-								}
 
 								Liferay.provide(window, '<portlet:namespace />toggleDropdown', () => {
 									var dropdownElement = window.document.querySelector(

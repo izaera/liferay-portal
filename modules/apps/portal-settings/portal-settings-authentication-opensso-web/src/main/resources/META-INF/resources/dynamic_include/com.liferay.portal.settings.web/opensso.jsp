@@ -56,7 +56,7 @@ String version = openSSOConfiguration.version();
 	<%@ include file="/dynamic_include/com.liferay.portal.settings.web/opensso_user_name.jspf" %>
 </aui:fieldset>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	window['<portlet:namespace />testOpenSSOSettings'] = function () {
 		var data = {};
 		data.<portlet:namespace />openSsoLoginURL =

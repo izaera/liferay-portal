@@ -58,7 +58,7 @@ renderResponse.setTitle(LanguageUtil.get(request, "edit-note"));
 	</aui:button-row>
 </aui:form>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />saveCommerceOrderNote() {
 		submitForm(document.<portlet:namespace />fm);
 	}

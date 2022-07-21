@@ -14,7 +14,7 @@
  */
 --%>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />confirmAction(formId, actionURL, message) {
 		if (confirm(message)) {
 			var form = document.getElementById('<portlet:namespace />' + formId);

@@ -70,7 +70,7 @@ DLFileEntryAdditionalMetadataSetsDisplayContext dlFileEntryAdditionalMetadataSet
 	/>
 </div>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />openDDMStructureSelector() {
 		Liferay.Util.openSelectionModal({
 			id: '<portlet:namespace />selectDDMStructure',

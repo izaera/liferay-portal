@@ -390,11 +390,7 @@ boolean showHeader = ParamUtil.getBoolean(request, "showHeader", true);
 	</c:if>
 
 	<aui:button-row>
-		<aui:script>
-			Liferay.after('<portlet:namespace />saveTemplate', () => {
-				submitForm(document.<portlet:namespace />fm);
-			});
-
+		<aui:script globalDeclaration="<%= true %>">
 			function <portlet:namespace />saveDraftTemplate() {
 				var form = document.<portlet:namespace />fm;
 
@@ -417,6 +413,12 @@ boolean showHeader = ParamUtil.getBoolean(request, "showHeader", true);
 
 				Liferay.fire('<portlet:namespace />saveTemplate');
 			}
+		</aui:script>
+
+		<aui:script>
+			Liferay.after('<portlet:namespace />saveTemplate', () => {
+				submitForm(document.<portlet:namespace />fm);
+			});
 
 			var onDestroyPortlet = function (event) {
 				Liferay.detach('destroyPortlet', onDestroyPortlet);

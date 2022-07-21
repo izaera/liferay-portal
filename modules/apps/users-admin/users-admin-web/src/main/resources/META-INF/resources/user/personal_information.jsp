@@ -110,7 +110,7 @@ if (Validator.isNull(organizationIdsString)) {
 	</clay:col>
 </clay:row>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />saveUser(cmd) {
 		document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value = cmd;
 

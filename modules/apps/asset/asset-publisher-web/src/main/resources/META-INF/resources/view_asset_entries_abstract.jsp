@@ -302,7 +302,7 @@ for (AssetEntry assetEntry : assetEntryResult.getAssetEntries()) {
 								url='<%= "javascript:" + liferayPortletResponse.getNamespace() + "printPage_" + id + "();" %>'
 							/>
 
-							<aui:script>
+							<aui:script globalDeclaration="<%= true %>">
 								function <portlet:namespace />printPage_<%= id %>() {
 									window.open(
 										'<%= printAssetURL %>',

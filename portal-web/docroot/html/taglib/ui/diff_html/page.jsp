@@ -28,7 +28,7 @@ String infoMessage = (String)request.getAttribute("liferay-ui:diff-html:infoMess
 				<%= diffHtmlResults %>
 			</div>
 
-			<aui:script>
+			<aui:script globalDeclaration="<%= true %>">
 				function updateOverlays() {
 					var images = document.getElementsByTagName('img');
 

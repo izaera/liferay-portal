@@ -282,7 +282,7 @@ AssetEntry layoutAssetEntry = AssetEntryLocalServiceUtil.getEntry(CalendarBookin
 				</aui:button-row>
 			</aui:form>
 
-			<aui:script>
+			<aui:script globalDeclaration="<%= true %>">
 				function <portlet:namespace />invokeTransition(status) {
 					document.<portlet:namespace />fm.<portlet:namespace />status.value = status;
 

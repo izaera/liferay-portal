@@ -28,7 +28,7 @@ CPCompareContentMiniDisplayContext cpCompareContentMiniDisplayContext = (CPCompa
 	<aui:input checked="<%= cpCompareContentMiniDisplayContext.isSelectionStyleCustomRenderer() %>" id="selectionStyleCustomRenderer" label="use-custom-renderer" name="preferences--selectionStyle--" onChange='<%= liferayPortletResponse.getNamespace() + "chooseSelectionStyle();" %>' type="radio" value="custom" />
 </aui:fieldset>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />chooseSelectionStyle() {
 		var form = window.document.querySelector(document.<portlet:namespace />fm);
 

@@ -82,7 +82,7 @@
 	<aui:input name="containerModelId" type="hidden" value="" />
 </aui:form>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />restoreDialog(uri) {
 		Liferay.Util.openSelectionModal({
 			onSelect: (event) => {

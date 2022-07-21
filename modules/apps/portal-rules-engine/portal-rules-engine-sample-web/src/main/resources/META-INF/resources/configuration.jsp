@@ -82,7 +82,7 @@ long[] classNameIdValues = StringUtil.split(ParamUtil.getString(request, "classN
 	</clay:container-fluid>
 </aui:form>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />saveConfiguration() {
 		var form = document.getElementById('<portlet:namespace />fm');
 

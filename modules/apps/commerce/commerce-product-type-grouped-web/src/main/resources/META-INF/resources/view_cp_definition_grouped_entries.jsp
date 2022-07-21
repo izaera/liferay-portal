@@ -183,7 +183,7 @@ renderResponse.setTitle(cpDefinition.getName(themeDisplay.getLanguageId()));
 	</div>
 </div>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />deleteCPDefinitionGroupedEntries() {
 		if (
 			confirm(

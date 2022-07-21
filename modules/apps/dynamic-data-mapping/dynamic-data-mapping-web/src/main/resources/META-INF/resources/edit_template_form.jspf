@@ -31,7 +31,7 @@ String fieldsJSONArrayString = String.valueOf(_getFormTemplateFieldsJSONArray(st
 <aui:input name="language" type="hidden" value="json" />
 <aui:input name="scriptContent" type="hidden" />
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />attachValueChange(formBuilder) {
 		var modeInput = document.getElementById('<portlet:namespace />mode');
 
@@ -41,17 +41,6 @@ String fieldsJSONArrayString = String.valueOf(_getFormTemplateFieldsJSONArray(st
 			});
 		}
 	}
-
-	Liferay.on('<portlet:namespace />formBuilderLoaded', (event) => {
-		var formBuilder = event.formBuilder;
-
-		<portlet:namespace />attachValueChange(formBuilder);
-
-		<portlet:namespace />toggleMode(
-			formBuilder,
-			'<%= HtmlUtil.escape(mode) %>'
-		);
-	});
 
 	function <portlet:namespace />setFieldsHiddenAttributes(
 		formBuilder,
@@ -121,6 +110,19 @@ String fieldsJSONArrayString = String.valueOf(_getFormTemplateFieldsJSONArray(st
 
 		return availableFields.concat(FormBuilder.AVAILABLE_FIELDS.DDM_TEMPLATE);
 	};
+</aui:script>
+
+<aui:script>
+	Liferay.on('<portlet:namespace />formBuilderLoaded', (event) => {
+		var formBuilder = event.formBuilder;
+
+		<portlet:namespace />attachValueChange(formBuilder);
+
+		<portlet:namespace />toggleMode(
+			formBuilder,
+			'<%= HtmlUtil.escape(mode) %>'
+		);
+	});
 </aui:script>
 
 <%@ include file="/form_builder.jspf" %>

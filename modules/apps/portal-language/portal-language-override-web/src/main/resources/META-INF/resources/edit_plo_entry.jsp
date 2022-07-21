@@ -175,7 +175,7 @@ renderResponse.setTitle(editDisplayContext.getPageTitle());
 </clay:container-fluid>
 
 <c:if test="<%= Validator.isNull(editDisplayContext.getKey()) %>">
-	<aui:script>
+	<aui:script globalDeclaration="<%= true %>">
 		function <portlet:namespace />validateForm(event) {
 			const form = document.getElementById('<portlet:namespace />editPLOEntryFm');
 

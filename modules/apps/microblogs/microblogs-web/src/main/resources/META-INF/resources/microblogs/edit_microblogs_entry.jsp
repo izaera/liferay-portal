@@ -220,7 +220,7 @@ if (comment) {
 </aui:form>
 
 <c:if test="<%= !repost %>">
-	<aui:script>
+	<aui:script globalDeclaration="<%= true %>">
 		function <portlet:namespace />relationTypeOnChange(event) {
 			var form = event.currentTarget.form;
 

@@ -351,7 +351,7 @@ Map<String, Object> fragmentsEditorData = HashMapBuilder.<String, Object>put(
 								url='<%= "javascript:" + liferayPortletResponse.getNamespace() + "printPage_" + id + "();" %>'
 							/>
 
-							<aui:script>
+							<aui:script globalDeclaration="<%= true %>">
 								function <portlet:namespace />printPage_<%= id %>() {
 									window.open(
 										'<%=

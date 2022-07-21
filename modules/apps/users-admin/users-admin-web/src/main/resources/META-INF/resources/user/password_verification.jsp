@@ -53,7 +53,7 @@ String eventName = ParamUtil.getString(request, "eventName", liferayPortletRespo
 	</aui:button-row>
 </aui:form>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />onClick() {
 		var form = Liferay.Form.get('<portlet:namespace />fm');
 		var formValidator = form.formValidator;

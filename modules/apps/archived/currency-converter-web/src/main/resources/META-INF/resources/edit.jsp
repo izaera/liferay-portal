@@ -58,7 +58,7 @@
 	<aui:button onClick='<%= liferayPortletResponse.getNamespace() + "saveCurrency();" %>' primary="<%= true %>" value="save" />
 </aui:form>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />saveCurrency() {
 		var form = document.getElementById('<portlet:namespace />fm');
 

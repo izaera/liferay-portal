@@ -69,7 +69,7 @@ long[] commerceChannelIds = commerceCountriesDisplayContext.getCommerceChannelRe
 	</div>
 </aui:form>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />fulfillCommerceChannelIds(e) {
 		var form = window.document['<portlet:namespace />fm'];
 		var values = Liferay.Util.getCheckedCheckboxes(
@@ -79,6 +79,8 @@ long[] commerceChannelIds = commerceCountriesDisplayContext.getCommerceChannelRe
 		form['<portlet:namespace />commerceChannelIds'].value = values;
 		return values;
 	}
+</aui:script>
 
+<aui:script>
 	<portlet:namespace />fulfillCommerceChannelIds();
 </aui:script>

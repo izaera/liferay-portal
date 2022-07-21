@@ -95,7 +95,7 @@ renderResponse.setTitle((vocabulary == null) ? LanguageUtil.get(request, "add-vo
 	</liferay-frontend:edit-form-footer>
 </liferay-frontend:edit-form>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />confirmation(event) {
 		<c:choose>
 			<c:when test="<%= vocabulary == null %>">

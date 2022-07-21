@@ -261,7 +261,7 @@ catch (NoSuchFolderException nsfe) {
 	</liferay-frontend:edit-form-footer>
 </liferay-frontend:edit-form>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />saveConfiguration() {
 		var Util = Liferay.Util;
 

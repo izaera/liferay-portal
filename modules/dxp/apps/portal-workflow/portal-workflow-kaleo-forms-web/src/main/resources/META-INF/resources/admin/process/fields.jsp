@@ -117,38 +117,7 @@ JSONArray availableDefinitionsJSONArray = JSONFactoryUtil.createJSONArray();
 	/>
 </liferay-ui:search-container>
 
-<aui:script>
-	Liferay.on(
-		'<portlet:namespace />chooseDefinition',
-		(event) => {
-			var A = AUI();
-
-			var ddmStructureId = event.ddmStructureId;
-			var ddmStructureName = event.name;
-
-			A.one('#<portlet:namespace />ddmStructureDisplay').html(
-				Liferay.Util.escapeHTML(ddmStructureName)
-			);
-			A.one('#<portlet:namespace />ddmStructureId').val(ddmStructureId);
-			A.one('#<portlet:namespace />ddmStructureName').val(ddmStructureName);
-
-			var kaleoFormsAdmin = Liferay.component(
-				'<portlet:namespace />KaleoFormsAdmin'
-			);
-
-			kaleoFormsAdmin.saveInPortletSession(
-				{
-					ddmStructureId: ddmStructureId,
-					ddmStructureName: ddmStructureName,
-				},
-				event.dialogId
-			);
-
-			kaleoFormsAdmin.updateNavigationControls();
-		},
-		['aui-base']
-	);
-
+<aui:script globalDeclaration="<%= true %>">
 	<portlet:namespace />editStructure = (title, uri) => {
 		let closeRedirectURL;
 		let redirectOnClose = false;
@@ -187,6 +156,39 @@ JSONArray availableDefinitionsJSONArray = JSONFactoryUtil.createJSONArray();
 			url: uri,
 		});
 	};
+</aui:script>
+
+<aui:script>
+	Liferay.on(
+		'<portlet:namespace />chooseDefinition',
+		(event) => {
+			var A = AUI();
+
+			var ddmStructureId = event.ddmStructureId;
+			var ddmStructureName = event.name;
+
+			A.one('#<portlet:namespace />ddmStructureDisplay').html(
+				Liferay.Util.escapeHTML(ddmStructureName)
+			);
+			A.one('#<portlet:namespace />ddmStructureId').val(ddmStructureId);
+			A.one('#<portlet:namespace />ddmStructureName').val(ddmStructureName);
+
+			var kaleoFormsAdmin = Liferay.component(
+				'<portlet:namespace />KaleoFormsAdmin'
+			);
+
+			kaleoFormsAdmin.saveInPortletSession(
+				{
+					ddmStructureId: ddmStructureId,
+					ddmStructureName: ddmStructureName,
+				},
+				event.dialogId
+			);
+
+			kaleoFormsAdmin.updateNavigationControls();
+		},
+		['aui-base']
+	);
 </aui:script>
 
 <aui:script use="liferay-kaleo-forms-components">

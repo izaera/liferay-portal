@@ -254,7 +254,7 @@ String orderByType = ParamUtil.getString(request, "orderByType", "asc");
 	}
 </aui:script>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	window['<portlet:namespace />selectRecordSet'] = function (
 		recordSetId,
 		recordSetName

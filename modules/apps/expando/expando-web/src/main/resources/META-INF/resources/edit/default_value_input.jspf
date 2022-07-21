@@ -194,7 +194,7 @@
 	</c:otherwise>
 </c:choose>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />onLocalizeFieldChange(event) {
 		var form = document.querySelector('#<portlet:namespace />fm');
 

@@ -286,7 +286,7 @@ renderResponse.setTitle((ldapServerId == 0) ? LanguageUtil.get(resourceBundle, "
 	</aui:button-row>
 </aui:form>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />mapValues(fields, fieldValues) {
 		var form = document.<portlet:namespace />fm;
 

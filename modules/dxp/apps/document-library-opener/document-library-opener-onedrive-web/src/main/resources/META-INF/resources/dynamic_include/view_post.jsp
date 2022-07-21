@@ -21,7 +21,7 @@
 	module="js/DocumentLibraryOpener.es"
 />
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	window.<portlet:namespace />openCreateOfficeDocument = function (
 		formSubmitURL,
 		dialogTitle
@@ -48,6 +48,9 @@
 			}
 		);
 	};
+</aui:script>
+
+<aui:script>
 
 	<%
 	String oneDriveBackgroundTaskStatusURL = (String)request.getAttribute("oneDriveBackgroundTaskStatusURL");

@@ -57,7 +57,7 @@ String noSuchUserRedirectURL = casConfiguration.noSuchUserRedirectURL();
 	<aui:input cssClass="lfr-input-text-container" helpMessage="cas-no-such-user-redirect-url-help" label="no-such-user-redirect-url" name='<%= PortalSettingsCASConstants.FORM_PARAMETER_NAMESPACE + "noSuchUserRedirectURL" %>' type="text" value="<%= noSuchUserRedirectURL %>" />
 </aui:fieldset>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	window['<portlet:namespace />testCasSettings'] = function () {
 		var data = {};
 

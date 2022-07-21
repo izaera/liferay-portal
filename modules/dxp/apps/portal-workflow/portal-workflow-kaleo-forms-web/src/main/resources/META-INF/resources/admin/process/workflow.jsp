@@ -196,6 +196,25 @@ if (Validator.isNotNull(workflowDefinition)) {
 	/>
 </liferay-ui:search-container>
 
+<aui:script globalDeclaration="<%= true %>">
+	window['<portlet:namespace />editWorkflow'] = function (uri) {
+		AUI().use('liferay-util', (A) => {
+			var WIN = A.config.win;
+
+			Liferay.Util.openWindow({
+				dialog: {
+					destroyOnHide: true,
+					modal: true,
+				},
+				id: A.guid(),
+				refreshWindow: WIN,
+				title: '<liferay-ui:message key="workflow" />',
+				uri: uri,
+			});
+		});
+	};
+</aui:script>
+
 <aui:script>
 	Liferay.on(
 		'<portlet:namespace />chooseWorkflow',
@@ -226,21 +245,4 @@ if (Validator.isNotNull(workflowDefinition)) {
 		},
 		['aui-base']
 	);
-
-	window['<portlet:namespace />editWorkflow'] = function (uri) {
-		AUI().use('liferay-util', (A) => {
-			var WIN = A.config.win;
-
-			Liferay.Util.openWindow({
-				dialog: {
-					destroyOnHide: true,
-					modal: true,
-				},
-				id: A.guid(),
-				refreshWindow: WIN,
-				title: '<liferay-ui:message key="workflow" />',
-				uri: uri,
-			});
-		});
-	};
 </aui:script>

@@ -49,7 +49,7 @@ String viewMode = ParamUtil.getString(request, "viewMode");
 			/>
 		</clay:content-col>
 
-		<aui:script>
+		<aui:script globalDeclaration="<%= true %>">
 			function <portlet:namespace />printPage() {
 				window.open(
 					'<%= printPageURL %>',

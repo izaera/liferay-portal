@@ -88,7 +88,7 @@
 	</liferay-frontend:edit-form-footer>
 </liferay-frontend:edit-form>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />updateFrameSize(value) {
 		var Util = Liferay.Util;
 
@@ -107,7 +107,9 @@
 			widthNode.value = dimensions[0];
 		}
 	}
+</aui:script>
 
+<aui:script>
 	Liferay.Util.toggleBoxes(
 		'<portlet:namespace />showThumbnail',
 		'<portlet:namespace />videoPreferences',

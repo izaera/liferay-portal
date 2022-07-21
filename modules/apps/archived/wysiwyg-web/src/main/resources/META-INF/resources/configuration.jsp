@@ -38,7 +38,7 @@
 	</aui:button-row>
 </aui:form>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />saveMessage() {
 		var editorVal = window.<portlet:namespace />editor.getHTML();
 

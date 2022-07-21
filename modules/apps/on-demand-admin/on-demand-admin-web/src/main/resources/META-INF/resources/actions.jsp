@@ -44,7 +44,7 @@ Company rowObjectCompany = (Company)row.getObject();
 	</c:if>
 </liferay-ui:icon-menu>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />openModal(event) {
 		Liferay.Util.openModal({
 			disableAutoClose: true,

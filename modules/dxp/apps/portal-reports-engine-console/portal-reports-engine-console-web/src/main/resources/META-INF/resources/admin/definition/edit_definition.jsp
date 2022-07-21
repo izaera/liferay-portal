@@ -205,15 +205,7 @@ else {
 	</aui:button-row>
 </aui:form>
 
-<aui:script>
-	AUI().ready((A) => {
-		Liferay.Report.initialize({
-			namespace: '<portlet:namespace />',
-			parameters:
-				'<%= HtmlUtil.escapeJS(BeanParamUtil.getString(definition, request, "reportParameters")) %>',
-		});
-	});
-
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />addReport() {
 		submitForm(
 			document.<portlet:namespace />fm,
@@ -240,4 +232,14 @@ else {
 			);
 		}
 	}
+</aui:script>
+
+<aui:script>
+	AUI().ready((A) => {
+		Liferay.Report.initialize({
+			namespace: '<portlet:namespace />',
+			parameters:
+				'<%= HtmlUtil.escapeJS(BeanParamUtil.getString(definition, request, "reportParameters")) %>',
+		});
+	});
 </aui:script>

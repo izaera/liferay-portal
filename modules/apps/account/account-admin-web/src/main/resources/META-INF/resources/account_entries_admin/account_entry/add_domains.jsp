@@ -48,7 +48,7 @@ String eventName = ParamUtil.getString(request, "eventName", liferayPortletRespo
 	</div>
 </liferay-frontend:edit-form>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />addDomains() {
 		var domainsInput = document.getElementById('<portlet:namespace />domain');
 

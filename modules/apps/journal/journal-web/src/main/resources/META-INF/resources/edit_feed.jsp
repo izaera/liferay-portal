@@ -345,7 +345,7 @@ renderResponse.setTitle((feed == null) ? LanguageUtil.get(request, "new-feed") :
 	</liferay-frontend:edit-form-footer>
 </liferay-frontend:edit-form>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />openDDMStructureSelector() {
 		Liferay.Util.openSelectionModal({
 			onSelect: function (selectedItem) {
@@ -411,7 +411,9 @@ renderResponse.setTitle((feed == null) ? LanguageUtil.get(request, "new-feed") :
 
 		submitForm(document.<portlet:namespace />fm);
 	}
+</aui:script>
 
+<aui:script>
 	var autoFeedInput = document.getElementById('<portlet:namespace />autoFeedId');
 	var newFeedCheckbox = document.getElementById('<portlet:namespace />newFeedId');
 

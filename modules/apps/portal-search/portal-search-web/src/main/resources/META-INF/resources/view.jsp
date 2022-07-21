@@ -80,7 +80,7 @@ pageContext.setAttribute("portletURL", portletURL);
 		</c:choose>
 	</div>
 
-	<aui:script>
+	<aui:script globalDeclaration="<%= true %>">
 		window.<portlet:namespace />search = function () {
 			var keywords =
 				document.<portlet:namespace />fm.<portlet:namespace />keywords.value;

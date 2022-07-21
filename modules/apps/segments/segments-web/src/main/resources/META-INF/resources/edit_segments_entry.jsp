@@ -55,7 +55,7 @@ renderResponse.setTitle(editSegmentsEntryDisplayContext.getTitle(locale));
 	</div>
 </aui:form>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />saveSegmentsEntry() {
 		submitForm(document.<portlet:namespace />editSegmentFm);
 	}

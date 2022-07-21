@@ -185,7 +185,7 @@ String notificationTemplateBody = BeanPropertiesUtil.getString(calendarNotificat
 	</aui:button-row>
 </aui:form>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />updateCalendarNotificationTemplate() {
 		var notificationTemplateContentBody = document.getElementById(
 			'<portlet:namespace />body'

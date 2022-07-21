@@ -98,11 +98,13 @@ List<LayoutDescription> layoutDescriptions = siteNavigationSiteMapDisplayContext
 	</liferay-frontend:edit-form-footer>
 </liferay-frontend:edit-form>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />isVisible(currentValue, value) {
 		return currentValue != '';
 	}
+</aui:script>
 
+<aui:script>
 	Liferay.Util.toggleSelectBox(
 		'<portlet:namespace />rootLayoutUuid',
 		<portlet:namespace />isVisible,

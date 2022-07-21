@@ -120,7 +120,7 @@ if (samlRoleIdpOptionDisabled) {
 	</c:when>
 </c:choose>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	window['<portlet:namespace />showCertificateDialog'] = function (uri) {
 		Liferay.Util.openModal({
 			id: '<portlet:namespace />certificateDialog',

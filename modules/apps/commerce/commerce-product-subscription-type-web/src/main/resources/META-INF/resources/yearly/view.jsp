@@ -61,7 +61,7 @@ int selectedYearlyMode = yearlyCPSubscriptionTypeDisplayContext.getSelectedYearl
 			</aui:input>
 		</div>
 
-		<aui:script>
+		<aui:script globalDeclaration="<%= true %>">
 			function changeYearlyCPSubscriptionTypeSettingsMode() {
 				var A = AUI();
 
@@ -124,7 +124,7 @@ int selectedYearlyMode = yearlyCPSubscriptionTypeDisplayContext.getSelectedYearl
 			</aui:input>
 		</div>
 
-		<aui:script>
+		<aui:script globalDeclaration="<%= true %>">
 			function changeYearlyDeliveryCPSubscriptionTypeSettingsMode() {
 				var A = AUI();
 

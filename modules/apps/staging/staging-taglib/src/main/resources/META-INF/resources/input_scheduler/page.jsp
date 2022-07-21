@@ -489,7 +489,7 @@
 	</li>
 </ul>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />showTable(id) {
 		document.getElementById('<portlet:namespace />neverTable').style.display =
 			'none';
@@ -504,7 +504,9 @@
 
 		document.getElementById(id).style.display = 'block';
 	}
+</aui:script>
 
+<aui:script>
 	Liferay.Util.toggleRadio(
 		'<portlet:namespace />schedulerEndBy',
 		'<portlet:namespace />schedulerEndDateType'

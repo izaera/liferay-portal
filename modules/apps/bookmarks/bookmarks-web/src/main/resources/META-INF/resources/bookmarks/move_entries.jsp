@@ -270,7 +270,7 @@ if (portletTitleBasedNavigation) {
 	</aui:form>
 </div>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />saveEntry() {
 		var form = document.getElementById('<portlet:namespace />fm');
 
@@ -278,7 +278,9 @@ if (portletTitleBasedNavigation) {
 			submitForm(form);
 		}
 	}
+</aui:script>
 
+<aui:script>
 	var <portlet:namespace />selectFolderButton = document.getElementById(
 		'<portlet:namespace />selectFolderButton'
 	);

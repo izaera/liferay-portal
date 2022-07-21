@@ -288,7 +288,7 @@ else {
 	</clay:container-fluid>
 </div>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />setWorkflowAction(draft) {
 		if (draft) {
 			document.<portlet:namespace />fm.<portlet:namespace />workflowAction.value = <%= WorkflowConstants.ACTION_SAVE_DRAFT %>;

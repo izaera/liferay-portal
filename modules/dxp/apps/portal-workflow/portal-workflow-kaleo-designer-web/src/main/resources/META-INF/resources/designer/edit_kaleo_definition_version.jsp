@@ -334,7 +334,7 @@ String successMessageKey = KaleoDesignerPortletKeys.KALEO_DESIGNER + "requestPro
 									</div>
 								</div>
 
-								<aui:script>
+								<aui:script globalDeclaration="<%= true %>">
 									window['<portlet:namespace />afterTabViewChange'] = function (event) {
 										var tabContentNode = event.newVal.get('boundingBox');
 
@@ -393,6 +393,9 @@ String successMessageKey = KaleoDesignerPortletKeys.KALEO_DESIGNER + "requestPro
 											dialog.destroy();
 										}
 									};
+								</aui:script>
+
+								<aui:script>
 
 									<%
 									String saveCallback = ParamUtil.getString(request, "saveCallback");

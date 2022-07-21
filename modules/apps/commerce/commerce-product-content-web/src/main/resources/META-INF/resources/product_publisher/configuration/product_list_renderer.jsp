@@ -39,7 +39,7 @@ List<CPContentListRenderer> cpContentListRenderers = cpPublisherConfigurationDis
 	</aui:select>
 </aui:fieldset>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />chooseCPContentListRendererKey() {
 		submitForm(document.<portlet:namespace />fm);
 	}

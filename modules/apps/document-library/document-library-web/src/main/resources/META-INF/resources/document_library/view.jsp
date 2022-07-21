@@ -246,7 +246,7 @@ DLViewDisplayContext dlViewDisplayContext = new DLViewDisplayContext(dlAdminDisp
 				/>
 			</c:when>
 			<c:otherwise>
-				<aui:script>
+				<aui:script globalDeclaration="<%= true %>">
 					function <portlet:namespace />move(
 						itemsSelected,
 						parameterName,

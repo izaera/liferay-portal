@@ -39,7 +39,7 @@ JournalArticleDisplay articleDisplay = commerceVirtualOrderItemContentDisplayCon
 	</aui:button-row>
 </div>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />agreeTermsOfUse() {
 		Liferay.Util.getOpener().<portlet:namespace />downloadCommerceVirtualOrderItem(
 			'<portlet:namespace />viewTermsOfUseDialog',

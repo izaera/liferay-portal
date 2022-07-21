@@ -136,7 +136,7 @@ MBBreadcrumbUtil.addPortletBreadcrumbEntries(message, request, renderResponse);
 	};
 </aui:script>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />hideReplyMessage(messageId) {
 		var addQuickReplyContainer = document.querySelector(
 			'#<portlet:namespace />addReplyToMessage' + messageId + ' .panel'
@@ -151,7 +151,9 @@ MBBreadcrumbUtil.addPortletBreadcrumbEntries(message, request, renderResponse);
 			false
 		);
 	}
+</aui:script>
 
+<aui:script>
 	<c:if test="<%= thread.getRootMessageId() != message.getMessageId() %>">
 		var message = document.getElementById(
 			'<portlet:namespace />message_' + <%= message.getMessageId() %>

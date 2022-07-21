@@ -99,7 +99,7 @@ boolean male = BeanParamUtil.getBoolean(selUser, request, "male", true);
 	<aui:button name="resetUser" onClick='<%= liferayPortletResponse.getNamespace() + "resetUser();" %>' value="create-new-account" />
 </div>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	window.<portlet:namespace />resetUser = function () {
 		var form = document.getElementById('<portlet:namespace />fm');
 

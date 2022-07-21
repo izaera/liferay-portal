@@ -43,7 +43,7 @@
 	</div>
 </aui:form>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />renamePage() {
 		document.<portlet:namespace />renameFm.<portlet:namespace /><%= Constants.CMD %>.value =
 			'<%= Constants.RENAME %>';

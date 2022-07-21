@@ -109,7 +109,7 @@ if (!portletName.equals(PortletKeys.SERVER_ADMIN)) {
 	</clay:row>
 </clay:container-fluid>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />selectOrganization(
 		organizationId,
 		groupId,
@@ -369,7 +369,7 @@ if (!portletName.equals(PortletKeys.SERVER_ADMIN)) {
 	});
 </aui:script>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />updateActions() {
 		var form = document.<portlet:namespace />fm;
 

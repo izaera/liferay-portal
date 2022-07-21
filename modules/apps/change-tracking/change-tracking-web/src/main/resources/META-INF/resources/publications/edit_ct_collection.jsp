@@ -132,7 +132,7 @@ portletDisplay.setShowBackIcon(true);
 					</aui:fieldset>
 				</div>
 
-				<aui:script>
+				<aui:script globalDeclaration="<%= true %>">
 					function <portlet:namespace />onPublishTimeChange(event) {
 						var form = event.currentTarget.form;
 

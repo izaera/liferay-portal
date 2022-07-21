@@ -180,7 +180,7 @@ long[] groupIds = viewUADEntitiesDisplay.getGroupIds();
 	</div>
 </aui:form>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />doAnonymizeMultiple() {
 		<portlet:namespace />doMultiple(
 			'<portlet:actionURL name='<%= Objects.equals(viewUADEntitiesDisplay.getApplicationKey(), UADConstants.ALL_APPLICATIONS) ? "/user_associated_data/anonymize_uad_applications" : "/user_associated_data/anonymize_uad_entities" %>' />',

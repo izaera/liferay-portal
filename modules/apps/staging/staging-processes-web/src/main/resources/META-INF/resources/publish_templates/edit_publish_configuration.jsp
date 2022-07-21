@@ -196,7 +196,7 @@ renderResponse.setTitle((exportImportConfiguration == null) ? LanguageUtil.get(r
 	</div>
 </clay:container-fluid>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />publishPages() {
 		var exportImport = Liferay.component(
 			'<portlet:namespace />ExportImportComponent'
@@ -211,7 +211,9 @@ renderResponse.setTitle((exportImportConfiguration == null) ? LanguageUtil.get(r
 			exportImport.showNotification();
 		}
 	}
+</aui:script>
 
+<aui:script>
 	Liferay.Util.toggleRadio(
 		'<portlet:namespace />allApplications',
 		'<portlet:namespace />showChangeGlobalConfiguration',

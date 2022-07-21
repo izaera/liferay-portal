@@ -113,7 +113,7 @@ int subscriptionsCount = mySubscriptionsManagementToolbarDisplayContext.getTotal
 	</aui:form>
 </clay:container-fluid>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	window['<portlet:namespace />displayPopup'] = function (url, title) {
 		Liferay.Util.openModal({
 			iframeBodyCssClass: 'portlet-my-subscription',

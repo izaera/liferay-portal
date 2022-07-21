@@ -76,7 +76,7 @@ PortletURL portletURL = viewUserGroupsManagementToolbarDisplayContext.getPortlet
 	<%@ include file="/view_flat_user_groups.jspf" %>
 </aui:form>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	window.<portlet:namespace />deleteUserGroups = function () {
 		<portlet:namespace />doDeleteUserGroup(
 			'<%= UserGroup.class.getName() %>',

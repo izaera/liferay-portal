@@ -123,7 +123,7 @@ if (comment instanceof WorkflowableComment) {
 	</aui:form>
 </clay:container-fluid>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />saveComment() {
 		Liferay.Util.postForm(document.<portlet:namespace />fm, {
 			data: {

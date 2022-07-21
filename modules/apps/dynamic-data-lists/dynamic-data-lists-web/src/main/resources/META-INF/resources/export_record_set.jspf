@@ -44,7 +44,7 @@ if (Validator.isNotNull(ddlDisplayContext.getCSVExport())) {
 	</aui:select>
 </div>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	window['<portlet:namespace />exportRecordSet'] = function (url) {
 		var form = document.createElement('form');
 		form.setAttribute('id', '<portlet:namespace />exportForm');

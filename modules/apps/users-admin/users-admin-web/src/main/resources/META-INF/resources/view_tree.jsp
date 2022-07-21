@@ -184,7 +184,7 @@ if (organization != null) {
 	</c:otherwise>
 </c:choose>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />delete(organizationsRedirect) {
 		<portlet:namespace />deleteOrganizations(organizationsRedirect);
 	}
@@ -239,7 +239,9 @@ if (organization != null) {
 			url: '<%= removeOrganizationsAndUsersURL.toString() %>',
 		});
 	}
+</aui:script>
 
+<aui:script>
 	var selectUsers = function (organizationId) {
 		<portlet:namespace />openSelectUsersDialog(organizationId);
 	};

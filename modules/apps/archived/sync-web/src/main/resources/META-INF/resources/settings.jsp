@@ -136,7 +136,7 @@ if (deployed && oAuthEnabled) {
 	</clay:sheet>
 </aui:form>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />updatePreferences() {
 		submitForm(
 			document.<portlet:namespace />fm,

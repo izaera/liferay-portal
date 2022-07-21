@@ -40,7 +40,7 @@
 					toolbarSet="<%= toolbarSet %>"
 				/>
 
-				<aui:script>
+				<aui:script globalDeclaration="<%= true %>">
 					function <%= namespace + randomNamespace %>onChangeEditor() {
 						var inputLocalized = Liferay.component('<%= namespace + HtmlUtil.escapeJS(fieldName) %>');
 

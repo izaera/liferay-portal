@@ -81,7 +81,7 @@ CommerceRegionsStarter commerceRegionsStarter = commerceCountriesDisplayContext.
 	</aui:button-row>
 </aui:form>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />saveCommerceCountry() {
 		submitForm(document.<portlet:namespace />fm);
 	}

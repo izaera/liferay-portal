@@ -28,7 +28,7 @@ request.setAttribute("view.jsp-portletURL", portletURL);
 
 <%@ include file="/message_boards.jspf" %>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	window['<portlet:namespace />deleteMBMessages'] = function (dicussion) {
 		var deleteMBMessageIds = Liferay.Util.getCheckedCheckboxes(
 			document.<portlet:namespace />fm,

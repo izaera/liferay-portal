@@ -232,14 +232,16 @@ if (portletTitleBasedNavigation) {
 	</aui:form>
 </div>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />saveCategory() {
 		document.<portlet:namespace />fm.<portlet:namespace /><%= Constants.CMD %>.value =
 			'<%= (category == null) ? Constants.ADD : Constants.UPDATE %>';
 
 		submitForm(document.<portlet:namespace />fm);
 	}
+</aui:script>
 
+<aui:script>
 	Liferay.Util.toggleBoxes(
 		'<portlet:namespace />mailingListActive',
 		'<portlet:namespace />mailingListSettings'

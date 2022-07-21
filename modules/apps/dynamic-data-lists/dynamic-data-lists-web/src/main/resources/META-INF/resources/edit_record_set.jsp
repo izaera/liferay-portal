@@ -166,7 +166,7 @@ if (ddlDisplayContext.isAdminPortlet()) {
 	</aui:form>
 </clay:container-fluid>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 
 	<%
 	Portlet portlet = PortletLocalServiceUtil.getPortletById(portletDisplay.getId());

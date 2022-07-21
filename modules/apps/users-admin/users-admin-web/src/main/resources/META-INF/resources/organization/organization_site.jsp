@@ -265,11 +265,13 @@ boolean hasUnlinkLayoutSetPrototypePermission = PortalPermissionUtil.contains(pe
 </div>
 
 <c:if test="<%= !site %>">
-	<aui:script>
+	<aui:script globalDeclaration="<%= true %>">
 		function <portlet:namespace />isVisible(currentValue, value) {
 			return currentValue != '';
 		}
+	</aui:script>
 
+	<aui:script>
 		Liferay.Util.toggleBoxes(
 			'<portlet:namespace />site',
 			'<portlet:namespace />siteTemplates'

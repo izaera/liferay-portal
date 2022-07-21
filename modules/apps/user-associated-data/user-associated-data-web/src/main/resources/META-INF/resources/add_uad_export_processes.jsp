@@ -133,7 +133,7 @@ renderResponse.setTitle(StringBundler.concat(selectedUser.getFullName(), " - ", 
 	</aui:form>
 </clay:container-fluid>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />exportApplicationData() {
 		var form = document.getElementById('<portlet:namespace />fm');
 

@@ -112,7 +112,7 @@ String redirect = PortalUtil.getLayoutFullURL(layout, themeDisplay);
 	</aui:button-row>
 </clay:container-fluid>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />addAssetEntry() {
 		var visibleItem = document.querySelector('.asset-entry-type:not(.hide)');
 

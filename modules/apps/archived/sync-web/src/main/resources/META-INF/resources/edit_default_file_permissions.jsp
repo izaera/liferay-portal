@@ -114,7 +114,7 @@ if (groupIds.length == 1) {
 	</tbody>
 </table>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	window['<portlet:namespace />setPermissions'] = function (uri) {
 		Liferay.Util.getOpener().Liferay.fire(
 

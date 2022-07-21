@@ -540,7 +540,7 @@ while (manageableCalendarsIterator.hasNext()) {
 	</aui:button-row>
 </aui:form>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />filterCalendarBookings(calendarBooking) {
 		return calendarBooking.calendarBookingId !== '<%= calendarBookingId %>';
 	}
@@ -567,7 +567,9 @@ while (manageableCalendarsIterator.hasNext()) {
 			submitForm(document.<portlet:namespace />fm);
 		}
 	}
+</aui:script>
 
+<aui:script>
 	Liferay.provide(
 		window,
 		'<portlet:namespace />updateCalendarBooking',

@@ -46,7 +46,7 @@ int selectedMonthlyMode = monthlyCPSubscriptionTypeDisplayContext.getSelectedMon
 			</aui:input>
 		</div>
 
-		<aui:script>
+		<aui:script globalDeclaration="<%= true %>">
 			function changeMonthlyCPSubscriptionTypeSettingsMode() {
 				var A = AUI();
 
@@ -95,7 +95,7 @@ int selectedMonthlyMode = monthlyCPSubscriptionTypeDisplayContext.getSelectedMon
 			</aui:input>
 		</div>
 
-		<aui:script>
+		<aui:script globalDeclaration="<%= true %>">
 			function changeMonthlyDeliveryCPSubscriptionTypeSettingsMode() {
 				var A = AUI();
 

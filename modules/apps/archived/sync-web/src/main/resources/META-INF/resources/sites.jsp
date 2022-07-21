@@ -214,7 +214,7 @@ PortletURL portletURL = PortletURLBuilder.createRenderURL(
 	</aui:form>
 </clay:container-fluid>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />disableSites() {
 		var form = document.querySelector('#document.<portlet:namespace />fm');
 

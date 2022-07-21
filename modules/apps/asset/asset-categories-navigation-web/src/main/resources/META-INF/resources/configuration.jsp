@@ -71,7 +71,7 @@
 	</liferay-frontend:edit-form-footer>
 </liferay-frontend:edit-form>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />saveConfiguration() {
 		var form = document.<portlet:namespace />fm;
 
@@ -83,7 +83,9 @@
 			},
 		});
 	}
+</aui:script>
 
+<aui:script>
 	Liferay.Util.toggleSelectBox(
 		'<portlet:namespace />allAssetVocabularies',
 		'false',

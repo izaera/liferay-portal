@@ -243,7 +243,7 @@ String redirect = ParamUtil.getString(request, "redirect");
 	module="message_boards/js/MBPortlet.es"
 />
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	window[
 		'<portlet:namespace />replyMessageOnChange' + <%= parentMessageId %>
 	] = function (html) {

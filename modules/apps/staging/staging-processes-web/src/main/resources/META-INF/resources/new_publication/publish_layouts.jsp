@@ -130,7 +130,7 @@
 	</div>
 </aui:form>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />publishPages() {
 		var exportImport = Liferay.component(
 			'<portlet:namespace />ExportImportComponent'
@@ -161,7 +161,9 @@
 			exportImport.showNotification(dateChecker);
 		}
 	}
+</aui:script>
 
+<aui:script>
 	Liferay.Util.toggleRadio(
 		'<portlet:namespace />allApplications',
 		'<portlet:namespace />showChangeGlobalConfiguration',

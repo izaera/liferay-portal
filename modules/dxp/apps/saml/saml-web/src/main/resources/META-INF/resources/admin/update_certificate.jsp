@@ -24,7 +24,7 @@ LocalEntityManager.CertificateUsage certificateUsage = LocalEntityManager.Certif
 X509Certificate x509Certificate = (X509Certificate)request.getAttribute(SamlWebKeys.SAML_X509_CERTIFICATE);
 %>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	window['<portlet:namespace />requestCloseDialog'] = function (stateChange) {
 		Liferay.Util.getOpener().<portlet:namespace />closeDialog(
 			'<portlet:namespace />certificateDialog',

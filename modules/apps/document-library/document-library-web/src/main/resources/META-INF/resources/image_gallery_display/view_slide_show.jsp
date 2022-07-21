@@ -80,7 +80,7 @@ int defaultSpeed = 3000;
 	</tr>
 </table>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	var <portlet:namespace />imgArray = [];
 
 	<%

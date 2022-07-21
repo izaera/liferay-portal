@@ -22,7 +22,7 @@
 	url="javascript:void(0);"
 />
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />openInstallFromURLView() {
 		Liferay.Util.openWindow({
 			dialog: {

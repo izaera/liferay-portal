@@ -109,7 +109,7 @@ renderResponse.setTitle((selCompany == null) ? LanguageUtil.get(request, "new-in
 	</aui:button-row>
 </aui:form>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />saveCompany() {
 		var form = document.getElementById('<portlet:namespace />fm');
 

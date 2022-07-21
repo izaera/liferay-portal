@@ -65,7 +65,7 @@ portletDisplay.setURLBack(backURL);
 </liferay-frontend:edit-form>
 
 <c:if test="<%= !objectEntryDisplayContext.isReadOnly() %>">
-	<aui:script>
+	<aui:script globalDeclaration="<%= true %>">
 		function <portlet:namespace />getExternalReferenceCode() {
 			return String(
 				'<%= (objectEntry == null) ? "" : objectEntry.getExternalReferenceCode() %>'
@@ -107,7 +107,9 @@ portletDisplay.setURLBack(backURL);
 				return Object.assign(obj, {[field.fieldName]: value});
 			}, {});
 		}
+	</aui:script>
 
+	<aui:script>
 		Liferay.provide(
 			window,
 			'<portlet:namespace />submitObjectEntry',

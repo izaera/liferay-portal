@@ -123,7 +123,7 @@ LowLevelSearchOptionsPortletPreferences lowLevelSearchOptionsPortletPreferences 
 	}).render();
 </aui:script>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />saveConfiguration() {
 		var form = document.getElementById('<portlet:namespace />fm');
 

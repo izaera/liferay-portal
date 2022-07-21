@@ -762,7 +762,7 @@ currentURLObj.setParameter("historyKey", liferayPortletResponse.getNamespace() +
 	</c:if>
 
 	<c:if test="<%= !portletName.equals(myAccountPortletId) %>">
-		<aui:script>
+		<aui:script globalDeclaration="<%= true %>">
 			var <portlet:namespace />addRoleIds = [];
 			var <portlet:namespace />deleteRoleIds = [];
 

@@ -345,7 +345,7 @@ if (Validator.isNotNull(requestUpdateStructureURL)) {
 	</aui:button-row>
 </clay:container-fluid>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />openParentStructureSelector() {
 		const opener = Liferay.Util.getOpener();
 

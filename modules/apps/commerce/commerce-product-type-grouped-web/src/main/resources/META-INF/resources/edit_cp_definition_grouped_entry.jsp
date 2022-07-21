@@ -73,7 +73,7 @@ renderResponse.setTitle(cpDefinition.getName(themeDisplay.getLanguageId()) + " -
 	</aui:button-row>
 </aui:form>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />saveCPDefinitionGroupedEntry() {
 		submitForm(document.<portlet:namespace />fm);
 	}

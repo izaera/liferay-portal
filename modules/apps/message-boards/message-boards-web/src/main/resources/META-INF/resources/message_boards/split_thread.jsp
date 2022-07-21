@@ -131,7 +131,7 @@ if (portletTitleBasedNavigation) {
 	</aui:form>
 </div>
 
-<aui:script>
+<aui:script globalDeclaration="<%= true %>">
 	function <portlet:namespace />splitThread() {
 		document.<portlet:namespace />fm.<portlet:namespace />body.value = <portlet:namespace />getHTML();
 
