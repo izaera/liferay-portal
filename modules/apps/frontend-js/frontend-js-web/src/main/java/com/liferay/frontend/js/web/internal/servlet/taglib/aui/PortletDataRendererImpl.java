@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.util.Validator;
 import java.io.IOException;
 import java.io.Writer;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -46,6 +47,21 @@ public class PortletDataRendererImpl implements PortletDataRenderer {
 	public void write(Collection<PortletData> portletDatas, Writer writer)
 		throws IOException {
 
+		Collection<JSFragment> jsFragments = _getJSFragments(portletDatas);
+
+		// Write global declaration fragments
+
+		writer.write("<script type=\"text/javascript\">\n");
+
+		for (JSFragment jsFragment : jsFragments) {
+			if (jsFragment.isGlobalDeclaration()) {
+				writer.write(jsFragment.getCode());
+				writer.write(StringPool.NEW_LINE);
+			}
+		}
+
+		writer.write("</script>\n");
+
 		writer.write("<script type=\"module\">\n");
 
 		// Write ES prolog
@@ -53,7 +69,7 @@ public class PortletDataRendererImpl implements PortletDataRenderer {
 		Map<String, Integer> usedVariables = new HashMap<>();
 
 		Map<ESImport, ESImport> esImportMap = _computeESImportMap(
-			portletDatas, usedVariables);
+			jsFragments, usedVariables);
 
 		if (!esImportMap.isEmpty()) {
 			for (ESImport esImport : esImportMap.values()) {
@@ -76,7 +92,7 @@ public class PortletDataRendererImpl implements PortletDataRenderer {
 		// Write AMD prolog
 
 		Map<AMDRequire, AMDRequire> amdRequireMap = _computeAMDRequireMap(
-			portletDatas, usedVariables);
+			jsFragments, usedVariables);
 
 		if (!amdRequireMap.isEmpty()) {
 			writer.write("Liferay.Loader.require(\n");
@@ -104,7 +120,7 @@ public class PortletDataRendererImpl implements PortletDataRenderer {
 
 		// Write AUI prolog
 
-		Set<String> auiUseSet = _computeAUIUseSet(portletDatas);
+		Set<String> auiUseSet = _computeAUIUseSet(jsFragments);
 
 		if (!auiUseSet.isEmpty()) {
 			writer.write("AUI().use(\n");
@@ -120,7 +136,8 @@ public class PortletDataRendererImpl implements PortletDataRenderer {
 
 		// Write actual JS code
 
-		writer.write(_computeCode(amdRequireMap, esImportMap, portletDatas));
+		writer.write(
+			_computeExecutableCode(amdRequireMap, esImportMap, jsFragments));
 
 		// Write AUI epilog
 
@@ -142,192 +159,189 @@ public class PortletDataRendererImpl implements PortletDataRenderer {
 	}
 
 	private Map<AMDRequire, AMDRequire> _computeAMDRequireMap(
-		Collection<PortletData> portletDatas,
+		Collection<JSFragment> jsFragments,
 		Map<String, Integer> usedVariables) {
 
 		Map<AMDRequire, AMDRequire> amdRequireMap = new HashMap<>();
 
-		for (PortletData portletData : portletDatas) {
-			for (JSFragment jsFragment : portletData.getJSFragments()) {
-				Collection<AMDRequire> amdRequires =
-					jsFragment.getAMDRequires();
+		for (JSFragment jsFragment : jsFragments) {
+			Collection<AMDRequire> amdRequires = jsFragment.getAMDRequires();
 
-				if ((amdRequires == null) || amdRequires.isEmpty()) {
+			if ((amdRequires == null) || amdRequires.isEmpty()) {
+				continue;
+			}
+
+			for (AMDRequire amdRequire : amdRequires) {
+				if (amdRequireMap.containsKey(amdRequire)) {
 					continue;
 				}
 
-				for (AMDRequire amdRequire : amdRequires) {
-					if (amdRequireMap.containsKey(amdRequire)) {
-						continue;
-					}
+				String variable = amdRequire.getAlias();
 
-					String variable = amdRequire.getAlias();
+				if (usedVariables.containsKey(variable)) {
+					int index = usedVariables.get(variable);
 
-					if (usedVariables.containsKey(variable)) {
-						int index = usedVariables.get(variable);
+					usedVariables.put(variable, index + 1);
 
-						usedVariables.put(variable, index + 1);
-
-						variable += index;
-					}
-					else {
-						usedVariables.put(variable, 1);
-					}
-
-					amdRequireMap.put(
-						amdRequire,
-						new AMDRequire(amdRequire.getModule(), variable));
+					variable += index;
 				}
+				else {
+					usedVariables.put(variable, 1);
+				}
+
+				amdRequireMap.put(
+					amdRequire,
+					new AMDRequire(amdRequire.getModule(), variable));
 			}
 		}
 
 		return amdRequireMap;
 	}
 
-	private Set<String> _computeAUIUseSet(
-		Collection<PortletData> portletDatas) {
-
+	private Set<String> _computeAUIUseSet(Collection<JSFragment> jsFragments) {
 		Set<String> auiUseSet = new HashSet<>();
 
-		for (PortletData portletData : portletDatas) {
-			for (JSFragment jsFragment : portletData.getJSFragments()) {
-				auiUseSet.addAll(jsFragment.getAUIUses());
-			}
+		for (JSFragment jsFragment : jsFragments) {
+			auiUseSet.addAll(jsFragment.getAUIUses());
 		}
 
 		return auiUseSet;
 	}
 
-	private String _computeCode(
-		Map<AMDRequire, AMDRequire> amdRequireMap,
-		Map<ESImport, ESImport> esImportMap,
-		Collection<PortletData> portletDatas) {
+	private Map<ESImport, ESImport> _computeESImportMap(
+		Collection<JSFragment> jsFragments,
+		Map<String, Integer> usedVariables) {
 
-		StringBundler sb = new StringBundler();
+		Map<ESImport, ESImport> esImportMap = new HashMap<>();
 
-		for (PortletData portletData : portletDatas) {
-			for (JSFragment jsFragment : portletData.getJSFragments()) {
-				String code = jsFragment.getCode();
+		for (JSFragment jsFragment : jsFragments) {
+			Collection<ESImport> esImports = jsFragment.getESImports();
 
-				if (Validator.isNull(code)) {
+			if ((esImports == null) || esImports.isEmpty()) {
+				continue;
+			}
+
+			for (ESImport esImport : esImports) {
+				if (esImportMap.containsKey(esImport)) {
 					continue;
 				}
 
-				List<AMDRequire> amdRequires = jsFragment.getAMDRequires();
-				List<String> auiUses = jsFragment.getAUIUses();
+				String variable = esImport.getAlias();
 
-				boolean legacyJSFragment = false;
+				if (usedVariables.containsKey(variable)) {
+					int index = usedVariables.get(variable);
 
-				if (!amdRequires.isEmpty() || !auiUses.isEmpty()) {
-					legacyJSFragment = true;
-				}
+					usedVariables.put(variable, index + 1);
 
-				if (legacyJSFragment) {
-					sb.append("(function() {\n");
+					variable += index;
 				}
 				else {
-					sb.append("{\n");
+					usedVariables.put(variable, 0);
 				}
 
-				// Map AMD requires to their requested aliases
+				esImportMap.put(
+					esImport,
+					new ESImport(
+						esImport.getSymbol(), variable, esImport.getModule()));
+			}
+		}
 
-				List<AMDRequire> fragmentAMDRequires =
-					jsFragment.getAMDRequires();
+		return esImportMap;
+	}
 
-				for (AMDRequire fragmentAMDRequire : fragmentAMDRequires) {
-					AMDRequire amdRequire = amdRequireMap.get(
-						fragmentAMDRequire);
+	private String _computeExecutableCode(
+		Map<AMDRequire, AMDRequire> amdRequireMap,
+		Map<ESImport, ESImport> esImportMap,
+		Collection<JSFragment> jsFragments) {
 
-					if (!Objects.equals(
-							amdRequire.getAlias(),
-							fragmentAMDRequire.getAlias())) {
+		StringBundler sb = new StringBundler();
 
-						sb.append("const ");
-						sb.append(fragmentAMDRequire.getAlias());
-						sb.append(" = ");
-						sb.append(amdRequire.getAlias());
-						sb.append(";\n");
-					}
+		for (JSFragment jsFragment : jsFragments) {
+			String code = jsFragment.getCode();
+
+			if (Validator.isNull(code) || jsFragment.isGlobalDeclaration()) {
+				continue;
+			}
+
+			List<AMDRequire> amdRequires = jsFragment.getAMDRequires();
+			List<String> auiUses = jsFragment.getAUIUses();
+
+			boolean legacyJSFragment = false;
+
+			if (!amdRequires.isEmpty() || !auiUses.isEmpty()) {
+				legacyJSFragment = true;
+			}
+
+			if (legacyJSFragment) {
+				sb.append("(function() {\n");
+			}
+			else {
+				sb.append("{\n");
+			}
+
+			// Map AMD requires to their requested aliases
+
+			List<AMDRequire> fragmentAMDRequires = jsFragment.getAMDRequires();
+
+			for (AMDRequire fragmentAMDRequire : fragmentAMDRequires) {
+				AMDRequire amdRequire = amdRequireMap.get(fragmentAMDRequire);
+
+				if (!Objects.equals(
+						amdRequire.getAlias(), fragmentAMDRequire.getAlias())) {
+
+					sb.append("const ");
+					sb.append(fragmentAMDRequire.getAlias());
+					sb.append(" = ");
+					sb.append(amdRequire.getAlias());
+					sb.append(";\n");
 				}
+			}
 
-				// Map ES imports to their requested aliases
+			// Map ES imports to their requested aliases
 
-				List<ESImport> fragmentESImports = jsFragment.getESImports();
+			List<ESImport> fragmentESImports = jsFragment.getESImports();
 
-				for (ESImport fragmentESImport : fragmentESImports) {
-					ESImport esImport = esImportMap.get(fragmentESImport);
+			for (ESImport fragmentESImport : fragmentESImports) {
+				ESImport esImport = esImportMap.get(fragmentESImport);
 
-					if (!Objects.equals(
-							esImport.getAlias(), fragmentESImport.getAlias())) {
+				if (!Objects.equals(
+						esImport.getAlias(), fragmentESImport.getAlias())) {
 
-						sb.append("const ");
-						sb.append(fragmentESImport.getAlias());
-						sb.append(" = ");
-						sb.append(esImport.getAlias());
-						sb.append(";\n");
-					}
+					sb.append("const ");
+					sb.append(fragmentESImport.getAlias());
+					sb.append(" = ");
+					sb.append(esImport.getAlias());
+					sb.append(";\n");
 				}
+			}
 
-				sb.append(code);
+			sb.append(code);
 
-				if (!code.endsWith(StringPool.NEW_LINE)) {
-					sb.append(StringPool.NEW_LINE);
-				}
+			if (!code.endsWith(StringPool.NEW_LINE)) {
+				sb.append(StringPool.NEW_LINE);
+			}
 
-				if (legacyJSFragment) {
-					sb.append("})();\n");
-				}
-				else {
-					sb.append("}\n");
-				}
+			if (legacyJSFragment) {
+				sb.append("})();\n");
+			}
+			else {
+				sb.append("}\n");
 			}
 		}
 
 		return sb.toString();
 	}
 
-	private Map<ESImport, ESImport> _computeESImportMap(
-		Collection<PortletData> portletDatas,
-		Map<String, Integer> usedVariables) {
+	private Collection<JSFragment> _getJSFragments(
+		Collection<PortletData> portletDatas) {
 
-		Map<ESImport, ESImport> esImportMap = new HashMap<>();
+		List<JSFragment> jsFragments = new ArrayList<>();
 
 		for (PortletData portletData : portletDatas) {
-			for (JSFragment jsFragment : portletData.getJSFragments()) {
-				Collection<ESImport> esImports = jsFragment.getESImports();
-
-				if ((esImports == null) || esImports.isEmpty()) {
-					continue;
-				}
-
-				for (ESImport esImport : esImports) {
-					if (esImportMap.containsKey(esImport)) {
-						continue;
-					}
-
-					String variable = esImport.getAlias();
-
-					if (usedVariables.containsKey(variable)) {
-						int index = usedVariables.get(variable);
-
-						usedVariables.put(variable, index + 1);
-
-						variable += index;
-					}
-					else {
-						usedVariables.put(variable, 0);
-					}
-
-					esImportMap.put(
-						esImport,
-						new ESImport(
-							esImport.getSymbol(), variable,
-							esImport.getModule()));
-				}
-			}
+			jsFragments.addAll(portletData.getJSFragments());
 		}
 
-		return esImportMap;
+		return jsFragments;
 	}
 
 }

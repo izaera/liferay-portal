@@ -1357,6 +1357,11 @@
 		<description>Creates a script component in which to write JavaScript that facilitates using AlloyUI modules.</description>
 		<attributes>
 			<attribute>
+				<name>globalDeclaration</name>
+				<inputType>boolean</inputType>
+				<outputType>boolean</outputType>
+			</attribute>
+			<attribute>
 				<name>load</name>
 				<inputType>java.lang.String</inputType>
 				<outputType>java.lang.String</outputType>

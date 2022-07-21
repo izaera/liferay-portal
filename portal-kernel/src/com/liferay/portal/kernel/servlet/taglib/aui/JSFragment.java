@@ -25,18 +25,31 @@ public class JSFragment {
 
 	public JSFragment(
 		Collection<AMDRequire> amdRequires, Collection<ESImport> esImports,
-		String code) {
+		String code, boolean globalDeclaration) {
 
-		this(null, amdRequires, esImports, code);
+		this(null, amdRequires, esImports, code, globalDeclaration);
 	}
 
-	public JSFragment(Collection<ESImport> esImports, String code) {
-		this(null, null, esImports, code);
+	public JSFragment(
+		Collection<ESImport> esImports, String code,
+		boolean globalDeclaration) {
+
+		this(null, null, esImports, code, globalDeclaration);
 	}
 
 	public JSFragment(
 		Collection<String> auiUses, Collection<AMDRequire> amdRequires,
-		Collection<ESImport> esImports, String code) {
+		Collection<ESImport> esImports, String code,
+		boolean globalDeclaration) {
+
+		if (globalDeclaration && (auiUses != null) && !auiUses.isEmpty() &&
+			(amdRequires != null) && !amdRequires.isEmpty() &&
+			(esImports != null) && !esImports.isEmpty()) {
+
+			throw new IllegalArgumentException(
+				"Parameter globalDeclaration cannot be true if auiUses, " +
+					"amdRequires or esImports are not empty");
+		}
 
 		if (esImports != null) {
 			_esImports.addAll(esImports);
@@ -51,10 +64,11 @@ public class JSFragment {
 		}
 
 		_code = code;
+		_globalDeclaration = globalDeclaration;
 	}
 
-	public JSFragment(String code) {
-		this(null, null, null, code);
+	public JSFragment(String code, boolean globalDeclaration) {
+		this(null, null, null, code, globalDeclaration);
 	}
 
 	public List<AMDRequire> getAMDRequires() {
@@ -73,9 +87,14 @@ public class JSFragment {
 		return _esImports;
 	}
 
+	public boolean isGlobalDeclaration() {
+		return _globalDeclaration;
+	}
+
 	private final List<AMDRequire> _amdRequires = new ArrayList<>();
 	private final List<String> _auiUses = new ArrayList<>();
 	private final String _code;
 	private final List<ESImport> _esImports = new ArrayList<>();
+	private final boolean _globalDeclaration;
 
 }

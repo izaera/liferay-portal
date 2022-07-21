@@ -30,6 +30,10 @@ public abstract class BaseScriptTag extends com.liferay.taglib.util.PositionTagS
 		return super.doStartTag();
 	}
 
+	public boolean getGlobalDeclaration() {
+		return _globalDeclaration;
+	}
+
 	public java.lang.String getLoad() {
 		return _load;
 	}
@@ -44,6 +48,10 @@ public abstract class BaseScriptTag extends com.liferay.taglib.util.PositionTagS
 
 	public java.lang.String getUse() {
 		return _use;
+	}
+
+	public void setGlobalDeclaration(boolean globalDeclaration) {
+		_globalDeclaration = globalDeclaration;
 	}
 
 	public void setLoad(java.lang.String load) {
@@ -79,6 +87,7 @@ public abstract class BaseScriptTag extends com.liferay.taglib.util.PositionTagS
 	private static final String _PAGE =
 		"/html/taglib/aui/script/page.jsp";
 
+	private boolean _globalDeclaration = false;
 	private java.lang.String _load = null;
 	private java.lang.String _require = null;
 	private boolean _sandbox = false;

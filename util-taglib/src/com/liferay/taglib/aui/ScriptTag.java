@@ -19,11 +19,14 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.servlet.FileAvailabilityUtil;
 import com.liferay.portal.kernel.servlet.taglib.BodyContentWrapper;
+import com.liferay.portal.kernel.servlet.taglib.aui.JSFragment;
 import com.liferay.portal.kernel.servlet.taglib.aui.ScriptData;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.taglib.aui.base.BaseScriptTag;
 import com.liferay.taglib.util.PortalIncludeUtil;
+
+import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
@@ -118,6 +121,14 @@ public class ScriptTag extends BaseScriptTag {
 			String require = getRequire();
 			String use = getUse();
 
+			if (getGlobalDeclaration() &&
+				((use != null) || (load != null) || (require != null))) {
+
+				throw new JspException(
+					"Attribute \"globalDeclaration\" cannot be used with " +
+						"\"load\", \"require\", or \"use\"");
+			}
+
 			if ((use != null) && ((load != null) || (require != null))) {
 				throw new JspException(
 					"Attribute \"use\" cannot be used with \"load\" or " +
@@ -210,10 +221,16 @@ public class ScriptTag extends BaseScriptTag {
 						portletId, bodyContentSB, require,
 						ScriptData.ModulesType.ES6);
 				}
-				else {
+				else if ((use != null) || (load != null)) {
 					scriptData.append(
 						portletId, bodyContentSB, use,
 						ScriptData.ModulesType.AUI);
+				}
+				else {
+					scriptData.append(
+						portletId,
+						new JSFragment(
+							bodyContentSB.toString(), getGlobalDeclaration()));
 				}
 
 				String page = getPage();
@@ -244,10 +261,16 @@ public class ScriptTag extends BaseScriptTag {
 						portletId, bodyContentSB, require,
 						ScriptData.ModulesType.ES6);
 				}
-				else {
+				else if ((use != null) || (load != null)) {
 					scriptData.append(
 						portletId, bodyContentSB, use,
 						ScriptData.ModulesType.AUI);
+				}
+				else {
+					scriptData.append(
+						portletId,
+						new JSFragment(
+							bodyContentSB.toString(), getGlobalDeclaration()));
 				}
 			}
 

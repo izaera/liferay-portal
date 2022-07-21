@@ -74,7 +74,7 @@ public class ScriptData implements Mergeable<ScriptData>, Serializable {
 		ModulesType modulesType) {
 
 		if (Validator.isNull(modules)) {
-			append(portletId, new JSFragment(content));
+			append(portletId, new JSFragment(content, false));
 		}
 		else {
 			if (modulesType == ModulesType.AUI) {
@@ -85,13 +85,15 @@ public class ScriptData implements Mergeable<ScriptData>, Serializable {
 				}
 
 				append(
-					portletId, new JSFragment(auiModules, null, null, content));
+					portletId,
+					new JSFragment(auiModules, null, null, content, false));
 			}
 			else {
 				append(
 					portletId,
 					new JSFragment(
-						null, _parseAMDRequires(modules), null, content));
+						null, _parseAMDRequires(modules), null, content,
+						false));
 			}
 		}
 	}
