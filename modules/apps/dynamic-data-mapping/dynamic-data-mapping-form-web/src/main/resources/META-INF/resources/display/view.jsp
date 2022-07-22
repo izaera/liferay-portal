@@ -413,7 +413,9 @@ boolean limitToOneSubmissionPerUser = DDMFormInstanceSubmissionLimitStatusUtil.i
 						var rememberMe = true;
 					</c:if>
 
-					<portlet:namespace />sessionIntervalId = setInterval(() => {
+					let <portlet:namespace />sessionIntervalId;
+
+					const intervalHandler = () => {
 						if (Liferay.Session || rememberMe) {
 							clearInterval(<portlet:namespace />sessionIntervalId);
 
@@ -436,7 +438,9 @@ boolean limitToOneSubmissionPerUser = DDMFormInstanceSubmissionLimitStatusUtil.i
 								});
 							}
 						}
-					}, 1000);
+					};
+
+					<portlet:namespace />sessionIntervalId = setInterval(intervalHandler, 1000);
 				</aui:script>
 			</c:when>
 			<c:otherwise>
