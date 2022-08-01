@@ -17,12 +17,12 @@
 <%@ include file="/init.jsp" %>
 
 <%
-String eventName = ParamUtil.getString(request, "eventName", liferayPortletResponse.getNamespace() + "addDomains");
+String eventName = HtmlUtil.escapeJS(ParamUtil.getString(request, "eventName", liferayPortletResponse.getNamespace() + "addDomains"));
 %>
 
 <liferay-frontend:edit-form
 	action="javascript:void(0);"
-	onSubmit='<%= liferayPortletResponse.getNamespace() + "addDomains();" %>'
+	onSubmit='<%= liferayPortletResponse.getNamespace() + "addDomains('" + eventName + "');" %>'
 >
 	<div class="modal-body">
 		<div class="hide" id="<portlet:namespace />domainAlert">
@@ -47,42 +47,3 @@ String eventName = ParamUtil.getString(request, "eventName", liferayPortletRespo
 		</aui:button-row>
 	</div>
 </liferay-frontend:edit-form>
-
-<aui:script>
-	function <portlet:namespace />addDomains() {
-		var domainsInput = document.getElementById('<portlet:namespace />domain');
-
-		var domains = domainsInput.value.split(',');
-
-		// Email domain regex from aui-form-validator.js
-
-		var pattern = new RegExp(
-			'^((([a-z]|\\d|[\\u00A0-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFEF])|(([a-z]|\\d|[\\u00A0-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFEF])([a-z]|\\d|-|\\.|_|~|[\\u00A0-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFEF])*([a-z]|\\d|[\\u00A0-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFEF])))\\.)+(([a-z]|[\\u00A0-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFEF])|(([a-z]|[\\u00A0-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFEF])([a-z]|\\d|-|\\.|_|~|[\\u00A0-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFEF])*([a-z]|[\\u00A0-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFEF])))\\.?$',
-			'i'
-		);
-
-		for (var i = 0; i < domains.length; i++) {
-			var domain = domains[i];
-
-			if (!pattern.test(domain.trim())) {
-				var domainAlert = document.getElementById(
-					'<portlet:namespace />domainAlert'
-				);
-
-				domainAlert.classList.remove('hide');
-
-				domainsInput.focus();
-
-				return;
-			}
-		}
-
-		var openingLiferay = Liferay.Util.getOpener().Liferay;
-
-		openingLiferay.fire('<%= HtmlUtil.escapeJS(eventName) %>', {
-			data: document.getElementById('<portlet:namespace />domain').value,
-		});
-
-		openingLiferay.fire('closeModal');
-	}
-</aui:script>
