@@ -141,6 +141,7 @@ definition {
 	test CustomElementCanBeCreatedInNonRootContext {
 		property app.server.types = "tomcat";
 		property database.types = "mysql";
+		property ignore.errors = "LIFERAY_ERROR";
 		property portal.acceptance = "true";
 		property portal.context = "liferay";
 		property skip.clean-app-server-deploy-dir = "true";
