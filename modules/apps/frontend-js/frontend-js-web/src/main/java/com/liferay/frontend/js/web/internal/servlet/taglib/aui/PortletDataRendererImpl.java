@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.servlet.taglib.aui.JSFragment;
 import com.liferay.portal.kernel.servlet.taglib.aui.PortletData;
 import com.liferay.portal.kernel.servlet.taglib.aui.PortletDataRenderer;
 import com.liferay.portal.kernel.util.StringBundler;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.io.IOException;
@@ -49,14 +50,18 @@ public class PortletDataRendererImpl implements PortletDataRenderer {
 		String rawCode = _computeRawCode(portletDatas);
 
 		if (!Validator.isBlank(rawCode)) {
-			writer.write("<script type=\"text/javascript\">\n");
+			writer.write("<script id=\"");
+			writer.write(StringUtil.randomId());
+			writer.write("\" type=\"text/javascript\" >\n");
 
 			writer.write(rawCode);
 
 			writer.write("\n</script>");
 		}
 
-		writer.write("<script type=\"module\">\n");
+		writer.write("<script id=\"");
+		writer.write(StringUtil.randomId());
+		writer.write("\" type=\"module\">\n");
 
 		// Write ES prolog
 

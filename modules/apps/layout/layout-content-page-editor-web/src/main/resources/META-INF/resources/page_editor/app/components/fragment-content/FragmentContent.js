@@ -158,10 +158,6 @@ const FragmentContent = ({
 				}
 			}
 
-			if (fragmentEntryLink?.editableValues?.portletId) {
-				return;
-			}
-
 			Promise.all(
 				getAllEditables(fragmentElement).map((editable) => {
 					const editableValue =
