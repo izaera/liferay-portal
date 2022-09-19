@@ -27,6 +27,7 @@ export default class UnsafeHTML extends React.PureComponent {
 	constructor(props) {
 		super(props);
 		this.state = {portals: [], ref: null};
+		this._executedScriptsIds = {};
 	}
 
 	componentDidUpdate(prevProps) {
@@ -60,9 +61,23 @@ export default class UnsafeHTML extends React.PureComponent {
 
 		const runNextScript = () => {
 			if (scriptElements.length) {
-				const nextScriptElement = doc.createElement('script');
 				const prevScriptElement = scriptElements.shift();
 
+				const id = prevScriptElement.id;
+
+				if (id) {
+					if (this._executedScriptsIds[id]) {
+						requestAnimationFrame(runNextScript);
+
+						return;
+					}
+
+					this._executedScriptsIds[id] = true;
+				}
+
+				const nextScriptElement = doc.createElement('script');
+
+				nextScriptElement.id = prevScriptElement.id;
 				nextScriptElement.type = prevScriptElement.type;
 
 				if (prevScriptElement.src) {

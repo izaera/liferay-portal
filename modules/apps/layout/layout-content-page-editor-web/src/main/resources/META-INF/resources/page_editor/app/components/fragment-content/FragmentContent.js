@@ -113,7 +113,10 @@ const FragmentContent = ({
 		languageId,
 		segmentsExperienceId
 	);
-	const [content, setContent] = useState(defaultContent);
+	const [{content, executeScripts}, setContent] = useState({
+		content: defaultContent,
+		executeScripts: fragmentEntryLink?.editableValues?.portletId ?? false,
+	});
 
 	/* eslint-disable-next-line react-hooks/exhaustive-deps */
 	const editableValues = fragmentEntryLink
@@ -159,6 +162,10 @@ const FragmentContent = ({
 				}
 			}
 
+			if (fragmentEntryLink?.editableValues?.portletId) {
+				return;
+			}
+
 			Promise.all(
 				getAllEditables(fragmentElement).map((editable) => {
 					const editableValue =
@@ -196,8 +203,19 @@ const FragmentContent = ({
 					});
 				})
 			).then(() => {
+
+				// In theory we should arrive here only for pure fragments (not
+				// portlets) since they are the only ones that can have dynamic
+				// content.
+				// If we entered this code for portlets, the setContent() would
+				// possibly issue a React update which would lead to multiple
+				// execution of <script> nodes in the UnsafeHTML component.
+
 				if (isMounted() && fragmentElement) {
-					setContent(fragmentElement.innerHTML);
+					setContent({
+						content: fragmentElement.innerHTML,
+						executeScripts: true,
+					});
 				}
 			});
 		}
@@ -271,6 +289,7 @@ const FragmentContent = ({
 					)}
 					contentRef={elementRef}
 					data={{fragmentEntryLinkId}}
+					executeScripts={executeScripts}
 					getPortals={getPortals}
 					globalContext={globalContext}
 					id={elementId}
