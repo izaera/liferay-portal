@@ -22,6 +22,14 @@ EditClientExtensionEntryPartDisplayContext<CustomElementCET> editClientExtension
 CustomElementCET customElementCET = editClientExtensionEntryPartDisplayContext.getCET();
 %>
 
+<hr />
+<hr />
+<hr />
+<input name="file" type="file" />
+<hr />
+<hr />
+<hr />
+
 <aui:input label="html-element-name" name="htmlElementName" type="text" value="<%= customElementCET.getHTMLElementName() %>" />
 
 <aui:input label="use-esm" name="useESM" type="checkbox" value="<%= customElementCET.isUseESM() %>" />
