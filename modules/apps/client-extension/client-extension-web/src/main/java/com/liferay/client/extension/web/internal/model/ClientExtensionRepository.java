@@ -15,6 +15,7 @@
 package com.liferay.client.extension.web.internal.model;
 
 import com.liferay.client.extension.web.internal.constants.ClientExtensionAdminPortletKeys;
+import com.liferay.document.library.kernel.exception.NoSuchFolderException;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
@@ -35,6 +36,7 @@ import java.io.InputStream;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 import org.osgi.service.component.annotations.Activate;
@@ -89,11 +91,16 @@ public class ClientExtensionRepository {
 
 		Folder folder = _portletFileRepository.getPortletFolder(folderId);
 
-		folder = _portletFileRepository.getPortletFolder(
-			_repository.getRepositoryId(), folder.getFolderId(), folderName);
+		try {
+			folder = _portletFileRepository.getPortletFolder(
+				_repository.getRepositoryId(), folder.getFolderId(),
+				folderName);
 
-		return _portletFileRepository.getPortletFileEntries(
-			_repository.getGroupId(), folder.getFolderId());
+			return _portletFileRepository.getPortletFileEntries(
+				_repository.getGroupId(), folder.getFolderId());
+		} catch (NoSuchFolderException noSuchFolderException) {
+			return Collections.emptyList();
+		}
 	}
 
 	public FileEntry getFileEntry(String fileEntryPath) throws PortalException {
