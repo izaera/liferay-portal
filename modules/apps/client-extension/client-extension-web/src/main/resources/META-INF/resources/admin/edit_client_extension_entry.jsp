@@ -98,7 +98,7 @@ renderResponse.setTitle(editClientExtensionEntryDisplayContext.getTitle());
 	</liferay-frontend:edit-form-footer>
 </liferay-frontend:edit-form>
 
-<aui:script use="liferay-item-selector-dialog">
+<aui:script>
 	const showItemSelector = document.getElementById(
 		'<portlet:namespace />showItemSelector'
 	);
@@ -107,11 +107,10 @@ renderResponse.setTitle(editClientExtensionEntryDisplayContext.getTitle());
 	);
 
 	showItemSelector.addEventListener('click', (event) => {
-		const itemSelectorDialog = new A.LiferayItemSelectorDialog({
-			eventName: 'itemSelected',
-			on: {
-				selectedItemChange: function (event) {
-					var selectedItem = event.newVal;
+		Liferay.Util.openSelectionModal(
+			{
+				onSelect: function (event) {
+					var selectedItem = event.value;
 
 					if (selectedItem) {
 						var itemValue = JSON.parse(selectedItem.value);
@@ -123,11 +122,10 @@ renderResponse.setTitle(editClientExtensionEntryDisplayContext.getTitle());
 						);
 					}
 				},
-			},
-			title: '<liferay-ui:message key="add-resources" />',
-			url: '<%= clientExtensionItemSelectorURL.toString() %>',
-		});
-
-		itemSelectorDialog.open();
+				selectEventName: '<portlet:namespace />itemSelected',
+				title: '<liferay-ui:message key="add-resources" />',
+				url: '<%= clientExtensionItemSelectorURL.toString() %>'
+			}
+		);
 	});
 </aui:script>
