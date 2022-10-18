@@ -27,6 +27,10 @@ renderResponse.setTitle(editClientExtensionEntryDisplayContext.getTitle());
 
 <portlet:actionURL name="/client_extension_admin/edit_client_extension_entry" var="editClientExtensionEntryURL" />
 
+<portlet:renderURL var="clientExtensionItemSelectorURL">
+	<portlet:param name="mvcRenderCommandName" value="/client_extension_admin/client_extension_item_selector" />
+</portlet:renderURL>
+
 <liferay-frontend:edit-form
 	action="<%= editClientExtensionEntryURL %>"
 	method="post"
@@ -43,6 +47,10 @@ renderResponse.setTitle(editClientExtensionEntryDisplayContext.getTitle());
 
 		<liferay-ui:message arguments="<%= clientExtensionEntryTypeSettingsException.getMessageArguments() %>" key="<%= clientExtensionEntryTypeSettingsException.getMessageKey() %>" />
 	</liferay-ui:error>
+
+	<a href="#" id="<portlet:namespace />showItemSelector">Add resources</a>
+
+	<pre id="<portlet:namespace />showItemSelectorValue"></pre>
 
 	<liferay-frontend:edit-form-body>
 		<liferay-frontend:fieldset-group>
@@ -89,3 +97,37 @@ renderResponse.setTitle(editClientExtensionEntryDisplayContext.getTitle());
 		/>
 	</liferay-frontend:edit-form-footer>
 </liferay-frontend:edit-form>
+
+<aui:script use="liferay-item-selector-dialog">
+	const showItemSelector = document.getElementById(
+		'<portlet:namespace />showItemSelector'
+	);
+	const showItemSelectorValue = document.getElementById(
+		'<portlet:namespace />showItemSelectorValue'
+	);
+
+	showItemSelector.addEventListener('click', (event) => {
+		const itemSelectorDialog = new A.LiferayItemSelectorDialog({
+			eventName: 'itemSelected',
+			on: {
+				selectedItemChange: function (event) {
+					var selectedItem = event.newVal;
+
+					if (selectedItem) {
+						var itemValue = JSON.parse(selectedItem.value);
+
+						showItemSelectorValue.innerText = JSON.stringify(
+							itemValue,
+							null,
+							2
+						);
+					}
+				},
+			},
+			title: '<liferay-ui:message key="add-resources" />',
+			url: '<%= clientExtensionItemSelectorURL.toString() %>',
+		});
+
+		itemSelectorDialog.open();
+	});
+</aui:script>
