@@ -58,6 +58,19 @@ public class ClientExtensionEntryServiceImpl
 	}
 
 	@Override
+	public ClientExtensionEntry addDraftClientExtensionEntry(
+			String externalReferenceCode, Map<Locale, String> nameMap,
+			String type)
+		throws PortalException {
+
+		_portletResourcePermission.check(
+			getPermissionChecker(), null, ActionKeys.ADD_ENTRY);
+
+		return clientExtensionEntryLocalService.addDraftClientExtensionEntry(
+			externalReferenceCode, getUserId(), nameMap, type);
+	}
+
+	@Override
 	public ClientExtensionEntry deleteClientExtensionEntry(
 			long clientExtensionEntryId)
 		throws PortalException {

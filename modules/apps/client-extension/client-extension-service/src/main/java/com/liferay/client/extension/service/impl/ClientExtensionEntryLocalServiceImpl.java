@@ -80,9 +80,9 @@ public class ClientExtensionEntryLocalServiceImpl
 	@Indexable(type = IndexableType.REINDEX)
 	@Override
 	public ClientExtensionEntry addClientExtensionEntry(
-			String externalReferenceCode, long userId, String description,
-			Map<Locale, String> nameMap, String properties,
-			String sourceCodeURL, String type, String typeSettings)
+		String externalReferenceCode, long userId, String description,
+		Map<Locale, String> nameMap, String properties,
+		String sourceCodeURL, String type, String typeSettings)
 		throws PortalException {
 
 		ClientExtensionEntry clientExtensionEntry =
@@ -110,6 +110,50 @@ public class ClientExtensionEntryLocalServiceImpl
 		clientExtensionEntry.setSourceCodeURL(sourceCodeURL);
 		clientExtensionEntry.setType(type);
 		clientExtensionEntry.setTypeSettings(typeSettings);
+		clientExtensionEntry.setStatus(WorkflowConstants.STATUS_DRAFT);
+		clientExtensionEntry.setStatusByUserId(userId);
+		clientExtensionEntry.setStatusDate(new Date());
+
+		clientExtensionEntry = clientExtensionEntryPersistence.update(
+			clientExtensionEntry);
+
+		_addResources(clientExtensionEntry);
+
+		return _startWorkflowInstance(userId, clientExtensionEntry);
+	}
+
+	@Indexable(type = IndexableType.REINDEX)
+	@Override
+	public ClientExtensionEntry addDraftClientExtensionEntry(
+			String externalReferenceCode, long userId,
+			Map<Locale, String> nameMap, String type)
+		throws PortalException {
+
+		ClientExtensionEntry clientExtensionEntry =
+			clientExtensionEntryPersistence.create(
+				counterLocalService.increment());
+
+		if (Validator.isBlank(externalReferenceCode)) {
+			externalReferenceCode = clientExtensionEntry.getUuid();
+		}
+
+		User user = _userLocalService.getUser(userId);
+
+		_validateExternalReferenceCode(
+			user.getCompanyId(), externalReferenceCode);
+
+		//_validateTypeSettings(typeSettings, null, type);
+
+		clientExtensionEntry.setExternalReferenceCode(externalReferenceCode);
+		clientExtensionEntry.setCompanyId(user.getCompanyId());
+		clientExtensionEntry.setUserId(user.getUserId());
+		clientExtensionEntry.setUserName(user.getFullName());
+		//clientExtensionEntry.setDescription(description);
+		clientExtensionEntry.setNameMap(nameMap);
+		//clientExtensionEntry.setProperties(properties);
+		//clientExtensionEntry.setSourceCodeURL(sourceCodeURL);
+		clientExtensionEntry.setType(type);
+		//clientExtensionEntry.setTypeSettings(typeSettings);
 		clientExtensionEntry.setStatus(WorkflowConstants.STATUS_DRAFT);
 		clientExtensionEntry.setStatusByUserId(userId);
 		clientExtensionEntry.setStatusDate(new Date());
