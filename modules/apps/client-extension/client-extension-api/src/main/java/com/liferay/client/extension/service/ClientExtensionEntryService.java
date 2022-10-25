@@ -60,6 +60,11 @@ public interface ClientExtensionEntryService extends BaseService {
 			String sourceCodeURL, String type, String typeSettings)
 		throws PortalException;
 
+	public ClientExtensionEntry addDraftClientExtensionEntry(
+			String externalReferenceCode, Map<Locale, String> nameMap,
+			String type)
+		throws PortalException;
+
 	public ClientExtensionEntry deleteClientExtensionEntry(
 			long clientExtensionEntryId)
 		throws PortalException;

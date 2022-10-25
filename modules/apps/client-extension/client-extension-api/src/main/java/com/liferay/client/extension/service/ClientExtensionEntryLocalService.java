@@ -98,6 +98,12 @@ public interface ClientExtensionEntryLocalService
 		throws PortalException;
 
 	@Indexable(type = IndexableType.REINDEX)
+	public ClientExtensionEntry addDraftClientExtensionEntry(
+			String externalReferenceCode, long userId,
+			Map<Locale, String> nameMap, String type)
+		throws PortalException;
+
+	@Indexable(type = IndexableType.REINDEX)
 	public ClientExtensionEntry addOrUpdateClientExtensionEntry(
 			String externalReferenceCode, long userId, String description,
 			Map<Locale, String> nameMap, String properties,
