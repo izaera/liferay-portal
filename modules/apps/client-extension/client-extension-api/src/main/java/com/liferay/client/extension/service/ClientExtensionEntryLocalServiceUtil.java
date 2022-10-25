@@ -73,6 +73,15 @@ public class ClientExtensionEntryLocalServiceUtil {
 			sourceCodeURL, type, typeSettings);
 	}
 
+	public static ClientExtensionEntry addDraftClientExtensionEntry(
+			String externalReferenceCode, long userId,
+			Map<java.util.Locale, String> nameMap, String type)
+		throws PortalException {
+
+		return getService().addDraftClientExtensionEntry(
+			externalReferenceCode, userId, nameMap, type);
+	}
+
 	public static ClientExtensionEntry addOrUpdateClientExtensionEntry(
 			String externalReferenceCode, long userId, String description,
 			Map<java.util.Locale, String> nameMap, String properties,

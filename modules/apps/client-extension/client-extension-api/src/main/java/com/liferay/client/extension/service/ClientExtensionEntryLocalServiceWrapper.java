@@ -71,6 +71,16 @@ public class ClientExtensionEntryLocalServiceWrapper
 	}
 
 	@Override
+	public ClientExtensionEntry addDraftClientExtensionEntry(
+			String externalReferenceCode, long userId,
+			java.util.Map<java.util.Locale, String> nameMap, String type)
+		throws com.liferay.portal.kernel.exception.PortalException {
+
+		return _clientExtensionEntryLocalService.addDraftClientExtensionEntry(
+			externalReferenceCode, userId, nameMap, type);
+	}
+
+	@Override
 	public ClientExtensionEntry addOrUpdateClientExtensionEntry(
 			String externalReferenceCode, long userId, String description,
 			java.util.Map<java.util.Locale, String> nameMap, String properties,
