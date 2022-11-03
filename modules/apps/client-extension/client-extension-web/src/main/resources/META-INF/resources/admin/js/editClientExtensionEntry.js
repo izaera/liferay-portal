@@ -46,11 +46,7 @@ function addURLButtonsEventListeners(fm, clientExtensionItemSelectorURL, selectE
 							if (selectedItem) {
 								var itemValue = JSON.parse(selectedItem.value);
 
-								showItemSelectorValue.innerText = JSON.stringify(
-									itemValue,
-									null,
-									2
-								);
+								window.alert(JSON.stringify(itemValue, null, 2));
 							}
 						},
 						selectEventName,
