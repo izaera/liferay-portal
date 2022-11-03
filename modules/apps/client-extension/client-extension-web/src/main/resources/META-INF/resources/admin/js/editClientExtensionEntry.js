@@ -39,6 +39,7 @@ function addURLButtonsEventListeners(fm, clientExtensionItemSelectorURL, selectE
 			element.addEventListener('click', (event) => {
 				Liferay.Util.openSelectionModal(
 					{
+						iframeBodyCssClass: '',
 						onSelect: function (event) {
 							var selectedItem = event.value;
 
