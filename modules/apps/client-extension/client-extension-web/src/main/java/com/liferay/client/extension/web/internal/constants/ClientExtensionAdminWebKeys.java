@@ -19,6 +19,12 @@ package com.liferay.client.extension.web.internal.constants;
  */
 public class ClientExtensionAdminWebKeys {
 
+	public static final String ADD_CLIENT_EXTENSION_DISPLAY_CONTEXT =
+		"ADD_CLIENT_EXTENSION_DISPLAY_CONTEXT";
+
+	public static final String CLIENT_EXTENSION_ITEM_SELECTOR_DISPLAY_CONTEXT =
+		"CLIENT_EXTENSION_ITEM_SELECTOR_DISPLAY_CONTEXT";
+
 	public static final String CLIENT_EXTENSION_ADMIN_DISPLAY_CONTEXT =
 		"CLIENT_EXTENSION_ADMIN_DISPLAY_CONTEXT";
 
@@ -28,5 +34,7 @@ public class ClientExtensionAdminWebKeys {
 	public static final String
 		EDIT_CLIENT_EXTENSION_ENTRY_PART_DISPLAY_CONTEXT =
 			"EDIT_CLIENT_EXTENSION_ENTRY_PART_DISPLAY_CONTEXT";
+
+	public static final String ITEM_SELECTOR_VIEW_KEY = "ITEM_SELECTOR_VIEW_KEY";
 
 }

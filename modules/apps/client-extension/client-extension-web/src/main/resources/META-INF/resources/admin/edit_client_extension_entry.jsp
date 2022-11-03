@@ -30,6 +30,7 @@ renderResponse.setTitle(editClientExtensionEntryDisplayContext.getTitle());
 <liferay-frontend:edit-form
 	action="<%= editClientExtensionEntryURL %>"
 	method="post"
+	name="fm"
 >
 	<aui:input name="<%= Constants.CMD %>" type="hidden" value="<%= editClientExtensionEntryDisplayContext.getCmd() %>" />
 	<aui:input name="redirect" type="hidden" value="<%= editClientExtensionEntryDisplayContext.getRedirect() %>" />
@@ -61,6 +62,13 @@ renderResponse.setTitle(editClientExtensionEntryDisplayContext.getTitle());
 				placeholder="description"
 			/>
 
+			<clay:select
+				id="<%= renderResponse.getNamespace() + "addResources" %>"
+				name="addResources"
+				label="<%= editClientExtensionEntryDisplayContext.getAddResourcesLabel() %>"
+				options="<%= editClientExtensionEntryDisplayContext.getAddResourcesSelectOptions() %>"
+			/>
+
 			<aui:input label="source-code-url" name="sourceCodeURL" type="text" value="<%= editClientExtensionEntryDisplayContext.getSourceCodeURL() %>" />
 
 			<aui:input disabled="<%= true %>" label="type" name="typeLabel" type="text" value="<%= editClientExtensionEntryDisplayContext.getTypeLabel() %>" />
@@ -82,3 +90,8 @@ renderResponse.setTitle(editClientExtensionEntryDisplayContext.getTitle());
 		/>
 	</liferay-frontend:edit-form-footer>
 </liferay-frontend:edit-form>
+
+<liferay-frontend:component
+	context="<%= editClientExtensionEntryDisplayContext.getFrontendComponentContext() %>"
+	module="admin/js/editClientExtensionEntry"
+/>

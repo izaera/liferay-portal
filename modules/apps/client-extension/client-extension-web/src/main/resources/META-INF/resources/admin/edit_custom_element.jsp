@@ -26,14 +26,21 @@ CustomElementCET customElementCET = editClientExtensionEntryPartDisplayContext.g
 
 <aui:input label="use-esm" name="useESM" type="checkbox" value="<%= customElementCET.isUseESM() %>" />
 
-<div class="lfr-form-rows" id="<portlet:namespace />_urls_field">
+<div class="lfr-form-rows" data-is-url-fields="true" id="<portlet:namespace />_urls_field">
 
 	<%
 	for (String url : editClientExtensionEntryPartDisplayContext.getStrings(customElementCET.getURLs())) {
 	%>
 
 		<div class="lfr-form-row">
-			<aui:input ignoreRequestValue="<%= true %>" label="url" name="urls" type="text" value="<%= url %>" />
+			<div data-is-url-field="true" style="display: flex; flex-direction: row;">
+				<span style="flex-grow: 1;">
+					<aui:input data-is-url-input="<%= true %>" ignoreRequestValue="<%= true %>" label="url" name="urls" type="text" value="<%= url %>" />
+				</span>
+				<span style="display: none; align-items: center; padding-left: 1em;">
+					<aui:button data-is-url-button="<%= true %>" name="urlsButton" value="choose" />
+				</span>
+			</div>
 		</div>
 
 	<%
@@ -48,8 +55,13 @@ CustomElementCET customElementCET = editClientExtensionEntryPartDisplayContext.g
 	for (String cssURL : editClientExtensionEntryPartDisplayContext.getStrings(customElementCET.getCSSURLs())) {
 	%>
 
-		<div class="lfr-form-row">
-			<aui:input ignoreRequestValue="<%= true %>" label="css-url" name="cssURLs" type="text" value="<%= cssURL %>" />
+		<div class="lfr-form-row" style="display: flex; flex-direction: row;">
+			<span style="flex-grow: 1;">
+				<aui:input data-is-url-input="<%= true %>" ignoreRequestValue="<%= true %>" label="css-url" name="cssURLs" type="text" value="<%= cssURL %>" />
+			</span>
+			<span style="display: none; align-items: center; padding-left: 1em;">
+				<aui:button data-is-url-button="<%= true %>" name="cssURLsButton" value="choose" />
+			</span>
 		</div>
 
 	<%
@@ -89,3 +101,5 @@ CustomElementCET customElementCET = editClientExtensionEntryPartDisplayContext.g
 		namespace: '<portlet:namespace />',
 	}).render();
 </aui:script>
+
+<liferay-frontend:component module="admin/js/editCustomElement" />

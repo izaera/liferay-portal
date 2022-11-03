@@ -29,3 +29,7 @@ ClientExtensionAdminDisplayContext clientExtensionAdminDisplayContext = (ClientE
 	selectedItemsKey="externalReferenceCode"
 	style="fluid"
 />
+
+<liferay-frontend:component
+	module="admin/js/view"
+/>
