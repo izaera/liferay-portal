@@ -17,6 +17,7 @@ package com.liferay.client.extension.web.internal.display.context;
 import com.liferay.client.extension.type.factory.CETFactory;
 import com.liferay.client.extension.web.internal.display.context.util.CETLabelUtil;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.CreationMenu;
+import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.portlet.url.builder.PortletURLBuilder;
 import com.liferay.portal.kernel.util.PortalUtil;
 
@@ -50,15 +51,18 @@ public class ClientExtensionAdminDisplayContext {
 							_renderResponse
 						).setMVCRenderCommandName(
 							"/client_extension_admin" +
-								"/edit_client_extension_entry"
+								"/add_client_extension_entry"
 						).setRedirect(
 							_getRedirect()
 						).setParameter(
 							"type", type
+						).setWindowState(
+							LiferayWindowState.POP_UP
 						).buildPortletURL());
 					dropdownItem.setLabel(
 						CETLabelUtil.getAddLabel(
 							_renderRequest.getLocale(), type));
+					dropdownItem.setTarget("modal");
 				});
 		}
 

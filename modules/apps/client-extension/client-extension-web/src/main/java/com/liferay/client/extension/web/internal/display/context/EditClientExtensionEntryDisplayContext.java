@@ -17,17 +17,28 @@ package com.liferay.client.extension.web.internal.display.context;
 import com.liferay.client.extension.model.ClientExtensionEntry;
 import com.liferay.client.extension.type.CET;
 import com.liferay.client.extension.web.internal.display.context.util.CETLabelUtil;
+import com.liferay.frontend.taglib.clay.servlet.taglib.util.SelectOption;
 import com.liferay.portal.kernel.bean.BeanParamUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
+import com.liferay.portal.kernel.portlet.LiferayWindowState;
+import com.liferay.portal.kernel.portlet.RequestBackedPortletURLFactory;
+import com.liferay.portal.kernel.portlet.RequestBackedPortletURLFactoryUtil;
+import com.liferay.portal.kernel.portlet.url.builder.PortletURLBuilder;
+import com.liferay.portal.kernel.theme.PortletDisplay;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.Constants;
+import com.liferay.portal.kernel.util.HashMapBuilder;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import javax.portlet.PortletRequest;
 
+import javax.portlet.PortletURL;
 import javax.servlet.http.HttpServletRequest;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Iván Zaera Avellón
@@ -43,6 +54,20 @@ public class EditClientExtensionEntryDisplayContext {
 		_portletRequest = portletRequest;
 	}
 
+	public String getAddResourcesLabel() {
+		return LanguageUtil.get(_getHttpServletRequest(), "add-resources");
+	}
+
+	public List<SelectOption> getAddResourcesSelectOptions() {
+		return ListUtil.fromArray(
+			new SelectOption(
+				LanguageUtil.get(_getHttpServletRequest(), "from-url"),
+					"fromURL"),
+			new SelectOption(
+				LanguageUtil.get(_getHttpServletRequest(), "from-computer"),
+					"fromComputer"));
+	}
+
 	public String getCmd() {
 		if (_clientExtensionEntry == null) {
 			return Constants.ADD;
@@ -56,6 +81,10 @@ public class EditClientExtensionEntryDisplayContext {
 			_clientExtensionEntry, _portletRequest, "description");
 	}
 
+	public long getClientExtensionEntryId() {
+		return _clientExtensionEntry.getClientExtensionEntryId();
+	}
+
 	public String getEditJSP() {
 		return _cet.getEditJSP();
 	}
@@ -63,6 +92,23 @@ public class EditClientExtensionEntryDisplayContext {
 	public String getExternalReferenceCode() {
 		return BeanParamUtil.getString(
 			_clientExtensionEntry, _portletRequest, "externalReferenceCode");
+	}
+
+	public Map<String, Object> getFrontendComponentContext() {
+		String clientExtensionItemSelectorURL = PortletURLBuilder.create(
+			_getRenderPortletURL()
+		).setMVCRenderCommandName(
+			"/client_extension_admin/client_extension_item_selector"
+		).setParameter(
+			"clientExtensionEntryId", getClientExtensionEntryId()
+		).setWindowState(
+			LiferayWindowState.POP_UP
+		).buildString();
+
+
+		return HashMapBuilder.<String, Object>put(
+			"clientExtensionItemSelectorURL", clientExtensionItemSelectorURL
+		).build();
 	}
 
 	public String getName() {
@@ -123,6 +169,28 @@ public class EditClientExtensionEntryDisplayContext {
 
 		return (ThemeDisplay)httpServletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
+	}
+
+	private PortletURL _getRenderPortletURL() {
+		HttpServletRequest httpServletRequest =
+			PortalUtil.getHttpServletRequest(_portletRequest);
+
+		String portletId = _getPortletId(httpServletRequest);
+
+		RequestBackedPortletURLFactory requestBackedPortletURLFactory =
+			RequestBackedPortletURLFactoryUtil.create(httpServletRequest);
+
+		return requestBackedPortletURLFactory.createRenderURL(portletId);
+	}
+
+	private String _getPortletId(HttpServletRequest httpServletRequest) {
+		ThemeDisplay themeDisplay =
+			(ThemeDisplay)httpServletRequest.getAttribute(
+				WebKeys.THEME_DISPLAY);
+
+		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
+
+		return portletDisplay.getId();
 	}
 
 	private final CET _cet;

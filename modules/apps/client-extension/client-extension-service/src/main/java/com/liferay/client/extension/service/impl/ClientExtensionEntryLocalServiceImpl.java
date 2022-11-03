@@ -163,7 +163,7 @@ public class ClientExtensionEntryLocalServiceImpl
 
 		_addResources(clientExtensionEntry);
 
-		return _startWorkflowInstance(userId, clientExtensionEntry);
+		return clientExtensionEntry;
 	}
 
 	@Indexable(type = IndexableType.REINDEX)
