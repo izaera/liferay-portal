@@ -20,6 +20,7 @@
 		<!-- Other fields -->
 
 		<column name="description" type="String" />
+		<column name="internalURLs" type="boolean" />
 		<column localized="true" name="name" type="String" />
 		<column name="properties" type="String" />
 		<column name="sourceCodeURL" type="String" />
