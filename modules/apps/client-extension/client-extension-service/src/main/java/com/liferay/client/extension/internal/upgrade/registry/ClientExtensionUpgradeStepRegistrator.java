@@ -113,6 +113,11 @@ public class ClientExtensionUpgradeStepRegistrator
 			UpgradeProcessFactory.addColumns(
 				"ClientExtensionEntryRel", "groupId LONG",
 				"lastPublishDate DATE null"));
+
+		registry.register(
+			"3.5.0", "3.6.0",
+			UpgradeProcessFactory.addColumns(
+				"ClientExtensionEntry", "internalURLs BOOLEAN"));
 	}
 
 	@Reference
