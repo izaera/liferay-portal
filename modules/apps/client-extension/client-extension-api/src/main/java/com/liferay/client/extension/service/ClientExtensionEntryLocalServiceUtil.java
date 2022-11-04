@@ -64,13 +64,14 @@ public class ClientExtensionEntryLocalServiceUtil {
 
 	public static ClientExtensionEntry addClientExtensionEntry(
 			String externalReferenceCode, long userId, String description,
-			Map<java.util.Locale, String> nameMap, String properties,
-			String sourceCodeURL, String type, String typeSettings)
+			boolean internalURLs, Map<java.util.Locale, String> nameMap,
+			String properties, String sourceCodeURL, String type,
+			String typeSettings)
 		throws PortalException {
 
 		return getService().addClientExtensionEntry(
-			externalReferenceCode, userId, description, nameMap, properties,
-			sourceCodeURL, type, typeSettings);
+			externalReferenceCode, userId, description, internalURLs, nameMap,
+			properties, sourceCodeURL, type, typeSettings);
 	}
 
 	public static ClientExtensionEntry addDraftClientExtensionEntry(
@@ -84,13 +85,14 @@ public class ClientExtensionEntryLocalServiceUtil {
 
 	public static ClientExtensionEntry addOrUpdateClientExtensionEntry(
 			String externalReferenceCode, long userId, String description,
-			Map<java.util.Locale, String> nameMap, String properties,
-			String sourceCodeURL, String type, String typeSettings)
+			boolean internalURLs, Map<java.util.Locale, String> nameMap,
+			String properties, String sourceCodeURL, String type,
+			String typeSettings)
 		throws PortalException {
 
 		return getService().addOrUpdateClientExtensionEntry(
-			externalReferenceCode, userId, description, nameMap, properties,
-			sourceCodeURL, type, typeSettings);
+			externalReferenceCode, userId, description, internalURLs, nameMap,
+			properties, sourceCodeURL, type, typeSettings);
 	}
 
 	/**
@@ -474,13 +476,13 @@ public class ClientExtensionEntryLocalServiceUtil {
 
 	public static ClientExtensionEntry updateClientExtensionEntry(
 			long userId, long clientExtensionEntryId, String description,
-			Map<java.util.Locale, String> nameMap, String properties,
-			String sourceCodeURL, String typeSettings)
+			boolean internalURLs, Map<java.util.Locale, String> nameMap,
+			String properties, String sourceCodeURL, String typeSettings)
 		throws PortalException {
 
 		return getService().updateClientExtensionEntry(
-			userId, clientExtensionEntryId, description, nameMap, properties,
-			sourceCodeURL, typeSettings);
+			userId, clientExtensionEntryId, description, internalURLs, nameMap,
+			properties, sourceCodeURL, typeSettings);
 	}
 
 	public static ClientExtensionEntry updateStatus(

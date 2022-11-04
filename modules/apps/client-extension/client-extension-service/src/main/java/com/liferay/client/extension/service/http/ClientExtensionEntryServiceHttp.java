@@ -53,7 +53,7 @@ public class ClientExtensionEntryServiceHttp {
 	public static com.liferay.client.extension.model.ClientExtensionEntry
 			addClientExtensionEntry(
 				HttpPrincipal httpPrincipal, String externalReferenceCode,
-				String description,
+				String description, boolean internalURLs,
 				java.util.Map<java.util.Locale, String> nameMap,
 				String properties, String sourceCodeURL, String type,
 				String typeSettings)
@@ -66,8 +66,8 @@ public class ClientExtensionEntryServiceHttp {
 				_addClientExtensionEntryParameterTypes0);
 
 			MethodHandler methodHandler = new MethodHandler(
-				methodKey, externalReferenceCode, description, nameMap,
-				properties, sourceCodeURL, type, typeSettings);
+				methodKey, externalReferenceCode, description, internalURLs,
+				nameMap, properties, sourceCodeURL, type, typeSettings);
 
 			Object returnObj = null;
 
@@ -319,7 +319,7 @@ public class ClientExtensionEntryServiceHttp {
 	public static com.liferay.client.extension.model.ClientExtensionEntry
 			updateClientExtensionEntry(
 				HttpPrincipal httpPrincipal, long clientExtensionEntryId,
-				String description,
+				String description, boolean internalURLs,
 				java.util.Map<java.util.Locale, String> nameMap,
 				String properties, String sourceCodeURL, String typeSettings)
 		throws com.liferay.portal.kernel.exception.PortalException {
@@ -331,8 +331,8 @@ public class ClientExtensionEntryServiceHttp {
 				_updateClientExtensionEntryParameterTypes6);
 
 			MethodHandler methodHandler = new MethodHandler(
-				methodKey, clientExtensionEntryId, description, nameMap,
-				properties, sourceCodeURL, typeSettings);
+				methodKey, clientExtensionEntryId, description, internalURLs,
+				nameMap, properties, sourceCodeURL, typeSettings);
 
 			Object returnObj = null;
 
@@ -368,8 +368,8 @@ public class ClientExtensionEntryServiceHttp {
 
 	private static final Class<?>[] _addClientExtensionEntryParameterTypes0 =
 		new Class[] {
-			String.class, String.class, java.util.Map.class, String.class,
-			String.class, String.class, String.class
+			String.class, String.class, boolean.class, java.util.Map.class,
+			String.class, String.class, String.class, String.class
 		};
 	private static final Class<?>[]
 		_addDraftClientExtensionEntryParameterTypes1 = new Class[] {
@@ -387,8 +387,8 @@ public class ClientExtensionEntryServiceHttp {
 		new Class[] {long.class};
 	private static final Class<?>[] _updateClientExtensionEntryParameterTypes6 =
 		new Class[] {
-			long.class, String.class, java.util.Map.class, String.class,
-			String.class, String.class
+			long.class, String.class, boolean.class, java.util.Map.class,
+			String.class, String.class, String.class
 		};
 
 }

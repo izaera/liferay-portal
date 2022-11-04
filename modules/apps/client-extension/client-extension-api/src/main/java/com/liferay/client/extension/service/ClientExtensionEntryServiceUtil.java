@@ -40,13 +40,14 @@ public class ClientExtensionEntryServiceUtil {
 	 */
 	public static ClientExtensionEntry addClientExtensionEntry(
 			String externalReferenceCode, String description,
-			Map<java.util.Locale, String> nameMap, String properties,
-			String sourceCodeURL, String type, String typeSettings)
+			boolean internalURLs, Map<java.util.Locale, String> nameMap,
+			String properties, String sourceCodeURL, String type,
+			String typeSettings)
 		throws PortalException {
 
 		return getService().addClientExtensionEntry(
-			externalReferenceCode, description, nameMap, properties,
-			sourceCodeURL, type, typeSettings);
+			externalReferenceCode, description, internalURLs, nameMap,
+			properties, sourceCodeURL, type, typeSettings);
 	}
 
 	public static ClientExtensionEntry addDraftClientExtensionEntry(
@@ -101,13 +102,13 @@ public class ClientExtensionEntryServiceUtil {
 
 	public static ClientExtensionEntry updateClientExtensionEntry(
 			long clientExtensionEntryId, String description,
-			Map<java.util.Locale, String> nameMap, String properties,
-			String sourceCodeURL, String typeSettings)
+			boolean internalURLs, Map<java.util.Locale, String> nameMap,
+			String properties, String sourceCodeURL, String typeSettings)
 		throws PortalException {
 
 		return getService().updateClientExtensionEntry(
-			clientExtensionEntryId, description, nameMap, properties,
-			sourceCodeURL, typeSettings);
+			clientExtensionEntryId, description, internalURLs, nameMap,
+			properties, sourceCodeURL, typeSettings);
 	}
 
 	public static ClientExtensionEntryService getService() {

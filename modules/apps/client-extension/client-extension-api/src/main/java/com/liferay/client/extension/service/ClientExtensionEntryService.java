@@ -56,8 +56,9 @@ public interface ClientExtensionEntryService extends BaseService {
 	 */
 	public ClientExtensionEntry addClientExtensionEntry(
 			String externalReferenceCode, String description,
-			Map<Locale, String> nameMap, String properties,
-			String sourceCodeURL, String type, String typeSettings)
+			boolean internalURLs, Map<Locale, String> nameMap,
+			String properties, String sourceCodeURL, String type,
+			String typeSettings)
 		throws PortalException;
 
 	public ClientExtensionEntry addDraftClientExtensionEntry(
@@ -94,8 +95,8 @@ public interface ClientExtensionEntryService extends BaseService {
 
 	public ClientExtensionEntry updateClientExtensionEntry(
 			long clientExtensionEntryId, String description,
-			Map<Locale, String> nameMap, String properties,
-			String sourceCodeURL, String typeSettings)
+			boolean internalURLs, Map<Locale, String> nameMap,
+			String properties, String sourceCodeURL, String typeSettings)
 		throws PortalException;
 
 }

@@ -61,13 +61,14 @@ public class ClientExtensionEntryLocalServiceWrapper
 	@Override
 	public ClientExtensionEntry addClientExtensionEntry(
 			String externalReferenceCode, long userId, String description,
+			boolean internalURLs,
 			java.util.Map<java.util.Locale, String> nameMap, String properties,
 			String sourceCodeURL, String type, String typeSettings)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _clientExtensionEntryLocalService.addClientExtensionEntry(
-			externalReferenceCode, userId, description, nameMap, properties,
-			sourceCodeURL, type, typeSettings);
+			externalReferenceCode, userId, description, internalURLs, nameMap,
+			properties, sourceCodeURL, type, typeSettings);
 	}
 
 	@Override
@@ -83,14 +84,15 @@ public class ClientExtensionEntryLocalServiceWrapper
 	@Override
 	public ClientExtensionEntry addOrUpdateClientExtensionEntry(
 			String externalReferenceCode, long userId, String description,
+			boolean internalURLs,
 			java.util.Map<java.util.Locale, String> nameMap, String properties,
 			String sourceCodeURL, String type, String typeSettings)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _clientExtensionEntryLocalService.
 			addOrUpdateClientExtensionEntry(
-				externalReferenceCode, userId, description, nameMap, properties,
-				sourceCodeURL, type, typeSettings);
+				externalReferenceCode, userId, description, internalURLs,
+				nameMap, properties, sourceCodeURL, type, typeSettings);
 	}
 
 	/**
@@ -540,13 +542,14 @@ public class ClientExtensionEntryLocalServiceWrapper
 	@Override
 	public ClientExtensionEntry updateClientExtensionEntry(
 			long userId, long clientExtensionEntryId, String description,
+			boolean internalURLs,
 			java.util.Map<java.util.Locale, String> nameMap, String properties,
 			String sourceCodeURL, String typeSettings)
 		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _clientExtensionEntryLocalService.updateClientExtensionEntry(
-			userId, clientExtensionEntryId, description, nameMap, properties,
-			sourceCodeURL, typeSettings);
+			userId, clientExtensionEntryId, description, internalURLs, nameMap,
+			properties, sourceCodeURL, typeSettings);
 	}
 
 	@Override
