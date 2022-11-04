@@ -81,7 +81,7 @@ public class ClientExtensionEntryLocalServiceImpl
 	@Override
 	public ClientExtensionEntry addClientExtensionEntry(
 		String externalReferenceCode, long userId, String description,
-		Map<Locale, String> nameMap, String properties,
+		boolean internalURLs, Map<Locale, String> nameMap, String properties,
 		String sourceCodeURL, String type, String typeSettings)
 		throws PortalException {
 
@@ -105,6 +105,7 @@ public class ClientExtensionEntryLocalServiceImpl
 		clientExtensionEntry.setUserId(user.getUserId());
 		clientExtensionEntry.setUserName(user.getFullName());
 		clientExtensionEntry.setDescription(description);
+		clientExtensionEntry.setInternalURLs(internalURLs);
 		clientExtensionEntry.setNameMap(nameMap);
 		clientExtensionEntry.setProperties(properties);
 		clientExtensionEntry.setSourceCodeURL(sourceCodeURL);
@@ -142,18 +143,13 @@ public class ClientExtensionEntryLocalServiceImpl
 		_validateExternalReferenceCode(
 			user.getCompanyId(), externalReferenceCode);
 
-		//_validateTypeSettings(typeSettings, null, type);
-
 		clientExtensionEntry.setExternalReferenceCode(externalReferenceCode);
 		clientExtensionEntry.setCompanyId(user.getCompanyId());
 		clientExtensionEntry.setUserId(user.getUserId());
 		clientExtensionEntry.setUserName(user.getFullName());
-		//clientExtensionEntry.setDescription(description);
+		clientExtensionEntry.setInternalURLs(true);
 		clientExtensionEntry.setNameMap(nameMap);
-		//clientExtensionEntry.setProperties(properties);
-		//clientExtensionEntry.setSourceCodeURL(sourceCodeURL);
 		clientExtensionEntry.setType(type);
-		//clientExtensionEntry.setTypeSettings(typeSettings);
 		clientExtensionEntry.setStatus(WorkflowConstants.STATUS_DRAFT);
 		clientExtensionEntry.setStatusByUserId(userId);
 		clientExtensionEntry.setStatusDate(new Date());
@@ -170,7 +166,7 @@ public class ClientExtensionEntryLocalServiceImpl
 	@Override
 	public ClientExtensionEntry addOrUpdateClientExtensionEntry(
 			String externalReferenceCode, long userId, String description,
-			Map<Locale, String> nameMap, String properties,
+			boolean internalURLs, Map<Locale, String> nameMap, String properties,
 			String sourceCodeURL, String type, String typeSettings)
 		throws PortalException {
 
@@ -184,12 +180,13 @@ public class ClientExtensionEntryLocalServiceImpl
 		if (clientExtensionEntry != null) {
 			return clientExtensionEntryLocalService.updateClientExtensionEntry(
 				userId, clientExtensionEntry.getClientExtensionEntryId(),
-				description, nameMap, properties, sourceCodeURL, typeSettings);
+				description, internalURLs, nameMap, properties, sourceCodeURL,
+				typeSettings);
 		}
 
 		return addClientExtensionEntry(
-			externalReferenceCode, userId, description, nameMap, properties,
-			sourceCodeURL, type, typeSettings);
+			externalReferenceCode, userId, description, internalURLs, nameMap,
+			properties, sourceCodeURL, type, typeSettings);
 	}
 
 	@Override
@@ -351,8 +348,8 @@ public class ClientExtensionEntryLocalServiceImpl
 	@Override
 	public ClientExtensionEntry updateClientExtensionEntry(
 			long userId, long clientExtensionEntryId, String description,
-			Map<Locale, String> nameMap, String properties,
-			String sourceCodeURL, String typeSettings)
+			boolean internalURLs, Map<Locale, String> nameMap,
+			String properties, String sourceCodeURL, String typeSettings)
 		throws PortalException {
 
 		ClientExtensionEntry clientExtensionEntry =
@@ -367,6 +364,7 @@ public class ClientExtensionEntryLocalServiceImpl
 			clientExtensionEntry);
 
 		clientExtensionEntry.setDescription(description);
+		clientExtensionEntry.setInternalURLs(internalURLs);
 		clientExtensionEntry.setNameMap(nameMap);
 		clientExtensionEntry.setProperties(properties);
 		clientExtensionEntry.setSourceCodeURL(sourceCodeURL);
