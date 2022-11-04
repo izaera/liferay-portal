@@ -1,4 +1,34 @@
 .portlet-remote-app-admin {
+	.add-resources-summary {
+		background-color: #dbe8ff;
+		display: flex;
+		flex-direction: row;
+		margin-bottom: 1em;
+
+		.text {
+			flex-grow: 1;
+		}
+
+		.button-wrapper {
+			align-items: center;
+			padding: 1em;
+		}
+	}
+
+	.url-input-field {
+		display: flex;
+		flex-direction: row;
+
+		.input-text-wrapper {
+			flex-grow: 1;
+		}
+
+		.button-wrapper {
+			align-items: center;
+			padding-left: 1em;
+		}
+	}
+
 	.lfr-form-rows {
 		counter-reset: line-number;
 	}

@@ -32,14 +32,10 @@ CustomElementCET customElementCET = editClientExtensionEntryPartDisplayContext.g
 	for (String url : editClientExtensionEntryPartDisplayContext.getStrings(customElementCET.getURLs())) {
 	%>
 
-		<div class="lfr-form-row">
-			<div data-is-url-field="true" style="display: flex; flex-direction: row;">
-				<span style="flex-grow: 1;">
-					<aui:input data-is-url-input="<%= true %>" ignoreRequestValue="<%= true %>" label="url" name="urls" type="text" value="<%= url %>" />
-				</span>
-				<span style="display: none; align-items: center; padding-left: 1em;">
-					<aui:button data-is-url-button="<%= true %>" name="urlsButton" value="choose" />
-				</span>
+		<div class="lfr-form-row url-input-field">
+			<aui:input ignoreRequestValue="<%= true %>" label="url" name="urls" type="text" value="<%= url %>" />
+			<div class="button-wrapper">
+				<aui:button name="urlsButton" value="choose" />
 			</div>
 		</div>
 
@@ -55,13 +51,11 @@ CustomElementCET customElementCET = editClientExtensionEntryPartDisplayContext.g
 	for (String cssURL : editClientExtensionEntryPartDisplayContext.getStrings(customElementCET.getCSSURLs())) {
 	%>
 
-		<div class="lfr-form-row" style="display: flex; flex-direction: row;">
-			<span style="flex-grow: 1;">
-				<aui:input data-is-url-input="<%= true %>" ignoreRequestValue="<%= true %>" label="css-url" name="cssURLs" type="text" value="<%= cssURL %>" />
-			</span>
-			<span style="display: none; align-items: center; padding-left: 1em;">
-				<aui:button data-is-url-button="<%= true %>" name="cssURLsButton" value="choose" />
-			</span>
+		<div class="lfr-form-row url-input-field">
+			<aui:input ignoreRequestValue="<%= true %>" label="css-url" name="cssURLs" type="text" value="<%= cssURL %>" />
+			<div class="button-wrapper">
+				<aui:button name="cssURLsButton" value="choose" />
+			</div>
 		</div>
 
 	<%

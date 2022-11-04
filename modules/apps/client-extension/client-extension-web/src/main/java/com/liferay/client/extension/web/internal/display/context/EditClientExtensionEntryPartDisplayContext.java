@@ -19,6 +19,7 @@ import com.liferay.client.extension.type.CET;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.SelectOption;
 import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.bean.BeanParamUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.PortletCategory;
@@ -125,6 +126,11 @@ public class EditClientExtensionEntryPartDisplayContext<T extends CET> {
 		}
 
 		return strings;
+	}
+
+	public boolean isInternalURLs() {
+		return BeanParamUtil.getBoolean(
+			_clientExtensionEntry, _portletRequest, "internalURLs");
 	}
 
 	public boolean isNew() {

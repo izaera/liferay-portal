@@ -22,6 +22,7 @@ import com.liferay.client.extension.web.internal.constants.ClientExtensionAdminP
 import com.liferay.client.extension.web.internal.constants.ClientExtensionAdminWebKeys;
 import com.liferay.client.extension.web.internal.display.context.EditClientExtensionEntryDisplayContext;
 import com.liferay.client.extension.web.internal.display.context.EditClientExtensionEntryPartDisplayContext;
+import com.liferay.client.extension.web.internal.model.ClientExtensionRepository;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
 import com.liferay.portal.kernel.util.ParamUtil;
@@ -72,7 +73,8 @@ public class EditClientExtensionEntryMVCRenderCommand
 				ClientExtensionAdminWebKeys.
 					EDIT_CLIENT_EXTENSION_ENTRY_DISPLAY_CONTEXT,
 				new EditClientExtensionEntryDisplayContext(
-					cet, clientExtensionEntry, renderRequest));
+					cet, clientExtensionEntry, _clientExtensionRepository,
+					renderRequest));
 			renderRequest.setAttribute(
 				ClientExtensionAdminWebKeys.
 					EDIT_CLIENT_EXTENSION_ENTRY_PART_DISPLAY_CONTEXT,
@@ -107,6 +109,9 @@ public class EditClientExtensionEntryMVCRenderCommand
 
 	@Reference
 	private ClientExtensionEntryService _clientExtensionEntryService;
+
+	@Reference
+	private ClientExtensionRepository _clientExtensionRepository;
 
 	@Reference
 	private Portal _portal;

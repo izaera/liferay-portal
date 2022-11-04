@@ -17,8 +17,11 @@ package com.liferay.client.extension.web.internal.display.context;
 import com.liferay.client.extension.model.ClientExtensionEntry;
 import com.liferay.client.extension.type.CET;
 import com.liferay.client.extension.web.internal.display.context.util.CETLabelUtil;
+import com.liferay.client.extension.web.internal.model.ClientExtensionRepository;
 import com.liferay.frontend.taglib.clay.servlet.taglib.util.SelectOption;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.bean.BeanParamUtil;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.portlet.RequestBackedPortletURLFactory;
@@ -37,6 +40,7 @@ import javax.portlet.PortletRequest;
 
 import javax.portlet.PortletURL;
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -47,10 +51,12 @@ public class EditClientExtensionEntryDisplayContext {
 
 	public EditClientExtensionEntryDisplayContext(
 		CET cet, ClientExtensionEntry clientExtensionEntry,
+		ClientExtensionRepository clientExtensionRepository,
 		PortletRequest portletRequest) {
 
 		_cet = cet;
 		_clientExtensionEntry = clientExtensionEntry;
+		_clientExtensionRepository = clientExtensionRepository;
 		_portletRequest = portletRequest;
 	}
 
@@ -62,10 +68,10 @@ public class EditClientExtensionEntryDisplayContext {
 		return ListUtil.fromArray(
 			new SelectOption(
 				LanguageUtil.get(_getHttpServletRequest(), "from-url"),
-					"fromURL"),
+					"fromURL", !isInternalURLs()),
 			new SelectOption(
 				LanguageUtil.get(_getHttpServletRequest(), "from-computer"),
-					"fromComputer"));
+					"fromComputer", isInternalURLs()));
 	}
 
 	public String getCmd() {
@@ -156,8 +162,22 @@ public class EditClientExtensionEntryDisplayContext {
 			CETLabelUtil.getTypeNameLabel(themeDisplay.getLocale(), getType()));
 	}
 
+	public boolean isInternalURLs() {
+		return BeanParamUtil.getBoolean(
+			_clientExtensionEntry, _portletRequest, "internalURLs");
+	}
+
 	public boolean isPropertiesVisible() {
 		return _cet.hasProperties();
+	}
+
+	public String getAddResourcesSummaryText() throws PortalException {
+		return LanguageUtil.format(
+			_getHttpServletRequest(), "x-folders-and-x-files-added",
+			new Object[] {
+				0,
+				_clientExtensionRepository.getFileEntriesCount(
+					_clientExtensionEntry.getClientExtensionEntryId())});
 	}
 
 	private HttpServletRequest _getHttpServletRequest() {
@@ -195,6 +215,7 @@ public class EditClientExtensionEntryDisplayContext {
 
 	private final CET _cet;
 	private final ClientExtensionEntry _clientExtensionEntry;
+	private final ClientExtensionRepository _clientExtensionRepository;
 	private final PortletRequest _portletRequest;
 
 }

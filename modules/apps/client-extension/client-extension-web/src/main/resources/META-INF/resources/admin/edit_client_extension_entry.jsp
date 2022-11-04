@@ -61,13 +61,24 @@ renderResponse.setTitle(editClientExtensionEntryDisplayContext.getTitle());
 				name="description"
 				placeholder="description"
 			/>
+		</liferay-frontend:fieldset-group>
 
+		<liferay-frontend:fieldset-group>
 			<clay:select
 				id="<%= renderResponse.getNamespace() + "addResources" %>"
 				name="addResources"
 				label="<%= editClientExtensionEntryDisplayContext.getAddResourcesLabel() %>"
 				options="<%= editClientExtensionEntryDisplayContext.getAddResourcesSelectOptions() %>"
 			/>
+
+			<div class="add-resources-summary">
+				<div class="text">
+					<%= editClientExtensionEntryDisplayContext.getAddResourcesSummaryText() %>
+				</div>
+				<div class="button-wrapper">
+					<aui:button name="manageResources" value="manage-resources" />
+				</div>
+			</div>
 
 			<aui:input label="source-code-url" name="sourceCodeURL" type="text" value="<%= editClientExtensionEntryDisplayContext.getSourceCodeURL() %>" />
 

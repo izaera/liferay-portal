@@ -84,16 +84,10 @@ public class ClientExtensionRepository {
 	public List<FileEntry> getFileEntries(long clientExtensionEntryId)
 		throws PortalException {
 
-		long folderId = _repository.getDlFolderId();
+		Folder folder = _fetchClientExtensionEntryFolder(
+			clientExtensionEntryId);
 
-		Folder folder = _portletFileRepository.getPortletFolder(folderId);
-
-		try {
-			folder = _portletFileRepository.getPortletFolder(
-				_repository.getRepositoryId(), folder.getFolderId(),
-				String.valueOf(clientExtensionEntryId));
-		}
-		catch (NoSuchFolderException noSuchFolderException) {
+		if (folder == null) {
 			return Collections.emptyList();
 		}
 
@@ -101,17 +95,30 @@ public class ClientExtensionRepository {
 			_repository.getGroupId(), folder.getFolderId());
 	}
 
+	public int getFileEntriesCount(long clientExtensionEntryId)
+		throws PortalException {
+
+		Folder folder = _fetchClientExtensionEntryFolder(
+			clientExtensionEntryId);
+
+		if (folder == null) {
+			return 0;
+		}
+
+		return _portletFileRepository.getPortletFileEntriesCount(
+			_repository.getGroupId(), folder.getFolderId());
+	}
+
 	public FileEntry getFileEntry(
 			long clientExtensionEntryId, String fileEntryPath)
 		throws PortalException {
 
-		long folderId = _repository.getDlFolderId();
+		Folder folder = _fetchClientExtensionEntryFolder(
+			clientExtensionEntryId);
 
-		Folder folder = _portletFileRepository.getPortletFolder(folderId);
-
-		folder = _portletFileRepository.getPortletFolder(
-			_repository.getRepositoryId(), folder.getFolderId(),
-			String.valueOf(clientExtensionEntryId));
+		if (folder == null) {
+			throw new NoSuchFolderException();
+		}
 
 		String[] parts = fileEntryPath.split(StringPool.SLASH);
 
@@ -123,6 +130,23 @@ public class ClientExtensionRepository {
 		return _portletFileRepository.getPortletFileEntry(
 			_repository.getGroupId(), folder.getFolderId(),
 			parts[parts.length - 1]);
+	}
+
+	private Folder _fetchClientExtensionEntryFolder(long clientExtensionEntryId)
+		throws PortalException {
+
+		long folderId = _repository.getDlFolderId();
+
+		Folder folder = _portletFileRepository.getPortletFolder(folderId);
+
+		try {
+			return _portletFileRepository.getPortletFolder(
+				_repository.getRepositoryId(), folder.getFolderId(),
+				String.valueOf(clientExtensionEntryId));
+		}
+		catch (NoSuchFolderException noSuchFolderException) {
+			return null;
+		}
 	}
 
 	public Collection<String> getURLs(Collection<FileEntry> fileEntries)

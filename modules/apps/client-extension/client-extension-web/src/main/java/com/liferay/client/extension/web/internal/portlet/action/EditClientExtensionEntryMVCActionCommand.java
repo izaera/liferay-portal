@@ -22,6 +22,7 @@ import com.liferay.client.extension.web.internal.constants.ClientExtensionAdminP
 import com.liferay.client.extension.web.internal.constants.ClientExtensionAdminWebKeys;
 import com.liferay.client.extension.web.internal.display.context.EditClientExtensionEntryDisplayContext;
 import com.liferay.client.extension.web.internal.display.context.EditClientExtensionEntryPartDisplayContext;
+import com.liferay.client.extension.web.internal.model.ClientExtensionRepository;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
@@ -37,6 +38,7 @@ import com.liferay.portal.kernel.util.Validator;
 
 import java.util.Locale;
 import java.util.Map;
+import java.util.Objects;
 
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
@@ -103,7 +105,8 @@ public class EditClientExtensionEntryMVCActionCommand
 				ClientExtensionAdminWebKeys.
 					EDIT_CLIENT_EXTENSION_ENTRY_DISPLAY_CONTEXT,
 				new EditClientExtensionEntryDisplayContext(
-					cet, clientExtensionEntry, actionRequest));
+					cet, clientExtensionEntry, _clientExtensionRepository,
+					actionRequest));
 			actionRequest.setAttribute(
 				ClientExtensionAdminWebKeys.
 					EDIT_CLIENT_EXTENSION_ENTRY_PART_DISPLAY_CONTEXT,
@@ -117,6 +120,8 @@ public class EditClientExtensionEntryMVCActionCommand
 
 	private void _add(ActionRequest actionRequest) throws PortalException {
 		String description = ParamUtil.getString(actionRequest, "description");
+		boolean addResources = ParamUtil.getBoolean(
+			actionRequest, "addResources");
 		Map<Locale, String> nameMap = _localization.getLocalizationMap(
 			actionRequest, "name");
 		String sourceCodeURL = ParamUtil.getString(
@@ -127,7 +132,8 @@ public class EditClientExtensionEntryMVCActionCommand
 		CET cet = _cetFactory.create(actionRequest, type);
 
 		_clientExtensionEntryService.addClientExtensionEntry(
-			StringPool.BLANK, description, nameMap,
+			StringPool.BLANK, description,
+			Objects.equals(addResources, "fromComputer"), nameMap,
 			ParamUtil.getString(actionRequest, "properties"), sourceCodeURL,
 			type, cet.getTypeSettings());
 	}
@@ -153,6 +159,8 @@ public class EditClientExtensionEntryMVCActionCommand
 			actionRequest);
 
 		String description = ParamUtil.getString(actionRequest, "description");
+		boolean addResources = ParamUtil.getBoolean(
+			actionRequest, "addResources");
 		Map<Locale, String> nameMap = _localization.getLocalizationMap(
 			actionRequest, "name");
 		String properties = ParamUtil.getString(actionRequest, "properties");
@@ -164,7 +172,8 @@ public class EditClientExtensionEntryMVCActionCommand
 
 		_clientExtensionEntryService.updateClientExtensionEntry(
 			clientExtensionEntry.getClientExtensionEntryId(), description,
-			nameMap, properties, sourceCodeURL, cet.getTypeSettings());
+			Objects.equals(addResources, "fromComputer"), nameMap, properties,
+			sourceCodeURL, cet.getTypeSettings());
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
@@ -175,6 +184,9 @@ public class EditClientExtensionEntryMVCActionCommand
 
 	@Reference
 	private ClientExtensionEntryService _clientExtensionEntryService;
+
+	@Reference
+	private ClientExtensionRepository _clientExtensionRepository;
 
 	@Reference
 	private Localization _localization;

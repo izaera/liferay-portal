@@ -19,12 +19,13 @@ export default function ({
 	const fm = document.getElementById(`${namespace}fm`);
 	const addResources = document.getElementById(`${namespace}addResources`);
 
-	addURLButtonsEventListeners(fm, clientExtensionItemSelectorURL, `${namespace}itemSelected`);
+	addURLButtonsEventListeners(
+		fm, clientExtensionItemSelectorURL, `${namespace}itemSelected`);
 
-	updateURLButtonsVisibility(fm, addResources.value);
+	updateURLFieldsVisibility(fm, addResources.value);
 
 	addResources.addEventListener('change', (event) => {
-		updateURLButtonsVisibility(fm, event.target.value);
+		updateURLFieldsVisibility(fm, event.target.value);
 /*
 		Liferay.fire('urlModeChanged', {
 			mode: event.target.value
@@ -34,47 +35,59 @@ export default function ({
 }
 
 function addURLButtonsEventListeners(fm, clientExtensionItemSelectorURL, selectEventName) {
-	for (const element of fm.elements) {
-		if (element.dataset.isUrlButton) {
-			element.addEventListener('click', (event) => {
-				Liferay.Util.openSelectionModal(
-					{
-						iframeBodyCssClass: '',
-						onSelect: function (event) {
-							var selectedItem = event.value;
+	const manageResourcesButton = fm.querySelector('.add-resources-summary button');
 
-							if (selectedItem) {
-								var itemValue = JSON.parse(selectedItem.value);
+	manageResourcesButton.addEventListener('click', (event) => {
+		Liferay.Util.openSelectionModal(
+			{
+				iframeBodyCssClass: '',
+				title: Liferay.Language.get('add-resources'),
+				url: clientExtensionItemSelectorURL
+			}
+		);
+	});
 
-								window.alert(JSON.stringify(itemValue, null, 2));
-							}
-						},
-						selectEventName,
-						title: Liferay.Language.get('add-resources'),
-						url: clientExtensionItemSelectorURL
-					}
-				);
-			});
-		}
+
+	const buttons = fm.querySelectorAll('.url-input-field button');
+
+	for (const button of buttons) {
+		button.addEventListener('click', (event) => {
+			Liferay.Util.openSelectionModal(
+				{
+					iframeBodyCssClass: '',
+					onSelect: function (event) {
+						var selectedItem = event.value;
+
+						if (selectedItem) {
+							var itemValue = JSON.parse(selectedItem.value);
+
+							window.alert(JSON.stringify(itemValue, null, 2));
+						}
+					},
+					selectEventName,
+					title: Liferay.Language.get('add-resources'),
+					url: clientExtensionItemSelectorURL
+				}
+			);
+		});
 	}
 }
 
-function updateURLButtonsVisibility(fm, mode) {
-	let disabled = false;
-	let display = 'none';
+function updateURLFieldsVisibility(fm, mode) {
+	const inputs = fm.querySelectorAll('.url-input-field input');
+	const disabled = mode == "fromComputer" ? true : false;
 
-	if (mode == 'fromComputer') {
-		disabled = true;
-		display = 'flex';
+	for (const input of inputs) {
+		input.disabled = disabled;
 	}
 
-	for (const element of fm.elements) {
-		if (element.dataset.isUrlButton) {
-			element.parentElement.style.display = display;
-		}
+	const addResourcesSummary = fm.querySelector('.add-resources-summary');
+	const buttonWrappers = fm.querySelectorAll('.url-input-field .button-wrapper');
+	const display = mode == "fromComputer" ? 'flex' : 'none';
 
-		if (element.dataset.isUrlInput) {
-			element.disabled = disabled;
-		}
+	addResourcesSummary.style.display = display;
+
+	for (const buttonWrapper of buttonWrappers) {
+		buttonWrapper.style.display = display;
 	}
 }
