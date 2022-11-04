@@ -261,6 +261,27 @@ public interface ClientExtensionEntryModel
 	public void setDescription(String description);
 
 	/**
+	 * Returns the internal ur ls of this client extension entry.
+	 *
+	 * @return the internal ur ls of this client extension entry
+	 */
+	public boolean getInternalURLs();
+
+	/**
+	 * Returns <code>true</code> if this client extension entry is internal ur ls.
+	 *
+	 * @return <code>true</code> if this client extension entry is internal ur ls; <code>false</code> otherwise
+	 */
+	public boolean isInternalURLs();
+
+	/**
+	 * Sets whether this client extension entry is internal ur ls.
+	 *
+	 * @param internalURLs the internal ur ls of this client extension entry
+	 */
+	public void setInternalURLs(boolean internalURLs);
+
+	/**
 	 * Returns the name of this client extension entry.
 	 *
 	 * @return the name of this client extension entry

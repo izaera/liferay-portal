@@ -148,6 +148,8 @@ public class ClientExtensionEntryPersistenceTest {
 
 		newClientExtensionEntry.setDescription(RandomTestUtil.randomString());
 
+		newClientExtensionEntry.setInternalURLs(RandomTestUtil.randomBoolean());
+
 		newClientExtensionEntry.setName(RandomTestUtil.randomString());
 
 		newClientExtensionEntry.setProperties(RandomTestUtil.randomString());
@@ -209,6 +211,9 @@ public class ClientExtensionEntryPersistenceTest {
 		Assert.assertEquals(
 			existingClientExtensionEntry.getDescription(),
 			newClientExtensionEntry.getDescription());
+		Assert.assertEquals(
+			existingClientExtensionEntry.isInternalURLs(),
+			newClientExtensionEntry.isInternalURLs());
 		Assert.assertEquals(
 			existingClientExtensionEntry.getName(),
 			newClientExtensionEntry.getName());
@@ -313,10 +318,10 @@ public class ClientExtensionEntryPersistenceTest {
 			"ClientExtensionEntry", "mvccVersion", true, "ctCollectionId", true,
 			"uuid", true, "externalReferenceCode", true,
 			"clientExtensionEntryId", true, "companyId", true, "userId", true,
-			"userName", true, "createDate", true, "modifiedDate", true, "name",
-			true, "sourceCodeURL", true, "type", true, "status", true,
-			"statusByUserId", true, "statusByUserName", true, "statusDate",
-			true);
+			"userName", true, "createDate", true, "modifiedDate", true,
+			"internalURLs", true, "name", true, "sourceCodeURL", true, "type",
+			true, "status", true, "statusByUserId", true, "statusByUserName",
+			true, "statusDate", true);
 	}
 
 	@Test
@@ -649,6 +654,8 @@ public class ClientExtensionEntryPersistenceTest {
 		clientExtensionEntry.setModifiedDate(RandomTestUtil.nextDate());
 
 		clientExtensionEntry.setDescription(RandomTestUtil.randomString());
+
+		clientExtensionEntry.setInternalURLs(RandomTestUtil.randomBoolean());
 
 		clientExtensionEntry.setName(RandomTestUtil.randomString());
 

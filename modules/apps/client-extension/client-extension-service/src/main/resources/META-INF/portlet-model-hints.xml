@@ -16,6 +16,7 @@
 			<hint-collection name="CLOB" />
 			<sanitize content-type="text/html" modes="ALL" />
 		</field>
+		<field name="internalURLs" type="boolean" />
 		<field localized="true" name="name" type="String" />
 		<field name="properties" type="String">
 			<hint-collection name="CLOB" />

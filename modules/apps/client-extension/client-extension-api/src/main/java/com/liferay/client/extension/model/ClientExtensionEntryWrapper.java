@@ -58,6 +58,7 @@ public class ClientExtensionEntryWrapper
 		attributes.put("createDate", getCreateDate());
 		attributes.put("modifiedDate", getModifiedDate());
 		attributes.put("description", getDescription());
+		attributes.put("internalURLs", isInternalURLs());
 		attributes.put("name", getName());
 		attributes.put("properties", getProperties());
 		attributes.put("sourceCodeURL", getSourceCodeURL());
@@ -139,6 +140,12 @@ public class ClientExtensionEntryWrapper
 
 		if (description != null) {
 			setDescription(description);
+		}
+
+		Boolean internalURLs = (Boolean)attributes.get("internalURLs");
+
+		if (internalURLs != null) {
+			setInternalURLs(internalURLs);
 		}
 
 		String name = (String)attributes.get("name");
@@ -289,6 +296,16 @@ public class ClientExtensionEntryWrapper
 	@Override
 	public String getExternalReferenceCode() {
 		return model.getExternalReferenceCode();
+	}
+
+	/**
+	 * Returns the internal ur ls of this client extension entry.
+	 *
+	 * @return the internal ur ls of this client extension entry
+	 */
+	@Override
+	public boolean getInternalURLs() {
+		return model.getInternalURLs();
 	}
 
 	/**
@@ -598,6 +615,16 @@ public class ClientExtensionEntryWrapper
 	}
 
 	/**
+	 * Returns <code>true</code> if this client extension entry is internal ur ls.
+	 *
+	 * @return <code>true</code> if this client extension entry is internal ur ls; <code>false</code> otherwise
+	 */
+	@Override
+	public boolean isInternalURLs() {
+		return model.isInternalURLs();
+	}
+
+	/**
 	 * Returns <code>true</code> if this client extension entry is pending.
 	 *
 	 * @return <code>true</code> if this client extension entry is pending; <code>false</code> otherwise
@@ -705,6 +732,16 @@ public class ClientExtensionEntryWrapper
 	@Override
 	public void setExternalReferenceCode(String externalReferenceCode) {
 		model.setExternalReferenceCode(externalReferenceCode);
+	}
+
+	/**
+	 * Sets whether this client extension entry is internal ur ls.
+	 *
+	 * @param internalURLs the internal ur ls of this client extension entry
+	 */
+	@Override
+	public void setInternalURLs(boolean internalURLs) {
+		model.setInternalURLs(internalURLs);
 	}
 
 	/**

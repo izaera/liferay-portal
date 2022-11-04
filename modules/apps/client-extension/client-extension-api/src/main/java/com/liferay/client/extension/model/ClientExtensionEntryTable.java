@@ -68,6 +68,9 @@ public class ClientExtensionEntryTable
 	public final Column<ClientExtensionEntryTable, Clob> description =
 		createColumn(
 			"description", Clob.class, Types.CLOB, Column.FLAG_DEFAULT);
+	public final Column<ClientExtensionEntryTable, Boolean> internalURLs =
+		createColumn(
+			"internalURLs", Boolean.class, Types.BOOLEAN, Column.FLAG_DEFAULT);
 	public final Column<ClientExtensionEntryTable, String> name = createColumn(
 		"name", String.class, Types.VARCHAR, Column.FLAG_DEFAULT);
 	public final Column<ClientExtensionEntryTable, Clob> properties =

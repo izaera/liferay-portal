@@ -5215,6 +5215,7 @@ public class ClientExtensionEntryPersistenceImpl
 		ctStrictColumnNames.add("createDate");
 		ctIgnoreColumnNames.add("modifiedDate");
 		ctStrictColumnNames.add("description");
+		ctStrictColumnNames.add("internalURLs");
 		ctStrictColumnNames.add("name");
 		ctStrictColumnNames.add("properties");
 		ctStrictColumnNames.add("sourceCodeURL");

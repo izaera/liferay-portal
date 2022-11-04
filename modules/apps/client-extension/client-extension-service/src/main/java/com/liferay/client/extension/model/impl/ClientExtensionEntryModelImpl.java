@@ -87,11 +87,12 @@ public class ClientExtensionEntryModelImpl
 		{"clientExtensionEntryId", Types.BIGINT}, {"companyId", Types.BIGINT},
 		{"userId", Types.BIGINT}, {"userName", Types.VARCHAR},
 		{"createDate", Types.TIMESTAMP}, {"modifiedDate", Types.TIMESTAMP},
-		{"description", Types.CLOB}, {"name", Types.VARCHAR},
-		{"properties", Types.CLOB}, {"sourceCodeURL", Types.VARCHAR},
-		{"type_", Types.VARCHAR}, {"typeSettings", Types.CLOB},
-		{"status", Types.INTEGER}, {"statusByUserId", Types.BIGINT},
-		{"statusByUserName", Types.VARCHAR}, {"statusDate", Types.TIMESTAMP}
+		{"description", Types.CLOB}, {"internalURLs", Types.BOOLEAN},
+		{"name", Types.VARCHAR}, {"properties", Types.CLOB},
+		{"sourceCodeURL", Types.VARCHAR}, {"type_", Types.VARCHAR},
+		{"typeSettings", Types.CLOB}, {"status", Types.INTEGER},
+		{"statusByUserId", Types.BIGINT}, {"statusByUserName", Types.VARCHAR},
+		{"statusDate", Types.TIMESTAMP}
 	};
 
 	public static final Map<String, Integer> TABLE_COLUMNS_MAP =
@@ -109,6 +110,7 @@ public class ClientExtensionEntryModelImpl
 		TABLE_COLUMNS_MAP.put("createDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("modifiedDate", Types.TIMESTAMP);
 		TABLE_COLUMNS_MAP.put("description", Types.CLOB);
+		TABLE_COLUMNS_MAP.put("internalURLs", Types.BOOLEAN);
 		TABLE_COLUMNS_MAP.put("name", Types.VARCHAR);
 		TABLE_COLUMNS_MAP.put("properties", Types.CLOB);
 		TABLE_COLUMNS_MAP.put("sourceCodeURL", Types.VARCHAR);
@@ -121,7 +123,7 @@ public class ClientExtensionEntryModelImpl
 	}
 
 	public static final String TABLE_SQL_CREATE =
-		"create table ClientExtensionEntry (mvccVersion LONG default 0 not null,ctCollectionId LONG default 0 not null,uuid_ VARCHAR(75) null,externalReferenceCode VARCHAR(75) null,clientExtensionEntryId LONG not null,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,description TEXT null,name STRING null,properties TEXT null,sourceCodeURL STRING null,type_ VARCHAR(75) null,typeSettings TEXT null,status INTEGER,statusByUserId LONG,statusByUserName VARCHAR(75) null,statusDate DATE null,primary key (clientExtensionEntryId, ctCollectionId))";
+		"create table ClientExtensionEntry (mvccVersion LONG default 0 not null,ctCollectionId LONG default 0 not null,uuid_ VARCHAR(75) null,externalReferenceCode VARCHAR(75) null,clientExtensionEntryId LONG not null,companyId LONG,userId LONG,userName VARCHAR(75) null,createDate DATE null,modifiedDate DATE null,description TEXT null,internalURLs BOOLEAN,name STRING null,properties TEXT null,sourceCodeURL STRING null,type_ VARCHAR(75) null,typeSettings TEXT null,status INTEGER,statusByUserId LONG,statusByUserName VARCHAR(75) null,statusDate DATE null,primary key (clientExtensionEntryId, ctCollectionId))";
 
 	public static final String TABLE_SQL_DROP =
 		"drop table ClientExtensionEntry";
@@ -349,6 +351,12 @@ public class ClientExtensionEntryModelImpl
 			"description",
 			(BiConsumer<ClientExtensionEntry, String>)
 				ClientExtensionEntry::setDescription);
+		attributeGetterFunctions.put(
+			"internalURLs", ClientExtensionEntry::getInternalURLs);
+		attributeSetterBiConsumers.put(
+			"internalURLs",
+			(BiConsumer<ClientExtensionEntry, Boolean>)
+				ClientExtensionEntry::setInternalURLs);
 		attributeGetterFunctions.put("name", ClientExtensionEntry::getName);
 		attributeSetterBiConsumers.put(
 			"name",
@@ -640,6 +648,27 @@ public class ClientExtensionEntryModelImpl
 		}
 
 		_description = description;
+	}
+
+	@JSON
+	@Override
+	public boolean getInternalURLs() {
+		return _internalURLs;
+	}
+
+	@JSON
+	@Override
+	public boolean isInternalURLs() {
+		return _internalURLs;
+	}
+
+	@Override
+	public void setInternalURLs(boolean internalURLs) {
+		if (_columnOriginalValues == Collections.EMPTY_MAP) {
+			_setColumnOriginalValues();
+		}
+
+		_internalURLs = internalURLs;
 	}
 
 	@JSON
@@ -1166,6 +1195,7 @@ public class ClientExtensionEntryModelImpl
 		clientExtensionEntryImpl.setCreateDate(getCreateDate());
 		clientExtensionEntryImpl.setModifiedDate(getModifiedDate());
 		clientExtensionEntryImpl.setDescription(getDescription());
+		clientExtensionEntryImpl.setInternalURLs(isInternalURLs());
 		clientExtensionEntryImpl.setName(getName());
 		clientExtensionEntryImpl.setProperties(getProperties());
 		clientExtensionEntryImpl.setSourceCodeURL(getSourceCodeURL());
@@ -1208,6 +1238,8 @@ public class ClientExtensionEntryModelImpl
 			this.<Date>getColumnOriginalValue("modifiedDate"));
 		clientExtensionEntryImpl.setDescription(
 			this.<String>getColumnOriginalValue("description"));
+		clientExtensionEntryImpl.setInternalURLs(
+			this.<Boolean>getColumnOriginalValue("internalURLs"));
 		clientExtensionEntryImpl.setName(
 			this.<String>getColumnOriginalValue("name"));
 		clientExtensionEntryImpl.setProperties(
@@ -1371,6 +1403,8 @@ public class ClientExtensionEntryModelImpl
 			clientExtensionEntryCacheModel.description = null;
 		}
 
+		clientExtensionEntryCacheModel.internalURLs = isInternalURLs();
+
 		clientExtensionEntryCacheModel.name = getName();
 
 		String name = clientExtensionEntryCacheModel.name;
@@ -1507,6 +1541,7 @@ public class ClientExtensionEntryModelImpl
 	private Date _modifiedDate;
 	private boolean _setModifiedDate;
 	private String _description;
+	private boolean _internalURLs;
 	private String _name;
 	private String _nameCurrentLanguageId;
 	private String _properties;
@@ -1560,6 +1595,7 @@ public class ClientExtensionEntryModelImpl
 		_columnOriginalValues.put("createDate", _createDate);
 		_columnOriginalValues.put("modifiedDate", _modifiedDate);
 		_columnOriginalValues.put("description", _description);
+		_columnOriginalValues.put("internalURLs", _internalURLs);
 		_columnOriginalValues.put("name", _name);
 		_columnOriginalValues.put("properties", _properties);
 		_columnOriginalValues.put("sourceCodeURL", _sourceCodeURL);
@@ -1615,23 +1651,25 @@ public class ClientExtensionEntryModelImpl
 
 		columnBitmasks.put("description", 1024L);
 
-		columnBitmasks.put("name", 2048L);
+		columnBitmasks.put("internalURLs", 2048L);
 
-		columnBitmasks.put("properties", 4096L);
+		columnBitmasks.put("name", 4096L);
 
-		columnBitmasks.put("sourceCodeURL", 8192L);
+		columnBitmasks.put("properties", 8192L);
 
-		columnBitmasks.put("type_", 16384L);
+		columnBitmasks.put("sourceCodeURL", 16384L);
 
-		columnBitmasks.put("typeSettings", 32768L);
+		columnBitmasks.put("type_", 32768L);
 
-		columnBitmasks.put("status", 65536L);
+		columnBitmasks.put("typeSettings", 65536L);
 
-		columnBitmasks.put("statusByUserId", 131072L);
+		columnBitmasks.put("status", 131072L);
 
-		columnBitmasks.put("statusByUserName", 262144L);
+		columnBitmasks.put("statusByUserId", 262144L);
 
-		columnBitmasks.put("statusDate", 524288L);
+		columnBitmasks.put("statusByUserName", 524288L);
+
+		columnBitmasks.put("statusDate", 1048576L);
 
 		_columnBitmasks = Collections.unmodifiableMap(columnBitmasks);
 	}

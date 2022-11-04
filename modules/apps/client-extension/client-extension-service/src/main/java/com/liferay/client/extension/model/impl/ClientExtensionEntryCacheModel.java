@@ -78,7 +78,7 @@ public class ClientExtensionEntryCacheModel
 
 	@Override
 	public String toString() {
-		StringBundler sb = new StringBundler(41);
+		StringBundler sb = new StringBundler(43);
 
 		sb.append("{mvccVersion=");
 		sb.append(mvccVersion);
@@ -102,6 +102,8 @@ public class ClientExtensionEntryCacheModel
 		sb.append(modifiedDate);
 		sb.append(", description=");
 		sb.append(description);
+		sb.append(", internalURLs=");
+		sb.append(internalURLs);
 		sb.append(", name=");
 		sb.append(name);
 		sb.append(", properties=");
@@ -181,6 +183,8 @@ public class ClientExtensionEntryCacheModel
 			clientExtensionEntryImpl.setDescription(description);
 		}
 
+		clientExtensionEntryImpl.setInternalURLs(internalURLs);
+
 		if (name == null) {
 			clientExtensionEntryImpl.setName("");
 		}
@@ -257,6 +261,8 @@ public class ClientExtensionEntryCacheModel
 		createDate = objectInput.readLong();
 		modifiedDate = objectInput.readLong();
 		description = (String)objectInput.readObject();
+
+		internalURLs = objectInput.readBoolean();
 		name = objectInput.readUTF();
 		properties = (String)objectInput.readObject();
 		sourceCodeURL = objectInput.readUTF();
@@ -312,6 +318,8 @@ public class ClientExtensionEntryCacheModel
 		else {
 			objectOutput.writeObject(description);
 		}
+
+		objectOutput.writeBoolean(internalURLs);
 
 		if (name == null) {
 			objectOutput.writeUTF("");
@@ -373,6 +381,7 @@ public class ClientExtensionEntryCacheModel
 	public long createDate;
 	public long modifiedDate;
 	public String description;
+	public boolean internalURLs;
 	public String name;
 	public String properties;
 	public String sourceCodeURL;

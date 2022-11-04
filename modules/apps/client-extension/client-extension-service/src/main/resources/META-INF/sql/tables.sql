@@ -10,6 +10,7 @@ create table ClientExtensionEntry (
 	createDate DATE null,
 	modifiedDate DATE null,
 	description TEXT null,
+	internalURLs BOOLEAN,
 	name STRING null,
 	properties TEXT null,
 	sourceCodeURL STRING null,
