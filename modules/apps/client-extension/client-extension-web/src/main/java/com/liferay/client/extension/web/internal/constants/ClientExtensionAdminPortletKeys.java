@@ -23,4 +23,6 @@ public class ClientExtensionAdminPortletKeys {
 		"com_liferay_client_extension_web_internal_portlet_" +
 			"ClientExtensionAdminPortlet";
 
+	public static final String ITEM_SELECTED = "itemSelected";
+
 }

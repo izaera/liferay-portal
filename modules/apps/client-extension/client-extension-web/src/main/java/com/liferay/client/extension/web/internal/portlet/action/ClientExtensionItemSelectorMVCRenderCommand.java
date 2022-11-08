@@ -68,12 +68,15 @@ public class ClientExtensionItemSelectorMVCRenderCommand
 				CLIENT_EXTENSION_ITEM_SELECTOR_DISPLAY_CONTEXT,
 			new ClientExtensionItemSelectorDisplayContext(
 				clientExtensionItemSelectorCriterion,
-				_clientExtensionRepository, _itemSelectorView, "itemSelected",
+				_clientExtensionRepository, _itemSelectorView,
+				renderResponse.getNamespace() +
+					ClientExtensionAdminPortletKeys.ITEM_SELECTED,
 				_itemSelectorReturnTypeResolverHandler, _language,
 				_itemSelector.getItemSelectorURL(
 					RequestBackedPortletURLFactoryUtil.create(
 						_portal.getHttpServletRequest(renderRequest)),
-					"itemSelected", clientExtensionItemSelectorCriterion)));
+					ClientExtensionAdminPortletKeys.ITEM_SELECTED,
+					clientExtensionItemSelectorCriterion)));
 
 		return "/admin/client_extension_item_selector.jsp";
 	}

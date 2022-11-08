@@ -109,6 +109,10 @@ public class ClientExtensionRepository {
 			_repository.getGroupId(), folder.getFolderId());
 	}
 
+	public FileEntry getFileEntry(long fileEntryId) throws PortalException {
+		return _portletFileRepository.getPortletFileEntry(fileEntryId);
+	}
+
 	public FileEntry getFileEntry(
 			long clientExtensionEntryId, String fileEntryPath)
 		throws PortalException {
@@ -132,6 +136,37 @@ public class ClientExtensionRepository {
 			parts[parts.length - 1]);
 	}
 
+	public String getURL(FileEntry fileEntry) throws PortalException {
+		StringBuilder sb = new StringBuilder();
+
+		sb.append(_BASE_URL);
+
+		List<String> parts = new ArrayList<>();
+
+		parts.add(fileEntry.getFileName());
+
+		Folder folder = fileEntry.getFolder();
+
+		while (true) {
+			String name = folder.getName();
+
+			if (name.equals(_repository.getPortletId())) {
+				break;
+			}
+
+			parts.add(folder.getName());
+
+			folder = folder.getParentFolder();
+		}
+
+		for (int i = parts.size() - 1; i >= 0; i--) {
+			sb.append(StringPool.SLASH);
+			sb.append(parts.get(i));
+		}
+
+		return sb.toString();
+	}
+
 	private Folder _fetchClientExtensionEntryFolder(long clientExtensionEntryId)
 		throws PortalException {
 
@@ -147,45 +182,6 @@ public class ClientExtensionRepository {
 		catch (NoSuchFolderException noSuchFolderException) {
 			return null;
 		}
-	}
-
-	public Collection<String> getURLs(Collection<FileEntry> fileEntries)
-		throws PortalException {
-
-		List<String> urls = new ArrayList<>();
-
-		for (FileEntry fileEntry : fileEntries) {
-			StringBuilder sb = new StringBuilder();
-
-			sb.append(_BASE_URL);
-
-			List<String> parts = new ArrayList<>();
-
-			parts.add(fileEntry.getFileName());
-
-			Folder folder = fileEntry.getFolder();
-
-			while (true) {
-				String name = folder.getName();
-
-				if (name.equals(_repository.getPortletId())) {
-					break;
-				}
-
-				parts.add(folder.getName());
-
-				folder = folder.getParentFolder();
-			}
-
-			for (int i = parts.size() - 1; i >= 0; i--) {
-				sb.append(StringPool.SLASH);
-				sb.append(parts.get(i));
-			}
-
-			urls.add(sb.toString());
-		}
-
-		return urls;
 	}
 
 	@Activate

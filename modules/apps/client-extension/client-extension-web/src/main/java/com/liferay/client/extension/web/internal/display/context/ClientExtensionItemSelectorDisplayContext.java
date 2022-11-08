@@ -73,7 +73,7 @@ public class ClientExtensionItemSelectorDisplayContext {
 	}
 
 	public String[] getExtensions() {
-		return new String[] {".js", ".css"};
+		return new String[] {"*"};
 	}
 
 	public String getItemSelectedEventName() {
@@ -81,7 +81,7 @@ public class ClientExtensionItemSelectorDisplayContext {
 	}
 
 	public ItemSelectorReturnTypeResolver<?, ?>
-	getItemSelectorReturnTypeResolver() {
+		getItemSelectorReturnTypeResolver() {
 
 		return _itemSelectorReturnTypeResolverHandler.
 			getItemSelectorReturnTypeResolver(

@@ -74,7 +74,7 @@ public class EditClientExtensionEntryMVCRenderCommand
 					EDIT_CLIENT_EXTENSION_ENTRY_DISPLAY_CONTEXT,
 				new EditClientExtensionEntryDisplayContext(
 					cet, clientExtensionEntry, _clientExtensionRepository,
-					renderRequest));
+					renderRequest, renderResponse));
 			renderRequest.setAttribute(
 				ClientExtensionAdminWebKeys.
 					EDIT_CLIENT_EXTENSION_ENTRY_PART_DISPLAY_CONTEXT,

@@ -21,7 +21,7 @@ ClientExtensionItemSelectorDisplayContext clientExtensionItemSelectorDisplayCont
 %>
 
 <liferay-item-selector:repository-entry-browser
-	displayStyle="table"
+	displayStyle="list"
 	showSearch="true"
 	allowedCreationMenuUIItemKeys="<%= clientExtensionItemSelectorDisplayContext.getAllowedCreationMenuUIItemKeys() %>"
 	emptyResultsMessage="<%= clientExtensionItemSelectorDisplayContext.getEmptyResultsMessage(locale) %>"
@@ -37,5 +37,3 @@ ClientExtensionItemSelectorDisplayContext clientExtensionItemSelectorDisplayCont
 	tabName="<%= clientExtensionItemSelectorDisplayContext.getTitle(locale) %>"
 	uploadURL="<%= clientExtensionItemSelectorDisplayContext.getUploadURL(liferayPortletResponse) %>"
 />
-
-<liferay-frontend:component module="admin/js/clientExtensionItemSelector" />

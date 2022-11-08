@@ -12,80 +12,141 @@
  * details.
  */
 
+import {createPortletURL, openToast} from 'frontend-js-web';
+
 export default function ({
 	clientExtensionItemSelectorURL,
+	getFileEntryURLURL,
+	getManageResourcesSummaryURL,
+	itemSelectedEventName,
 	namespace,
 }) {
 	const fm = document.getElementById(`${namespace}fm`);
-	const addResources = document.getElementById(`${namespace}addResources`);
 
-	addURLButtonsEventListeners(
-		fm, clientExtensionItemSelectorURL, `${namespace}itemSelected`);
+	const state = {
+		activeURLInput: null,
+		addResources: fm.querySelector(`#${namespace}addResources`),
+		clientExtensionItemSelectorURL,
+		fm,
+		getFileEntryURLURL,
+		getManageResourcesSummaryURL,
+		itemSelectedEventName,
+		manageResources: fm.querySelector('.manage-resources'),
+		manageResourcesButton: fm.querySelector('.manage-resources button'),
+		manageResourcesSummary:	fm.querySelector('.manage-resources .summary'),
+		modalId: `${namespace}addResourcesDialog`,
+		namespace,
+	};
 
-	updateURLFieldsVisibility(fm, addResources.value);
+	// Initialize
 
-	addResources.addEventListener('change', (event) => {
-		updateURLFieldsVisibility(fm, event.target.value);
-/*
-		Liferay.fire('urlModeChanged', {
-			mode: event.target.value
-		});
-*/
+	updateURLFieldsVisibility(state);
+
+	// Handle events
+
+	state.addResources.addEventListener(
+		'change', () => updateURLFieldsVisibility(state));
+
+	addURLButtonsEventListeners(state);
+
+	Liferay.on(itemSelectedEventName, ({data}) => {
+		const value = JSON.parse(data.value);
+		const {fileEntryId} = value;
+
+		if (state.activeURLInput) {
+			fetchResource(
+				`${getFileEntryURLURL.replace('FILE_ENTRY_ID', fileEntryId)}`)
+			.then(({url}) => {
+				state.activeURLInput.value = url;
+			});
+
+			updateManageResourcesSummary(state);
+
+			Liferay.fire('closeModal', state.modalId)
+		}
 	});
 }
 
-function addURLButtonsEventListeners(fm, clientExtensionItemSelectorURL, selectEventName) {
-	const manageResourcesButton = fm.querySelector('.add-resources-summary button');
+function updateManageResourcesSummary(state) {
+	fetchResource(state.getManageResourcesSummaryURL).then(({text}) => {
+		state.manageResourcesSummary.innerHTML = text;
+	});
+}
 
-	manageResourcesButton.addEventListener('click', (event) => {
-		Liferay.Util.openSelectionModal(
-			{
-				iframeBodyCssClass: '',
-				title: Liferay.Language.get('add-resources'),
-				url: clientExtensionItemSelectorURL
-			}
-		);
+function addURLButtonsEventListeners(state) {
+	const modalProps = {
+		id: state.modalId,
+		iframeBodyCssClass: '',
+		onClose: () => updateManageResourcesSummary(state),
+		title: Liferay.Language.get('add-resources'),
+		url: state.clientExtensionItemSelectorURL
+	};
+
+	state.manageResourcesButton.addEventListener('click', (event) => {
+		state.activeURLInput = null;
+
+		Liferay.Util.openModal(modalProps);
 	});
 
-
-	const buttons = fm.querySelectorAll('.url-input-field button');
+	const buttons = findURLInputButtons(state);
 
 	for (const button of buttons) {
 		button.addEventListener('click', (event) => {
-			Liferay.Util.openSelectionModal(
-				{
-					iframeBodyCssClass: '',
-					onSelect: function (event) {
-						var selectedItem = event.value;
+			state.activeURLInput = findURLInput(button);
 
-						if (selectedItem) {
-							var itemValue = JSON.parse(selectedItem.value);
-
-							window.alert(JSON.stringify(itemValue, null, 2));
-						}
-					},
-					selectEventName,
-					title: Liferay.Language.get('add-resources'),
-					url: clientExtensionItemSelectorURL
-				}
-			);
+			Liferay.Util.openModal(modalProps);
 		});
 	}
 }
 
-function updateURLFieldsVisibility(fm, mode) {
+async function fetchResource(resourceURL) {
+	return new Promise((resolve, reject) => {
+		Liferay.Util.fetch(
+			resourceURL
+		).then(response => {
+			return response.json();
+		}).then(json => {
+			if (json.error) {
+				openToast({
+					message: json.error,
+					title: Liferay.Language.get('error'),
+					type: 'danger',
+				});
+			}
+			else {
+				resolve(json);
+			}
+		});
+	});
+}
+
+function findURLInput(button) {
+	let parent = button.parentElement;
+
+	while (!parent.classList.contains("url-input-field")) {
+		parent = parent.parentElement;
+	}
+
+	return parent.querySelector('input');
+}
+
+function findURLInputButtons(state) {
+	return state.fm.querySelectorAll('.url-input-field button');
+}
+
+function updateURLFieldsVisibility(state) {
+	const {fm} = state;
 	const inputs = fm.querySelectorAll('.url-input-field input');
-	const disabled = mode == "fromComputer" ? true : false;
+	const disabled = state.addResources.value == "fromComputer" ? true : false;
 
 	for (const input of inputs) {
 		input.disabled = disabled;
 	}
 
-	const addResourcesSummary = fm.querySelector('.add-resources-summary');
 	const buttonWrappers = fm.querySelectorAll('.url-input-field .button-wrapper');
-	const display = mode == "fromComputer" ? 'flex' : 'none';
+	const display = state.addResources.value == "fromComputer" ? 'flex' : 'none';
 
-	addResourcesSummary.style.display = display;
+	state.manageResources.style.display = display;
 
 	for (const buttonWrapper of buttonWrappers) {
 		buttonWrapper.style.display = display;

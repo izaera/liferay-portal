@@ -71,9 +71,9 @@ renderResponse.setTitle(editClientExtensionEntryDisplayContext.getTitle());
 				options="<%= editClientExtensionEntryDisplayContext.getAddResourcesSelectOptions() %>"
 			/>
 
-			<div class="add-resources-summary">
-				<div class="text">
-					<%= editClientExtensionEntryDisplayContext.getAddResourcesSummaryText() %>
+			<div class="manage-resources">
+				<div class="summary">
+					<%= editClientExtensionEntryDisplayContext.getManageResourcesSummaryText() %>
 				</div>
 				<div class="button-wrapper">
 					<aui:button name="manageResources" value="manage-resources" />

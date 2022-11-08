@@ -106,7 +106,7 @@ public class EditClientExtensionEntryMVCActionCommand
 					EDIT_CLIENT_EXTENSION_ENTRY_DISPLAY_CONTEXT,
 				new EditClientExtensionEntryDisplayContext(
 					cet, clientExtensionEntry, _clientExtensionRepository,
-					actionRequest));
+					actionRequest, actionResponse));
 			actionRequest.setAttribute(
 				ClientExtensionAdminWebKeys.
 					EDIT_CLIENT_EXTENSION_ENTRY_PART_DISPLAY_CONTEXT,
