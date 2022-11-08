@@ -20,6 +20,12 @@
 ClientExtensionAdminDisplayContext clientExtensionAdminDisplayContext = (ClientExtensionAdminDisplayContext)renderRequest.getAttribute(ClientExtensionAdminWebKeys.CLIENT_EXTENSION_ADMIN_DISPLAY_CONTEXT);
 %>
 
+<portlet:renderURL var="browseRepositoryURL">
+	<portlet:param name="mvcRenderCommandName" value="/client_extension_admin/_browse_client_extension_repository"/>
+</portlet:renderURL>
+
+<a href="<%= browseRepositoryURL %>">Browse PortletFileRepository</a>
+
 <frontend-data-set:classic-display
 	actionParameterName="externalReferenceCode"
 	creationMenu="<%= clientExtensionAdminDisplayContext.getCreationMenu() %>"

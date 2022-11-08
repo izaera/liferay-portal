@@ -16,6 +16,8 @@ package com.liferay.client.extension.web.internal.model;
 
 import com.liferay.client.extension.web.internal.constants.ClientExtensionAdminPortletKeys;
 import com.liferay.document.library.kernel.exception.NoSuchFolderException;
+import com.liferay.document.library.kernel.model.DLFolder;
+import com.liferay.document.library.kernel.service.DLFolderLocalService;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
@@ -32,7 +34,6 @@ import com.liferay.portal.kernel.util.Portal;
 import java.io.InputStream;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -94,6 +95,42 @@ public class ClientExtensionRepository {
 		return _portletFileRepository.getPortletFileEntries(
 			_repository.getGroupId(), folder.getFolderId());
 	}
+
+	public List<FileEntry> _getFileEntries(long folderId)
+		throws PortalException {
+
+		if (folderId == 0) {
+			folderId = _repository.getDlFolderId();
+		}
+
+		Folder folder = _portletFileRepository.getPortletFolder(folderId);
+
+		return _portletFileRepository.getPortletFileEntries(
+			_repository.getGroupId(), folder.getFolderId());
+	}
+
+	public List<DLFolder> _getFolders(long folderId) throws PortalException {
+		if (folderId == 0) {
+			folderId = _repository.getDlFolderId();
+		}
+
+		List<DLFolder> folders =
+			_dlFolderLocalService.getFolders(_repository.getGroupId(),
+				folderId);
+
+		return folders;
+	}
+
+	public Folder _getFolder(long folderId) throws PortalException {
+		if (folderId == 0) {
+			folderId = _repository.getDlFolderId();
+		}
+
+		Folder folder = _portletFileRepository.getPortletFolder(folderId);
+
+		return folder;
+	}
+
 
 	public int getFileEntriesCount(long clientExtensionEntryId)
 		throws PortalException {
@@ -252,6 +289,9 @@ public class ClientExtensionRepository {
 
 	@Reference
 	private PortletFileRepository _portletFileRepository;
+
+	@Reference
+	private DLFolderLocalService _dlFolderLocalService;
 
 	private Repository _repository;
 
