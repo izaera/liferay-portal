@@ -137,10 +137,10 @@ function findURLInputButtons(state) {
 function updateURLFieldsVisibility(state) {
 	const {fm} = state;
 	const inputs = fm.querySelectorAll('.url-input-field input');
-	const disabled = state.addResources.value == "fromComputer" ? true : false;
+	const readOnly = state.addResources.value == "fromComputer" ? true : false;
 
 	for (const input of inputs) {
-		input.disabled = disabled;
+		input.readOnly = readOnly;
 	}
 
 	const buttonWrappers = fm.querySelectorAll('.url-input-field .button-wrapper');

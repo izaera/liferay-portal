@@ -15,13 +15,15 @@
 package com.liferay.client.extension.web.internal.servlet;
 
 import com.liferay.client.extension.web.internal.model.ClientExtensionRepository;
+import com.liferay.client.extension.web.internal.model.ClientExtensionRepository.Status;
 import com.liferay.petra.string.StringPool;
+import com.liferay.petra.string.StringUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.repository.model.FileEntry;
+import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StreamUtil;
-import com.liferay.portal.kernel.util.StringBundler;
 
 import java.io.IOException;
 
@@ -55,13 +57,23 @@ public class ClientExtensionAssetServlet extends HttpServlet {
 
 		String pathInfo = httpServletRequest.getPathInfo();
 
+		pathInfo = pathInfo.substring(1);
+
 		String[] parts = pathInfo.split(StringPool.SLASH);
 
-		long fileEntryId = Long.valueOf(parts[0]);
+		String[] pathParts = new String[parts.length-1];
+
+		System.arraycopy(parts, 1, pathParts, 0, pathParts.length);
+
+		long clientExtensionEntryId = Long.valueOf(parts[0]);
+
+		Status status = ParamUtil.getBoolean(httpServletRequest, "draft") ?
+			Status.DRAFT : Status.PUBLISHED;
 
 		try {
 			FileEntry fileEntry = _clientExtensionRepository.getFileEntry(
-				fileEntryId);
+				clientExtensionEntryId,
+				StringUtil.merge(pathParts, StringPool.SLASH), status);
 
 			httpServletResponse.setContentType(fileEntry.getMimeType());
 

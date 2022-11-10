@@ -68,11 +68,18 @@ public class EditClientExtensionEntryMVCActionCommand
 		try {
 			String cmd = ParamUtil.getString(actionRequest, Constants.CMD);
 
+			ClientExtensionEntry clientExtensionEntry = null;
+
 			if (cmd.equals(Constants.ADD)) {
-				_add(actionRequest);
+				clientExtensionEntry = _add(actionRequest);
 			}
 			else if (cmd.equals(Constants.UPDATE)) {
-				_update(actionRequest);
+				clientExtensionEntry = _update(actionRequest);
+			}
+
+			if (clientExtensionEntry != null) {
+				_clientExtensionRepository.publishDraftFileEntries(
+					clientExtensionEntry.getClientExtensionEntryId());
 			}
 
 			String redirect = ParamUtil.getString(actionRequest, "redirect");
@@ -82,8 +89,8 @@ public class EditClientExtensionEntryMVCActionCommand
 			}
 		}
 		catch (Exception exception) {
-			if (_log.isDebugEnabled()) {
-				_log.debug(exception);
+			if (_log.isErrorEnabled()) {
+				_log.error(exception);
 			}
 
 			SessionErrors.add(actionRequest, exception.getClass(), exception);
@@ -118,7 +125,9 @@ public class EditClientExtensionEntryMVCActionCommand
 		}
 	}
 
-	private void _add(ActionRequest actionRequest) throws PortalException {
+	private ClientExtensionEntry _add(ActionRequest actionRequest)
+		throws PortalException {
+
 		String description = ParamUtil.getString(actionRequest, "description");
 		boolean addResources = ParamUtil.getBoolean(
 			actionRequest, "addResources");
@@ -131,7 +140,7 @@ public class EditClientExtensionEntryMVCActionCommand
 
 		CET cet = _cetFactory.create(actionRequest, type);
 
-		_clientExtensionEntryService.addClientExtensionEntry(
+		return _clientExtensionEntryService.addClientExtensionEntry(
 			StringPool.BLANK, description,
 			Objects.equals(addResources, "fromComputer"), nameMap,
 			ParamUtil.getString(actionRequest, "properties"), sourceCodeURL,
@@ -154,7 +163,9 @@ public class EditClientExtensionEntryMVCActionCommand
 				_portal.getCompanyId(actionRequest), externalReferenceCode);
 	}
 
-	private void _update(ActionRequest actionRequest) throws PortalException {
+	private ClientExtensionEntry _update(ActionRequest actionRequest)
+		throws PortalException {
+
 		ClientExtensionEntry clientExtensionEntry = _fetchClientExtensionEntry(
 			actionRequest);
 
@@ -170,7 +181,7 @@ public class EditClientExtensionEntryMVCActionCommand
 		CET cet = _cetFactory.create(
 			actionRequest, clientExtensionEntry.getType());
 
-		_clientExtensionEntryService.updateClientExtensionEntry(
+		return _clientExtensionEntryService.updateClientExtensionEntry(
 			clientExtensionEntry.getClientExtensionEntryId(), description,
 			Objects.equals(addResources, "fromComputer"), nameMap, properties,
 			sourceCodeURL, cet.getTypeSettings());

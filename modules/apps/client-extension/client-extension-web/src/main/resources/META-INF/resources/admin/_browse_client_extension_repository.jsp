@@ -19,6 +19,10 @@
 <%@ page import="com.liferay.portal.kernel.repository.model.FileEntry" %>
 <%@ page import="java.util.List" %>
 <%@ page import="com.liferay.document.library.kernel.model.DLFolder" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="com.liferay.portal.kernel.repository.model.Folder" %>
+<%@ page import="java.util.Collections" %>
+<%@ page import="java.util.Objects" %>
 
 <%
 List<FileEntry> fileEntries = (List)renderRequest.getAttribute("fileEntries");
@@ -44,8 +48,35 @@ String baseURL = "http://localhost:8080/group/control_panel/manage?p_p_id=com_li
 	}
 
 	for (FileEntry fileEntry : fileEntries) {
+		List<String> parts = new ArrayList<>();
+
+		parts.add(fileEntry.getFileName());
+
+		for(Folder folder = fileEntry.getFolder();
+				!Objects.equals(
+					folder.getName(),
+					"com_liferay_client_extension_web_internal_portlet_ClientExtensionAdminPortlet");
+				folder = folder.getParentFolder()) {
+
+			parts.add(folder.getName());
+		}
+
+		String draft = "";
+
+		String clientExtensionEntryId = parts.remove(parts.size() - 1);
+
+		if (clientExtensionEntryId.contains(".tmp")) {
+			clientExtensionEntryId = clientExtensionEntryId.replace(".tmp", "");
+			draft = "?draft=true";
+		}
+
+		Collections.reverse(parts);
 %>
-		<div><%= fileEntry.getFileName() %></div>
+		<a target="_blank" href="/o/cet-asset/<%= clientExtensionEntryId %>/<%= String.join("/", parts) %><%= draft %>"
+			style="display: block;"
+		>
+			<%= fileEntry.getFileName() %>
+		</a>
 <%
 	}
 %>

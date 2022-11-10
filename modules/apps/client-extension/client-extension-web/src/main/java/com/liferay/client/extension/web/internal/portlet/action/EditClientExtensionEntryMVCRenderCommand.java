@@ -81,6 +81,9 @@ public class EditClientExtensionEntryMVCRenderCommand
 				new EditClientExtensionEntryPartDisplayContext(
 					cet, clientExtensionEntry, renderRequest));
 
+			_clientExtensionRepository.deleteDraftFileEntries(
+				clientExtensionEntry.getClientExtensionEntryId());
+
 			return "/admin/edit_client_extension_entry.jsp";
 		}
 		catch (Exception exception) {

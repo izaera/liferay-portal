@@ -15,8 +15,12 @@
 package com.liferay.client.extension.web.internal.model;
 
 import com.liferay.client.extension.web.internal.constants.ClientExtensionAdminPortletKeys;
+import com.liferay.document.library.kernel.exception.NoSuchFileEntryException;
 import com.liferay.document.library.kernel.exception.NoSuchFolderException;
 import com.liferay.document.library.kernel.model.DLFolder;
+import com.liferay.document.library.kernel.model.DLVersionNumberIncrease;
+import com.liferay.document.library.kernel.service.DLAppLocalService;
+import com.liferay.document.library.kernel.service.DLFileEntryLocalService;
 import com.liferay.document.library.kernel.service.DLFolderLocalService;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -31,6 +35,7 @@ import com.liferay.portal.kernel.service.CompanyLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.util.Portal;
 
+import java.io.IOException;
 import java.io.InputStream;
 
 import java.util.ArrayList;
@@ -39,6 +44,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.liferay.portlet.documentlibrary.util.DLAppUtil;
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -50,6 +56,55 @@ import org.osgi.service.component.annotations.Reference;
 public class ClientExtensionRepository {
 
 	private static final String TMP_SUFFIX = ".tmp";
+
+	public void deleteDraftFileEntries(long clientExtensionEntryId)
+		throws PortalException {
+
+		Folder draftFolder = _fetchClientExtensionEntryFolder(
+			clientExtensionEntryId, Status.DRAFT);
+
+		if (draftFolder == null) {
+			return;
+		}
+
+		_dlAppLocalService.deleteFolder(draftFolder.getFolderId());
+	}
+
+	public void publishDraftFileEntries(long clientExtensionEntryId)
+		throws PortalException {
+
+		Folder draftFolder = _fetchClientExtensionEntryFolder(
+			clientExtensionEntryId, Status.DRAFT);
+
+		if (draftFolder == null) {
+			return;
+		}
+
+		Folder publishedFolder = _ensureClientExtensionEntryFolder(
+			clientExtensionEntryId, Status.PUBLISHED);
+
+		// TODO: support folder paths
+
+		for (FileEntry fileEntry :
+				getFileEntries(clientExtensionEntryId, Status.DRAFT)) {
+
+			FileEntry publishedFileEntry =
+				_portletFileRepository.fetchPortletFileEntry(
+					_repository.getGroupId(), publishedFolder.getFolderId(),
+					fileEntry.getFileName());
+
+			if (publishedFileEntry != null) {
+				_portletFileRepository.deletePortletFileEntry(
+					publishedFileEntry.getFileEntryId());
+			}
+
+			_dlAppLocalService.moveFileEntry(
+				_repository.getUserId(), fileEntry.getFileEntryId(),
+				publishedFolder.getFolderId(), _EMPTY_SERVICE_CONTEXT);
+		}
+
+		_dlAppLocalService.deleteFolder(draftFolder.getFolderId());
+	}
 
 	public enum Status {
 		ALL, DRAFT, PUBLISHED,
@@ -86,13 +141,13 @@ public class ClientExtensionRepository {
 			Map<String, FileEntry> fileEntryMap = new HashMap<>();
 
 			for (FileEntry fileEntry :
-					getFileEntries(clientExtensionEntryId, Status.PUBLISHED)) {
+				getFileEntries(clientExtensionEntryId, Status.DRAFT)) {
 
 				fileEntryMap.put(fileEntry.getFileName(), fileEntry);
 			}
 
 			for (FileEntry fileEntry :
-				getFileEntries(clientExtensionEntryId, Status.DRAFT)) {
+				getFileEntries(clientExtensionEntryId, Status.PUBLISHED)) {
 
 				fileEntryMap.put(fileEntry.getFileName(), fileEntry);
 			}
@@ -137,9 +192,8 @@ public class ClientExtensionRepository {
 		return _portletFileRepository.getPortletFileEntry(fileEntryId);
 	}
 
-	/*
 	public FileEntry getFileEntry(
-			long clientExtensionEntryId, String fileName, Status status)
+			long clientExtensionEntryId, String filePath, Status status)
 		throws PortalException {
 
 		Folder folder = _fetchClientExtensionEntryFolder(
@@ -149,11 +203,24 @@ public class ClientExtensionRepository {
 			throw new NoSuchFolderException();
 		}
 
+		if (filePath.startsWith(StringPool.SLASH)) {
+			filePath = filePath.substring(1);
+		}
+
+		DLFolder dlFolder = _dlFolderLocalService.getDLFolder(
+			folder.getFolderId());
+
+		String[] parts = filePath.split(StringPool.SLASH);
+
+		for (int i = 0; i<parts.length-1; i++) {
+			dlFolder = _dlFolderLocalService.getFolder(
+				_repository.getGroupId(), dlFolder.getFolderId(), parts[i]);
+		}
+
 		return _portletFileRepository.getPortletFileEntry(
-			_repository.getGroupId(), folder.getFolderId(),
-			fileName);
+			_repository.getGroupId(), dlFolder.getFolderId(),
+			parts[parts.length-1]);
 	}
-	*/
 
 	public String getURL(FileEntry fileEntry) throws PortalException {
 		StringBuilder sb = new StringBuilder();
@@ -323,5 +390,8 @@ public class ClientExtensionRepository {
 	private DLFolderLocalService _dlFolderLocalService;
 
 	private Repository _repository;
+
+	@Reference
+	private DLAppLocalService _dlAppLocalService;
 
 }
