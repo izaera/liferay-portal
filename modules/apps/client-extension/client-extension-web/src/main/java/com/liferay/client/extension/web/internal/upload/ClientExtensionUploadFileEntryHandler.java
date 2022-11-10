@@ -50,7 +50,8 @@ public class ClientExtensionUploadFileEntryHandler
 
 			return _clientExtensionRepository.createFileEntry(
 				clientExtensionEntryId, fileName, inputStream,
-				uploadPortletRequest.getContentType("imageSelectorFileName"));
+				uploadPortletRequest.getContentType("imageSelectorFileName"),
+				ClientExtensionRepository.Status.DRAFT);
 		}
 	}
 

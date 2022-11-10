@@ -14,23 +14,13 @@
 
 package com.liferay.client.extension.web.internal.portlet.action;
 
-import com.liferay.client.extension.model.ClientExtensionEntry;
-import com.liferay.client.extension.service.ClientExtensionEntryService;
-import com.liferay.client.extension.type.CET;
-import com.liferay.client.extension.type.factory.CETFactory;
 import com.liferay.client.extension.web.internal.constants.ClientExtensionAdminPortletKeys;
-import com.liferay.client.extension.web.internal.constants.ClientExtensionAdminWebKeys;
-import com.liferay.client.extension.web.internal.display.context.EditClientExtensionEntryDisplayContext;
-import com.liferay.client.extension.web.internal.display.context.EditClientExtensionEntryPartDisplayContext;
 import com.liferay.client.extension.web.internal.model.ClientExtensionRepository;
 import com.liferay.document.library.kernel.model.DLFolder;
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCRenderCommand;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.kernel.util.Portal;
-import com.liferay.portal.kernel.util.Validator;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 

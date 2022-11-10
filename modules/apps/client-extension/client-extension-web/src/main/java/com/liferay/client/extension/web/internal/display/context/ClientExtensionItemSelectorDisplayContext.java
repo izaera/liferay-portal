@@ -101,7 +101,8 @@ public class ClientExtensionItemSelectorDisplayContext {
 		throws PortalException {
 
 		_fileEntries = _clientExtensionRepository.getFileEntries(
-			_clientExtensionItemSelectorCriterion.getClientExtensionEntryId());
+			_clientExtensionItemSelectorCriterion.getClientExtensionEntryId(),
+			ClientExtensionRepository.Status.ALL);
 
 		return (List)_fileEntries;
 	}

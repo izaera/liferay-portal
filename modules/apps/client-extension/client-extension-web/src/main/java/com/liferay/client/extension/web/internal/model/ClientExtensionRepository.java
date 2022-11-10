@@ -35,7 +35,9 @@ import java.io.InputStream;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
@@ -47,28 +49,22 @@ import org.osgi.service.component.annotations.Reference;
 @Component(service = ClientExtensionRepository.class)
 public class ClientExtensionRepository {
 
+	private static final String TMP_SUFFIX = ".tmp";
+
+	public enum Status {
+		ALL, DRAFT, PUBLISHED,
+	}
+
 	public FileEntry createFileEntry(
-			long clientExtensionEntryId, String fileEntryPath,
-			InputStream inputStream, String mimeType)
+			long clientExtensionEntryId, String fileName,
+			InputStream inputStream, String mimeType, Status status)
 		throws PortalException {
 
-		int i = fileEntryPath.lastIndexOf(StringPool.SLASH);
-
-		Folder folder;
-
-		if (i <= 0) {
-			folder = _createFolder(String.valueOf(clientExtensionEntryId));
-		} else {
-			folder = _createFolder(
-				clientExtensionEntryId + fileEntryPath.substring(0, i));
-		}
-
-		long folderId = folder.getFolderId();
-
-		String fileName = fileEntryPath.substring(i + 1);
+		Folder folder = _ensureClientExtensionEntryFolder(
+			clientExtensionEntryId, status);
 
 		FileEntry fileEntry = _portletFileRepository.fetchPortletFileEntry(
-			_repository.getGroupId(), folderId, fileName);
+			_repository.getGroupId(), folder.getFolderId(), fileName);
 
 		if (fileEntry != null) {
 			_portletFileRepository.deletePortletFileEntry(
@@ -78,25 +74,127 @@ public class ClientExtensionRepository {
 		return _portletFileRepository.addPortletFileEntry(
 			StringPool.BLANK, _repository.getGroupId(), _repository.getUserId(),
 			ClientExtensionRepository.class.getName(), 0,
-			_repository.getPortletId(), folderId, inputStream, fileName,
-			mimeType, false);
+			_repository.getPortletId(), folder.getFolderId(), inputStream,
+			fileName, mimeType, false);
 	}
 
-	public List<FileEntry> getFileEntries(long clientExtensionEntryId)
+	public List<FileEntry> getFileEntries(
+			long clientExtensionEntryId, Status status)
+		throws PortalException {
+
+		if (status == Status.ALL) {
+			Map<String, FileEntry> fileEntryMap = new HashMap<>();
+
+			for (FileEntry fileEntry :
+					getFileEntries(clientExtensionEntryId, Status.PUBLISHED)) {
+
+				fileEntryMap.put(fileEntry.getFileName(), fileEntry);
+			}
+
+			for (FileEntry fileEntry :
+				getFileEntries(clientExtensionEntryId, Status.DRAFT)) {
+
+				fileEntryMap.put(fileEntry.getFileName(), fileEntry);
+			}
+
+			return new ArrayList<>(fileEntryMap.values());
+		}
+		else {
+			Folder folder = _fetchClientExtensionEntryFolder(
+				clientExtensionEntryId, status);
+
+			if (folder == null) {
+				return Collections.emptyList();
+			}
+
+			return _portletFileRepository.getPortletFileEntries(
+				_repository.getGroupId(), folder.getFolderId());
+		}
+	}
+
+	public int getFileEntriesCount(long clientExtensionEntryId, Status status)
+		throws PortalException {
+
+		if (status == Status.ALL) {
+			List<FileEntry> fileEntries =
+				getFileEntries(clientExtensionEntryId, Status.ALL);
+
+			return fileEntries.size();
+		} else {
+			Folder folder = _fetchClientExtensionEntryFolder(
+				clientExtensionEntryId, status);
+
+			if (folder == null) {
+				return 0;
+			}
+
+			return _portletFileRepository.getPortletFileEntriesCount(
+				_repository.getGroupId(), folder.getFolderId());
+		}
+	}
+
+	public FileEntry getFileEntry(long fileEntryId) throws PortalException {
+		return _portletFileRepository.getPortletFileEntry(fileEntryId);
+	}
+
+	/*
+	public FileEntry getFileEntry(
+			long clientExtensionEntryId, String fileName, Status status)
 		throws PortalException {
 
 		Folder folder = _fetchClientExtensionEntryFolder(
-			clientExtensionEntryId);
+			clientExtensionEntryId, status);
 
 		if (folder == null) {
-			return Collections.emptyList();
+			throw new NoSuchFolderException();
 		}
 
-		return _portletFileRepository.getPortletFileEntries(
-			_repository.getGroupId(), folder.getFolderId());
+		return _portletFileRepository.getPortletFileEntry(
+			_repository.getGroupId(), folder.getFolderId(),
+			fileName);
+	}
+	*/
+
+	public String getURL(FileEntry fileEntry) throws PortalException {
+		StringBuilder sb = new StringBuilder();
+
+		sb.append(_BASE_URL);
+
+		List<String> parts = new ArrayList<>();
+
+		parts.add(fileEntry.getFileName());
+
+		Folder folder = fileEntry.getFolder();
+
+		while (true) {
+			String name = folder.getName();
+
+			if (name.equals(_repository.getPortletId())) {
+				// Remove the client extension entry folder part
+				parts.remove(parts.size() - 1);
+
+				break;
+			}
+
+			parts.add(folder.getName());
+
+			folder = folder.getParentFolder();
+		}
+
+		parts.add(String.valueOf(fileEntry.getFileEntryId()));
+
+		for (int i = parts.size() - 1; i >= 0; i--) {
+			sb.append(StringPool.SLASH);
+			sb.append(parts.get(i));
+		}
+
+		return sb.toString();
 	}
 
-	public List<FileEntry> _getFileEntries(long folderId)
+	/**************************************************************************/
+
+	public List<FileEntry> _getFileEntries(
+			long folderId)
 		throws PortalException {
 
 		if (folderId == 0) {
@@ -109,7 +207,7 @@ public class ClientExtensionRepository {
 			_repository.getGroupId(), folder.getFolderId());
 	}
 
-	public List<DLFolder> _getFolders(long folderId) throws PortalException {
+	public List<DLFolder> _getFolders(long folderId) {
 		if (folderId == 0) {
 			folderId = _repository.getDlFolderId();
 		}
@@ -131,95 +229,7 @@ public class ClientExtensionRepository {
 		return folder;
 	}
 
-
-	public int getFileEntriesCount(long clientExtensionEntryId)
-		throws PortalException {
-
-		Folder folder = _fetchClientExtensionEntryFolder(
-			clientExtensionEntryId);
-
-		if (folder == null) {
-			return 0;
-		}
-
-		return _portletFileRepository.getPortletFileEntriesCount(
-			_repository.getGroupId(), folder.getFolderId());
-	}
-
-	public FileEntry getFileEntry(long fileEntryId) throws PortalException {
-		return _portletFileRepository.getPortletFileEntry(fileEntryId);
-	}
-
-	public FileEntry getFileEntry(
-			long clientExtensionEntryId, String fileEntryPath)
-		throws PortalException {
-
-		Folder folder = _fetchClientExtensionEntryFolder(
-			clientExtensionEntryId);
-
-		if (folder == null) {
-			throw new NoSuchFolderException();
-		}
-
-		String[] parts = fileEntryPath.split(StringPool.SLASH);
-
-		for (int i = 0; i < (parts.length - 1); i++) {
-			folder = _portletFileRepository.getPortletFolder(
-				_repository.getRepositoryId(), folder.getFolderId(), parts[i]);
-		}
-
-		return _portletFileRepository.getPortletFileEntry(
-			_repository.getGroupId(), folder.getFolderId(),
-			parts[parts.length - 1]);
-	}
-
-	public String getURL(FileEntry fileEntry) throws PortalException {
-		StringBuilder sb = new StringBuilder();
-
-		sb.append(_BASE_URL);
-
-		List<String> parts = new ArrayList<>();
-
-		parts.add(fileEntry.getFileName());
-
-		Folder folder = fileEntry.getFolder();
-
-		while (true) {
-			String name = folder.getName();
-
-			if (name.equals(_repository.getPortletId())) {
-				break;
-			}
-
-			parts.add(folder.getName());
-
-			folder = folder.getParentFolder();
-		}
-
-		for (int i = parts.size() - 1; i >= 0; i--) {
-			sb.append(StringPool.SLASH);
-			sb.append(parts.get(i));
-		}
-
-		return sb.toString();
-	}
-
-	private Folder _fetchClientExtensionEntryFolder(long clientExtensionEntryId)
-		throws PortalException {
-
-		long folderId = _repository.getDlFolderId();
-
-		Folder folder = _portletFileRepository.getPortletFolder(folderId);
-
-		try {
-			return _portletFileRepository.getPortletFolder(
-				_repository.getRepositoryId(), folder.getFolderId(),
-				String.valueOf(clientExtensionEntryId));
-		}
-		catch (NoSuchFolderException noSuchFolderException) {
-			return null;
-		}
-	}
+	/**************************************************************************/
 
 	@Activate
 	protected void activate() throws PortalException {
@@ -239,38 +249,57 @@ public class ClientExtensionRepository {
 		}
 	}
 
-	private Folder _createFolder(String folderPath) throws PortalException {
-		Folder folder = null;
+	private Folder _ensureClientExtensionEntryFolder(
+			long clientExtensionEntryId, Status status)
+		throws PortalException {
 
 		long folderId = _repository.getDlFolderId();
 
-		String[] parts = folderPath.split(StringPool.SLASH);
+		Folder folder = _portletFileRepository.getPortletFolder(folderId);
 
-		for (String part : parts) {
-			folder = _ensureFolder(folderId, part);
-
-			folderId = folder.getFolderId();
-		}
-
-		return folder;
-	}
-
-	private Folder _ensureFolder(long parentFolderId, String folderName)
-		throws PortalException {
+		String folderName = _getFolderName(clientExtensionEntryId, status);
 
 		try {
 			return _portletFileRepository.getPortletFolder(
-				_repository.getRepositoryId(), parentFolderId, folderName);
+				_repository.getRepositoryId(), folder.getFolderId(),
+				folderName);
 		}
-		catch (PortalException portalException) {
-			if (_log.isWarnEnabled()) {
-				_log.warn(portalException);
-			}
-
+		catch (NoSuchFolderException noSuchFolderException) {
 			return _portletFileRepository.addPortletFolder(
 				_repository.getUserId(), _repository.getRepositoryId(),
-				parentFolderId, folderName, _EMPTY_SERVICE_CONTEXT);
+					folder.getFolderId(), folderName, _EMPTY_SERVICE_CONTEXT);
 		}
+	}
+
+	private Folder _fetchClientExtensionEntryFolder(
+			long clientExtensionEntryId, Status status)
+		throws PortalException {
+
+		long folderId = _repository.getDlFolderId();
+
+		Folder folder = _portletFileRepository.getPortletFolder(folderId);
+
+		String folderName = _getFolderName(clientExtensionEntryId, status);
+
+		try {
+			return _portletFileRepository.getPortletFolder(
+				_repository.getRepositoryId(), folder.getFolderId(),
+				folderName);
+		}
+		catch (NoSuchFolderException noSuchFolderException) {
+			return null;
+		}
+	}
+
+	private String _getFolderName(long clientExtensionEntryId, Status status) {
+		if (status == Status.DRAFT) {
+			return clientExtensionEntryId + TMP_SUFFIX;
+		}
+		else if (status == Status.PUBLISHED) {
+			return String.valueOf(clientExtensionEntryId);
+		}
+
+		throw new IllegalArgumentException(status.name());
 	}
 
 	private static final String _BASE_URL = "/o/cet-asset";

@@ -57,11 +57,11 @@ public class ClientExtensionAssetServlet extends HttpServlet {
 
 		String[] parts = pathInfo.split(StringPool.SLASH);
 
-		long clientExtensionEntryId = Long.valueOf(parts[0]);
+		long fileEntryId = Long.valueOf(parts[0]);
 
 		try {
 			FileEntry fileEntry = _clientExtensionRepository.getFileEntry(
-				clientExtensionEntryId, _join(parts, 1, StringPool.SLASH));
+				fileEntryId);
 
 			httpServletResponse.setContentType(fileEntry.getMimeType());
 
@@ -76,20 +76,6 @@ public class ClientExtensionAssetServlet extends HttpServlet {
 
 			httpServletResponse.sendError(HttpServletResponse.SC_NOT_FOUND);
 		}
-	}
-
-	private String _join(String[] parts, int offset, String delimiter) {
-		StringBundler sb = new StringBundler(parts.length - offset);
-
-		for (int i = offset; i < parts.length; i++) {
-			if (sb.length() != 0) {
-				sb.append(delimiter);
-			}
-
-			sb.append(parts[i]);
-		}
-
-		return sb.toString();
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(

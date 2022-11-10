@@ -234,7 +234,8 @@ public class EditClientExtensionEntryDisplayContext {
 			new Object[] {
 				0,
 				_clientExtensionRepository.getFileEntriesCount(
-					_clientExtensionEntry.getClientExtensionEntryId())});
+					_clientExtensionEntry.getClientExtensionEntryId(),
+					ClientExtensionRepository.Status.ALL)});
 	}
 
 	private HttpServletRequest _getHttpServletRequest() {
@@ -246,16 +247,6 @@ public class EditClientExtensionEntryDisplayContext {
 
 		return (ThemeDisplay)httpServletRequest.getAttribute(
 			WebKeys.THEME_DISPLAY);
-	}
-
-	private String _getPortletId(HttpServletRequest httpServletRequest) {
-		ThemeDisplay themeDisplay =
-			(ThemeDisplay)httpServletRequest.getAttribute(
-				WebKeys.THEME_DISPLAY);
-
-		PortletDisplay portletDisplay = themeDisplay.getPortletDisplay();
-
-		return portletDisplay.getId();
 	}
 
 	private final CET _cet;

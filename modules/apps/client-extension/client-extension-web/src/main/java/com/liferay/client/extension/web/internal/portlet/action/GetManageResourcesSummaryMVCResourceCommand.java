@@ -64,7 +64,8 @@ public class GetManageResourcesSummaryMVCResourceCommand
 							_clientExtensionRepository.getFileEntriesCount(
 								ParamUtil.getLong(
 									resourceRequest,
-									"clientExtensionEntryId"))})
+									"clientExtensionEntryId"),
+								ClientExtensionRepository.Status.ALL)})
 				));
 		}
 		catch (Exception exception) {
