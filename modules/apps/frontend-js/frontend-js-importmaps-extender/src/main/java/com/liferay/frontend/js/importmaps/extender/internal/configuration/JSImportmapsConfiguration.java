@@ -21,7 +21,7 @@ import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClass
 /**
  * @author Iván Zaera Avellón
  */
-@ExtendedObjectClassDefinition(category = "infrastructure", generateUI = false)
+@ExtendedObjectClassDefinition(category = "infrastructure", generateUI = true)
 @Meta.OCD(
 	description = "frontend-js-importmaps-description",
 	id = "com.liferay.frontend.js.importmaps.extender.internal.configuration.JSImportmapsConfiguration",
