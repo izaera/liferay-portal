@@ -18,19 +18,24 @@ import com.liferay.client.extension.constants.ClientExtensionEntryConstants;
 import com.liferay.client.extension.type.CET;
 import com.liferay.client.extension.type.CustomElementCET;
 import com.liferay.client.extension.type.IFrameCET;
+import com.liferay.client.extension.type.JSPackageCET;
 import com.liferay.client.extension.type.deployer.CETDeployer;
+import com.liferay.client.extension.web.internal.importmap.ClientExtensionEntryJSImportmapsContributor;
 import com.liferay.client.extension.web.internal.portlet.ClientExtensionEntryFriendlyURLMapper;
 import com.liferay.client.extension.web.internal.portlet.ClientExtensionEntryPortlet;
 import com.liferay.client.extension.web.internal.portlet.action.ClientExtensionEntryConfigurationAction;
 import com.liferay.client.extension.web.internal.util.CETUtil;
+import com.liferay.frontend.js.importmaps.extender.JSImportmapsContributor;
 import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.model.Release;
 import com.liferay.portal.kernel.portlet.ConfigurationAction;
 import com.liferay.portal.kernel.portlet.FriendlyURLMapper;
 import com.liferay.portal.kernel.util.HashMapDictionaryBuilder;
 import com.liferay.portal.kernel.util.HttpComponentsUtil;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.Validator;
 
@@ -56,15 +61,34 @@ public class CETDeployerImpl implements CETDeployer {
 
 	@Override
 	public List<ServiceRegistration<?>> deploy(CET cet) {
-		if (!Objects.equals(
+		if (Objects.equals(
 				cet.getType(),
-				ClientExtensionEntryConstants.TYPE_CUSTOM_ELEMENT) &&
-			!Objects.equals(
+				ClientExtensionEntryConstants.TYPE_CUSTOM_ELEMENT) ||
+			Objects.equals(
 				cet.getType(), ClientExtensionEntryConstants.TYPE_IFRAME)) {
 
-			return Collections.emptyList();
+			return _deployPortlet(cet);
 		}
 
+		if (Objects.equals(
+				cet.getType(), ClientExtensionEntryConstants.TYPE_JS_PACKAGE)) {
+
+			return _deployJSPackage(cet);
+		}
+
+		return Collections.emptyList();
+	}
+
+	@Activate
+	protected void activate(BundleContext bundleContext) {
+		_bundleContext = bundleContext;
+	}
+
+	private List<ServiceRegistration<?>> _deployJSPackage(CET cet) {
+		return ListUtil.fromArray(_registerJSImportmapsContributor(cet));
+	}
+
+	private List<ServiceRegistration<?>> _deployPortlet(CET cet) {
 		List<ServiceRegistration<?>> serviceRegistrations = new ArrayList<>();
 
 		serviceRegistrations.add(_registerConfigurationAction(cet));
@@ -112,11 +136,6 @@ public class CETDeployerImpl implements CETDeployer {
 		return serviceRegistrations;
 	}
 
-	@Activate
-	protected void activate(BundleContext bundleContext) {
-		_bundleContext = bundleContext;
-	}
-
 	private String _getPortletId(CET cet) {
 		return StringBundler.concat(
 			"com_liferay_client_extension_web_internal_portlet_",
@@ -155,6 +174,17 @@ public class CETDeployerImpl implements CETDeployer {
 			HashMapDictionaryBuilder.<String, Object>put(
 				"javax.portlet.name", _getPortletId(cet)
 			).build());
+	}
+
+	private ServiceRegistration<?> _registerJSImportmapsContributor(CET cet) {
+		JSPackageCET jsPackageCET = (JSPackageCET)cet;
+
+		return _bundleContext.registerService(
+			JSImportmapsContributor.class,
+			new ClientExtensionEntryJSImportmapsContributor(
+				_jsonFactory, jsPackageCET.getIdentifier(),
+				jsPackageCET.getURL()),
+			null);
 	}
 
 	private ServiceRegistration<Portlet> _registerPortlet(
@@ -226,6 +256,9 @@ public class CETDeployerImpl implements CETDeployer {
 	}
 
 	private BundleContext _bundleContext;
+
+	@Reference
+	private JSONFactory _jsonFactory;
 
 	@Reference
 	private NPMResolver _npmResolver;
