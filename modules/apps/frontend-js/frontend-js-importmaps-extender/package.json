@@ -1,6 +1,6 @@
 {
 	"dependencies": {
-		"es-module-shims": "1.4.1"
+		"es-module-shims": "1.6.3"
 	},
 	"name": "@liferay/frontend-js-importmaps-extender",
 	"version": "1.0.10"
