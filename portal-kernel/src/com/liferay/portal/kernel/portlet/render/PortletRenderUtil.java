@@ -231,11 +231,19 @@ public class PortletRenderUtil {
 					}
 
 					boolean module = false;
+					String modulePrefix = null;
 
 					if (portletResource.startsWith("module:")) {
 						module = true;
+						modulePrefix = "module:";
 
 						portletResource = portletResource.substring(7);
+					}
+					else if (portletResource.startsWith("module-shim:")) {
+						module = true;
+						modulePrefix = "module-shim:";
+
+						portletResource = portletResource.substring(12);
 					}
 
 					boolean absolute = HttpComponentsUtil.hasProtocol(
@@ -246,7 +254,7 @@ public class PortletRenderUtil {
 					}
 
 					if (module) {
-						portletResource = "module:" + portletResource;
+						portletResource = modulePrefix + portletResource;
 					}
 
 					if (visitedURLs.contains(portletResource)) {
@@ -369,11 +377,19 @@ public class PortletRenderUtil {
 
 				for (String portletResource : portletResources) {
 					boolean module = false;
+					String modulePrefix = null;
 
 					if (portletResource.startsWith("module:")) {
 						module = true;
+						modulePrefix = "module:";
 
 						portletResource = portletResource.substring(7);
+					}
+					else if (portletResource.startsWith("module-shim:")) {
+						module = true;
+						modulePrefix = "module-shim:";
+
+						portletResource = portletResource.substring(12);
 					}
 
 					if (!HttpComponentsUtil.hasProtocol(portletResource)) {
@@ -389,7 +405,7 @@ public class PortletRenderUtil {
 					}
 
 					if (module) {
-						portletResource = "module:" + portletResource;
+						portletResource = modulePrefix + portletResource;
 					}
 
 					if (visitedURLs.contains(portletResource)) {
@@ -492,6 +508,11 @@ public class PortletRenderUtil {
 
 		if (javaScriptPath.startsWith("module:")) {
 			javaScriptPath = javaScriptPath.substring(7);
+
+			type = "module";
+		}
+		else if (javaScriptPath.startsWith("module-shim:")) {
+			javaScriptPath = javaScriptPath.substring(12);
 
 			type = FrontendESMUtil.getScriptType();
 		}

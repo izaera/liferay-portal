@@ -230,7 +230,7 @@ public class CETDeployerImpl implements CETDeployer {
 
 			if (customElementCET.isUseESM()) {
 				for (int i = 0; i < urlsArray.length; i++) {
-					urlsArray[i] = "module:" + urlsArray[i];
+					urlsArray[i] = "module-shim:" + urlsArray[i];
 				}
 			}
 

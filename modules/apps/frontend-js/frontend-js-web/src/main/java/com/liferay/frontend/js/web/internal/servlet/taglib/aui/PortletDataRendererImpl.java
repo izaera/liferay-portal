@@ -15,7 +15,6 @@
 package com.liferay.frontend.js.web.internal.servlet.taglib.aui;
 
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.kernel.frontend.esm.FrontendESMUtil;
 import com.liferay.portal.kernel.servlet.taglib.aui.AMDRequire;
 import com.liferay.portal.kernel.servlet.taglib.aui.ESImport;
 import com.liferay.portal.kernel.servlet.taglib.aui.JSFragment;
@@ -64,9 +63,7 @@ public class PortletDataRendererImpl implements PortletDataRenderer {
 			writer.write("<script>\n");
 		}
 		else {
-			writer.write("<script type=\"");
-			writer.write(FrontendESMUtil.getScriptType());
-			writer.write("\">\n");
+			writer.write("<script type=\"module\">\n");
 		}
 
 		// Write ES prologue
