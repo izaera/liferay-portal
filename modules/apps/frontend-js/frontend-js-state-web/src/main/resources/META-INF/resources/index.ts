@@ -12,6 +12,21 @@
  * details.
  */
 
+import 'cropperjs/dist/cropper.css';
+import x from 'isarray/index.js';
+
+
+console.log('>>>>>>>> if you see this message it means frontend-js-state-web loaded both "cropperjs/dist/cropper.css" and "isarray/index.js"');
+
+console.log('>>>>>>>> checking imports are OK...');
+console.log('>>>>>>>> isarray/index.js :', x);
+console.log('>>>>>>>> cropperjs/dist/cropper.css :', document.querySelector('link[href="/o/frontend-js-web/__liferay__/css/cropperjs$dist$cropper.css"]'));
+
+console.log('>>>>>>>> now checking that the CSS imports works in AMD...');
+(Liferay as any).Loader.require("item-selector-taglib@5.3.1/image_editor/ImageEditor", () => {
+	console.log('>>>>>>>> item-selector-taglib@5.3.1/image_editor/ImageEditor correctly loaded!');
+});
+
 export {default as State} from './State';
 
 export type {Atom, Selector} from './State';
