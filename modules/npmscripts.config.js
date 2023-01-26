@@ -183,6 +183,8 @@ module.exports = {
 					},
 					'frontend-js-web': {
 						'/': '*',
+						'cropperjs': '*',
+						'isarray': '*',
 					},
 					'frontend-taglib-chart': {
 						'billboard.js': '*',
@@ -449,7 +451,11 @@ module.exports = {
 				'querystring',
 				'xss-filters',
 			],
-			'frontend-js-web': [],
+			'frontend-js-web': [
+				'cropperjs',
+				'cropperjs/dist/cropper.css',
+				'isarray/index.js',
+			],
 			'frontend-taglib-clay': [
 				'@clayui/alert',
 				'@clayui/autocomplete',

@@ -26,6 +26,11 @@ module.exports = {
 			'bridge/frontend-js-web/index':
 				'../../../../../frontend-js-web/__liferay__/index.js',
 		},
+		exports: [
+			{name: 'cropperjs', symbols: 'auto'},
+			'cropperjs/dist/cropper.css',
+			{name: 'isarray/index.js', symbols: 'auto'},
+		],
 		main: 'src/main/resources/META-INF/resources/index.es.js',
 	},
 };

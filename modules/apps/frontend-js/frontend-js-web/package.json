@@ -1,6 +1,8 @@
 {
 	"dependencies": {
 		"clay": "2.18.1",
+		"cropperjs": "1.5.11",
+		"isarray": "0.0.1",
 		"lodash.escape": "4.0.1",
 		"lodash.groupby": "4.6.0",
 		"lodash.isequal": "4.5.0",
