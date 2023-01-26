@@ -23,6 +23,9 @@ import React, {useEffect, useRef, useState} from 'react';
 import '../css/image_editor.scss';
 
 import 'cropperjs/dist/cropper.css';
+// NOTE THIS WON'T WORK, BUT WE LEAVE IT UNCOVERED, AS A KNOWN ISSUE: import x from 'isarray/index.js';
+// The reason is that the AMD stack sometimes plays with the .js extensions which causes the file to
+// fail downloading from the browser.
 
 const ratios = [
 	{
