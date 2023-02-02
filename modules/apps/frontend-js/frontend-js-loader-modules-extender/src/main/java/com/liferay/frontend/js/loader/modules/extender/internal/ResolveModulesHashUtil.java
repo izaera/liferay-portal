@@ -83,6 +83,7 @@ public class ResolveModulesHashUtil {
 		}
 
 		_hash = String.valueOf(UUID.randomUUID());
+		_lastSeenPriority++;
 
 		if (_log.isDebugEnabled()) {
 			_log.debug("Updated master hash to: " + _hash);
@@ -106,17 +107,34 @@ public class ResolveModulesHashUtil {
 
 		ClusterExecutorUtil.execute(
 			ClusterRequest.createMulticastRequest(
-				new MethodHandler(_updateSlaveHashMethod, _hash), true));
+				new MethodHandler(
+					_updateSlaveHashMethod, _lastSeenPriority, _hash),
+				true));
 	}
 
-	protected static synchronized void updateSlaveHash(String hash) {
+	protected static synchronized void updateSlaveHash(
+		long priority, String hash) {
+
 		if (ClusterMasterExecutorUtil.isMaster()) {
 			_log.error("Ignoring request to update slave hash in master node");
 
 			return;
 		}
 
+		if (priority < _lastSeenPriority) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(
+					StringBundler.concat(
+						"Ignoring request to update slave due to priority: ",
+						String.valueOf(priority), " < ",
+						String.valueOf(_lastSeenPriority)));
+			}
+
+			return;
+		}
+
 		_hash = hash;
+		_lastSeenPriority = priority;
 
 		if (_log.isDebugEnabled()) {
 			_log.debug("Updated slave hash to: " + _hash);
@@ -139,6 +157,7 @@ public class ResolveModulesHashUtil {
 		ResolveModulesHashUtil.class);
 
 	private static volatile String _hash;
+	private static volatile long _lastSeenPriority;
 	private static volatile Set<Listener> _listeners =
 		ConcurrentHashMap.newKeySet();
 	private static final MethodHandler _updateMasterHashMethodHandler;
@@ -151,7 +170,7 @@ public class ResolveModulesHashUtil {
 			_updateMasterHashMethodHandler = new MethodHandler(
 				clazz.getDeclaredMethod("updateMasterHash"));
 			_updateSlaveHashMethod = clazz.getDeclaredMethod(
-				"updateSlaveHash", String.class);
+				"updateSlaveHash", long.class, String.class);
 		}
 		catch (NoSuchMethodException noSuchMethodException) {
 			throw new RuntimeException(noSuchMethodException);
