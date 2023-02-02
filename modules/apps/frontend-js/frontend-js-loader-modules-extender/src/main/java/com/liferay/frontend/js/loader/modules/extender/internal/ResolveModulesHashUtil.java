@@ -75,7 +75,7 @@ public class ResolveModulesHashUtil {
 
 	}
 
-	protected static void updateMasterHash() {
+	protected static synchronized void updateMasterHash() {
 		if (!ClusterMasterExecutorUtil.isMaster()) {
 			_log.error("Ignoring request to update master hash in slave node");
 
@@ -109,7 +109,7 @@ public class ResolveModulesHashUtil {
 				new MethodHandler(_updateSlaveHashMethod, _hash), true));
 	}
 
-	protected static void updateSlaveHash(String hash) {
+	protected static synchronized void updateSlaveHash(String hash) {
 		if (ClusterMasterExecutorUtil.isMaster()) {
 			_log.error("Ignoring request to update slave hash in master node");
 
