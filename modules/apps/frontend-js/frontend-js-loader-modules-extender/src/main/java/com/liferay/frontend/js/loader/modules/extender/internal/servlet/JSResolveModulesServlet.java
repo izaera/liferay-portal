@@ -14,16 +14,20 @@
 
 package com.liferay.frontend.js.loader.modules.extender.internal.servlet;
 
+import com.liferay.frontend.js.loader.modules.extender.internal.ResolveModulesHashUtil;
 import com.liferay.frontend.js.loader.modules.extender.internal.configuration.Details;
 import com.liferay.frontend.js.loader.modules.extender.internal.resolution.BrowserModulesResolution;
 import com.liferay.frontend.js.loader.modules.extender.internal.resolution.BrowserModulesResolver;
 import com.liferay.frontend.js.loader.modules.extender.npm.NPMRegistryUpdatesListener;
-import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.url.builder.AbsolutePortalURLBuilder;
+import com.liferay.portal.url.builder.AbsolutePortalURLBuilderFactory;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -33,14 +37,15 @@ import java.net.URLDecoder;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
-import java.util.UUID;
 
 import javax.servlet.Servlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import org.osgi.service.component.annotations.Activate;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.service.component.annotations.Reference;
 
 /**
@@ -50,7 +55,7 @@ import org.osgi.service.component.annotations.Reference;
 	configurationPid = "com.liferay.frontend.js.loader.modules.extender.internal.configuration.Details",
 	property = {
 		"osgi.http.whiteboard.servlet.name=com.liferay.frontend.js.loader.modules.extender.internal.servlet.JSResolveModulesServlet",
-		"osgi.http.whiteboard.servlet.pattern=/js_resolve_modules",
+		"osgi.http.whiteboard.servlet.pattern=/js_resolve_modules/*",
 		"service.ranking:Integer=" + Details.MAX_VALUE_LESS_1K
 	},
 	service = {
@@ -59,16 +64,45 @@ import org.osgi.service.component.annotations.Reference;
 	}
 )
 public class JSResolveModulesServlet
-	extends HttpServlet implements NPMRegistryUpdatesListener {
+	extends HttpServlet
+	implements NPMRegistryUpdatesListener, ResolveModulesHashUtil.Listener {
 
-	public JSResolveModulesServlet() {
-		onAfterUpdate();
+	public String getURL() {
+		return _hashData.url;
 	}
 
 	@Override
 	public void onAfterUpdate() {
-		_etag = StringBundler.concat(
-			"W/\"", UUID.randomUUID(), StringPool.QUOTE);
+		if (_log.isDebugEnabled()) {
+			_log.debug("Triggering hash update after NPM Registry update");
+		}
+
+		ResolveModulesHashUtil.triggerUpdate();
+	}
+
+	@Override
+	public void onHashUpdate(String hash) {
+		if (_log.isDebugEnabled()) {
+			_log.debug("Updating hash to " + hash);
+		}
+
+		_hashData = new HashData(hash);
+	}
+
+	@Activate
+	protected void activate() {
+		ResolveModulesHashUtil.addListener(this);
+
+		if (_log.isDebugEnabled()) {
+			_log.debug("Triggering hash update after OSGi activation");
+		}
+
+		ResolveModulesHashUtil.triggerUpdate();
+	}
+
+	@Deactivate
+	protected void deactivate() {
+		ResolveModulesHashUtil.removeListener(this);
 	}
 
 	@Override
@@ -77,16 +111,31 @@ public class JSResolveModulesServlet
 			HttpServletResponse httpServletResponse)
 		throws IOException {
 
-		if (_etag.equals(
-				httpServletRequest.getHeader(HttpHeaders.IF_NONE_MATCH))) {
+		HashData hashData = _hashData;
 
-			httpServletResponse.setStatus(HttpServletResponse.SC_NOT_MODIFIED);
+		String expectedPathInfo = hashData.expectedPathInfo;
+
+		if (!expectedPathInfo.equals(httpServletRequest.getPathInfo())) {
+			AbsolutePortalURLBuilder absolutePortalURLBuilder =
+				_absolutePortalURLBuilderFactory.getAbsolutePortalURLBuilder(
+					httpServletRequest);
+
+			String url = absolutePortalURLBuilder.forServlet(
+				hashData.url
+			).build();
+
+			// Send a redirect so that the AMD loader knows that it must update
+			// its resolvePath to the new URL.
+
+			httpServletResponse.sendRedirect(url);
 
 			return;
 		}
 
-		httpServletResponse.addHeader(HttpHeaders.CACHE_CONTROL, "no-cache");
-		httpServletResponse.addHeader(HttpHeaders.ETAG, _etag);
+		// See https://ashton.codes/set-cache-control-max-age-1-year/
+
+		httpServletResponse.addHeader(
+			HttpHeaders.CACHE_CONTROL, "public, max-age=31536000, immutable");
 		httpServletResponse.setCharacterEncoding(StringPool.UTF8);
 		httpServletResponse.setContentType(ContentTypes.APPLICATION_JSON);
 
@@ -133,9 +182,29 @@ public class JSResolveModulesServlet
 		return Collections.emptyList();
 	}
 
+	private static final Log _log = LogFactoryUtil.getLog(
+		JSResolveModulesServlet.class);
+
+	@Reference
+	private AbsolutePortalURLBuilderFactory _absolutePortalURLBuilderFactory;
+
 	@Reference
 	private BrowserModulesResolver _browserModulesResolver;
 
-	private volatile String _etag;
+	private volatile HashData _hashData;
+
+	private static class HashData {
+
+		public HashData(String hash) {
+			expectedPathInfo = StringPool.SLASH + hash;
+			this.hash = hash;
+			url = "/js_resolve_modules/" + hash;
+		}
+
+		public final String expectedPathInfo;
+		public final String hash;
+		public final String url;
+
+	}
 
 }
