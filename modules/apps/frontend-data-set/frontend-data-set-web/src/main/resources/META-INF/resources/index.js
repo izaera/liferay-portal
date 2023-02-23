@@ -12,6 +12,11 @@
  * details.
  */
 
+// Temporary hack to avoid needing to migrate more things from AMD to ESM
+
+import perico from './FrontendDataSet';
+export default perico;
+
 // Frontend Data Set API
 
 export {default as FrontendDataSet} from './FrontendDataSet';

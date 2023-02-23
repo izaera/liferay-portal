@@ -263,7 +263,7 @@ public class BaseDisplayTag extends AttributesTagSupport {
 		NPMResolver npmResolver = NPMResolverProvider.getNPMResolver();
 
 		String moduleName = npmResolver.resolveModuleName(
-			"@liferay/frontend-data-set-web/FrontendDataSet");
+			"@liferay/frontend-data-set-web");
 
 		String propsTransformer = null;
 
