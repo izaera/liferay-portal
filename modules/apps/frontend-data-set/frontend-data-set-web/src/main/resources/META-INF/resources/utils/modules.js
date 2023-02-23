@@ -14,14 +14,76 @@
 
 import React from 'react';
 
+const moduleURLPromises = {};
+
 export function getLiferayJsModule(moduleURL) {
-	return new Promise((resolve, reject) => {
-		Liferay.Loader.require(
-			moduleURL,
-			(jsModule) => resolve(jsModule.default || jsModule),
-			(error) => reject(error)
-		);
-	});
+	if (moduleURL.includes('|')) {
+		if (!moduleURLPromises[moduleURL]) {
+			moduleURLPromises[moduleURL] = new Promise((resolve, reject) => {
+				// GreenAppleFDSCellRenderer|/o/ce-sample/index.js
+				const parts = moduleURL.split('|');
+
+				// TODO: We may want to create a npm-scripts webpack plugin to add /*webpackIgnore: true*/ to every dynamic import
+				import(/*webpackIgnore: true*/ parts[1])
+					.then((module) => {
+						let renderer = module[parts[0]];
+
+						resolve((props) => {
+							return React.createElement(
+								class extends React.Component {
+									constructor(props) {
+										super(props);
+
+										this.props = props;
+										this.ref = React.createRef();
+									}
+
+									render() {
+										// Sandbox passed-in args
+										const {value} = this.props;
+
+										setTimeout(
+											() => {
+												renderer({
+													element: this.ref.current,
+													value
+												});
+											},
+											0
+										);
+
+										return <div ref={this.ref}></div>;
+									}
+								},
+								props
+							);
+						});
+					})
+					.catch((err) => {
+						console.error(err);
+
+						resolve(() => (
+							<div className="custom-component">
+								component load failed
+							</div>
+						));
+
+						// this enters an infinite loop -> reject(err);
+					});
+			});
+		}
+
+		return moduleURLPromises[moduleURL];
+	}
+	else {
+		return new Promise((resolve, reject) => {
+				Liferay.Loader.require(
+					moduleURL,
+					(jsModule) => resolve(jsModule.default || jsModule),
+					(error) => reject(error)
+				);
+		});
+	}
 }
 
 export function getFakeJsModule() {
