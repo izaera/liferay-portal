@@ -60,9 +60,9 @@ public class CustomizedTableFDSView extends BaseTableFDSView {
 		).add(
 			"color", "color",
 			fdsTableSchemaField -> {
-				String moduleName = _npmResolver.resolveModuleName(
-					"@liferay/frontend-data-set-sample-web/js" +
-						"/GreenCheckDataRenderer");
+				// TODO: the client extension should register an import map so that we don't have to provide the full URL of the .js file here
+				// TODO: the structure of moduleName is a contract between Java and JavaScript, so better make it explicit in the final PR
+				String moduleName = "GreenAppleFDSCellRenderer|/o/ce-sample/index.js";
 
 				fdsTableSchemaField.setContentRendererModuleURL(moduleName);
 			}
