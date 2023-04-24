@@ -22,7 +22,7 @@ import org.osgi.annotation.versioning.ProviderType;
 /**
  * @author Iván Zaera Avellón
  */
-@CETType(description = "JS Importmaps Entry.", name = "jsImportmapsEntry")
+@CETType(description = "This is a description.", name = "jsImportmapsEntry")
 @ProviderType
 public interface JSImportmapsEntryCET extends CET {
 

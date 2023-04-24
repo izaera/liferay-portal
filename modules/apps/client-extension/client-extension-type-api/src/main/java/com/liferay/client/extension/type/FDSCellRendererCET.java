@@ -23,7 +23,7 @@ import org.osgi.annotation.versioning.ProviderType;
  * @author Iván Zaera Avellón
  */
 @CETType(
-	description = "Frontend Data Set custom cell renderer.",
+	description = "This is a description.",
 	name = "fdsCellRenderer"
 )
 @ProviderType
