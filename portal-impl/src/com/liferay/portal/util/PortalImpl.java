@@ -4787,7 +4787,9 @@ public class PortalImpl implements Portal {
 
 	@Override
 	public PreferencesValidator getPreferencesValidator(Portlet portlet) {
-		PortletBag portletBag = PortletBagPool.get(portlet.getRootPortletId());
+		PortletBag portletBag = PortletBagPool.get(
+			portlet.getCompanyId(),
+			portlet.getRootPortletId());
 
 		if (portletBag == null) {
 			return null;
