@@ -37,8 +37,9 @@ public class MVCPortletConfigurationIconLocator
 	implements PortletConfigurationIconLocator {
 
 	@Override
-	public List<String> getDefaultViews(String portletId) {
-		Portlet portlet = _portletLocalService.getPortletById(portletId);
+	public List<String> getDefaultViews(long companyId, String portletId) {
+		Portlet portlet = _portletLocalService.unsafeGetPortletById(
+			companyId, portletId);
 
 		if (portlet == null) {
 			return Collections.emptyList();

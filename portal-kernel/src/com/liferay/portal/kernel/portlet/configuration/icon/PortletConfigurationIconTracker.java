@@ -73,7 +73,7 @@ public class PortletConfigurationIconTracker {
 	}
 
 	protected static Set<String> getPaths(
-		String portletId, PortletRequest portletRequest) {
+		long companyId, String portletId, PortletRequest portletRequest) {
 
 		Set<String> paths = _defaultPaths;
 
@@ -93,7 +93,7 @@ public class PortletConfigurationIconTracker {
 				if (!path.equals(StringPool.DASH)) {
 					List<String> defaultViews =
 						portletConfigurationIconLocator.getDefaultViews(
-							portletId);
+							companyId, portletId);
 
 					if (defaultViews.contains(path)) {
 						paths.add(StringPool.DASH);
@@ -139,7 +139,10 @@ public class PortletConfigurationIconTracker {
 		String layoutMode = ParamUtil.getString(
 			originalHttpServletRequest, "p_l_mode", Constants.VIEW);
 
-		for (String path : getPaths(portletId, portletRequest)) {
+		for (String path :
+				getPaths(
+					themeDisplay.getCompanyId(), portletId, portletRequest)) {
+
 			List<PortletConfigurationIcon> portletPortletConfigurationIcons =
 				_serviceTrackerMap.getService(getKey(StringPool.STAR, path));
 

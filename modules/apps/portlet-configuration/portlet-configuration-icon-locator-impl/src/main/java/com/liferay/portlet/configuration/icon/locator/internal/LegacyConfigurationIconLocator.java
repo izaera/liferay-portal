@@ -40,7 +40,7 @@ public class LegacyConfigurationIconLocator
 	implements PortletConfigurationIconLocator {
 
 	@Override
-	public List<String> getDefaultViews(String portletId) {
+	public List<String> getDefaultViews(long companyId, String portletId) {
 		return Collections.emptyList();
 	}
 
@@ -53,7 +53,8 @@ public class LegacyConfigurationIconLocator
 
 		String portletId = portletDisplay.getRootPortletId();
 
-		Portlet portlet = _portletLocalService.getPortletById(portletId);
+		Portlet portlet = _portletLocalService.unsafeGetPortletById(
+			themeDisplay.getCompanyId(), portletId);
 
 		if (portlet == null) {
 			return StringPool.BLANK;

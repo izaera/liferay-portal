@@ -23,7 +23,7 @@ import javax.portlet.PortletRequest;
  */
 public interface PortletConfigurationIconLocator {
 
-	public List<String> getDefaultViews(String portletId);
+	public List<String> getDefaultViews(long companyId, String portletId);
 
 	public String getPath(PortletRequest portletRequest);
 
