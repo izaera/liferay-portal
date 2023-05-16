@@ -29,7 +29,6 @@ import com.liferay.client.extension.web.internal.util.CETUtil;
 import com.liferay.frontend.js.importmaps.extender.JSImportMapsContributor;
 import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
 import com.liferay.petra.string.StringBundler;
-import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.model.Release;
 import com.liferay.portal.kernel.portlet.ConfigurationAction;
@@ -106,7 +105,8 @@ public class CETDeployerImpl implements CETDeployer {
 				_register(
 					FriendlyURLMapper.class,
 					new CETPortletFriendlyURLMapper(
-						friendlyURLMapping, portletId)));
+						customElementCET.getCompanyId(), friendlyURLMapping,
+						portletId)));
 		}
 
 		serviceRegistrations.add(
@@ -138,7 +138,8 @@ public class CETDeployerImpl implements CETDeployer {
 				_register(
 					FriendlyURLMapper.class,
 					new CETPortletFriendlyURLMapper(
-						friendlyURLMapping, portletId)));
+						iFrameCET.getCompanyId(), friendlyURLMapping,
+						portletId)));
 		}
 
 		serviceRegistrations.add(
@@ -163,8 +164,7 @@ public class CETDeployerImpl implements CETDeployer {
 	private String _getPortletId(CET cet) {
 		return StringBundler.concat(
 			"com_liferay_client_extension_web_internal_portlet_",
-			"ClientExtensionEntryPortlet_", cet.getCompanyId(),
-			StringPool.UNDERLINE,
+			"ClientExtensionEntryPortlet_",
 			CETUtil.normalizeExternalReferenceCodeForPortletId(
 				cet.getExternalReferenceCode()));
 	}
