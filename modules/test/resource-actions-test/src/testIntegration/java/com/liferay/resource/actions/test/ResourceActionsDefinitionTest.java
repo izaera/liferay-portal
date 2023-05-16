@@ -21,6 +21,7 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.portlet.PortletBag;
 import com.liferay.portal.kernel.portlet.PortletBagPool;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
+import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.PortalClassLoaderUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -198,8 +199,9 @@ public class ResourceActionsDefinitionTest {
 	}
 
 	private void _collectResourceActionsErrorForPortletResources(
-		Element rootElement, Bundle bundle, ClassLoader bundleClassLoader,
-		StringBundler sb) {
+			Element rootElement, Bundle bundle, ClassLoader bundleClassLoader,
+			StringBundler sb)
+		throws Exception {
 
 		for (Element portletResourceElement :
 				rootElement.elements("portlet-resource")) {
@@ -209,7 +211,8 @@ public class ResourceActionsDefinitionTest {
 
 			String portletName = portletNameElement.getTextTrim();
 
-			PortletBag portletBag = PortletBagPool.get(portletName);
+			PortletBag portletBag = PortletBagPool.get(
+				TestPropsValues.getCompanyId(), portletName);
 
 			if (portletBag == null) {
 				sb.append("\n\t\tPortlet resource ");

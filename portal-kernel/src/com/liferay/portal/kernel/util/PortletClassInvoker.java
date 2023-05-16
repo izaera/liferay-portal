@@ -26,14 +26,15 @@ import javax.servlet.ServletContext;
 public class PortletClassInvoker {
 
 	public static Object invoke(
-			String portletId, MethodKey methodKey, Object... arguments)
+			long companyId, String portletId, MethodKey methodKey,
+			Object... arguments)
 		throws Exception {
 
 		portletId = _getRootPortletId(portletId);
 
 		ClassLoader portletClassLoader = PortalClassLoaderUtil.getClassLoader();
 
-		PortletBag portletBag = PortletBagPool.get(portletId);
+		PortletBag portletBag = PortletBagPool.get(companyId, portletId);
 
 		if (portletBag != null) {
 			ServletContext servletContext = portletBag.getServletContext();

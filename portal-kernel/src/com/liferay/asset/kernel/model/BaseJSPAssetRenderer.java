@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.resource.bundle.AggregateResourceBundleLoader;
 import com.liferay.portal.kernel.resource.bundle.ClassResourceBundleLoader;
 import com.liferay.portal.kernel.resource.bundle.ResourceBundleLoader;
 import com.liferay.portal.kernel.resource.bundle.ResourceBundleLoaderUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 
@@ -58,7 +59,7 @@ public abstract class BaseJSPAssetRenderer<T>
 			(ResourceBundleLoader)httpServletRequest.getAttribute(
 				WebKeys.RESOURCE_BUNDLE_LOADER);
 
-		ServletContext servletContext = getServletContext();
+		ServletContext servletContext = getServletContext(httpServletRequest);
 
 		RequestDispatcher requestDispatcher =
 			servletContext.getRequestDispatcher(jspPath);
@@ -106,12 +107,15 @@ public abstract class BaseJSPAssetRenderer<T>
 			ResourceBundleLoaderUtil.getPortalResourceBundleLoader());
 	}
 
-	protected ServletContext getServletContext() {
+	protected ServletContext getServletContext(
+		HttpServletRequest httpServletRequest) {
+
 		if (_servletContext != null) {
 			return _servletContext;
 		}
 
 		PortletBag portletBag = PortletBagPool.get(
+			PortalUtil.getCompanyId(httpServletRequest),
 			getAssetRendererFactory().getPortletId());
 
 		return portletBag.getServletContext();

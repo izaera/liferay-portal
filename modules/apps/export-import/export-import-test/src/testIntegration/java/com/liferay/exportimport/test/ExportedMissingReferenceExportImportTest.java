@@ -290,7 +290,8 @@ public class ExportedMissingReferenceExportImportTest
 			List<PortletDataHandler> portletDataHandlerInstances)
 		throws Exception {
 
-		PortletBag portletBag = PortletBagPool.get(portletId);
+		PortletBag portletBag = PortletBagPool.get(
+			TestPropsValues.getCompanyId(), portletId);
 
 		List<PortletDataHandler> oldDataHandlerInstances =
 			portletBag.getPortletDataHandlerInstances();

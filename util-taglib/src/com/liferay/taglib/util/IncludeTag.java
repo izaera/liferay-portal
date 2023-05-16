@@ -138,7 +138,8 @@ public class IncludeTag extends AttributesTagSupport {
 		if (Validator.isNotNull(portletId)) {
 			String rootPortletId = PortletIdCodec.decodePortletName(portletId);
 
-			PortletBag portletBag = PortletBagPool.get(rootPortletId);
+			PortletBag portletBag = PortletBagPool.get(
+				PortalUtil.getCompanyId(getRequest()), rootPortletId);
 
 			setServletContext(portletBag.getServletContext());
 		}
