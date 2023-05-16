@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Company;
+import com.liferay.portal.kernel.model.CompanyConstants;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.GroupConstants;
 import com.liferay.portal.kernel.model.Layout;
@@ -151,7 +152,10 @@ public class MainServlet extends HttpServlet {
 
 		PortalLifecycleUtil.flushDestroys();
 
-		List<Portlet> portlets = PortletLocalServiceUtil.getPortlets();
+		// TODO: would need to destroy company specific portlets too
+
+		List<Portlet> portlets = PortletLocalServiceUtil.getPortlets(
+			CompanyConstants.SYSTEM);
 
 		if (_log.isDebugEnabled()) {
 			_log.debug("Destroy portlets");
@@ -931,7 +935,10 @@ public class MainServlet extends HttpServlet {
 		portletBagFactory.setServletContext(servletContext);
 		portletBagFactory.setWARFile(false);
 
-		List<Portlet> portlets = PortletLocalServiceUtil.getPortlets();
+		// TODO: would need to process company specific portlets too (?)
+
+		List<Portlet> portlets = PortletLocalServiceUtil.getPortlets(
+			CompanyConstants.SYSTEM);
 
 		for (int i = 0; i < portlets.size(); i++) {
 			Portlet portlet = portlets.get(i);
