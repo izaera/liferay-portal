@@ -174,8 +174,12 @@ public class PanelAppRegistry {
 
 					panelApp.setGroupProvider(_groupProvider);
 
-					Portlet portlet = _portletLocalService.getPortletById(
-						panelApp.getPortletId());
+					// TODO: since panelApps are not multitenant I'm using the
+					// SYSTEM company assuming that the referred portlets are
+					// installed at SYSTEM level.
+
+					Portlet portlet = _portletLocalService.unsafeGetPortletById(
+						CompanyConstants.SYSTEM, panelApp.getPortletId());
 
 					if (portlet != null) {
 						portlet.setControlPanelEntryCategory(

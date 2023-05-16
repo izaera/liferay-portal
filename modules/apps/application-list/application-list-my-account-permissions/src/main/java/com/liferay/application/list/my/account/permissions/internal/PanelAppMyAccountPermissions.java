@@ -22,6 +22,7 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.CompanyConstants;
 import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.model.PortletConstants;
@@ -192,8 +193,13 @@ public class PanelAppMyAccountPermissions {
 				Portlet portlet = panelApp.getPortlet();
 
 				if (portlet == null) {
-					portlet = _portletLocalService.getPortletById(
-						panelApp.getPortletId());
+
+					// TODO: since panelApps are not multitenant I'm using the
+					// SYSTEM company assuming that the referred portlets are
+					// installed at SYSTEM level.
+
+					portlet = _portletLocalService.unsafeGetPortletById(
+						CompanyConstants.SYSTEM, panelApp.getPortletId());
 				}
 
 				if (portlet == null) {

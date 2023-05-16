@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.deploy.hot.BaseHotDeployListener;
 import com.liferay.portal.kernel.deploy.hot.HotDeployEvent;
 import com.liferay.portal.kernel.deploy.hot.HotDeployException;
 import com.liferay.portal.kernel.deploy.hot.HotDeployListener;
+import com.liferay.portal.kernel.model.CompanyConstants;
 import com.liferay.portal.kernel.model.PortletConstants;
 import com.liferay.portal.kernel.service.PortletLocalService;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -79,7 +80,7 @@ public class LegacyPortletPanelAppHotDeployListener
 						new PortletPanelAppAdapter(
 							portletId,
 							() -> _portletLocalService.getPortletById(
-								portletId)),
+								CompanyConstants.SYSTEM, portletId)),
 						properties);
 
 				_serviceRegistrations.put(portletId, serviceRegistration);
