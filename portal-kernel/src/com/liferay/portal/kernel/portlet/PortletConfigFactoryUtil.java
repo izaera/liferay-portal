@@ -35,12 +35,12 @@ public class PortletConfigFactoryUtil {
 		_portletConfigFactory.destroy(portlet);
 	}
 
-	public static PortletConfig get(Portlet portlet) {
-		return _portletConfigFactory.get(portlet);
+	public static PortletConfig get(long companyId, String portletId) {
+		return _portletConfigFactory.get(companyId, portletId);
 	}
 
-	public static PortletConfig get(String portletId) {
-		return _portletConfigFactory.get(portletId);
+	public static PortletConfig get(Portlet portlet) {
+		return _portletConfigFactory.get(portlet);
 	}
 
 	public static PortletConfigFactory getPortletConfigFactory() {

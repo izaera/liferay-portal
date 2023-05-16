@@ -15,6 +15,7 @@
 package com.liferay.portlet.internal;
 
 import com.liferay.portal.kernel.model.Portlet;
+import com.liferay.portal.kernel.portlet.CompanyPortletMap;
 import com.liferay.portal.kernel.portlet.LiferayPortletConfig;
 import com.liferay.portal.kernel.portlet.PortletConfigFactory;
 import com.liferay.portal.kernel.portlet.PortletContextFactory;
@@ -37,13 +38,15 @@ public class PortletConfigFactoryImpl implements PortletConfigFactory {
 	public PortletConfig create(
 		Portlet portlet, ServletContext servletContext) {
 
-		Map<String, PortletConfig> portletConfigs = _pool.get(
-			portlet.getRootPortletId());
+		Map<String, PortletConfig> portletConfigs = _poolMap.get(
+			portlet.getCompanyId(), portlet.getRootPortletId());
 
 		if (portletConfigs == null) {
 			portletConfigs = new ConcurrentHashMap<>();
 
-			_pool.put(portlet.getRootPortletId(), portletConfigs);
+			_poolMap.put(
+				portlet.getCompanyId(), portlet.getRootPortletId(),
+				portletConfigs);
 		}
 
 		PortletConfig portletConfig = portletConfigs.get(
@@ -65,25 +68,26 @@ public class PortletConfigFactoryImpl implements PortletConfigFactory {
 
 	@Override
 	public void destroy(Portlet portlet) {
-		_pool.remove(portlet.getRootPortletId());
+		_poolMap.remove(portlet.getCompanyId(), portlet.getRootPortletId());
 	}
 
 	@Override
-	public PortletConfig get(Portlet portlet) {
-		return get(portlet.getPortletId());
-	}
-
-	@Override
-	public PortletConfig get(String portletId) {
+	public PortletConfig get(long companyId, String portletId) {
 		String rootPortletId = PortletIdCodec.decodePortletName(portletId);
 
-		Map<String, PortletConfig> portletConfigs = _pool.get(rootPortletId);
+		Map<String, PortletConfig> portletConfigs = _poolMap.get(
+			companyId, rootPortletId);
 
 		if (portletConfigs == null) {
 			return null;
 		}
 
 		return portletConfigs.get(portletId);
+	}
+
+	@Override
+	public PortletConfig get(Portlet portlet) {
+		return get(portlet.getCompanyId(), portlet.getPortletId());
 	}
 
 	public void setPortletContextFactory(
@@ -94,8 +98,8 @@ public class PortletConfigFactoryImpl implements PortletConfigFactory {
 
 	@Override
 	public PortletConfig update(Portlet portlet) {
-		Map<String, PortletConfig> portletConfigs = _pool.get(
-			portlet.getRootPortletId());
+		Map<String, PortletConfig> portletConfigs = _poolMap.get(
+			portlet.getCompanyId(), portlet.getRootPortletId());
 
 		if (portletConfigs == null) {
 			return null;
@@ -130,8 +134,8 @@ public class PortletConfigFactoryImpl implements PortletConfigFactory {
 		return false;
 	}
 
-	private final Map<String, Map<String, PortletConfig>> _pool =
-		new ConcurrentHashMap<>();
+	private final CompanyPortletMap<Map<String, PortletConfig>> _poolMap =
+		new CompanyPortletMap<>();
 	private PortletContextFactory _portletContextFactory;
 
 }

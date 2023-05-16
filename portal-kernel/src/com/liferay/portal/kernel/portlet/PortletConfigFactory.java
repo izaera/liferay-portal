@@ -29,9 +29,9 @@ public interface PortletConfigFactory {
 
 	public void destroy(Portlet portlet);
 
-	public PortletConfig get(Portlet portlet);
+	public PortletConfig get(long companyId, String portletId);
 
-	public PortletConfig get(String portletId);
+	public PortletConfig get(Portlet portlet);
 
 	public PortletConfig update(Portlet portlet);
 
