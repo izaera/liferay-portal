@@ -19,6 +19,8 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.portlet.PortletConfigFactoryUtil;
+import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.util.JavaConstants;
 
 import java.util.Locale;
@@ -46,8 +48,11 @@ public class PortletPanelAppAdapter extends BasePanelApp {
 
 	@Override
 	public String getLabel(Locale locale) {
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
 		PortletConfig portletConfig = PortletConfigFactoryUtil.get(
-			getPortletId());
+			serviceContext.getCompanyId(), getPortletId());
 
 		ResourceBundle resourceBundle = portletConfig.getResourceBundle(locale);
 

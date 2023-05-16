@@ -142,6 +142,8 @@ import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.kernel.service.PortletLocalServiceUtil;
 import com.liferay.portal.kernel.service.ResourceLocalServiceUtil;
 import com.liferay.portal.kernel.service.ResourcePermissionLocalServiceUtil;
+import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.service.TicketLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserServiceUtil;
@@ -4639,7 +4641,8 @@ public class PortalImpl implements Portal {
 		String portletId = (String)portletRequest.getAttribute(
 			WebKeys.PORTLET_ID);
 
-		PortletConfig portletConfig = PortletConfigFactoryUtil.get(portletId);
+		PortletConfig portletConfig = PortletConfigFactoryUtil.get(
+			PortalUtil.getCompanyId(portletRequest), portletId);
 
 		Locale locale = portletRequest.getLocale();
 
@@ -4708,7 +4711,11 @@ public class PortalImpl implements Portal {
 
 	@Override
 	public String getPortletTitle(String portletId, Locale locale) {
-		PortletConfig portletConfig = PortletConfigFactoryUtil.get(portletId);
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
+		PortletConfig portletConfig = PortletConfigFactoryUtil.get(
+			serviceContext.getCompanyId(), portletId);
 
 		if (portletConfig == null) {
 			return PortletIdCodec.decodePortletName(portletId);

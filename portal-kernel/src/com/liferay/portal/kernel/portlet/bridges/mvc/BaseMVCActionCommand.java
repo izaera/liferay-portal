@@ -104,6 +104,7 @@ public abstract class BaseMVCActionCommand implements MVCActionCommand {
 
 	protected PortletConfig getPortletConfig(PortletRequest portletRequest) {
 		return PortletConfigFactoryUtil.get(
+			PortalUtil.getCompanyId(portletRequest),
 			PortletIdCodec.decodePortletName(
 				PortalUtil.getPortletId(portletRequest)));
 	}

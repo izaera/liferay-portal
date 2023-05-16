@@ -1335,7 +1335,7 @@ public class ContentPageEditorDisplayContext {
 					jsonObject.getString("content"));
 
 				PortletConfig portletConfig = PortletConfigFactoryUtil.get(
-					portletId);
+					fragmentEntryLink.getCompanyId(), portletId);
 
 				if (portletConfig != null) {
 					jsonObject.put(
