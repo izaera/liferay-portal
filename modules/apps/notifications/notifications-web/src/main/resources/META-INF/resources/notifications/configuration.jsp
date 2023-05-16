@@ -46,7 +46,7 @@
 			Map<String, List<UserNotificationDefinition>> userNotificationDefinitionsMap = TreeMapBuilder.<String, List<UserNotificationDefinition>>create(
 				new PortletIdComparator(locale)
 			).putAll(
-				UserNotificationManagerUtil.getActiveUserNotificationDefinitions()
+				UserNotificationManagerUtil.getActiveUserNotificationDefinitions(themeDisplay.getCompanyId())
 			).build();
 
 			List<Long> userNotificationDeliveryIds = new ArrayList<Long>();

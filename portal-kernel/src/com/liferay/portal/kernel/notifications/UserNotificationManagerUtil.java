@@ -69,15 +69,15 @@ public class UserNotificationManagerUtil {
 	}
 
 	public static Map<String, List<UserNotificationDefinition>>
-		getActiveUserNotificationDefinitions() {
+		getActiveUserNotificationDefinitions(long companyId) {
 
-		return _getUserNotificationDefinitions(true);
+		return _getUserNotificationDefinitions(true, companyId);
 	}
 
 	public static Map<String, List<UserNotificationDefinition>>
-		getUserNotificationDefinitions() {
+		getUserNotificationDefinitions(long companyId) {
 
-		return _getUserNotificationDefinitions(false);
+		return _getUserNotificationDefinitions(false, companyId);
 	}
 
 	public static Map<String, Map<String, UserNotificationHandler>>
@@ -135,15 +135,15 @@ public class UserNotificationManagerUtil {
 	}
 
 	private static Map<String, List<UserNotificationDefinition>>
-		_getUserNotificationDefinitions(boolean active) {
+		_getUserNotificationDefinitions(boolean active, long companyId) {
 
 		Map<String, List<UserNotificationDefinition>>
 			userNotificationDefinitionsMap = new ConcurrentHashMap<>();
 
 		for (String portletId : _userNotificationDefinitions.keySet()) {
 			if (active) {
-				Portlet portlet = PortletLocalServiceUtil.getPortletById(
-					portletId);
+				Portlet portlet = PortletLocalServiceUtil.unsafeGetPortletById(
+					companyId, portletId);
 
 				if (portlet == null) {
 					continue;
