@@ -298,17 +298,8 @@ public class ResourceActionsImpl implements ResourceActions {
 	public List<String> getPortletResourceActions(String name) {
 		name = PortletIdCodec.decodePortletName(name);
 
-		long companyId = CompanyThreadLocal.getCompanyId();
-
-		ServiceContext serviceContext =
-			ServiceContextThreadLocal.getServiceContext();
-
-		if (serviceContext != null) {
-			companyId = serviceContext.getCompanyId();
-		}
-
 		Portlet portlet = portletLocalService.unsafeGetPortletById(
-			companyId, name);
+			_getCompanyId(), name);
 
 		return _getPortletResourceActions(name, portlet);
 	}
@@ -578,15 +569,13 @@ public class ResourceActionsImpl implements ResourceActions {
 
 		Set<String> portletResourceNames = new HashSet<>();
 
-		ServiceContext serviceContext =
-			ServiceContextThreadLocal.getServiceContext();
+		long companyId = _getCompanyId();
 
 		for (String source : sources) {
 			_read(
 				classLoader, source,
 				rootElement -> _readPortletResources(
-					serviceContext.getCompanyId(), rootElement,
-					portletResourceNames));
+					companyId, rootElement,	portletResourceNames));
 		}
 
 		if (checkResourceActions) {
@@ -677,6 +666,19 @@ public class ResourceActionsImpl implements ResourceActions {
 		actions.add(ActionKeys.PERMISSIONS);
 		actions.add(ActionKeys.PREFERENCES);
 		actions.add(ActionKeys.VIEW);
+	}
+
+	private long _getCompanyId() {
+		long companyId = CompanyThreadLocal.getCompanyId();
+
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
+		if (serviceContext != null) {
+			companyId = serviceContext.getCompanyId();
+		}
+
+		return companyId;
 	}
 
 	private String _getCompositeModelName(Element compositeModelNameElement) {
