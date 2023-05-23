@@ -223,7 +223,6 @@ public class PortletLocalServiceImpl extends PortletLocalServiceBaseImpl {
 	@Override
 	@Transactional(enabled = false)
 	public void clearPortletsMap() {
-		_portlets.clear();
 	}
 
 	@Override
@@ -989,7 +988,6 @@ public class PortletLocalServiceImpl extends PortletLocalServiceBaseImpl {
 	@Override
 	@Transactional(enabled = false)
 	public void removeCompanyPortletsPool(long companyId) {
-		_portlets.removeCompanyMap(companyId);
 	}
 
 	@Override
