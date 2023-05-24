@@ -28,7 +28,10 @@ import javax.servlet.http.HttpServletRequest;
 public class CETPortletConfigurationAction
 	extends DefaultConfigurationAction implements Registrable {
 
-	public CETPortletConfigurationAction(String jspPath, String portletId) {
+	public CETPortletConfigurationAction(
+		long companyId, String jspPath, String portletId) {
+
+		_companyId = companyId;
 		_jspPath = jspPath;
 		_portletId = portletId;
 	}
@@ -36,6 +39,8 @@ public class CETPortletConfigurationAction
 	@Override
 	public Dictionary<String, Object> getDictionary() {
 		return HashMapDictionaryBuilder.<String, Object>put(
+			"com.liferay.portlet.company", _companyId
+		).put(
 			"javax.portlet.name", _portletId
 		).build();
 	}
@@ -45,6 +50,7 @@ public class CETPortletConfigurationAction
 		return _jspPath;
 	}
 
+	private final long _companyId;
 	private final String _jspPath;
 	private final String _portletId;
 

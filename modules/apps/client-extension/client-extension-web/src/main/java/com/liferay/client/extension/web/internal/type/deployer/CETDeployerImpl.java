@@ -94,7 +94,8 @@ public class CETDeployerImpl implements CETDeployer {
 			_register(
 				ConfigurationAction.class,
 				new CETPortletConfigurationAction(
-					"/entry/configuration.jsp", portletId)));
+					customElementCET.getCompanyId(), "/entry/configuration.jsp",
+					portletId)));
 
 		String friendlyURLMapping = customElementCET.getFriendlyURLMapping();
 
@@ -127,7 +128,8 @@ public class CETDeployerImpl implements CETDeployer {
 			_register(
 				ConfigurationAction.class,
 				new CETPortletConfigurationAction(
-					"/entry/configuration.jsp", portletId)));
+					iFrameCET.getCompanyId(), "/entry/configuration.jsp",
+					portletId)));
 
 		String friendlyURLMapping = iFrameCET.getFriendlyURLMapping();
 
