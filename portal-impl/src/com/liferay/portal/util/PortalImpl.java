@@ -4503,8 +4503,11 @@ public class PortalImpl implements Portal {
 			String url, Map<String, String[]> params,
 			Map<String, Object> requestContext) {
 
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
 		return _getPortletFriendlyURLMapperLayoutQueryStringComposite(
-			url, params, requestContext);
+			serviceContext.getCompanyId(), url, params, requestContext);
 	}
 
 	@Override

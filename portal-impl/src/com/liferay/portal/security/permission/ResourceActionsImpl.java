@@ -35,6 +35,7 @@ import com.liferay.portal.kernel.model.role.RoleConstants;
 import com.liferay.portal.kernel.module.util.SystemBundleUtil;
 import com.liferay.portal.kernel.portlet.PortletIdCodec;
 import com.liferay.portal.kernel.resource.bundle.ResourceBundleLoader;
+import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.ResourceActions;
 import com.liferay.portal.kernel.service.GroupServiceUtil;
@@ -42,6 +43,8 @@ import com.liferay.portal.kernel.service.PortletLocalService;
 import com.liferay.portal.kernel.service.ResourceActionLocalService;
 import com.liferay.portal.kernel.service.ResourceActionLocalServiceUtil;
 import com.liferay.portal.kernel.service.RoleLocalService;
+import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -295,7 +298,17 @@ public class ResourceActionsImpl implements ResourceActions {
 	public List<String> getPortletResourceActions(String name) {
 		name = PortletIdCodec.decodePortletName(name);
 
-		Portlet portlet = portletLocalService.getPortletById(name);
+		long companyId = CompanyThreadLocal.getCompanyId();
+
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
+		if (serviceContext != null) {
+			companyId = serviceContext.getCompanyId();
+		}
+
+		Portlet portlet = portletLocalService.unsafeGetPortletById(
+			companyId, name);
 
 		return _getPortletResourceActions(name, portlet);
 	}
@@ -565,11 +578,15 @@ public class ResourceActionsImpl implements ResourceActions {
 
 		Set<String> portletResourceNames = new HashSet<>();
 
+		ServiceContext serviceContext =
+			ServiceContextThreadLocal.getServiceContext();
+
 		for (String source : sources) {
 			_read(
 				classLoader, source,
 				rootElement -> _readPortletResources(
-					rootElement, portletResourceNames));
+					serviceContext.getCompanyId(), rootElement,
+					portletResourceNames));
 		}
 
 		if (checkResourceActions) {
@@ -1093,7 +1110,7 @@ public class ResourceActionsImpl implements ResourceActions {
 	}
 
 	private void _readPortletResources(
-			Element rootElement, Set<String> resourceNames)
+			long companyId, Element rootElement, Set<String> resourceNames)
 		throws ResourceActionsException {
 
 		if (PropsValues.RESOURCE_ACTIONS_READ_PORTLET_RESOURCES) {
@@ -1103,8 +1120,8 @@ public class ResourceActionsImpl implements ResourceActions {
 				String portletName = portletResourceElement.elementTextTrim(
 					"portlet-name");
 
-				Portlet portlet = portletLocalService.getPortletById(
-					portletName);
+				Portlet portlet = portletLocalService.unsafeGetPortletById(
+					companyId, portletName);
 
 				Set<String> portletActions = _getPortletMimeTypeActions(
 					portletName, portlet);

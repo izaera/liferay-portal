@@ -124,6 +124,7 @@ import com.liferay.portal.kernel.service.RecentLayoutBranchLocalService;
 import com.liferay.portal.kernel.service.RecentLayoutRevisionLocalService;
 import com.liferay.portal.kernel.service.RecentLayoutSetBranchLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.service.WorkflowInstanceLinkLocalService;
 import com.liferay.portal.kernel.service.permission.GroupPermission;
@@ -1255,8 +1256,11 @@ public class StagingImpl implements Staging {
 
 				Object[] arguments = layoutImportException.getArguments();
 
-				Portlet portlet = _portletLocalService.getPortletById(
-					(String)arguments[1]);
+				ServiceContext serviceContext =
+					ServiceContextThreadLocal.getServiceContext();
+
+				Portlet portlet = _portletLocalService.unsafeGetPortletById(
+					serviceContext.getCompanyId(), (String)arguments[1]);
 
 				arguments[1] = portlet.getDisplayName();
 
@@ -1671,8 +1675,11 @@ public class StagingImpl implements Staging {
 			PortletIdException portletIdException =
 				(PortletIdException)exception;
 
-			Portlet portlet = _portletLocalService.getPortletById(
-				portletIdException.getMessage());
+			ServiceContext serviceContext =
+				ServiceContextThreadLocal.getServiceContext();
+
+			Portlet portlet = _portletLocalService.unsafeGetPortletById(
+				serviceContext.getCompanyId(), portletIdException.getMessage());
 
 			errorMessage = _language.format(
 				resourceBundle, "a-x-can-only-be-imported-to-a-x",
