@@ -1101,7 +1101,8 @@ public class GroupImpl extends GroupBaseImpl {
 		}
 
 		try {
-			Portlet portlet = PortletLocalServiceUtil.getPortletById(portletId);
+			Portlet portlet = PortletLocalServiceUtil.unsafeGetPortletById(
+				getCompanyId(), portletId);
 
 			PortletDataHandler portletDataHandler =
 				portlet.getPortletDataHandlerInstance();
@@ -1122,8 +1123,9 @@ public class GroupImpl extends GroupBaseImpl {
 				String stagedPortletId = StringUtil.removeSubstring(
 					key, StagingConstants.STAGED_PORTLET);
 
-				Portlet stagedPortlet = PortletLocalServiceUtil.getPortletById(
-					stagedPortletId);
+				Portlet stagedPortlet =
+					PortletLocalServiceUtil.unsafeGetPortletById(
+						getCompanyId(), stagedPortletId);
 
 				if (stagedPortlet == null) {
 					continue;

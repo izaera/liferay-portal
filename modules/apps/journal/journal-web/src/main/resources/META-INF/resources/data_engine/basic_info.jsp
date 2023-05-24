@@ -46,7 +46,7 @@ if (ddmStructure != null) {
 	<aui:input name="url" type="resource" value="<%= getDDMStructureURL %>" />
 
 	<%
-	Portlet portlet = PortletLocalServiceUtil.getPortletById(portletDisplay.getId());
+	Portlet portlet = PortletLocalServiceUtil.unsafeGetPortletById(themeDisplay.getCompanyId(), portletDisplay.getId());
 	%>
 
 	<aui:input name="webDavURL" type="resource" value="<%= ddmStructure.getWebDavURL(themeDisplay, WebDAVUtil.getStorageToken(portlet)) %>" />

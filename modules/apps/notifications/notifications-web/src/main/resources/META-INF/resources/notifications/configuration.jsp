@@ -58,7 +58,7 @@
 				boolean first = true;
 
 				for (Map.Entry<String, List<UserNotificationDefinition>> entry : userNotificationDefinitionsMap.entrySet()) {
-					Portlet portlet = PortletLocalServiceUtil.getPortletById(entry.getKey());
+					Portlet portlet = PortletLocalServiceUtil.unsafeGetPortletById(themeDisplay.getCompanyId(), entry.getKey());
 				%>
 
 					<liferay-frontend:fieldset

@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.portlet.PortletProvider;
 import com.liferay.portal.kernel.portlet.PortletProviderUtil;
 import com.liferay.portal.kernel.service.PortletLocalServiceUtil;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
+import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -57,7 +58,8 @@ public class LayoutTypePortletImplStaticPortletsTest
 
 		try {
 			Portlet noncacheablePortlet =
-				PortletLocalServiceUtil.getPortletById(PortletKeys.LOGIN);
+				PortletLocalServiceUtil.unsafeGetPortletById(
+					TestPropsValues.getCompanyId(), PortletKeys.LOGIN);
 
 			String cacheablePortletId = PortletProviderUtil.getPortletId(
 				"com.liferay.journal.model.JournalArticle",

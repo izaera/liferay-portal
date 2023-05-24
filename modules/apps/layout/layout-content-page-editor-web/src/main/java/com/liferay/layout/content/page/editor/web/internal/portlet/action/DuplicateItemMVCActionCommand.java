@@ -296,7 +296,8 @@ public class DuplicateItemMVCActionCommand
 		String namespace = StringUtil.randomId();
 
 		if (Validator.isNotNull(portletId)) {
-			Portlet portlet = _portletLocalService.getPortletById(portletId);
+			Portlet portlet = _portletLocalService.unsafeGetPortletById(
+				fragmentEntryLink.getCompanyId(), portletId);
 
 			if (!portlet.isInstanceable()) {
 				throw new NoninstanceablePortletException(portletId);

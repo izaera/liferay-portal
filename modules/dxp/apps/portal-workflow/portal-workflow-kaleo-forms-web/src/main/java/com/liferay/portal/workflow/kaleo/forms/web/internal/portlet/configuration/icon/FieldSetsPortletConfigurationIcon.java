@@ -81,8 +81,8 @@ public class FieldSetsPortletConfigurationIcon
 				PortletDisplay portletDisplay =
 					themeDisplay.getPortletDisplay();
 
-				Portlet portlet = _portletLocalService.getPortletById(
-					portletDisplay.getId());
+				Portlet portlet = _portletLocalService.unsafeGetPortletById(
+					themeDisplay.getCompanyId(), portletDisplay.getId());
 
 				return WebDAVUtil.getStorageToken(portlet);
 			}

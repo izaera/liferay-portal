@@ -24,7 +24,7 @@ List<String> headerNames = new ArrayList<String>();
 headerNames.add("resource");
 headerNames.add("custom-fields");
 
-List<CustomAttributesDisplay> customAttributesDisplays = PortletLocalServiceUtil.getCustomAttributesDisplays();
+List<CustomAttributesDisplay> customAttributesDisplays = PortletLocalServiceUtil.getCustomAttributesDisplays(themeDisplay.getCompanyId());
 
 Collections.sort(customAttributesDisplays, new CustomAttributesDisplayComparator(locale));
 %>

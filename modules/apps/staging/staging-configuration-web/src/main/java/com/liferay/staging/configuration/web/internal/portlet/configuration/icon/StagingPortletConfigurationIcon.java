@@ -109,8 +109,8 @@ public class StagingPortletConfigurationIcon
 			return false;
 		}
 
-		Portlet portlet = _portletLocalService.getPortletById(
-			portletDisplay.getId());
+		Portlet portlet = _portletLocalService.unsafeGetPortletById(
+			group.getCompanyId(), portletDisplay.getId());
 
 		PortletDataHandler portletDataHandler =
 			portlet.getPortletDataHandlerInstance();

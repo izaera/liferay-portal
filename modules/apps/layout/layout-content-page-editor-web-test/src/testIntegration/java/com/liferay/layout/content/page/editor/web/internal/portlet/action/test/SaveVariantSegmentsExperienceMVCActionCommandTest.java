@@ -253,7 +253,8 @@ public class SaveVariantSegmentsExperienceMVCActionCommandTest {
 		mockLiferayPortletActionRequest.setAttribute(
 			JavaConstants.JAVAX_PORTLET_CONFIG,
 			PortletConfigFactoryUtil.create(
-				_portletLocalService.getPortletById(
+				_portletLocalService.unsafeGetPortletById(
+					TestPropsValues.getCompanyId(),
 					ContentPageEditorPortletKeys.CONTENT_PAGE_EDITOR_PORTLET),
 				null));
 		mockLiferayPortletActionRequest.setAttribute(

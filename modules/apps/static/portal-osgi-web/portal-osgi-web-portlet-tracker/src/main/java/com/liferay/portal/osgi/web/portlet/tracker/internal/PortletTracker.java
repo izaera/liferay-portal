@@ -159,8 +159,12 @@ public class PortletTracker
 			return null;
 		}
 
+		long companyId = GetterUtil.getLong(
+			serviceReference.getProperty("com.liferay.portlet.company"),
+			CompanyConstants.SYSTEM);
+
 		com.liferay.portal.kernel.model.Portlet portletModel =
-			_portletLocalService.getPortletById(portletId);
+			_portletLocalService.unsafeGetPortletById(companyId, portletId);
 
 		if (portletModel != null) {
 			_log.error("Portlet id " + portletId + " is already in use");

@@ -26,6 +26,7 @@ import com.liferay.fragment.util.FragmentTestUtil;
 import com.liferay.layout.test.util.LayoutTestUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.model.Company;
+import com.liferay.portal.kernel.model.CompanyConstants;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutSet;
@@ -148,8 +149,8 @@ public class PropagateGroupFragmentEntryChangesMVCActionCommandTest {
 			JavaConstants.JAVAX_PORTLET_RESPONSE,
 			new MockLiferayPortletActionResponse());
 
-		Portlet portlet = _portletLocalService.getPortletById(
-			FragmentPortletKeys.FRAGMENT);
+		Portlet portlet = _portletLocalService.unsafeGetPortletById(
+			CompanyConstants.SYSTEM, FragmentPortletKeys.FRAGMENT);
 
 		LiferayPortletConfig liferayPortletConfig =
 			(LiferayPortletConfig)PortletConfigFactoryUtil.create(

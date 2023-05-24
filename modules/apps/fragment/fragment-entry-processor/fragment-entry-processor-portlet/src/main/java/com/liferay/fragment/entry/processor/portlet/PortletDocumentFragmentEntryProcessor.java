@@ -86,7 +86,8 @@ public class PortletDocumentFragmentEntryProcessor
 		}
 
 		_validateFragmentEntryHTMLDocument(
-			document, fragmentEntryProcessorContext.getLocale());
+			fragmentEntryLink.getCompanyId(), document,
+			fragmentEntryProcessorContext.getLocale());
 
 		Set<String> processedPortletIds = new HashSet<>();
 
@@ -99,7 +100,8 @@ public class PortletDocumentFragmentEntryProcessor
 				continue;
 			}
 
-			Portlet portlet = _portletLocalService.getPortletById(portletName);
+			Portlet portlet = _portletLocalService.unsafeGetPortletById(
+				fragmentEntryLink.getCompanyId(), portletName);
 
 			String instanceId = String.valueOf(CharPool.NUMBER_0);
 
@@ -382,7 +384,7 @@ public class PortletDocumentFragmentEntryProcessor
 	}
 
 	private void _validateFragmentEntryHTMLDocument(
-			Document document, Locale locale)
+			long companyId, Document document, Locale locale)
 		throws PortalException {
 
 		for (Element element : document.select("*")) {
@@ -441,8 +443,8 @@ public class PortletDocumentFragmentEntryProcessor
 			}
 
 			if (elements.size() > 1) {
-				Portlet portlet = _portletLocalService.getPortletById(
-					_portletRegistry.getPortletName(alias));
+				Portlet portlet = _portletLocalService.unsafeGetPortletById(
+					companyId, _portletRegistry.getPortletName(alias));
 
 				if (!portlet.isInstanceable()) {
 					throw new FragmentEntryContentException(

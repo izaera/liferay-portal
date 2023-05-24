@@ -77,8 +77,8 @@ public class StagedModelDataHandlerUtil {
 			T stagedModel)
 		throws PortletDataException {
 
-		Portlet referrerPortlet = PortletLocalServiceUtil.getPortletById(
-			referrerPortletId);
+		Portlet referrerPortlet = PortletLocalServiceUtil.unsafeGetPortletById(
+			portletDataContext.getCompanyId(), referrerPortletId);
 
 		if (!ExportImportHelperUtil.isPublishDisplayedContent(
 				portletDataContext, referrerPortlet)) {

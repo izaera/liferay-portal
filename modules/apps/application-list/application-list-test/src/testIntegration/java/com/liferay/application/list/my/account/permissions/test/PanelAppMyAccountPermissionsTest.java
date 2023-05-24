@@ -164,12 +164,13 @@ public class PanelAppMyAccountPermissionsTest {
 			ActionKeys.ACCESS_IN_CONTROL_PANEL);
 	}
 
-	private void _registerTestPanelApp() {
+	private void _registerTestPanelApp() throws Exception {
 		_serviceRegistrations.add(
 			_bundleContext.registerService(
 				PanelApp.class,
 				new TestPanelApp(
-					_portletLocalService.getPortletById(_testPortletId)),
+					_portletLocalService.unsafeGetPortletById(
+						TestPropsValues.getCompanyId(), _testPortletId)),
 				HashMapDictionaryBuilder.put(
 					"panel.category.key", PanelCategoryKeys.USER_MY_ACCOUNT
 				).build()));

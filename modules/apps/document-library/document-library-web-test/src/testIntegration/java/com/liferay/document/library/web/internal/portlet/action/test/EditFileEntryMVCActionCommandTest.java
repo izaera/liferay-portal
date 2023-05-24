@@ -95,7 +95,7 @@ public class EditFileEntryMVCActionCommandTest {
 	}
 
 	@Test
-	public void testAddMultipleFileEntries() throws PortalException {
+	public void testAddMultipleFileEntries() throws Exception {
 		FileEntry tempFileEntry = TempFileEntryUtil.addTempFileEntry(
 			_group.getGroupId(), TestPropsValues.getUserId(),
 			"com.liferay.document.library.web.internal.portlet.action." +
@@ -125,7 +125,7 @@ public class EditFileEntryMVCActionCommandTest {
 
 	@Test
 	public void testAddMultipleFileEntriesSeveralFiles()
-		throws PortalException {
+		throws Exception {
 
 		String tempFolderName =
 			"com.liferay.document.library.web.internal.portlet.action." +
@@ -181,7 +181,7 @@ public class EditFileEntryMVCActionCommandTest {
 
 	@Test
 	public void testAddMultipleFileEntriesSeveralFilesSameTitleDifferentExtension()
-		throws PortalException {
+		throws Exception {
 
 		String tempFolderName =
 			"com.liferay.document.library.web.internal.portlet.action." +
@@ -237,7 +237,7 @@ public class EditFileEntryMVCActionCommandTest {
 
 	@Test
 	public void testAddMultipleFileEntriesSeveralFilesWithSameTitleAndExtension()
-		throws PortalException {
+		throws Exception {
 
 		String tempFolderName =
 			"com.liferay.document.library.web.internal.portlet.action." +
@@ -358,9 +358,9 @@ public class EditFileEntryMVCActionCommandTest {
 		return new ByteArrayInputStream("test".getBytes());
 	}
 
-	private LiferayPortletConfig _getLiferayPortletConfig() {
-		Portlet portlet = _portletLocalService.getPortletById(
-			DLPortletKeys.DOCUMENT_LIBRARY);
+	private LiferayPortletConfig _getLiferayPortletConfig() throws Exception {
+		Portlet portlet = _portletLocalService.unsafeGetPortletById(
+			TestPropsValues.getCompanyId(), DLPortletKeys.DOCUMENT_LIBRARY);
 
 		return (LiferayPortletConfig)PortletConfigFactoryUtil.create(
 			portlet, null);

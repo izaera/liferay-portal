@@ -153,8 +153,8 @@ public class PortletRegistryImpl implements PortletRegistry {
 		Set<Portlet> portlets = new HashSet<>();
 
 		for (String fragmentEntryLinkPortletId : fragmentEntryLinkPortletIds) {
-			Portlet portlet = _portletLocalService.getPortletById(
-				fragmentEntryLinkPortletId);
+			Portlet portlet = _portletLocalService.unsafeGetPortletById(
+				fragmentEntryLink.getCompanyId(), fragmentEntryLinkPortletId);
 
 			if ((portlet == null) || !portlet.isActive() ||
 				portlet.isUndeployedPortlet()) {

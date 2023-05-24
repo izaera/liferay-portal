@@ -208,7 +208,8 @@ public class PortletTrackerTest extends BasePortletContainerTestCase {
 			testBundle.start();
 
 			Portlet testBundleTestPortlet =
-				PortletLocalServiceUtil.getPortletById(
+				PortletLocalServiceUtil.unsafeGetPortletById(
+					TestPropsValues.getCompanyId(),
 					TestBundleActivator.TEST_BUNDLE_TEST_PORTLET_NAME);
 
 			Assert.assertNotNull(testBundleTestPortlet);
@@ -365,7 +366,8 @@ public class PortletTrackerTest extends BasePortletContainerTestCase {
 		throws Exception {
 
 		Portlet registeredLiferayPortlet =
-			PortletLocalServiceUtil.getPortletById(expectedPortletId);
+			PortletLocalServiceUtil.unsafeGetPortletById(
+				TestPropsValues.getCompanyId(), expectedPortletId);
 
 		Assert.assertNotNull(registeredLiferayPortlet);
 

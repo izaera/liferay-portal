@@ -273,7 +273,8 @@ public class PingbackMethodImpl implements Method {
 		FriendlyURLMapperThreadLocal.setPRPIdentifiers(
 			new HashMap<String, String>());
 
-		Portlet portlet = _portletLocalService.getPortletById(
+		Portlet portlet = _portletLocalService.unsafeGetPortletById(
+			companyId,
 			_getPortletId(
 				BlogsEntry.class.getName(), PortletProvider.Action.VIEW));
 

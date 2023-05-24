@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.model.ModelHintsConstants;
 import com.liferay.portal.kernel.model.Portlet;
+import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.service.PortletLocalService;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -108,7 +109,8 @@ public class PortletFragmentEntryValidator implements FragmentEntryValidator {
 			}
 
 			if (elements.size() > 1) {
-				Portlet portlet = _portletLocalService.getPortletById(
+				Portlet portlet = _portletLocalService.unsafeGetPortletById(
+					CompanyThreadLocal.getCompanyId(),
 					_portletRegistry.getPortletName(alias));
 
 				if (!portlet.isInstanceable()) {

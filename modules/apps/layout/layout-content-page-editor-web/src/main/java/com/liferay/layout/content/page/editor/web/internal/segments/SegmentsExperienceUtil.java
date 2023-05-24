@@ -277,7 +277,8 @@ public class SegmentsExperienceUtil {
 			return null;
 		}
 
-		Portlet portlet = PortletLocalServiceUtil.getPortletById(portletId);
+		Portlet portlet = PortletLocalServiceUtil.unsafeGetPortletById(
+			portletPreferences.getCompanyId(), portletId);
 
 		if ((portlet == null) || portlet.isUndeployedPortlet()) {
 			return null;

@@ -156,7 +156,8 @@ public class AssetListEntryUsagesManager {
 			HttpServletResponse httpServletResponse)
 		throws Exception {
 
-		Portlet portlet = _portletLocalService.getPortletById(
+		Portlet portlet = _portletLocalService.unsafeGetPortletById(
+			_portal.getCompanyId(httpServletRequest),
 			ContentPageEditorPortletKeys.CONTENT_PAGE_EDITOR_PORTLET);
 		ServletContext servletContext =
 			(ServletContext)httpServletRequest.getAttribute(WebKeys.CTX);

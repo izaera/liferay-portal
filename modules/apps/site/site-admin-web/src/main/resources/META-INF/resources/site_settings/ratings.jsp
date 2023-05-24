@@ -36,7 +36,7 @@ CompanyPortletRatingsDefinitionDisplayContext companyPortletRatingsDefinitionDis
 	for (Map.Entry<String, Map<String, RatingsType>> entry : groupRatingsTypeMaps.entrySet()) {
 		String portletId = entry.getKey();
 
-		Portlet portlet = PortletLocalServiceUtil.getPortletById(portletId);
+		Portlet portlet = PortletLocalServiceUtil.unsafeGetPortletById(themeDisplay.getCompanyId(), portletId);
 	%>
 
 		<h4 class="text-default">

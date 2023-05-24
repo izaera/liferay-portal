@@ -41,6 +41,7 @@ import com.liferay.portal.kernel.module.framework.service.IdentifiableOSGiServic
 import com.liferay.portal.kernel.portlet.FriendlyURLMapper;
 import com.liferay.portal.kernel.portlet.FriendlyURLResolverRegistryUtil;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
+import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
 import com.liferay.portal.kernel.service.LayoutFriendlyURLEntryValidator;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
 import com.liferay.portal.kernel.service.LayoutRevisionLocalService;
@@ -452,8 +453,10 @@ public class LayoutLocalServiceHelper implements IdentifiableOSGiService {
 			}
 		}
 
+		Group group = GroupLocalServiceUtil.getGroup(groupId);
+
 		List<FriendlyURLMapper> friendlyURLMappers =
-			PortletLocalServiceUtil.getFriendlyURLMappers();
+			PortletLocalServiceUtil.getFriendlyURLMappers(group.getCompanyId());
 
 		for (FriendlyURLMapper friendlyURLMapper : friendlyURLMappers) {
 			if (friendlyURLMapper.isCheckMappingWithPrefix()) {

@@ -53,8 +53,8 @@ public class CompanyModelListener extends BaseModelListener<Company> {
 				List<Portlet> portlets = new ArrayList<>(panelApps.size());
 
 				for (PanelApp panelApp : panelApps) {
-					Portlet portlet = _portletLocalService.getPortletById(
-						panelApp.getPortletId());
+					Portlet portlet = _portletLocalService.unsafeGetPortletById(
+						company.getCompanyId(), panelApp.getPortletId());
 
 					portlets.add(portlet);
 				}

@@ -33,6 +33,7 @@ import com.liferay.portal.kernel.service.PortletLocalService;
 import com.liferay.portal.kernel.service.PortletPreferencesLocalService;
 import com.liferay.portal.kernel.servlet.BufferCacheServletResponse;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portlet.RenderRequestFactory;
@@ -157,7 +158,8 @@ public class CollectionItemsDetailProductNavigationControlMenuEntry
 			HttpServletResponse httpServletResponse)
 		throws Exception {
 
-		Portlet portlet = _portletLocalService.getPortletById(
+		Portlet portlet = _portletLocalService.unsafeGetPortletById(
+			_portal.getCompanyId(httpServletRequest),
 			ProductNavigationControlMenuPortletKeys.
 				PRODUCT_NAVIGATION_CONTROL_MENU);
 		ServletContext servletContext =
@@ -215,6 +217,9 @@ public class CollectionItemsDetailProductNavigationControlMenuEntry
 
 	@Reference
 	private InfoItemServiceRegistry _infoItemServiceRegistry;
+
+	@Reference
+	private Portal _portal;
 
 	@Reference
 	private PortletLocalService _portletLocalService;

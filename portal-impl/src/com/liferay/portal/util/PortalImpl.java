@@ -134,6 +134,7 @@ import com.liferay.portal.kernel.security.permission.ResourceActionsUtil;
 import com.liferay.portal.kernel.service.ClassNameLocalServiceUtil;
 import com.liferay.portal.kernel.service.CompanyLocalServiceUtil;
 import com.liferay.portal.kernel.service.GroupLocalServiceUtil;
+import com.liferay.portal.kernel.service.GroupServiceUtil;
 import com.liferay.portal.kernel.service.ImageLocalServiceUtil;
 import com.liferay.portal.kernel.service.LayoutFriendlyURLLocalServiceUtil;
 import com.liferay.portal.kernel.service.LayoutLocalServiceUtil;
@@ -4469,9 +4470,11 @@ public class PortalImpl implements Portal {
 				Map<String, Object> requestContext)
 		throws PortalException {
 
+		Group group = GroupServiceUtil.getGroup(groupId);
+
 		LayoutQueryStringComposite layoutQueryStringComposite =
 			_getPortletFriendlyURLMapperLayoutQueryStringComposite(
-				url, params, requestContext);
+				group.getCompanyId(), url, params, requestContext);
 
 		Layout layout = null;
 
@@ -8587,7 +8590,7 @@ public class PortalImpl implements Portal {
 
 	private LayoutQueryStringComposite
 		_getPortletFriendlyURLMapperLayoutQueryStringComposite(
-			String url, Map<String, String[]> params,
+			long companyId, String url, Map<String, String[]> params,
 			Map<String, Object> requestContext) {
 
 		boolean foundFriendlyURLMapper = false;
@@ -8596,7 +8599,7 @@ public class PortalImpl implements Portal {
 		String queryString = StringPool.BLANK;
 
 		List<Portlet> portlets =
-			PortletLocalServiceUtil.getFriendlyURLMapperPortlets();
+			PortletLocalServiceUtil.getFriendlyURLMapperPortlets(companyId);
 
 		for (Portlet portlet : portlets) {
 			FriendlyURLMapper friendlyURLMapper =
@@ -8684,9 +8687,10 @@ public class PortalImpl implements Portal {
 
 				String ppid = url.substring(x + 3, y);
 
-				if (Validator.isNotNull(ppid) &&
-					(PortletLocalServiceUtil.getPortletById(ppid) != null)) {
+				Portlet portlet = PortletLocalServiceUtil.unsafeGetPortletById(
+					companyId, ppid);
 
+				if (Validator.isNotNull(ppid) && (portlet != null)) {
 					friendlyURL = url.substring(0, x);
 
 					Map<String, String[]> actualParams = null;

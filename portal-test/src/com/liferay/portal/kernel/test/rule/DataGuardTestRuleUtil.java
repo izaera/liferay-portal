@@ -43,6 +43,7 @@ import com.liferay.portal.kernel.service.ServiceWrapper;
 import com.liferay.portal.kernel.service.persistence.BasePersistence;
 import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.kernel.test.util.ResourcePermissionTestUtil;
+import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.transaction.Propagation;
 import com.liferay.portal.kernel.transaction.TransactionConfig;
 import com.liferay.portal.kernel.transaction.TransactionInvokerUtil;
@@ -115,7 +116,7 @@ public class DataGuardTestRuleUtil {
 			dataBag._records, autoDelete);
 	}
 
-	public static DataBag beforeClass() {
+	public static DataBag beforeClass() throws Exception {
 		BundleContext bundleContext = SystemBundleUtil.getBundleContext();
 
 		Map<String, Map<Serializable, String>> records =
@@ -129,13 +130,15 @@ public class DataGuardTestRuleUtil {
 				new RecordingSessionCustomizer(records), null);
 
 		return new DataBag(
-			_captureDataMap(), PortletLocalServiceUtil.getPortlets(), records,
-			serviceRegistration);
+			_captureDataMap(),
+			PortletLocalServiceUtil.getPortlets(TestPropsValues.getCompanyId()),
+			records, serviceRegistration);
 	}
 
-	public static DataBag beforeMethod() {
+	public static DataBag beforeMethod() throws Exception {
 		return new DataBag(
-			_captureDataMap(), PortletLocalServiceUtil.getPortlets(),
+			_captureDataMap(),
+			PortletLocalServiceUtil.getPortlets(TestPropsValues.getCompanyId()),
 			_recordsThreadLocal.get(), null);
 	}
 
@@ -263,7 +266,10 @@ public class DataGuardTestRuleUtil {
 			Map<String, Map<Serializable, String>> records, boolean autoDelete)
 		throws Throwable {
 
-		for (Portlet portlet : PortletLocalServiceUtil.getPortlets()) {
+		for (Portlet portlet :
+				PortletLocalServiceUtil.getPortlets(
+					TestPropsValues.getCompanyId())) {
+
 			if (!previousPortlets.remove(portlet)) {
 				PortletLocalServiceUtil.destroyPortlet(portlet);
 			}

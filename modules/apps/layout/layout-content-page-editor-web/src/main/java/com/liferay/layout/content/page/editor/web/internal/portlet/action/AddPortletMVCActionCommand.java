@@ -133,8 +133,11 @@ public class AddPortletMVCActionCommand
 		return jsonObject.put("layoutData", layoutDataJSONObject);
 	}
 
-	private String _getPortletInstanceId(String namespace, String portletId) {
-		Portlet portlet = _portletLocalService.getPortletById(portletId);
+	private String _getPortletInstanceId(
+		long companyId, String namespace, String portletId) {
+
+		Portlet portlet = _portletLocalService.unsafeGetPortletById(
+			companyId, portletId);
 
 		if (portlet.isInstanceable()) {
 			return namespace;
@@ -162,7 +165,8 @@ public class AddPortletMVCActionCommand
 
 		String namespace = StringUtil.randomId();
 
-		String instanceId = _getPortletInstanceId(namespace, portletId);
+		String instanceId = _getPortletInstanceId(
+			themeDisplay.getCompanyId(), namespace, portletId);
 
 		JSONObject editableValueJSONObject =
 			_fragmentEntryProcessorRegistry.getDefaultEditableValuesJSONObject(
@@ -213,7 +217,8 @@ public class AddPortletMVCActionCommand
 		HttpServletRequest httpServletRequest = _portal.getHttpServletRequest(
 			actionRequest);
 
-		Portlet portlet = _portletLocalService.getPortletById(portletId);
+		Portlet portlet = _portletLocalService.unsafeGetPortletById(
+			themeDisplay.getCompanyId(), portletId);
 
 		InvokerPortlet invokerPortlet = PortletInstanceFactoryUtil.create(
 			portlet, httpServletRequest.getServletContext());

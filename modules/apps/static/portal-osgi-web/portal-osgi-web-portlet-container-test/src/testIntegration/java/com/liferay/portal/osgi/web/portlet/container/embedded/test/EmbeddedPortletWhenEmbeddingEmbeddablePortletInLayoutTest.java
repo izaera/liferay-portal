@@ -83,8 +83,8 @@ public class EmbeddedPortletWhenEmbeddingEmbeddablePortletInLayoutTest {
 	public void testShouldNotReturnItFromExplicitlyAddedPortlets()
 		throws Exception {
 
-		Portlet portlet = _portletLocalService.getPortletById(
-			PortletKeys.LOGIN);
+		Portlet portlet = _portletLocalService.unsafeGetPortletById(
+			TestPropsValues.getCompanyId(), PortletKeys.LOGIN);
 
 		_portletPreferencesLocalService.addPortletPreferences(
 			TestPropsValues.getCompanyId(), PortletKeys.PREFS_OWNER_ID_DEFAULT,
@@ -101,8 +101,8 @@ public class EmbeddedPortletWhenEmbeddingEmbeddablePortletInLayoutTest {
 
 	@Test
 	public void testShouldReturnItFromAllPortlets() throws Exception {
-		Portlet portlet = _portletLocalService.getPortletById(
-			PortletKeys.LOGIN);
+		Portlet portlet = _portletLocalService.unsafeGetPortletById(
+			TestPropsValues.getCompanyId(), PortletKeys.LOGIN);
 
 		_portletPreferencesLocalService.addPortletPreferences(
 			TestPropsValues.getCompanyId(), PortletKeys.PREFS_OWNER_ID_DEFAULT,
@@ -122,8 +122,8 @@ public class EmbeddedPortletWhenEmbeddingEmbeddablePortletInLayoutTest {
 
 	@Test
 	public void testShouldReturnItFromEmbeddedPortlets() throws Exception {
-		Portlet portlet = _portletLocalService.getPortletById(
-			PortletKeys.LOGIN);
+		Portlet portlet = _portletLocalService.unsafeGetPortletById(
+			TestPropsValues.getCompanyId(), PortletKeys.LOGIN);
 
 		_portletPreferencesLocalService.addPortletPreferences(
 			TestPropsValues.getCompanyId(), PortletKeys.PREFS_OWNER_ID_DEFAULT,
@@ -144,8 +144,8 @@ public class EmbeddedPortletWhenEmbeddingEmbeddablePortletInLayoutTest {
 
 	@Test
 	public void testShouldReturnItsConfiguration() throws Exception {
-		Portlet portlet = _portletLocalService.getPortletById(
-			PortletKeys.LOGIN);
+		Portlet portlet = _portletLocalService.unsafeGetPortletById(
+			TestPropsValues.getCompanyId(), PortletKeys.LOGIN);
 
 		String defaultPreferences =
 			"<portlet-preferences><preference><name>testName</name><value>" +

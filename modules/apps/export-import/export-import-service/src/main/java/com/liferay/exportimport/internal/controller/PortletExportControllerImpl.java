@@ -1296,7 +1296,8 @@ public class PortletExportControllerImpl implements PortletExportController {
 			String changesetPortletId = ChangesetPortletKeys.CHANGESET;
 
 			if (ExportImportThreadLocal.isPortletStagingInProcess()) {
-				return _portletLocalService.getPortletById(changesetPortletId);
+				return _portletLocalService.unsafeGetPortletById(
+					portlet.getCompanyId(), changesetPortletId);
 			}
 
 			if (ExportImportThreadLocal.isLayoutStagingInProcess() &&

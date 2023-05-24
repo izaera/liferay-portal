@@ -91,7 +91,9 @@ public class ComboServletTest {
 			new PortletLocalServiceWrapper() {
 
 				@Override
-				public Portlet getPortletById(String portletId) {
+				public Portlet unsafeGetPortletById(
+					long companyId, String portletId) {
+
 					if (Objects.equals(_TEST_PORTLET_ID, portletId)) {
 						return _testPortlet;
 					}

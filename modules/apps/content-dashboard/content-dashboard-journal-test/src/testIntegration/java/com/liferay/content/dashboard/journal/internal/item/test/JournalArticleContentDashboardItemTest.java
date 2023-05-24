@@ -1135,8 +1135,9 @@ public class JournalArticleContentDashboardItemTest {
 			journalArticle, httpServletRequest);
 	}
 
-	private LiferayPortletConfig _getLiferayPortletConfig() {
-		Portlet portlet = _portletLocalService.getPortletById(
+	private LiferayPortletConfig _getLiferayPortletConfig() throws Exception {
+		Portlet portlet = _portletLocalService.unsafeGetPortletById(
+			TestPropsValues.getCompanyId(),
 			DDMPortletKeys.DYNAMIC_DATA_MAPPING_FORM_ADMIN);
 
 		return (LiferayPortletConfig)PortletConfigFactoryUtil.create(

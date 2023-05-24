@@ -57,8 +57,9 @@ public class LayoutTypePortletImplNoStaticAndNoEmbbededPortletsTest
 	public void testShouldReturnFalseIfANonlayoutCacheableRootPortletIsInstalled()
 		throws Exception {
 
-		Portlet noncacheablePortlet = PortletLocalServiceUtil.getPortletById(
-			PortletKeys.LOGIN);
+		Portlet noncacheablePortlet =
+			PortletLocalServiceUtil.unsafeGetPortletById(
+				TestPropsValues.getCompanyId(), PortletKeys.LOGIN);
 
 		LayoutTestUtil.addPortletToLayout(
 			TestPropsValues.getUserId(), layout,

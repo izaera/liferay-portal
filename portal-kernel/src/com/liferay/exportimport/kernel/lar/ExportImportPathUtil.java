@@ -286,7 +286,8 @@ public class ExportImportPathUtil {
 		sb.append(getPortletPath(portletDataContext, portletId));
 		sb.append(StringPool.SLASH);
 
-		Portlet portlet = PortletLocalServiceUtil.getPortletById(portletId);
+		Portlet portlet = PortletLocalServiceUtil.unsafeGetPortletById(
+			portletDataContext.getCompanyId(), portletId);
 
 		if (portlet.isPreferencesUniquePerLayout()) {
 			sb.append(plid);

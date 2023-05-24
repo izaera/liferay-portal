@@ -17,7 +17,7 @@
 <%@ include file="/document_library/init.jsp" %>
 
 <%
-Portlet portlet = PortletLocalServiceUtil.getPortletById(portletDisplay.getId());
+Portlet portlet = PortletLocalServiceUtil.unsafeGetPortletById(themeDisplay.getCompanyId(), portletDisplay.getId());
 
 String refererWebDAVToken = WebDAVUtil.getStorageToken(portlet);
 

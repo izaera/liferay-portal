@@ -323,7 +323,8 @@ public class ComboServlet extends HttpServlet {
 
 		String portletId = getModulePortletId(modulePath);
 
-		Portlet portlet = PortletLocalServiceUtil.getPortletById(portletId);
+		Portlet portlet = PortletLocalServiceUtil.unsafeGetPortletById(
+			PortalUtil.getCompanyId(httpServletRequest), portletId);
 
 		if (!resourcePath.startsWith(portlet.getContextPath())) {
 			resourcePath = portlet.getContextPath() + resourcePath;
@@ -510,7 +511,8 @@ public class ComboServlet extends HttpServlet {
 
 		String portletId = getModulePortletId(modulePath);
 
-		Portlet portlet = PortletLocalServiceUtil.getPortletById(portletId);
+		Portlet portlet = PortletLocalServiceUtil.unsafeGetPortletById(
+			PortalUtil.getCompanyId(httpServletRequest), portletId);
 
 		if ((portlet == null) || portlet.isUndeployedPortlet()) {
 			return null;

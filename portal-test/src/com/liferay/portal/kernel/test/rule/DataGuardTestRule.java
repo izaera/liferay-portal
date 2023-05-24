@@ -53,8 +53,8 @@ public class DataGuardTestRule
 	}
 
 	@Override
-	protected DataGuardTestRuleUtil.DataBag beforeClass(
-		Description description) {
+	protected DataGuardTestRuleUtil.DataBag beforeClass(Description description)
+		throws Exception {
 
 		DataGuard dataGuard = description.getAnnotation(DataGuard.class);
 
@@ -69,7 +69,8 @@ public class DataGuardTestRule
 
 	@Override
 	protected DataGuardTestRuleUtil.DataBag beforeMethod(
-		Description description, Object target) {
+			Description description, Object target)
+		throws Exception {
 
 		Class<?> testClass = description.getTestClass();
 

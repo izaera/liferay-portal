@@ -41,7 +41,7 @@ if (layout != null) {
 		List<com.liferay.portal.kernel.model.PortletPreferences> portletPreferencesList = PortletPreferencesLocalServiceUtil.getPortletPreferences(PortletKeys.PREFS_OWNER_ID_DEFAULT, PortletKeys.PREFS_OWNER_TYPE_LAYOUT, layout.getPlid());
 
 		for (com.liferay.portal.kernel.model.PortletPreferences portletPreferences : portletPreferencesList) {
-			Portlet portlet = PortletLocalServiceUtil.getPortletById(company.getCompanyId(), portletPreferences.getPortletId());
+			Portlet portlet = PortletLocalServiceUtil.unsafeGetPortletById(company.getCompanyId(), portletPreferences.getPortletId());
 
 			if ((portlet == null) || !portlet.isActive() || portlet.isUndeployedPortlet()) {
 				continue;

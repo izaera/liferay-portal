@@ -203,7 +203,8 @@ public class AddCollectionItemProductNavigationControlMenuEntry
 		ServletContext servletContext =
 			(ServletContext)httpServletRequest.getAttribute(WebKeys.CTX);
 
-		Portlet portlet = _portletLocalService.getPortletById(
+		Portlet portlet = _portletLocalService.unsafeGetPortletById(
+			_portal.getCompanyId(httpServletRequest),
 			ProductNavigationControlMenuPortletKeys.
 				PRODUCT_NAVIGATION_CONTROL_MENU);
 

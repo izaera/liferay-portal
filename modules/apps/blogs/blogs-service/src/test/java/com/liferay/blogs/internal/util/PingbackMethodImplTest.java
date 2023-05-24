@@ -581,7 +581,8 @@ public class PingbackMethodImplTest {
 		);
 
 		Mockito.when(
-			_portletLocalService.getPortletById(BlogsPortletKeys.BLOGS)
+			_portletLocalService.unsafeGetPortletById(
+				Mockito.anyLong(), BlogsPortletKeys.BLOGS)
 		).thenReturn(
 			portlet
 		);

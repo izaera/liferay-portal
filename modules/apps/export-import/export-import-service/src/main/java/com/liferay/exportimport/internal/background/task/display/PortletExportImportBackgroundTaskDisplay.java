@@ -62,8 +62,8 @@ public class PortletExportImportBackgroundTaskDisplay
 						exportImportConfiguration.getType());
 			}
 
-			portlet = PortletLocalServiceUtil.getPortletById(
-				backgroundTask.getName());
+			portlet = PortletLocalServiceUtil.unsafeGetPortletById(
+				backgroundTask.getCompanyId(), backgroundTask.getName());
 		}
 		catch (Exception exception) {
 			throw new RuntimeException(exception);

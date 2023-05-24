@@ -532,8 +532,8 @@ public class LayoutCopyHelperImpl implements LayoutCopyHelper {
 			StagingAdvicesThreadLocal.setEnabled(false);
 
 			for (String portletId : portletIds) {
-				Portlet portlet = _portletLocalService.getPortletById(
-					portletId);
+				Portlet portlet = _portletLocalService.unsafeGetPortletById(
+					sourceLayout.getCompanyId(), portletId);
 
 				if ((portlet == null) || portlet.isUndeployedPortlet()) {
 					continue;

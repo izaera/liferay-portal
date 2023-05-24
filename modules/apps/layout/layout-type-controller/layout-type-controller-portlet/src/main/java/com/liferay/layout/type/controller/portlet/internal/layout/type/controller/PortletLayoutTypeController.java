@@ -97,7 +97,8 @@ public class PortletLayoutTypeController extends BaseLayoutTypeControllerImpl {
 		String portletId = ParamUtil.getString(httpServletRequest, "p_p_id");
 
 		if (Validator.isNotNull(portletId)) {
-			Portlet portlet = _portletLocalService.getPortletById(portletId);
+			Portlet portlet = _portletLocalService.unsafeGetPortletById(
+				layout.getCompanyId(), portletId);
 
 			if (portlet != null) {
 				originalHttpServletRequest =

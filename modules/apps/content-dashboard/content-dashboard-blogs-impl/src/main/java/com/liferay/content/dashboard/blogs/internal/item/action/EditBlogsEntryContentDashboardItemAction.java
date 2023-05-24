@@ -76,7 +76,8 @@ public class EditBlogsEntryContentDashboardItemAction
 				_blogsEntry,
 				DynamicServletRequestUtil.createDynamicServletRequest(
 					_httpServletRequest,
-					_portletLocalService.getPortletById(
+					_portletLocalService.unsafeGetPortletById(
+						_portal.getCompanyId(_httpServletRequest),
 						_portal.getPortletId(_httpServletRequest)),
 					Collections.singletonMap(
 						"redirect",

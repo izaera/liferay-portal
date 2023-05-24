@@ -67,7 +67,8 @@ public class PortletPreferencesExportImportTest
 		String portletInstanceId = PortletIdCodec.encode(
 			JournalContentPortletKeys.JOURNAL_CONTENT, "1234");
 
-		Portlet portlet = PortletLocalServiceUtil.getPortletById(
+		Portlet portlet = PortletLocalServiceUtil.unsafeGetPortletById(
+			TestPropsValues.getCompanyId(),
 			JournalContentPortletKeys.JOURNAL_CONTENT);
 
 		_addGroupEmbeddedPortlet(

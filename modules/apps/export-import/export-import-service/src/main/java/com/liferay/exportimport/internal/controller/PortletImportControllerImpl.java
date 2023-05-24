@@ -402,8 +402,9 @@ public class PortletImportControllerImpl implements PortletImportController {
 
 			String changesetPortletId = ChangesetPortletKeys.CHANGESET;
 
-			Portlet changesetPortlet = _portletLocalService.getPortletById(
-				changesetPortletId);
+			Portlet changesetPortlet =
+				_portletLocalService.unsafeGetPortletById(
+					portletDataContext.getCompanyId(), changesetPortletId);
 
 			PortletDataHandler changesetPortletPortletDataHandlerInstance =
 				changesetPortlet.getPortletDataHandlerInstance();

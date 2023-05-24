@@ -171,7 +171,7 @@ if (ddlDisplayContext.isAdminPortlet()) {
 <aui:script>
 
 	<%
-	Portlet portlet = PortletLocalServiceUtil.getPortletById(portletDisplay.getId());
+	Portlet portlet = PortletLocalServiceUtil.unsafeGetPortletById(themeDisplay.getCompanyId(), portletDisplay.getId());
 	%>
 
 	<liferay-frontend:component

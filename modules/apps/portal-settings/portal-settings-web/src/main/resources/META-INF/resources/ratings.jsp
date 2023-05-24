@@ -31,7 +31,7 @@ CompanyPortletRatingsDefinitionDisplayContext companyPortletRatingsDefinitionDis
 	Map<String, Map<String, RatingsType>> companyRatingsTypeMaps = companyPortletRatingsDefinitionDisplayContext.getCompanyRatingsTypeMaps();
 
 	for (Map.Entry<String, Map<String, RatingsType>> entry : companyRatingsTypeMaps.entrySet()) {
-		Portlet portlet = PortletLocalServiceUtil.getPortletById(entry.getKey());
+		Portlet portlet = PortletLocalServiceUtil.unsafeGetPortletById(themeDisplay.getCompanyId(), entry.getKey());
 	%>
 
 		<p>

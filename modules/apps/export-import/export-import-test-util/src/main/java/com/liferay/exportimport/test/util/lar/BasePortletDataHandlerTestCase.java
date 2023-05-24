@@ -237,7 +237,8 @@ public abstract class BasePortletDataHandlerTestCase {
 			return;
 		}
 
-		Portlet portlet = _portletLocalService.getPortletById(portletId);
+		Portlet portlet = _portletLocalService.unsafeGetPortletById(
+			TestPropsValues.getCompanyId(), portletId);
 
 		initContext();
 

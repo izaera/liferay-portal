@@ -869,8 +869,8 @@ public class FragmentLayoutStructureItemImporter
 					fragmentEntryLink.getNamespace() + widgetInstanceId;
 			}
 			else {
-				Portlet portlet = _portletLocalService.getPortletById(
-					widgetName);
+				Portlet portlet = _portletLocalService.unsafeGetPortletById(
+					layout.getCompanyId(), widgetName);
 
 				if ((portlet != null) && portlet.isInstanceable()) {
 					widgetInstanceId = fragmentEntryLink.getNamespace();

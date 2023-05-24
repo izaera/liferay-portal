@@ -209,8 +209,8 @@ public class UpdateSegmentsEntryMVCCommandTest {
 		mockLiferayPortletActionRequest.setAttribute(
 			WebKeys.THEME_DISPLAY, _getThemeDisplay());
 
-		Portlet portlet = _portletLocalService.getPortletById(
-			SegmentsPortletKeys.SEGMENTS);
+		Portlet portlet = _portletLocalService.unsafeGetPortletById(
+			TestPropsValues.getCompanyId(), SegmentsPortletKeys.SEGMENTS);
 
 		LiferayPortletConfig liferayPortletConfig =
 			(LiferayPortletConfig)PortletConfigFactoryUtil.create(

@@ -26,6 +26,7 @@ import com.liferay.portal.kernel.service.PortletLocalServiceUtil;
 import com.liferay.portal.kernel.service.permission.PortletPermissionUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.JavaConstants;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
@@ -109,7 +110,8 @@ public abstract class BasePersonalMenuEntry implements PersonalMenuEntry {
 		try {
 			return hasAccessPermission(
 				permissionChecker,
-				PortletLocalServiceUtil.getPortletById(getPortletId()));
+				PortletLocalServiceUtil.unsafeGetPortletById(
+					PortalUtil.getCompanyId(portletRequest), getPortletId()));
 		}
 		catch (PortalException | RuntimeException exception) {
 			throw exception;

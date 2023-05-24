@@ -52,8 +52,9 @@ public class LayoutTypePortletImplEmbeddedPortletsTest
 	public void testShouldReturnFalseIfThereIsANonlayoutCacheableRootPortlet()
 		throws Exception {
 
-		Portlet noncacheablePortlet = PortletLocalServiceUtil.getPortletById(
-			PortletKeys.LOGIN);
+		Portlet noncacheablePortlet =
+			PortletLocalServiceUtil.unsafeGetPortletById(
+				TestPropsValues.getCompanyId(), PortletKeys.LOGIN);
 
 		PortletPreferencesLocalServiceUtil.addPortletPreferences(
 			TestPropsValues.getCompanyId(), PortletKeys.PREFS_OWNER_ID_DEFAULT,
@@ -69,8 +70,8 @@ public class LayoutTypePortletImplEmbeddedPortletsTest
 			"com.liferay.journal.model.JournalArticle",
 			PortletProvider.Action.ADD);
 
-		Portlet cacheablePortlet = PortletLocalServiceUtil.getPortletById(
-			cacheablePortletId);
+		Portlet cacheablePortlet = PortletLocalServiceUtil.unsafeGetPortletById(
+			TestPropsValues.getCompanyId(), cacheablePortletId);
 
 		addLayoutPortletPreferences(layout, cacheablePortlet);
 
@@ -91,8 +92,9 @@ public class LayoutTypePortletImplEmbeddedPortletsTest
 				"com.liferay.journal.model.JournalArticle",
 				PortletProvider.Action.ADD);
 
-			Portlet cacheablePortlet = PortletLocalServiceUtil.getPortletById(
-				cacheablePortletId);
+			Portlet cacheablePortlet =
+				PortletLocalServiceUtil.unsafeGetPortletById(
+					TestPropsValues.getCompanyId(), cacheablePortletId);
 
 			addLayoutPortletPreferences(layout, cacheablePortlet);
 

@@ -195,7 +195,8 @@ public class GetPagePreviewStrutsActionTest {
 		MockLiferayResourceRequest mockLiferayResourceRequest =
 			new MockLiferayResourceRequest();
 
-		Portlet portlet = _portletLocalService.getPortletById(
+		Portlet portlet = _portletLocalService.unsafeGetPortletById(
+			TestPropsValues.getCompanyId(),
 			ContentPageEditorPortletKeys.CONTENT_PAGE_EDITOR_PORTLET);
 
 		mockLiferayResourceRequest.setAttribute(

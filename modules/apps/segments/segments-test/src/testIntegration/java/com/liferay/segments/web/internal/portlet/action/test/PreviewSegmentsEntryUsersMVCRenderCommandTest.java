@@ -298,8 +298,8 @@ public class PreviewSegmentsEntryUsersMVCRenderCommandTest {
 		MockLiferayPortletRenderRequest mockLiferayPortletRenderRequest =
 			new MockLiferayPortletRenderRequest();
 
-		Portlet portlet = _portletLocalService.getPortletById(
-			SegmentsPortletKeys.SEGMENTS);
+		Portlet portlet = _portletLocalService.unsafeGetPortletById(
+			TestPropsValues.getCompanyId(), SegmentsPortletKeys.SEGMENTS);
 
 		mockLiferayPortletRenderRequest.setAttribute(
 			JavaConstants.JAVAX_PORTLET_CONFIG,

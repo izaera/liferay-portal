@@ -691,7 +691,8 @@ public class SegmentsDisplayContextTest {
 			new MockLiferayPortletRenderRequest();
 
 		com.liferay.portal.kernel.model.Portlet portlet =
-			_portletLocalService.getPortletById(SegmentsPortletKeys.SEGMENTS);
+			_portletLocalService.unsafeGetPortletById(
+				TestPropsValues.getCompanyId(), SegmentsPortletKeys.SEGMENTS);
 
 		mockLiferayPortletRenderRequest.setAttribute(
 			JavaConstants.JAVAX_PORTLET_CONFIG,

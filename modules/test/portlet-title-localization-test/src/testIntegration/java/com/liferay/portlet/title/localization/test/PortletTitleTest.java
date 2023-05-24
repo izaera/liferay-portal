@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.portlet.PortletBagPool;
 import com.liferay.portal.kernel.portlet.PortletConfigFactoryUtil;
 import com.liferay.portal.kernel.service.PortletLocalServiceUtil;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
+import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 
@@ -52,7 +53,10 @@ public class PortletTitleTest {
 	public void testPortletTitles() throws Exception {
 		List<String> portletIdsWithMissingTitles = new ArrayList<>();
 
-		for (Portlet portlet : PortletLocalServiceUtil.getPortlets()) {
+		for (Portlet portlet :
+				PortletLocalServiceUtil.getPortlets(
+					TestPropsValues.getCompanyId())) {
+
 			String rootPortletId = portlet.getRootPortletId();
 
 			PortletBag portletBag = PortletBagPool.get(

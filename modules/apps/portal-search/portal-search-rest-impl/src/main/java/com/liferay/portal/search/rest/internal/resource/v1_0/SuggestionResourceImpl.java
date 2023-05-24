@@ -141,8 +141,9 @@ public class SuggestionResourceImpl extends BaseSuggestionResourceImpl {
 		contextHttpServletRequest.setAttribute(
 			WebKeys.THEME_DISPLAY, _createThemeDisplay(currentURL, layout));
 
-		Portlet portlet = _portletLocalService.getPortletById(
-			SearchBarPortletKeys.SEARCH_BAR);
+		Portlet portlet = _portletLocalService.unsafeGetPortletById(
+			layout.getCompanyId(), SearchBarPortletKeys.SEARCH_BAR);
+
 		ServletContext servletContext =
 			(ServletContext)contextHttpServletRequest.getAttribute(WebKeys.CTX);
 

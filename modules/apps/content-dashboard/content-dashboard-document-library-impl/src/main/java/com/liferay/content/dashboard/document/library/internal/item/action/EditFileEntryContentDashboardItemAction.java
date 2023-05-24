@@ -72,7 +72,8 @@ public class EditFileEntryContentDashboardItemAction
 
 	@Override
 	public String getURL() {
-		Portlet portlet = _portletLocalService.getPortletById(
+		Portlet portlet = _portletLocalService.unsafeGetPortletById(
+			_portal.getCompanyId(_httpServletRequest),
 			_portal.getPortletId(_httpServletRequest));
 
 		HttpServletRequest httpServletRequest =

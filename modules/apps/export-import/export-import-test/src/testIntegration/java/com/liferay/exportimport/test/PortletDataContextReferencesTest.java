@@ -110,7 +110,8 @@ public class PortletDataContextReferencesTest {
 		_portletDataContext.setPortletId(
 			JournalContentPortletKeys.JOURNAL_CONTENT);
 
-		Portlet portlet = PortletLocalServiceUtil.getPortletById(
+		Portlet portlet = PortletLocalServiceUtil.unsafeGetPortletById(
+			TestPropsValues.getCompanyId(),
 			JournalContentPortletKeys.JOURNAL_CONTENT);
 
 		AssetVocabulary assetVocabulary = AssetTestUtil.addVocabulary(
@@ -267,7 +268,8 @@ public class PortletDataContextReferencesTest {
 
 	@Test
 	public void testMultipleMissingReferences() throws Exception {
-		Portlet portlet = PortletLocalServiceUtil.getPortletById(
+		Portlet portlet = PortletLocalServiceUtil.unsafeGetPortletById(
+			TestPropsValues.getCompanyId(),
 			JournalContentPortletKeys.JOURNAL_CONTENT);
 
 		_portletDataContext.addReferenceElement(

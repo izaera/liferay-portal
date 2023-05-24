@@ -25,6 +25,7 @@ import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.service.PortletLocalService;
 import com.liferay.portal.kernel.servlet.PipingServletResponse;
 import com.liferay.portal.kernel.util.ListUtil;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.WebKeys;
 
 import java.util.List;
@@ -103,7 +104,8 @@ public class FullPageApplicationLayoutTypeController
 	protected void addAttributes(HttpServletRequest httpServletRequest) {
 		super.addAttributes(httpServletRequest);
 
-		List<Portlet> portlets = _portletLocalService.getPortlets();
+		List<Portlet> portlets = _portletLocalService.getPortlets(
+			_portal.getCompanyId(httpServletRequest));
 
 		if (portlets.isEmpty()) {
 			return;
@@ -157,6 +159,9 @@ public class FullPageApplicationLayoutTypeController
 
 	private static final String _VIEW_PAGE =
 		"/layout/view/full_page_application.jsp";
+
+	@Reference
+	private Portal _portal;
 
 	@Reference
 	private PortletLocalService _portletLocalService;

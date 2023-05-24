@@ -544,7 +544,10 @@ public class PortletPermissionImpl implements PortletPermission {
 			String portletId)
 		throws PortalException {
 
-		Portlet portlet = PortletLocalServiceUtil.getPortletById(portletId);
+		Group group = GroupLocalServiceUtil.getGroup(scopeGroupId);
+
+		Portlet portlet = PortletLocalServiceUtil.unsafeGetPortletById(
+			group.getCompanyId(), portletId);
 
 		return hasControlPanelAccessPermission(
 			permissionChecker, scopeGroupId, portlet);

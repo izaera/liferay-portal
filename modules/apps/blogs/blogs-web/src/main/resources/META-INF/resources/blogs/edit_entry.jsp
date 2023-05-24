@@ -184,7 +184,7 @@ renderResponse.setTitle(blogsEditEntryDisplayContext.getPageTitle(resourceBundle
 					<aui:fieldset collapsed="<%= true %>" collapsible="<%= true %>" label="configuration">
 
 						<%
-						Portlet portlet = PortletLocalServiceUtil.getPortletById(BlogsPortletKeys.BLOGS);
+						Portlet portlet = PortletLocalServiceUtil.unsafeGetPortletById(themeDisplay.getCompanyId(), BlogsPortletKeys.BLOGS);
 						%>
 
 						<div class="clearfix form-group">

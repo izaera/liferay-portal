@@ -154,8 +154,8 @@ public class PortletConfigurationCSSPortletDisplayContext {
 
 		ServletContext servletContext = httpSession.getServletContext();
 
-		Portlet portlet = PortletLocalServiceUtil.getPortletById(
-			_portletResource);
+		Portlet portlet = PortletLocalServiceUtil.unsafeGetPortletById(
+			PortalUtil.getCompanyId(httpServletRequest), _portletResource);
 
 		Map<Locale, String> customTitleMap = new HashMap<>();
 

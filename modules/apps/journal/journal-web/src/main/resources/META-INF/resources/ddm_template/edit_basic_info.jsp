@@ -72,7 +72,7 @@ DDMStructure ddmStructure = journalEditDDMTemplateDisplayContext.getDDMStructure
 	<aui:input name="url" type="resource" value="<%= getDDMTemplateURL %>" />
 
 	<%
-	Portlet portlet = PortletLocalServiceUtil.getPortletById(portletDisplay.getId());
+	Portlet portlet = PortletLocalServiceUtil.unsafeGetPortletById(themeDisplay.getCompanyId(), portletDisplay.getId());
 	%>
 
 	<aui:input name="webDavURL" type="resource" value="<%= ddmTemplate.getWebDavURL(themeDisplay, WebDAVUtil.getStorageToken(portlet)) %>" />

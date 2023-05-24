@@ -2096,7 +2096,8 @@ public class LayoutTypePortletImpl
 					PortalUtil.getPortletNamespace(portletId), portletIdList);
 			}
 
-			Portlet portlet = PortletLocalServiceUtil.getPortletById(portletId);
+			Portlet portlet = PortletLocalServiceUtil.unsafeGetPortletById(
+				getCompanyId(), portletId);
 
 			if (portlet == null) {
 				continue;

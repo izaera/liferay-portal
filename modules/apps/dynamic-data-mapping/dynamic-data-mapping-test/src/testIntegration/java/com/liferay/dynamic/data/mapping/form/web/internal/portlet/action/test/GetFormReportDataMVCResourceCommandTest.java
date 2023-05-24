@@ -145,9 +145,10 @@ public class GetFormReportDataMVCResourceCommandTest {
 			new String(byteArrayOutputStream.toByteArray()));
 	}
 
-	private LiferayPortletConfig _getLiferayPortletConfig() {
+	private LiferayPortletConfig _getLiferayPortletConfig() throws Exception {
 		return (LiferayPortletConfig)PortletConfigFactoryUtil.create(
-			_portletLocalService.getPortletById(
+			_portletLocalService.unsafeGetPortletById(
+				TestPropsValues.getCompanyId(),
 				DDMPortletKeys.DYNAMIC_DATA_MAPPING_FORM),
 			null);
 	}

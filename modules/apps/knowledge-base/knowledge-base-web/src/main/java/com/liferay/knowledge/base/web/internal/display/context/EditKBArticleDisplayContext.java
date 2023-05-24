@@ -294,8 +294,8 @@ public class EditKBArticleDisplayContext {
 
 		sb.append("/-/");
 
-		Portlet portlet = PortletLocalServiceUtil.getPortletById(
-			KBPortletKeys.KNOWLEDGE_BASE_DISPLAY);
+		Portlet portlet = PortletLocalServiceUtil.unsafeGetPortletById(
+			_themeDisplay.getCompanyId(), KBPortletKeys.KNOWLEDGE_BASE_DISPLAY);
 
 		sb.append(portlet.getFriendlyURLMapping());
 

@@ -52,7 +52,8 @@ public class PortletPreferencesPortletConfigurationExporterImpl
 
 		String portletName = PortletIdCodec.decodePortletName(portletId);
 
-		Portlet portlet = _portletLocalService.getPortletById(portletName);
+		Portlet portlet = _portletLocalService.unsafeGetPortletById(
+			layout.getCompanyId(), portletName);
 
 		if (portlet == null) {
 			return null;

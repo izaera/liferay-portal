@@ -377,7 +377,7 @@ if (Validator.isNotNull(requestUpdateStructureURL)) {
 			title: '<%= HtmlUtil.escapeJS(scopeTitle) %>',
 
 			<%
-			Portlet portlet = PortletLocalServiceUtil.getPortletById(portletDisplay.getId());
+			Portlet portlet = PortletLocalServiceUtil.unsafeGetPortletById(themeDisplay.getCompanyId(), portletDisplay.getId());
 			%>
 
 			url:

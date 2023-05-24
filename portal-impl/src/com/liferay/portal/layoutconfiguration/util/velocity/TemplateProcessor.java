@@ -33,6 +33,7 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ClassUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -116,7 +117,8 @@ public class TemplateProcessor implements ColumnProcessor {
 		String portletId = ParamUtil.getString(_httpServletRequest, "p_p_id");
 
 		if (Validator.isNotNull(portletId)) {
-			Portlet portlet = PortletLocalServiceUtil.getPortletById(portletId);
+			Portlet portlet = PortletLocalServiceUtil.unsafeGetPortletById(
+				PortalUtil.getCompanyId(_httpServletRequest), portletId);
 
 			if (portlet != null) {
 				portlets.add(portlet);

@@ -56,7 +56,7 @@
 		}
 
 		for (String portletId : portletIds) {
-			Portlet portlet = PortletLocalServiceUtil.getPortletById(portletId);
+			Portlet portlet = PortletLocalServiceUtil.unsafeGetPortletById(themeDisplay.getCompanyId(), portletId);
 
 			if (!type.equals(Constants.EXPORT) && (liveGroup != null) && !liveGroup.isStagedPortlet(portlet.getRootPortletId())) {
 				continue;
@@ -134,7 +134,7 @@
 
 				<%
 				for (String portletId : portletIds) {
-					Portlet portlet = PortletLocalServiceUtil.getPortletById(portletId);
+					Portlet portlet = PortletLocalServiceUtil.unsafeGetPortletById(themeDisplay.getCompanyId(), portletId);
 
 					String portletTitle = PortalUtil.getPortletTitle(portlet, request.getLocale());
 

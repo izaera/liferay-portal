@@ -657,7 +657,8 @@ public class ExportImportHelperImpl implements ExportImportHelper {
 		PortletDataContext portletDataContext, StagedModel referenceStagedModel,
 		String rootPortletId) {
 
-		Portlet portlet = _portletLocalService.getPortletById(rootPortletId);
+		Portlet portlet = _portletLocalService.unsafeGetPortletById(
+			portletDataContext.getCompanyId(), rootPortletId);
 
 		if (portlet == null) {
 			return true;
