@@ -22,6 +22,7 @@ import com.liferay.osgi.service.tracker.collections.list.ServiceTrackerList;
 import com.liferay.osgi.service.tracker.collections.list.ServiceTrackerListFactory;
 import com.liferay.petra.concurrent.DCLSingleton;
 import com.liferay.petra.string.StringBundler;
+import com.liferay.portal.kernel.model.CompanyConstants;
 import com.liferay.portal.kernel.module.util.SystemBundleUtil;
 import com.liferay.portal.kernel.notifications.UserNotificationDefinition;
 import com.liferay.portal.kernel.notifications.UserNotificationHandler;
@@ -39,6 +40,7 @@ import com.liferay.portal.kernel.security.permission.propagator.PermissionPropag
 import com.liferay.portal.kernel.servlet.URLEncoder;
 import com.liferay.portal.kernel.template.TemplateHandler;
 import com.liferay.portal.kernel.trash.TrashHandler;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapDictionary;
 import com.liferay.portal.kernel.util.ServiceProxyFactory;
 import com.liferay.portal.kernel.webdav.WebDAVStorage;
@@ -73,11 +75,12 @@ import org.osgi.util.tracker.ServiceTrackerCustomizer;
 public class PortletBagImpl implements PortletBag {
 
 	public PortletBagImpl(
-		String portletName, ServletContext servletContext,
+		long companyId, String portletName, ServletContext servletContext,
 		Portlet portletInstance, String resourceBundleBaseName,
 		FriendlyURLMapperTracker friendlyURLMapperTracker,
 		List<ServiceRegistration<?>> serviceRegistrations) {
 
+		_companyId = companyId;
 		_portletName = portletName;
 		_servletContext = servletContext;
 		_portletInstance = portletInstance;
@@ -93,8 +96,9 @@ public class PortletBagImpl implements PortletBag {
 	@Override
 	public Object clone() {
 		return new PortletBagImpl(
-			getPortletName(), getServletContext(), getPortletInstance(),
-			getResourceBundleBaseName(), getFriendlyURLMapperTracker(), null);
+			_companyId, getPortletName(), getServletContext(),
+			getPortletInstance(), getResourceBundleBaseName(),
+			getFriendlyURLMapperTracker(), null);
 	}
 
 	@Override
@@ -122,7 +126,7 @@ public class PortletBagImpl implements PortletBag {
 
 	@Override
 	public List<AssetRendererFactory<?>> getAssetRendererFactoryInstances() {
-		return _getList(AssetRendererFactory.class);
+		return (List)_getList(AssetRendererFactory.class);
 	}
 
 	@Override
@@ -147,7 +151,7 @@ public class PortletBagImpl implements PortletBag {
 
 	@Override
 	public List<Indexer<?>> getIndexerInstances() {
-		return _getList(Indexer.class);
+		return (List)_getList(Indexer.class);
 	}
 
 	@Override
@@ -248,7 +252,7 @@ public class PortletBagImpl implements PortletBag {
 	public List<StagedModelDataHandler<?>>
 		getStagedModelDataHandlerInstances() {
 
-		return _getList(StagedModelDataHandler.class);
+		return (List)_getList(StagedModelDataHandler.class);
 	}
 
 	@Override
@@ -285,7 +289,7 @@ public class PortletBagImpl implements PortletBag {
 
 	@Override
 	public List<WorkflowHandler<?>> getWorkflowHandlerInstances() {
-		return _getList(WorkflowHandler.class);
+		return (List)_getList(WorkflowHandler.class);
 	}
 
 	@Override
@@ -303,14 +307,47 @@ public class PortletBagImpl implements PortletBag {
 		_portletName = portletName;
 	}
 
-	private final <T> List<T> _getList(Class<?> clazz) {
+	private final <T> List<T> _getList(Class<T> clazz) {
 		ServiceTrackerList<Class<?>> serviceTrackerList =
 			_serviceTrackerListMap.computeIfAbsent(
 				clazz,
 				key ->
 					(ServiceTrackerList<Class<?>>)
 						(ServiceTrackerList)ServiceTrackerListFactory.open(
-							_bundleContext, clazz, _filterString));
+							_bundleContext, clazz, _filterString,
+							new ServiceTrackerCustomizer<T, T>() {
+
+								@Override
+								public T addingService(
+									ServiceReference<T> serviceReference) {
+
+									long companyId = GetterUtil.getLong(
+										serviceReference.getProperty(
+											"com.liferay.portlet.company"),
+										CompanyConstants.SYSTEM);
+
+									if (companyId != _companyId) {
+										return null;
+									}
+
+									return _bundleContext.getService(
+										serviceReference);
+								}
+
+								@Override
+								public void modifiedService(
+									ServiceReference<T> serviceReference, T t) {
+								}
+
+								@Override
+								public void removedService(
+									ServiceReference<T> serviceReference, T t) {
+
+									_bundleContext.ungetService(
+										serviceReference);
+								}
+
+							}));
 
 		return (List<T>)serviceTrackerList.toList();
 	}
@@ -318,6 +355,7 @@ public class PortletBagImpl implements PortletBag {
 	private static final BundleContext _bundleContext =
 		SystemBundleUtil.getBundleContext();
 
+	private final long _companyId;
 	private final String _filterString;
 	private final FriendlyURLMapperTracker _friendlyURLMapperTracker;
 	private Portlet _portletInstance;
