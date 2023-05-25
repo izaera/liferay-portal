@@ -35,7 +35,6 @@ import com.liferay.portal.kernel.model.role.RoleConstants;
 import com.liferay.portal.kernel.module.util.SystemBundleUtil;
 import com.liferay.portal.kernel.portlet.PortletIdCodec;
 import com.liferay.portal.kernel.resource.bundle.ResourceBundleLoader;
-import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.ResourceActions;
 import com.liferay.portal.kernel.service.GroupServiceUtil;
@@ -43,8 +42,7 @@ import com.liferay.portal.kernel.service.PortletLocalService;
 import com.liferay.portal.kernel.service.ResourceActionLocalService;
 import com.liferay.portal.kernel.service.ResourceActionLocalServiceUtil;
 import com.liferay.portal.kernel.service.RoleLocalService;
-import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
+import com.liferay.portal.kernel.util.AmbientCompanyIdUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -299,7 +297,7 @@ public class ResourceActionsImpl implements ResourceActions {
 		name = PortletIdCodec.decodePortletName(name);
 
 		Portlet portlet = portletLocalService.unsafeGetPortletById(
-			_getCompanyId(), name);
+			AmbientCompanyIdUtil.getCompanyId(), name);
 
 		return _getPortletResourceActions(name, portlet);
 	}
@@ -569,7 +567,7 @@ public class ResourceActionsImpl implements ResourceActions {
 
 		Set<String> portletResourceNames = new HashSet<>();
 
-		long companyId = _getCompanyId();
+		long companyId = AmbientCompanyIdUtil.getCompanyId();
 
 		for (String source : sources) {
 			_read(
@@ -666,19 +664,6 @@ public class ResourceActionsImpl implements ResourceActions {
 		actions.add(ActionKeys.PERMISSIONS);
 		actions.add(ActionKeys.PREFERENCES);
 		actions.add(ActionKeys.VIEW);
-	}
-
-	private long _getCompanyId() {
-		long companyId = CompanyThreadLocal.getCompanyId();
-
-		ServiceContext serviceContext =
-			ServiceContextThreadLocal.getServiceContext();
-
-		if (serviceContext != null) {
-			companyId = serviceContext.getCompanyId();
-		}
-
-		return companyId;
 	}
 
 	private String _getCompositeModelName(Element compositeModelNameElement) {

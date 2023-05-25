@@ -143,8 +143,6 @@ import com.liferay.portal.kernel.service.OrganizationLocalServiceUtil;
 import com.liferay.portal.kernel.service.PortletLocalServiceUtil;
 import com.liferay.portal.kernel.service.ResourceLocalServiceUtil;
 import com.liferay.portal.kernel.service.ResourcePermissionLocalServiceUtil;
-import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.service.TicketLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.service.UserServiceUtil;
@@ -170,6 +168,7 @@ import com.liferay.portal.kernel.theme.PortletDisplay;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.upload.UploadPortletRequest;
 import com.liferay.portal.kernel.upload.UploadServletRequest;
+import com.liferay.portal.kernel.util.AmbientCompanyIdUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.CalendarFactoryUtil;
 import com.liferay.portal.kernel.util.ContentTypes;
@@ -4503,11 +4502,8 @@ public class PortalImpl implements Portal {
 			String url, Map<String, String[]> params,
 			Map<String, Object> requestContext) {
 
-		ServiceContext serviceContext =
-			ServiceContextThreadLocal.getServiceContext();
-
 		return _getPortletFriendlyURLMapperLayoutQueryStringComposite(
-			serviceContext.getCompanyId(), url, params, requestContext);
+			AmbientCompanyIdUtil.getCompanyId(), url, params, requestContext);
 	}
 
 	@Override
@@ -4717,11 +4713,8 @@ public class PortalImpl implements Portal {
 
 	@Override
 	public String getPortletTitle(String portletId, Locale locale) {
-		ServiceContext serviceContext =
-			ServiceContextThreadLocal.getServiceContext();
-
 		PortletConfig portletConfig = PortletConfigFactoryUtil.get(
-			serviceContext.getCompanyId(), portletId);
+			AmbientCompanyIdUtil.getCompanyId(), portletId);
 
 		if (portletConfig == null) {
 			return PortletIdCodec.decodePortletName(portletId);

@@ -20,8 +20,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.service.PortletLocalService;
-import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
+import com.liferay.portal.kernel.util.AmbientCompanyIdUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import org.osgi.service.component.annotations.Component;
@@ -57,11 +56,8 @@ public class PortletDataHandlerProviderImpl
 			return null;
 		}
 
-		ServiceContext serviceContext =
-			ServiceContextThreadLocal.getServiceContext();
-
 		Portlet portlet = _portletLocalService.unsafeGetPortletById(
-			serviceContext.getCompanyId(), portletId);
+			AmbientCompanyIdUtil.getCompanyId(), portletId);
 
 		return _provide(portlet);
 	}

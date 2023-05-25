@@ -124,7 +124,6 @@ import com.liferay.portal.kernel.service.RecentLayoutBranchLocalService;
 import com.liferay.portal.kernel.service.RecentLayoutRevisionLocalService;
 import com.liferay.portal.kernel.service.RecentLayoutSetBranchLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.service.WorkflowInstanceLinkLocalService;
 import com.liferay.portal.kernel.service.permission.GroupPermission;
@@ -132,6 +131,7 @@ import com.liferay.portal.kernel.servlet.ServletResponseConstants;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.upload.UploadRequestSizeException;
 import com.liferay.portal.kernel.upload.configuration.UploadServletRequestConfigurationProviderUtil;
+import com.liferay.portal.kernel.util.AmbientCompanyIdUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -1256,11 +1256,8 @@ public class StagingImpl implements Staging {
 
 				Object[] arguments = layoutImportException.getArguments();
 
-				ServiceContext serviceContext =
-					ServiceContextThreadLocal.getServiceContext();
-
 				Portlet portlet = _portletLocalService.unsafeGetPortletById(
-					serviceContext.getCompanyId(), (String)arguments[1]);
+					AmbientCompanyIdUtil.getCompanyId(), (String)arguments[1]);
 
 				arguments[1] = portlet.getDisplayName();
 
@@ -1675,11 +1672,9 @@ public class StagingImpl implements Staging {
 			PortletIdException portletIdException =
 				(PortletIdException)exception;
 
-			ServiceContext serviceContext =
-				ServiceContextThreadLocal.getServiceContext();
-
 			Portlet portlet = _portletLocalService.unsafeGetPortletById(
-				serviceContext.getCompanyId(), portletIdException.getMessage());
+				AmbientCompanyIdUtil.getCompanyId(),
+				portletIdException.getMessage());
 
 			errorMessage = _language.format(
 				resourceBundle, "a-x-can-only-be-imported-to-a-x",
