@@ -58,7 +58,7 @@ public interface PortletService extends BaseService {
 	public String getOSGiServiceIdentifier();
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
-	public JSONArray getWARPortlets();
+	public JSONArray getWARPortlets(long companyId);
 
 	@JSONWebService
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)

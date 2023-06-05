@@ -37,10 +37,10 @@ import java.util.List;
 public class PortletServiceImpl extends PortletServiceBaseImpl {
 
 	@Override
-	public JSONArray getWARPortlets() {
+	public JSONArray getWARPortlets(long companyId) {
 		JSONArray jsonArray = JSONFactoryUtil.createJSONArray();
 
-		List<Portlet> portlets = portletLocalService.getPortlets();
+		List<Portlet> portlets = portletLocalService.getPortlets(companyId);
 
 		for (Portlet portlet : portlets) {
 			PortletApp portletApp = portlet.getPortletApp();

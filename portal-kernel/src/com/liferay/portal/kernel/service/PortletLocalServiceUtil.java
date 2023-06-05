@@ -80,8 +80,8 @@ public class PortletLocalServiceUtil {
 		getService().clearPortletsMap();
 	}
 
-	public static Portlet clonePortlet(String portletId) {
-		return getService().clonePortlet(portletId);
+	public static Portlet clonePortlet(long companyId, String portletId) {
+		return getService().clonePortlet(companyId, portletId);
 	}
 
 	/**
@@ -300,9 +300,9 @@ public class PortletLocalServiceUtil {
 	}
 
 	public static List<com.liferay.expando.kernel.model.CustomAttributesDisplay>
-		getCustomAttributesDisplays() {
+		getCustomAttributesDisplays(long companyId) {
 
-		return getService().getCustomAttributesDisplays();
+		return getService().getCustomAttributesDisplays(companyId);
 	}
 
 	public static com.liferay.portal.kernel.model.PortletCategory getEARDisplay(
@@ -311,14 +311,14 @@ public class PortletLocalServiceUtil {
 		return getService().getEARDisplay(xml);
 	}
 
-	public static List<Portlet> getFriendlyURLMapperPortlets() {
-		return getService().getFriendlyURLMapperPortlets();
+	public static List<Portlet> getFriendlyURLMapperPortlets(long companyId) {
+		return getService().getFriendlyURLMapperPortlets(companyId);
 	}
 
 	public static List<com.liferay.portal.kernel.portlet.FriendlyURLMapper>
-		getFriendlyURLMappers() {
+		getFriendlyURLMappers(long companyId) {
 
-		return getService().getFriendlyURLMappers();
+		return getService().getFriendlyURLMappers(companyId);
 	}
 
 	public static
@@ -367,18 +367,14 @@ public class PortletLocalServiceUtil {
 		return getService().getPortletById(companyId, portletId);
 	}
 
-	public static Portlet getPortletById(String portletId) {
-		return getService().getPortletById(portletId);
+	public static Portlet unsafeGetPortletById(long companyId, String portletId) {
+		return getService().unsafeGetPortletById(companyId, portletId);
 	}
 
 	public static Portlet getPortletByStrutsPath(
 		long companyId, String strutsPath) {
 
 		return getService().getPortletByStrutsPath(companyId, strutsPath);
-	}
-
-	public static List<Portlet> getPortlets() {
-		return getService().getPortlets();
 	}
 
 	/**
@@ -419,8 +415,8 @@ public class PortletLocalServiceUtil {
 		return getService().getPortletsCount(companyId);
 	}
 
-	public static List<Portlet> getScopablePortlets() {
-		return getService().getScopablePortlets();
+	public static List<Portlet> getScopablePortlets(long companyId) {
+		return getService().getScopablePortlets(companyId);
 	}
 
 	public static com.liferay.portal.kernel.model.PortletCategory getWARDisplay(

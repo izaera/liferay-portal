@@ -99,7 +99,7 @@ public interface PortletLocalService
 	public void clearPortletsMap();
 
 	@Transactional(enabled = false)
-	public Portlet clonePortlet(String portletId);
+	public Portlet clonePortlet(long companyId, String portletId);
 
 	/**
 	 * @throws PortalException
@@ -264,16 +264,17 @@ public interface PortletLocalService
 	public ActionableDynamicQuery getActionableDynamicQuery();
 
 	@Transactional(enabled = false)
-	public List<CustomAttributesDisplay> getCustomAttributesDisplays();
+	public List<CustomAttributesDisplay> getCustomAttributesDisplays(
+		long companyId);
 
 	@Transactional(enabled = false)
 	public PortletCategory getEARDisplay(String xml);
 
 	@Transactional(enabled = false)
-	public List<Portlet> getFriendlyURLMapperPortlets();
+	public List<Portlet> getFriendlyURLMapperPortlets(long companyId);
 
 	@Transactional(enabled = false)
-	public List<FriendlyURLMapper> getFriendlyURLMappers();
+	public List<FriendlyURLMapper> getFriendlyURLMappers(long companyId);
 
 	@Transactional(propagation = Propagation.SUPPORTS, readOnly = true)
 	public IndexableActionableDynamicQuery getIndexableActionableDynamicQuery();
@@ -310,13 +311,10 @@ public interface PortletLocalService
 	public Portlet getPortletById(long companyId, String portletId);
 
 	@Transactional(enabled = false)
-	public Portlet getPortletById(String portletId);
+	public Portlet unsafeGetPortletById(long companyId, String portletId);
 
 	@Transactional(enabled = false)
 	public Portlet getPortletByStrutsPath(long companyId, String strutsPath);
-
-	@Transactional(enabled = false)
-	public List<Portlet> getPortlets();
 
 	/**
 	 * Returns a range of all the portlets.
@@ -351,7 +349,7 @@ public interface PortletLocalService
 	public int getPortletsCount(long companyId);
 
 	@Transactional(enabled = false)
-	public List<Portlet> getScopablePortlets();
+	public List<Portlet> getScopablePortlets(long companyId);
 
 	@Transactional(enabled = false)
 	public PortletCategory getWARDisplay(String servletContextName, String xml);

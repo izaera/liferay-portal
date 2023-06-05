@@ -46,8 +46,10 @@ public class PortletServiceUtil {
 		return getService().getOSGiServiceIdentifier();
 	}
 
-	public static com.liferay.portal.kernel.json.JSONArray getWARPortlets() {
-		return getService().getWARPortlets();
+	public static com.liferay.portal.kernel.json.JSONArray getWARPortlets(
+		long companyId) {
+
+		return getService().getWARPortlets(companyId);
 	}
 
 	public static boolean hasPortlet(long companyId, String portletId) {

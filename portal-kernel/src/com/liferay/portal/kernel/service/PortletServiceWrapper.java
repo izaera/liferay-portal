@@ -43,8 +43,8 @@ public class PortletServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.json.JSONArray getWARPortlets() {
-		return _portletService.getWARPortlets();
+	public com.liferay.portal.kernel.json.JSONArray getWARPortlets(long companyId) {
+		return _portletService.getWARPortlets(companyId);
 	}
 
 	@Override

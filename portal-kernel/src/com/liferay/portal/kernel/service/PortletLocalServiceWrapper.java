@@ -82,9 +82,9 @@ public class PortletLocalServiceWrapper
 
 	@Override
 	public com.liferay.portal.kernel.model.Portlet clonePortlet(
-		String portletId) {
+		long companyId, java.lang.String portletId) {
 
-		return _portletLocalService.clonePortlet(portletId);
+		return _portletLocalService.clonePortlet(companyId, portletId);
 	}
 
 	/**
@@ -351,9 +351,9 @@ public class PortletLocalServiceWrapper
 	@Override
 	public java.util.List
 		<com.liferay.expando.kernel.model.CustomAttributesDisplay>
-			getCustomAttributesDisplays() {
+			getCustomAttributesDisplays(long companyId) {
 
-		return _portletLocalService.getCustomAttributesDisplays();
+		return _portletLocalService.getCustomAttributesDisplays(companyId);
 	}
 
 	@Override
@@ -365,16 +365,16 @@ public class PortletLocalServiceWrapper
 
 	@Override
 	public java.util.List<com.liferay.portal.kernel.model.Portlet>
-		getFriendlyURLMapperPortlets() {
+		getFriendlyURLMapperPortlets(long companyId) {
 
-		return _portletLocalService.getFriendlyURLMapperPortlets();
+		return _portletLocalService.getFriendlyURLMapperPortlets(companyId);
 	}
 
 	@Override
 	public java.util.List<com.liferay.portal.kernel.portlet.FriendlyURLMapper>
-		getFriendlyURLMappers() {
+		getFriendlyURLMappers(long companyId) {
 
-		return _portletLocalService.getFriendlyURLMappers();
+		return _portletLocalService.getFriendlyURLMappers(companyId);
 	}
 
 	@Override
@@ -434,10 +434,10 @@ public class PortletLocalServiceWrapper
 	}
 
 	@Override
-	public com.liferay.portal.kernel.model.Portlet getPortletById(
-		String portletId) {
+	public com.liferay.portal.kernel.model.Portlet unsafeGetPortletById(
+		long companyId, java.lang.String portletId) {
 
-		return _portletLocalService.getPortletById(portletId);
+		return _portletLocalService.unsafeGetPortletById(companyId, portletId);
 	}
 
 	@Override
@@ -446,13 +446,6 @@ public class PortletLocalServiceWrapper
 
 		return _portletLocalService.getPortletByStrutsPath(
 			companyId, strutsPath);
-	}
-
-	@Override
-	public java.util.List<com.liferay.portal.kernel.model.Portlet>
-		getPortlets() {
-
-		return _portletLocalService.getPortlets();
 	}
 
 	/**
@@ -505,9 +498,9 @@ public class PortletLocalServiceWrapper
 
 	@Override
 	public java.util.List<com.liferay.portal.kernel.model.Portlet>
-		getScopablePortlets() {
+		getScopablePortlets(long companyId) {
 
-		return _portletLocalService.getScopablePortlets();
+		return _portletLocalService.getScopablePortlets(companyId);
 	}
 
 	@Override
