@@ -51,6 +51,7 @@ import com.liferay.portal.kernel.model.role.RoleConstants;
 import com.liferay.portal.kernel.module.util.SystemBundleUtil;
 import com.liferay.portal.kernel.plugin.PluginPackage;
 import com.liferay.portal.kernel.portlet.CompanyPortletMap;
+import com.liferay.portal.kernel.portlet.CompanyPortletMap.CreateCompanyMapProcessor;
 import com.liferay.portal.kernel.portlet.FriendlyURLMapper;
 import com.liferay.portal.kernel.portlet.LiferayPortletConfig;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
@@ -2754,8 +2755,21 @@ public class PortletLocalServiceImpl extends PortletLocalServiceBaseImpl {
 	private static final Map<String, PortletApp> _portletApps =
 		new ConcurrentHashMap<>();
 	private static volatile Map<String, String> _portletIdsByStrutsPath;
+
 	private static final CompanyPortletMap<Portlet> _portlets =
-		new CompanyPortletMap<>();
+		new CompanyPortletMap<>(
+			new CreateCompanyMapProcessor<Portlet>() {
+
+				@Override
+				public Portlet process(long companyId, Portlet portlet) {
+					portlet = (Portlet)portlet.clone();
+
+					portlet.setCompanyId(companyId);
+
+					return portlet;
+				}
+
+			});
 
 	@BeanReference(type = CompanyLocalService.class)
 	private CompanyLocalService _companyLocalService;

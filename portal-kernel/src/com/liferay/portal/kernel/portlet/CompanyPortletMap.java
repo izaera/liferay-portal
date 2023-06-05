@@ -16,184 +16,173 @@ package com.liferay.portal.kernel.portlet;
 
 import com.liferay.portal.kernel.model.CompanyConstants;
 
-import java.util.AbstractCollection;
-import java.util.AbstractSet;
 import java.util.Collection;
-import java.util.Iterator;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
 
 /**
  * @author Iván Zaera Avellon
  */
 public class CompanyPortletMap<T> {
 
+	public CompanyPortletMap() {
+		this(null);
+	}
+
+	public CompanyPortletMap(
+		CreateCompanyMapProcessor createCompanyMapProcessor) {
+
+		_createCompanyMapProcessor = createCompanyMapProcessor;
+
+		_map.put(CompanyConstants.SYSTEM, new HashMap<>());
+	}
+
 	public void clear() {
-		_map.clear();
+		synchronized (_map) {
+			_map.clear();
+			_map.put(CompanyConstants.SYSTEM, new HashMap<>());
+		}
 	}
 
 	public void clear(long companyId) {
-		ConcurrentMap<String, T> companyMap = _getCompanyMap(companyId);
-
-		companyMap.clear();
+		synchronized (_map) {
+			_map.remove(companyId);
+		}
 	}
 
 	public T get(long companyId, String portletId) {
-		ConcurrentMap<String, T> companyMap = _getCompanyMap(companyId);
+		synchronized (_map) {
+			Map<String, T> map = _map.get(companyId);
 
-		T value = companyMap.get(portletId);
+			if (map == null) {
+				map = _createCompanyMap(companyId);
+			}
 
-		if (value != null) {
-			return value;
+			return map.get(portletId);
 		}
-
-		companyMap = _getCompanyMap(CompanyConstants.SYSTEM);
-
-		return companyMap.get(portletId);
 	}
 
 	public boolean isEmpty() {
-		return _map.isEmpty();
+		synchronized (_map) {
+			for (Map<String, T> map : _map.values()) {
+				if (!map.isEmpty()) {
+					return false;
+				}
+			}
+
+			return true;
+		}
 	}
 
 	public Set<String> keySet(long companyId) {
-		ConcurrentMap<String, T> systemCompanyMap = _getCompanyMap(
-			CompanyConstants.SYSTEM);
+		synchronized (_map) {
+			Map<String, T> map = _map.get(companyId);
 
-		Set<String> systemKeySet = systemCompanyMap.keySet();
+			if (map == null) {
+				map = _createCompanyMap(companyId);
+			}
 
-		if (companyId == CompanyConstants.SYSTEM) {
-			return systemKeySet;
+			return map.keySet();
 		}
-
-		Iterator<String> systemIterator = systemKeySet.iterator();
-
-		ConcurrentMap<String, T> companyMap = _getCompanyMap(companyId);
-
-		Set<String> companyKeySet = companyMap.keySet();
-
-		Iterator<String> companyIterator = companyKeySet.iterator();
-
-		return new AbstractSet<String>() {
-
-			@Override
-			public Iterator<String> iterator() {
-				return new Iterator<String>() {
-
-					@Override
-					public boolean hasNext() {
-						if (systemIterator.hasNext() ||
-							companyIterator.hasNext()) {
-
-							return true;
-						}
-
-						return false;
-					}
-
-					@Override
-					public String next() {
-						if (systemIterator.hasNext()) {
-							return systemIterator.next();
-						}
-
-						return companyIterator.next();
-					}
-
-				};
-			}
-
-			@Override
-			public int size() {
-				return systemKeySet.size() + companyKeySet.size();
-			}
-
-		};
 	}
 
 	public void put(long companyId, String portletId, T value) {
-		ConcurrentMap<String, T> companyMap = _getCompanyMap(companyId);
+		synchronized (_map) {
+			Map<String, T> map = _map.get(companyId);
 
-		companyMap.put(portletId, value);
+			if (map == null) {
+				map = _createCompanyMap(companyId);
+			}
+
+			map.put(portletId, value);
+
+			if (companyId == CompanyConstants.SYSTEM) {
+				for (Map.Entry<Long, Map<String, T>> entry : _map.entrySet()) {
+					if (Objects.equals(
+							entry.getKey(), CompanyConstants.SYSTEM)) {
+
+						continue;
+					}
+
+					map = entry.getValue();
+
+					map.put(portletId, value);
+				}
+			}
+		}
 	}
 
 	public T remove(long companyId, String portletId) {
-		ConcurrentMap<String, T> companyMap = _getCompanyMap(companyId);
+		synchronized (_map) {
+			Map<String, T> map = _map.get(companyId);
 
-		return companyMap.remove(portletId);
+			if (map == null) {
+				return null;
+			}
+
+			T value = map.remove(portletId);
+
+			if (companyId == CompanyConstants.SYSTEM) {
+				for (long key : _map.keySet()) {
+					if (key == CompanyConstants.SYSTEM) {
+						continue;
+					}
+
+					_map.remove(key);
+				}
+			}
+
+			return value;
+		}
 	}
 
 	public Collection<T> values(long companyId) {
-		ConcurrentMap<String, T> systemCompanyMap = _getCompanyMap(
-			CompanyConstants.SYSTEM);
+		synchronized (_map) {
+			Map<String, T> map = _map.get(companyId);
 
-		Collection<T> systemValues = systemCompanyMap.values();
-
-		if (companyId == CompanyConstants.SYSTEM) {
-			return systemValues;
-		}
-
-		Iterator<T> systemIterator = systemValues.iterator();
-
-		ConcurrentMap<String, T> companyMap = _getCompanyMap(companyId);
-
-		Collection<T> companyValues = companyMap.values();
-
-		Iterator<T> companyIterator = companyValues.iterator();
-
-		return new AbstractCollection<T>() {
-
-			@Override
-			public Iterator<T> iterator() {
-				return new Iterator<T>() {
-
-					@Override
-					public boolean hasNext() {
-						if (systemIterator.hasNext() ||
-							companyIterator.hasNext()) {
-
-							return true;
-						}
-
-						return false;
-					}
-
-					@Override
-					public T next() {
-						if (systemIterator.hasNext()) {
-							return systemIterator.next();
-						}
-
-						return companyIterator.next();
-					}
-
-				};
+			if (map == null) {
+				map = _createCompanyMap(companyId);
 			}
 
-			@Override
-			public int size() {
-				return systemValues.size() + companyValues.size();
+			return map.values();
+		}
+	}
+
+	public interface CreateCompanyMapProcessor<T> {
+
+		public T process(long companyId, T value);
+
+	}
+
+	private Map<String, T> _createCompanyMap(long companyId) {
+		synchronized (_map) {
+			Map<String, T> map;
+
+			Map<String, T> systemMap = _map.get(CompanyConstants.SYSTEM);
+
+			if (_createCompanyMapProcessor == null) {
+				map = new HashMap<>(systemMap);
+			}
+			else {
+				map = new HashMap<>();
+
+				for (Map.Entry<String, T> entry : systemMap.entrySet()) {
+					map.put(
+						entry.getKey(),
+						_createCompanyMapProcessor.process(
+							companyId, entry.getValue()));
+				}
 			}
 
-		};
-	}
+			_map.put(companyId, map);
 
-	private ConcurrentMap<String, T> _getCompanyMap(long companyId) {
-		ConcurrentMap<String, T> companyMap = _map.get(companyId);
-
-		// TODO: only create CompanyMap on put (not get)
-
-		if (companyMap == null) {
-			_map.putIfAbsent(companyId, new ConcurrentHashMap<>());
-
-			companyMap = _map.get(companyId);
+			return map;
 		}
-
-		return companyMap;
 	}
 
-	private final ConcurrentMap<Long, ConcurrentMap<String, T>> _map =
-		new ConcurrentHashMap<>();
+	private final CreateCompanyMapProcessor<T> _createCompanyMapProcessor;
+	private final Map<Long, Map<String, T>> _map = new HashMap<>();
 
 }
