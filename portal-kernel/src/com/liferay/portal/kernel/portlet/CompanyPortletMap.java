@@ -53,10 +53,6 @@ public class CompanyPortletMap<T> {
 		return companyMap.get(portletId);
 	}
 
-	public ConcurrentMap<String, T> getCompanyMap(long companyId) {
-		return _map.get(companyId);
-	}
-
 	public boolean isEmpty() {
 		return _map.isEmpty();
 	}
@@ -122,20 +118,10 @@ public class CompanyPortletMap<T> {
 		companyMap.put(portletId, value);
 	}
 
-	public ConcurrentMap<String, T> putCompanyMap(
-		long companyId, ConcurrentMap<String, T> companyMap) {
-
-		return _map.put(companyId, companyMap);
-	}
-
 	public T remove(long companyId, String portletId) {
 		ConcurrentMap<String, T> companyMap = _getCompanyMap(companyId);
 
 		return companyMap.remove(portletId);
-	}
-
-	public ConcurrentMap<String, T> removeCompanyMap(long companyId) {
-		return _map.remove(companyId);
 	}
 
 	public Collection<T> values(long companyId) {
