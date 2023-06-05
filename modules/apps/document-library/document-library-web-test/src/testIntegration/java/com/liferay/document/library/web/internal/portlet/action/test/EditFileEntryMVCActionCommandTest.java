@@ -124,9 +124,7 @@ public class EditFileEntryMVCActionCommandTest {
 	}
 
 	@Test
-	public void testAddMultipleFileEntriesSeveralFiles()
-		throws Exception {
-
+	public void testAddMultipleFileEntriesSeveralFiles() throws Exception {
 		String tempFolderName =
 			"com.liferay.document.library.web.internal.portlet.action." +
 				"EditFileEntryMVCActionCommand";

@@ -573,7 +573,7 @@ public class ResourceActionsImpl implements ResourceActions {
 			_read(
 				classLoader, source,
 				rootElement -> _readPortletResources(
-					companyId, rootElement,	portletResourceNames));
+					companyId, rootElement, portletResourceNames));
 		}
 
 		if (checkResourceActions) {
