@@ -143,13 +143,22 @@
 			}
 			%>
 
-			Liferay.Language = {
-				available,
-				direction,
-				get: function(key) {
-					return key;
-				}
-			};
+			if (Liferay.Language === undefined) {
+				Liferay.Language = {
+					available,
+					direction,
+					get: function (key) {
+						let value = Liferay.Language._map[key];
+
+						if (value === undefined) {
+							value = key;
+						}
+
+						return value;
+					},
+					_map: {},
+				};
+			}
 		})();
 
 		var featureFlags = <%= FeatureFlagManagerUtil.getJSON(themeDisplay.getCompanyId()) %>;
