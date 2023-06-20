@@ -14,6 +14,7 @@
 
 package com.liferay.frontend.js.importmaps.extender.internal.servlet.taglib;
 
+import com.liferay.frontend.js.importmaps.extender.JSImportMapsContributor;
 import com.liferay.frontend.js.importmaps.extender.internal.configuration.JSImportMapsConfiguration;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.frontend.esm.FrontendESMUtil;
@@ -21,18 +22,19 @@ import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.servlet.taglib.BaseDynamicInclude;
 import com.liferay.portal.kernel.servlet.taglib.DynamicInclude;
+import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.HashMapBuilder;
+import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.url.builder.AbsolutePortalURLBuilder;
 import com.liferay.portal.url.builder.AbsolutePortalURLBuilderFactory;
 
 import java.io.IOException;
 import java.io.PrintWriter;
 
+import java.util.Locale;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.ConcurrentMap;
-import java.util.concurrent.atomic.AtomicLong;
-import java.util.concurrent.atomic.AtomicReference;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -64,10 +66,7 @@ public class JSImportMapsExtenderTopHeadDynamicInclude
 
 		PrintWriter printWriter = httpServletResponse.getWriter();
 
-		if (_jsImportMapsConfiguration.enableImportMaps() &&
-			(!_globalImportMapJSONObjects.isEmpty() ||
-			 !_scopedImportMapJSONObjects.isEmpty())) {
-
+		if (_jsImportMapsConfiguration.enableImportMaps()) {
 			printWriter.print("<script type=\"");
 
 			if (_jsImportMapsConfiguration.enableESModuleShims()) {
@@ -78,7 +77,7 @@ public class JSImportMapsExtenderTopHeadDynamicInclude
 			}
 
 			printWriter.print("\">");
-			printWriter.print(_importMaps.get());
+			printWriter.print(_getImportMap(httpServletRequest));
 			printWriter.print("</script>");
 		}
 
@@ -106,34 +105,15 @@ public class JSImportMapsExtenderTopHeadDynamicInclude
 	}
 
 	public JSImportMapsRegistration register(
-		String scope, JSONObject jsonObject) {
+		JSImportMapsContributor jsImportMapsContributor) {
 
-		if (scope == null) {
-			long globalId = _nextGlobalId.getAndIncrement();
-
-			_globalImportMapJSONObjects.put(globalId, jsonObject);
-
-			_rebuildImportMaps();
-
-			return new JSImportMapsRegistration() {
-
-				@Override
-				public void unregister() {
-					_globalImportMapJSONObjects.remove(globalId);
-				}
-
-			};
-		}
-
-		_scopedImportMapJSONObjects.put(scope, jsonObject);
-
-		_rebuildImportMaps();
+		_jsImportMapsContributors.put(jsImportMapsContributor, true);
 
 		return new JSImportMapsRegistration() {
 
 			@Override
 			public void unregister() {
-				_scopedImportMapJSONObjects.remove(scope);
+				_jsImportMapsContributors.remove(jsImportMapsContributor);
 			}
 
 		};
@@ -144,8 +124,6 @@ public class JSImportMapsExtenderTopHeadDynamicInclude
 		BundleContext bundleContext, Map<String, Object> properties) {
 
 		_bundleContext = bundleContext;
-
-		_rebuildImportMaps();
 
 		modified(properties);
 	}
@@ -168,7 +146,7 @@ public class JSImportMapsExtenderTopHeadDynamicInclude
 				"module");
 	}
 
-	private synchronized void _rebuildImportMaps() {
+	private String _buildImportMap(Locale locale) {
 		JSONObject jsonObject = _jsonFactory.createJSONObject();
 
 		jsonObject.put(
@@ -176,12 +154,19 @@ public class JSImportMapsExtenderTopHeadDynamicInclude
 			() -> {
 				JSONObject importsJSONObject = _jsonFactory.createJSONObject();
 
-				for (JSONObject globalImportMapJSONObject :
-						_globalImportMapJSONObjects.values()) {
+				for (JSImportMapsContributor jsImportMapsContributor :
+						_jsImportMapsContributors.keySet()) {
 
-					for (String key : globalImportMapJSONObject.keySet()) {
+					if (jsImportMapsContributor.getScope() != null) {
+						continue;
+					}
+
+					JSONObject importMapsJSONObject =
+						jsImportMapsContributor.getImportMapsJSONObject(locale);
+
+					for (String key : importMapsJSONObject.keySet()) {
 						importsJSONObject.put(
-							key, globalImportMapJSONObject.getString(key));
+							key, importMapsJSONObject.getString(key));
 					}
 				}
 
@@ -192,33 +177,63 @@ public class JSImportMapsExtenderTopHeadDynamicInclude
 			() -> {
 				JSONObject scopesJSONObject = _jsonFactory.createJSONObject();
 
-				for (Map.Entry<String, JSONObject> entry :
-						_scopedImportMapJSONObjects.entrySet()) {
+				for (JSImportMapsContributor jsImportMapsContributor :
+						_jsImportMapsContributors.keySet()) {
 
-					scopesJSONObject.put(entry.getKey(), entry.getValue());
+					if (jsImportMapsContributor.getScope() == null) {
+						continue;
+					}
+
+					String scope = jsImportMapsContributor.getScope();
+
+					if (scopesJSONObject.has(scope)) {
+						throw new IllegalStateException(
+							"Found multiple JS Import Maps Contributors for " +
+								"the same scope " + scope);
+					}
+
+					scopesJSONObject.put(
+						scope,
+						jsImportMapsContributor.getImportMapsJSONObject(
+							locale));
 				}
 
 				return scopesJSONObject;
 			}
 		);
 
-		_importMaps.set(_jsonFactory.looseSerializeDeep(jsonObject));
+		return jsonObject.toString();
+	}
+
+	private String _getImportMap(HttpServletRequest httpServletRequest) {
+		ThemeDisplay themeDisplay =
+			(ThemeDisplay)httpServletRequest.getAttribute(
+				WebKeys.THEME_DISPLAY);
+
+		Locale locale = LocaleUtil.fromLanguageId(themeDisplay.getLanguageId());
+
+		String importMap = _importMaps.get(locale);
+
+		if (importMap == null) {
+			_importMaps.putIfAbsent(locale, _buildImportMap(locale));
+
+			importMap = _importMaps.get(locale);
+		}
+
+		return importMap;
 	}
 
 	@Reference
 	private AbsolutePortalURLBuilderFactory _absolutePortalURLBuilderFactory;
 
 	private volatile BundleContext _bundleContext;
-	private final ConcurrentMap<Long, JSONObject> _globalImportMapJSONObjects =
+	private final ConcurrentHashMap<Locale, String> _importMaps =
 		new ConcurrentHashMap<>();
-	private final AtomicReference<String> _importMaps = new AtomicReference<>();
 	private volatile JSImportMapsConfiguration _jsImportMapsConfiguration;
+	private final ConcurrentHashMap<JSImportMapsContributor, Boolean>
+		_jsImportMapsContributors = new ConcurrentHashMap<>();
 
 	@Reference
 	private JSONFactory _jsonFactory;
-
-	private final AtomicLong _nextGlobalId = new AtomicLong();
-	private final ConcurrentMap<String, JSONObject>
-		_scopedImportMapJSONObjects = new ConcurrentHashMap<>();
 
 }

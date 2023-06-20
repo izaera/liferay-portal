@@ -18,6 +18,8 @@ import com.liferay.frontend.js.importmaps.extender.JSImportMapsContributor;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.json.JSONObject;
 
+import java.util.Locale;
+
 import javax.servlet.ServletContext;
 
 import org.osgi.service.component.annotations.Activate;
@@ -32,7 +34,7 @@ public class FrontendJSDependenciesWebJSImportMapsContributor
 	implements JSImportMapsContributor {
 
 	@Override
-	public JSONObject getImportMapsJSONObject() {
+	public JSONObject getImportMapsJSONObject(Locale locale) {
 		return _importMapsJSONObject;
 	}
 

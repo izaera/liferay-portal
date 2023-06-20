@@ -77,10 +77,7 @@ public class JSImportMapsContributorExtender {
 							_bundleContext.getService(serviceReference);
 
 						return _jsImportMapsExtenderTopHeadDynamicInclude.
-							register(
-								jsImportMapsContributor.getScope(),
-								jsImportMapsContributor.
-									getImportMapsJSONObject());
+							register(jsImportMapsContributor);
 					}
 
 					@Override

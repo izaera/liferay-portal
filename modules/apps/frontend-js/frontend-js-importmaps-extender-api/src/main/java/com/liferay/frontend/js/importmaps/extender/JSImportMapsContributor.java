@@ -16,6 +16,8 @@ package com.liferay.frontend.js.importmaps.extender;
 
 import com.liferay.portal.kernel.json.JSONObject;
 
+import java.util.Locale;
+
 /**
  * @author Iván Zaera Avellón
  */
@@ -31,7 +33,7 @@ public interface JSImportMapsContributor {
 	 * @return a pure JSON object
 	 * @review
 	 */
-	public JSONObject getImportMapsJSONObject();
+	public JSONObject getImportMapsJSONObject(Locale locale);
 
 	/**
 	 * Get the scope for the contributed chunks of import maps.

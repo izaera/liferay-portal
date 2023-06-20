@@ -24,6 +24,8 @@ import com.liferay.portal.kernel.util.StringUtil;
 import java.io.IOException;
 import java.io.InputStream;
 
+import java.util.Locale;
+
 import javax.servlet.ServletContext;
 
 import org.osgi.service.component.annotations.Activate;
@@ -38,7 +40,7 @@ public class FrontendTaglibClayJSImportMapsContributor
 	implements JSImportMapsContributor {
 
 	@Override
-	public JSONObject getImportMapsJSONObject() {
+	public JSONObject getImportMapsJSONObject(Locale locale) {
 		return _importMapsJSONObject;
 	}
 

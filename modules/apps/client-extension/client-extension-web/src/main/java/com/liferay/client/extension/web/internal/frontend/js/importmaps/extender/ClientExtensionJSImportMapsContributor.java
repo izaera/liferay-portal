@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.json.JSONObject;
 
 import java.util.Dictionary;
+import java.util.Locale;
 
 /**
  * @author Iván Zaera Avellón
@@ -41,7 +42,7 @@ public class ClientExtensionJSImportMapsContributor
 	}
 
 	@Override
-	public JSONObject getImportMapsJSONObject() {
+	public JSONObject getImportMapsJSONObject(Locale locale) {
 		return _importMapsJSONObject;
 	}
 

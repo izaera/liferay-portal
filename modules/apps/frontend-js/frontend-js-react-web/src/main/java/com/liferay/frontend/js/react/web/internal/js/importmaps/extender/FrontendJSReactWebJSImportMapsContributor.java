@@ -19,6 +19,8 @@ import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.json.JSONObject;
 
+import java.util.Locale;
+
 import javax.servlet.ServletContext;
 
 import org.osgi.service.component.annotations.Activate;
@@ -33,7 +35,7 @@ public class FrontendJSReactWebJSImportMapsContributor
 	implements JSImportMapsContributor {
 
 	@Override
-	public JSONObject getImportMapsJSONObject() {
+	public JSONObject getImportMapsJSONObject(Locale locale) {
 		return _importMapsJSONObject;
 	}
 
