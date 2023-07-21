@@ -63,6 +63,8 @@ export default class UnsafeHTML extends React.PureComponent {
 				const nextScriptElement = doc.createElement('script');
 				const prevScriptElement = scriptElements.shift();
 
+				nextScriptElement.setAttribute('nonce', Liferay.CSP.nonce);
+
 				nextScriptElement.type = prevScriptElement.type;
 
 				if (prevScriptElement.src) {

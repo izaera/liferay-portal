@@ -16,6 +16,7 @@ function runJSFromText(sourceScriptElement, next, appendFn) {
 	const {text, type} = sourceScriptElement;
 	const scriptElement = document.createElement('script');
 
+	scriptElement.setAttribute('nonce', Liferay.CSP.nonce);
 	scriptElement.text = text;
 	scriptElement.type = type;
 
@@ -35,6 +36,7 @@ function runJSFromFile(sourceScriptElement, next, appendFn) {
 	const {src, type} = sourceScriptElement;
 	const scriptElement = document.createElement('script');
 
+	scriptElement.setAttribute('nonce', Liferay.CSP.nonce);
 	scriptElement.src = src;
 	scriptElement.type = type;
 
