@@ -19,12 +19,12 @@
 <script async src="//code.jivosite.com/widget/<%= clickToChatChatProviderAccountId %>"></script>
 
 <c:if test="<%= themeDisplay.isSignedIn() %>">
-	<script>
+	<aui:script position="inline">
 		function jivo_onOpen() {
 			jivo_api.setContactInfo({
 				email: '<%= user.getEmailAddress() %>',
 				name: '<%= user.getScreenName() %>',
 			});
 		}
-	</script>
+	</aui:script>
 </c:if>

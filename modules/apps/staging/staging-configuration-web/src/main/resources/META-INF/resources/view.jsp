@@ -169,7 +169,7 @@ BackgroundTask lastCompletedInitialPublicationBackgroundTask = BackgroundTaskMan
 	</c:otherwise>
 </c:choose>
 
-<script>
+<aui:script position="inline">
 	function <portlet:namespace />saveGroup(forceDisable) {
 		var form = document.<portlet:namespace />fm;
 		var ok = true;
@@ -270,4 +270,4 @@ BackgroundTask lastCompletedInitialPublicationBackgroundTask = BackgroundTaskMan
 			});
 		}
 	})();
-</script>
+</aui:script>

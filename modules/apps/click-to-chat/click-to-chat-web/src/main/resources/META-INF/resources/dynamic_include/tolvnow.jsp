@@ -16,7 +16,7 @@
 
 <%@ include file="/dynamic_include/init.jsp" %>
 
-<script type="text/javascript">
+<aui:script position="inline">
 	var _tn = _tn || [];
 
 	_tn.push(['account', '<%= clickToChatChatProviderAccountId %>']);
@@ -56,4 +56,4 @@
 			loadTolnowScript();
 		}
 	})();
-</script>
+</aui:script>

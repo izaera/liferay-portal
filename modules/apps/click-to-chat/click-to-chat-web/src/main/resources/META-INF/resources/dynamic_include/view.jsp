@@ -18,7 +18,7 @@
 
 <liferay-util:include page='<%= "/dynamic_include/" + clickToChatChatProviderId + ".jsp" %>' servletContext="<%= application %>" />
 
-<script type="text/javascript">
+<aui:script position="inline">
 	(function () {
 		function handleVisibility(selectors, hide) {
 			let selectorsList = selectors.split(',');
@@ -84,4 +84,4 @@
 			action(hideElement);
 		});
 	})();
-</script>
+</aui:script>

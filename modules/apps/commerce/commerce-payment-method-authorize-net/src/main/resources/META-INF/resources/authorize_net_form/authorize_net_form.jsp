@@ -27,8 +27,8 @@ String tokenAttribute = (String)request.getAttribute(CommercePaymentWebKeys.TOKE
 	<button id="btnContinue">Continue</button>
 </form>
 
-<script>
+<aui:script position="inline">
 	window.onload = function () {
 		document.querySelector('form').submit();
 	};
-</script>
+</aui:script>

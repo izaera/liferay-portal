@@ -208,7 +208,7 @@
 	}
 </aui:script>
 
-<script>
+<aui:script position="inline">
 	function setDataType(selectionType) {
 		var dataTypeElement = document.getElementById(
 			'<portlet:namespace />dataType'
@@ -320,4 +320,4 @@
 			}
 		});
 	}
-</script>
+</aui:script>

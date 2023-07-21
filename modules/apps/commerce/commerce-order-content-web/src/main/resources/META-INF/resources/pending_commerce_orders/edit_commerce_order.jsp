@@ -66,7 +66,7 @@ if (backURL != null) {
 %>
 
 <c:if test="<%= (errorMessages != null) && !errorMessages.isEmpty() %>">
-	<script>
+	<aui:script position="inline">
 		Liferay.Util.openModal({
 			bodyHTML: '<%= errorMessages.get(0) %>',
 			title: '<liferay-ui:message key="warning" />',
@@ -74,7 +74,7 @@ if (backURL != null) {
 			size: 'm',
 			status: 'warning',
 		});
-	</script>
+	</aui:script>
 </c:if>
 
 <portlet:actionURL name="/commerce_open_order_content/edit_commerce_order" var="editCommerceOrderActionURL">

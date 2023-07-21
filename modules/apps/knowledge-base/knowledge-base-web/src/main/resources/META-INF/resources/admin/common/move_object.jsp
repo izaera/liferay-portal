@@ -111,7 +111,7 @@ if (portletTitleBasedNavigation) {
 	</aui:form>
 </div>
 
-<script>
+<aui:script position="inline">
 	var selectKBObjectButton = document.getElementById(
 		'<portlet:namespace />selectKBObjectButton'
 	);
@@ -153,4 +153,4 @@ if (portletTitleBasedNavigation) {
 			});
 		});
 	}
-</script>
+</aui:script>

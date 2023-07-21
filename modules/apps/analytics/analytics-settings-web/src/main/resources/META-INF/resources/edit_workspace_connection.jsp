@@ -174,7 +174,7 @@ if (analyticsConfiguration != null) {
 	</aui:fieldset>
 </clay:sheet>
 
-<script>
+<aui:script position="inline">
 	function <portlet:namespace />confirmation(event) {
 		<c:if test="<%= connected %>">
 			Liferay.Util.openConfirmModal({
@@ -203,4 +203,4 @@ if (analyticsConfiguration != null) {
 	<c:if test="<%= !connected %>">
 		<portlet:namespace />validateTokenButton();
 	</c:if>
-</script>
+</aui:script>

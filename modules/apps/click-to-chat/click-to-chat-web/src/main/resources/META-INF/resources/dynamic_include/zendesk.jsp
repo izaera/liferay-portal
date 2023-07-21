@@ -16,7 +16,7 @@
 
 <%@ include file="/dynamic_include/init.jsp" %>
 
-<script>
+<aui:script position="inline">
 	(function () {
 		function loadZendeskScript() {
 			function setZendeskUserInfo() {
@@ -58,4 +58,4 @@
 			loadZendeskScript();
 		}
 	})();
-</script>
+</aui:script>

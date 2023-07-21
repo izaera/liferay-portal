@@ -16,7 +16,7 @@
 
 <%@ include file="/dynamic_include/init.jsp" %>
 
-<script type="text/javascript">
+<aui:script position="inline">
 	var _smartsupp = _smartsupp || {};
 
 	_smartsupp.key = '<%= clickToChatChatProviderAccountId %>';
@@ -47,4 +47,4 @@
 		smartsupp('email', '<%= user.getEmailAddress() %>');
 		smartsupp('name', '<%= user.getFirstName() %>');
 	</c:if>
-</script>
+</aui:script>

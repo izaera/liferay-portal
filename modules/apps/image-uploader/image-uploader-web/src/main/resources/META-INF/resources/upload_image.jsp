@@ -143,7 +143,7 @@ String tempImageFileName = ParamUtil.getString(request, "tempImageFileName");
 			</aui:button-row>
 		</aui:form>
 
-		<script>
+		<aui:script position="inline">
 			(function () {
 				var uploadImageButton = document.getElementById(
 					'<portlet:namespace />uploadImage'
@@ -159,7 +159,7 @@ String tempImageFileName = ParamUtil.getString(request, "tempImageFileName");
 					});
 				}
 			})();
-		</script>
+		</aui:script>
 
 		<aui:script use="liferay-logo-editor">
 			<portlet:actionURL name="/image_uploader/upload_image" var="addTempImageURL">

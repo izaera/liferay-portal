@@ -76,7 +76,7 @@ renderResponse.setTitle(layoutsAdminDisplayContext.getConfigurationTitle(selLayo
 
 			<aui:button cssClass="remove-layout" id="deleteLayoutButton" name="deleteLayout" value="delete-in-all-pages-variations" />
 
-			<script>
+			<aui:script position="inline">
 				(function () {
 					var enableLayoutButton = document.getElementById(
 						'<portlet:namespace />enableLayoutButton'
@@ -109,7 +109,7 @@ renderResponse.setTitle(layoutsAdminDisplayContext.getConfigurationTitle(selLayo
 						});
 					}
 				})();
-			</script>
+			</aui:script>
 		</aui:button-row>
 	</c:when>
 	<c:otherwise>

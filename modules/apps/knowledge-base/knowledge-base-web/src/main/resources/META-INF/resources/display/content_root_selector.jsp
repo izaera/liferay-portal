@@ -71,7 +71,7 @@ List<KBFolder> kbFolders = KBUtil.getAlternateRootKBFolders(scopeGroupId, kbDisp
 	</aui:form>
 </div>
 
-<script>
+<aui:script position="inline">
 	var <portlet:namespace />form = document.getElementById(
 		'<portlet:namespace />updateRootKBFolderIdFm'
 	);
@@ -83,4 +83,4 @@ List<KBFolder> kbFolders = KBUtil.getAlternateRootKBFolders(scopeGroupId, kbDisp
 				<portlet:namespace />form.submit();
 			});
 	}
-</script>
+</aui:script>

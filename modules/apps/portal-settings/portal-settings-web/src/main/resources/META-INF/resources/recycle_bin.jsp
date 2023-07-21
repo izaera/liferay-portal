@@ -22,7 +22,7 @@
 	<aui:input helpMessage="enable-recycle-bin-default" id="trashEnabled" label="enable-recycle-bin" name='<%= "settings--" + PropsKeys.TRASH_ENABLED + "--" %>' type="checkbox" value="<%= PrefsPropsUtil.getBoolean(company.getCompanyId(), PropsKeys.TRASH_ENABLED) %>" />
 </aui:fieldset>
 
-<script>
+<aui:script position="inline">
 	(function () {
 		var trashEnabledCheckbox = document.getElementById(
 			'<portlet:namespace />trashEnabled'
@@ -46,4 +46,4 @@
 			});
 		}
 	})();
-</script>
+</aui:script>

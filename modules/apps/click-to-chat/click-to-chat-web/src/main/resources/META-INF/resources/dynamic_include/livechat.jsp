@@ -16,7 +16,7 @@
 
 <%@ include file="/dynamic_include/init.jsp" %>
 
-<script>
+<aui:script position="inline">
 	window.__lc = window.__lc || {};
 	window.__lc.license = '<%= clickToChatChatProviderAccountId %>';
 
@@ -66,4 +66,4 @@
 			LiveChatWidget.call('set_customer_name', '<%= user.getScreenName() %>');
 		};
 	</c:if>
-</script>
+</aui:script>

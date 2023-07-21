@@ -98,7 +98,7 @@ MBBreadcrumbUtil.addPortletBreadcrumbEntries(category, request, renderResponse);
 PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(request, "move"), currentURL);
 %>
 
-<script>
+<aui:script position="inline">
 	var selectCategoryButton = document.getElementById(
 		'<portlet:namespace />selectCategoryButton'
 	);
@@ -135,4 +135,4 @@ PortalUtil.addPortletBreadcrumbEntry(request, LanguageUtil.get(request, "move"),
 			});
 		});
 	}
-</script>
+</aui:script>

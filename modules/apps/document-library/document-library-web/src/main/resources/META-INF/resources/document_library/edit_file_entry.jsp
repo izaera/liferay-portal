@@ -309,7 +309,7 @@ renderResponse.setTitle(headerTitle);
 
 							<aui:button disabled="<%= folderId <= 0 %>" name="removeFolderButton" onClick="<%= taglibRemoveFolder %>" value="remove" />
 
-							<script>
+							<aui:script position="inline">
 								var selectFolderButton = document.getElementById(
 									'<portlet:namespace />selectFolderButton'
 								);
@@ -350,7 +350,7 @@ renderResponse.setTitle(headerTitle);
 										});
 									});
 								}
-							</script>
+							</aui:script>
 						</c:if>
 					</div>
 
@@ -675,7 +675,7 @@ renderResponse.setTitle(headerTitle);
 	<liferay-util:include page="/document_library/version_details.jsp" servletContext="<%= application %>" />
 </c:if>
 
-<script>
+<aui:script position="inline">
 	var form = document.<portlet:namespace />fm;
 
 	function <portlet:namespace />changeFileEntryType() {
@@ -810,7 +810,7 @@ renderResponse.setTitle(headerTitle);
 
 		formComponent.formValidator.validateField('<portlet:namespace />title');
 	}
-</script>
+</aui:script>
 
 <c:if test="<%= (fileEntry != null) && !checkedOut && dlAdminDisplayContext.isVersioningStrategyOverridable() %>">
 	<aui:script>

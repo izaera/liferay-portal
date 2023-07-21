@@ -142,7 +142,7 @@
 	</c:if>
 </liferay-frontend:fieldset>
 
-<script>
+<aui:script position="inline">
 	function populatePrecisionType(precisionTypeElement, numberSize) {
 		var numberSizeOptions = '';
 
@@ -180,4 +180,4 @@
 			populatePrecisionType(precisionTypeElement, numberSize);
 		}
 	}
-</script>
+</aui:script>

@@ -63,7 +63,7 @@ JournalPreviewArticleContentTemplateDisplayContext journalPreviewArticleContentT
 	/>
 </div>
 
-<script>
+<aui:script position="inline">
 	function previewArticleContentTemplate() {
 		var ddmTemplateId = document.getElementById(
 			'<portlet:namespace />ddmTemplateId'
@@ -74,4 +74,4 @@ JournalPreviewArticleContentTemplateDisplayContext journalPreviewArticleContentT
 			'<%= journalPreviewArticleContentTemplateDisplayContext.getPortletURL() %>'
 		);
 	}
-</script>
+</aui:script>

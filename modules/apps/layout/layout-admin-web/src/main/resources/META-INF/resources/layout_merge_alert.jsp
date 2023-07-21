@@ -46,7 +46,7 @@ int mergeFailCount = SitesUtil.getMergeFailCount(layoutPrototype);
 		/>
 	</clay:alert>
 
-	<script>
+	<aui:script position="inline">
 		(function () {
 			var resetButton = document.getElementById(
 				'<%= randomNamespace %>resetButton'
@@ -64,5 +64,5 @@ int mergeFailCount = SitesUtil.getMergeFailCount(layoutPrototype);
 				});
 			}
 		})();
-	</script>
+	</aui:script>
 </c:if>

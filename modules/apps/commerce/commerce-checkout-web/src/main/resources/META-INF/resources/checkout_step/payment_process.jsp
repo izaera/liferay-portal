@@ -28,7 +28,7 @@ PaymentProcessCheckoutStepDisplayContext paymentProcessCheckoutStepDisplayContex
 	<liferay-ui:message arguments="${redirectLink}" key="the-payment-process-has-been-initiated.-you-should-be-redirected-automatically.-if-the-page-does-not-reload-within-a-few-seconds-please-click-this-link-x" />
 </div>
 
-<script>
+<aui:script position="inline">
 	window.location.href =
 		'<%= HtmlUtil.escapeJS(paymentProcessCheckoutStepDisplayContext.getPaymentURL()) %>';
-</script>
+</aui:script>

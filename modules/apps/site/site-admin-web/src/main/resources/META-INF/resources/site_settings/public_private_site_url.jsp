@@ -349,7 +349,7 @@ if (privateVirtualHostnames.isEmpty()) {
 	</c:if>
 </aui:script>
 
-<script>
+<aui:script position="inline">
 	var friendlyURL = document.getElementById(
 		'<portlet:namespace />groupFriendlyURL'
 	);
@@ -376,4 +376,4 @@ if (privateVirtualHostnames.isEmpty()) {
 			friendlyURL.value = value;
 		});
 	}
-</script>
+</aui:script>

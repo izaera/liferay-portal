@@ -70,7 +70,7 @@ MBMessageIterator mbMessageIterator = new MBMessageIterator(treeWalker.getMessag
 List<MBMessage> messages = treeWalker.getMessages();
 %>
 
-<script>
+<aui:script position="inline">
 	var index = document.getElementById('<portlet:namespace />index');
 
 	if (index) {
@@ -94,4 +94,4 @@ List<MBMessage> messages = treeWalker.getMessages();
 			moreMessagesLink.classList.add('hide');
 		}
 	</c:if>
-</script>
+</aui:script>

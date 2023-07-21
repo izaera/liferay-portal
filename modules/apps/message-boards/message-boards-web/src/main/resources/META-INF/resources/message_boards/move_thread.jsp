@@ -113,7 +113,7 @@ if (portletTitleBasedNavigation) {
 	</aui:form>
 </div>
 
-<script>
+<aui:script position="inline">
 	var form = document.<portlet:namespace />fm;
 
 	function <portlet:namespace />moveThread() {
@@ -167,4 +167,4 @@ if (portletTitleBasedNavigation) {
 			});
 		});
 	}
-</script>
+</aui:script>

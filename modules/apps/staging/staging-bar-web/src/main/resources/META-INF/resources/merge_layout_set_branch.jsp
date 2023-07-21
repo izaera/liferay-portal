@@ -102,7 +102,7 @@ if (layoutSetBranches.contains(layoutSetBranch)) {
 	</div>
 </clay:container-fluid>
 
-<script>
+<aui:script position="inline">
 	function <portlet:namespace />selectLayoutSetBranch(layoutSetBranchId) {
 		var layoutSetBranch = document.getElementById(
 			'<portlet:namespace />' + layoutSetBranchId
@@ -127,4 +127,4 @@ if (layoutSetBranches.contains(layoutSetBranch)) {
 			});
 		}
 	}
-</script>
+</aui:script>

@@ -145,7 +145,7 @@ boolean ldapAuthEnabled = ldapAuthConfiguration.enabled();
 	</c:if>
 </aui:fieldset>
 
-<script>
+<aui:script position="inline">
 	function <portlet:namespace />changeLDAPServerPriority(ldapServerId, action) {
 		var ldapServer = document.querySelector(
 			'.ldap-servers tr[data-ldapServerId="' + ldapServerId + '"]'
@@ -204,4 +204,4 @@ boolean ldapAuthEnabled = ldapAuthConfiguration.enabled();
 		'<portlet:namespace />ldapImportEnabled',
 		'<portlet:namespace />importEnabledSettings'
 	);
-</script>
+</aui:script>

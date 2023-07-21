@@ -87,7 +87,7 @@ renderResponse.setTitle(viewKBSuggestionDisplayContext.getKBCommentTitle());
 	</c:if>
 </clay:container-fluid>
 
-<script>
+<aui:script position="inline">
 	var deleteButtonElement = document.getElementById(
 		'<portlet:namespace />deleteButton'
 	);
@@ -105,4 +105,4 @@ renderResponse.setTitle(viewKBSuggestionDisplayContext.getKBCommentTitle());
 			});
 		});
 	}
-</script>
+</aui:script>
