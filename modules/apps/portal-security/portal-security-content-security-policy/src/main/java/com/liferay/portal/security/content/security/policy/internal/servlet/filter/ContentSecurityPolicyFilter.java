@@ -18,11 +18,10 @@ import com.liferay.petra.reflect.ReflectionUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.feature.flag.FeatureFlagManagerUtil;
 import com.liferay.portal.kernel.module.configuration.ConfigurationProvider;
-import com.liferay.portal.kernel.security.SecureRandom;
-import com.liferay.portal.kernel.util.Base64;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.security.content.security.policy.internal.CSPNonceProviderImpl;
 import com.liferay.portal.security.content.security.policy.internal.configuration.ContentSecurityPolicyConfiguration;
 import com.liferay.portal.servlet.filters.BasePortalFilter;
 
@@ -93,6 +92,22 @@ public class ContentSecurityPolicyFilter extends BasePortalFilter {
 			return;
 		}
 
+		String nonce = _cspNonceProviderImpl.ensureNonce(httpServletRequest);
+
+		try {
+			_cspNonceProviderImpl.setTLSNonce(nonce);
+
+			policy = StringUtil.replace(policy, "[$NONCE$]", "nonce-" + nonce);
+
+			httpServletResponse.setHeader("Content-Security-Policy", policy);
+
+			filterChain.doFilter(httpServletRequest, httpServletResponse);
+		}
+		finally {
+			_cspNonceProviderImpl.removeTLSNonce();
+		}
+
+		/*
 		PrintWriter printWriter = httpServletResponse.getWriter();
 
 		ContentSecurityPolicyHttpServletResponse
@@ -105,7 +120,8 @@ public class ContentSecurityPolicyFilter extends BasePortalFilter {
 
 		String content = contentSecurityPolicyHttpServletResponse.getContent();
 
-		String nonce = _generateNonce();
+		content = content.replaceAll(
+			"<body>", "<body><div id='yui3-css-stamp'></div>");
 
 		content = content.replaceAll(
 			"<(?i)link ", "<link nonce=\"" + nonce + "\" ");
@@ -120,25 +136,47 @@ public class ContentSecurityPolicyFilter extends BasePortalFilter {
 		content = content.replaceAll(
 			"<(?i)style>", "<style nonce=\"" + nonce + "\">");
 
-		printWriter.write(content);
-
-		printWriter.close();
+		content = _removeInlineAttr(content, "style");
 
 		httpServletResponse.setContentLength(content.length());
 
-		policy = StringUtil.replace(policy, "[$NONCE$]", "nonce-" + nonce);
+		printWriter.write(content);
 
-		httpServletResponse.setHeader("Content-Security-Policy", policy);
+		printWriter.close();
+		*/
 	}
 
-	private String _generateNonce() {
-		SecureRandom secureRandom = new SecureRandom();
+	private String _removeInlineAttr(String content, String attr) {
+		String lcContent = content.toLowerCase();
 
-		byte[] bytes = new byte[16];
+		StringBuilder sb = new StringBuilder();
+		int i = 0;
 
-		secureRandom.nextBytes(bytes);
+		System.err.println("------ " + attr + " ------------------------");
 
-		return Base64.encode(bytes);
+		while(true) {
+			int j = lcContent.indexOf(attr + "=", i);
+
+			if (j == -1) {
+				sb.append(content.substring(i));
+				break;
+			}
+			else {
+				System.err.println(
+					content.substring(
+						Math.max(0, j - 64), Math.min(content.length(), j+64)
+					).replaceAll("\n", "↲"));
+				sb.append(content.substring(i, j));
+			}
+
+			sb.append("csp-" + attr + "=");
+
+			i = j + attr.length() + 1;
+		}
+
+		System.err.println("----------------------------------------");
+
+		return sb.toString();
 	}
 
 	private ContentSecurityPolicyConfiguration
@@ -202,6 +240,9 @@ public class ContentSecurityPolicyFilter extends BasePortalFilter {
 
 	@Reference
 	private ConfigurationProvider _configurationProvider;
+
+	@Reference
+	private CSPNonceProviderImpl _cspNonceProviderImpl;
 
 	@Reference
 	private Portal _portal;
