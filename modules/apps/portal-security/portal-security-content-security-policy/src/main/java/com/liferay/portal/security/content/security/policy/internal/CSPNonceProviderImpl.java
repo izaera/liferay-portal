@@ -19,7 +19,6 @@ import com.liferay.portal.kernel.security.SecureRandom;
 import com.liferay.portal.kernel.security.csp.CSPNonceProvider;
 import com.liferay.portal.kernel.util.Base64;
 import com.liferay.portal.kernel.util.Portal;
-import com.liferay.portal.util.PropsValues;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -43,36 +42,22 @@ public class CSPNonceProviderImpl implements CSPNonceProvider {
 		httpServletRequest = _portal.getOriginalServletRequest(
 			httpServletRequest);
 
-		String nonce;
+		HttpSession httpSession = httpServletRequest.getSession();
 
-		if (PropsValues.JAVASCRIPT_SINGLE_PAGE_APPLICATION_ENABLED) {
-			HttpSession httpSession = httpServletRequest.getSession();
+		String nonce = (String)httpSession.getAttribute(_NONCE_ATTR);
 
-			nonce = (String)httpSession.getAttribute(_NONCE_ATTR);
+		if (nonce == null) {
+			synchronized (httpSession) {
+				nonce = (String)httpSession.getAttribute(_NONCE_ATTR);
 
-			if (nonce == null) {
-				synchronized (httpSession) {
-					nonce = (String)httpSession.getAttribute(_NONCE_ATTR);
+				if (nonce == null) {
+					nonce = _generateNonce();
 
-					if (nonce == null) {
-						nonce = _generateNonce();
-
-						httpSession.setAttribute(_NONCE_ATTR, nonce);
-					}
+					System.err.println("SET NONCE: " + nonce + " FOR: " + httpServletRequest.getRequestURI() + " SESSION: " + httpSession.getId());
+					httpSession.setAttribute(_NONCE_ATTR, nonce);
 				}
 			}
 		}
-		else {
-			nonce = (String)httpServletRequest.getAttribute(_NONCE_ATTR);
-
-			if (nonce == null) {
-				nonce = _generateNonce();
-
-				httpServletRequest.setAttribute(_NONCE_ATTR, nonce);
-			}
-		}
-
-		System.err.println("NONCE: " + nonce + " FOR: " + httpServletRequest.getRequestURI());
 
 		return nonce;
 	}
@@ -89,13 +74,10 @@ public class CSPNonceProviderImpl implements CSPNonceProvider {
 		if (httpServletRequest == null) {
 			nonce =  _threadLocal.get();
 		}
-		else if (PropsValues.JAVASCRIPT_SINGLE_PAGE_APPLICATION_ENABLED) {
+		else {
 			HttpSession httpSession = httpServletRequest.getSession();
 
 			nonce = (String)httpSession.getAttribute(_NONCE_ATTR);
-		}
-		else {
-			nonce = (String)httpServletRequest.getAttribute(_NONCE_ATTR);
 		}
 
 		if (nonce == null) {
