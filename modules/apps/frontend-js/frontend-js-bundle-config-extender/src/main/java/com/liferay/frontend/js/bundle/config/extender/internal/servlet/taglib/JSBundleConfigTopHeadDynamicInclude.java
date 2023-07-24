@@ -61,7 +61,7 @@ public class JSBundleConfigTopHeadDynamicInclude extends BaseDynamicInclude {
 			HttpServletResponse httpServletResponse, String key)
 		throws IOException {
 
-		if (!_isStale()) {
+		if (!_isStale(httpServletRequest)) {
 			_writeResponse(httpServletResponse, _objectValuePair.getValue());
 
 			return;
@@ -167,9 +167,16 @@ public class JSBundleConfigTopHeadDynamicInclude extends BaseDynamicInclude {
 		}
 	}
 
-	private boolean _isStale() {
+	private boolean _isStale(HttpServletRequest httpServletRequest) {
 		if (_jsBundleConfigRegistry.getLastModified() >
 				_objectValuePair.getKey()) {
+
+			return true;
+		}
+
+		if (
+			Validator.isNotNull(
+				_cspNonceProvider.getCSPNonce(httpServletRequest))) {
 
 			return true;
 		}
