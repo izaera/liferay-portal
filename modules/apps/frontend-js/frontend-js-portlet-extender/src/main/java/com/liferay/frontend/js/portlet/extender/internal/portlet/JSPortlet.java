@@ -20,6 +20,8 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
+import com.liferay.portal.kernel.security.csp.CSPNonceProvider;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.IOException;
@@ -40,6 +42,7 @@ import javax.portlet.PortletPreferences;
 import javax.portlet.RenderRequest;
 import javax.portlet.RenderResponse;
 
+import com.liferay.portal.kernel.util.Validator;
 import org.osgi.service.cm.ManagedService;
 
 /**
@@ -50,12 +53,15 @@ import org.osgi.service.cm.ManagedService;
 public class JSPortlet extends MVCPortlet implements ManagedService {
 
 	public JSPortlet(
-		JSONFactory jsonFactory, String packageName, String packageVersion,
+		CSPNonceProvider cspNonceProvider, JSONFactory jsonFactory,
+		String packageName, String packageVersion, Portal portal,
 		Set<String> portletPreferencesFieldNames) {
 
+		_cspNonceProvider = cspNonceProvider;
 		_jsonFactory = jsonFactory;
 		_packageName = packageName;
 		_packageVersion = packageVersion;
+		_portal = portal;
 		_portletPreferencesFieldNames = portletPreferencesFieldNames;
 	}
 
@@ -74,18 +80,31 @@ public class JSPortlet extends MVCPortlet implements ManagedService {
 					_TPL_HTML, new String[] {"[$PORTLET_ELEMENT_ID$]"},
 					new String[] {portletElementId}));
 
+			String cspNonceAttr;
+
+			String cspNonce = _cspNonceProvider.getCSPNonce(
+				_portal.getHttpServletRequest(renderRequest));
+
+			if (Validator.isNull(cspNonce)) {
+				cspNonceAttr = StringPool.BLANK;
+			}
+			else {
+				cspNonceAttr = "nonce=\"" + cspNonce + StringPool.QUOTE;
+			}
+
 			printWriter.print(
 				StringUtil.replace(
 					_TPL_JAVA_SCRIPT,
 					new String[] {
-						"[$CONTEXT_PATH$]", "[$PACKAGE_NAME$]",
-						"[$PACKAGE_VERSION$]", "[$PORTLET_ELEMENT_ID$]",
+						"[$CONTEXT_PATH$]", "[$CSP_NONCE_ATTR$]",
+						"[$PACKAGE_NAME$]", "[$PACKAGE_VERSION$]",
+						"[$PORTLET_ELEMENT_ID$]",
 						"[$PORTLET_INSTANCE_CONFIGURATION$]",
 						"[$PORTLET_NAMESPACE$]", "[$SYSTEM_CONFIGURATION$]"
 					},
 					new String[] {
-						renderRequest.getContextPath(), _packageName,
-						_packageVersion, portletElementId,
+						renderRequest.getContextPath(), cspNonceAttr,
+						_packageName, _packageVersion, portletElementId,
 						_getPortletInstanceConfiguration(renderRequest),
 						renderResponse.getNamespace(), _getSystemConfiguration()
 					}));
@@ -201,9 +220,11 @@ public class JSPortlet extends MVCPortlet implements ManagedService {
 
 	private final AtomicReference<Map<String, Object>> _configuration =
 		new AtomicReference<>();
+	private final CSPNonceProvider _cspNonceProvider;
 	private final JSONFactory _jsonFactory;
 	private final String _packageName;
 	private final String _packageVersion;
+	private final Portal _portal;
 	private final Set<String> _portletPreferencesFieldNames;
 
 }
