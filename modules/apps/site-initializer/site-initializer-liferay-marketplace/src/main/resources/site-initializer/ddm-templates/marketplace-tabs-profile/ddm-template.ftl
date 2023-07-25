@@ -4,7 +4,7 @@
 	</#if>
 </div>
 
-<script>
+<script ${cspNonceAttr}>
 	var contentEl = document.querySelector('#mpProfile');
 	var tabPanel = contentEl.closest('.tab-panel-item');
 	var tabTarget = tabPanel.getAttribute('aria-labelledby');

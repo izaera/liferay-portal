@@ -40,6 +40,7 @@ import com.liferay.portal.kernel.portlet.PortletRequestModelFactory;
 import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.portlet.WindowStateFactory_IW;
 import com.liferay.portal.kernel.security.auth.PrincipalThreadLocal;
+import com.liferay.portal.kernel.security.csp.CSPNonceProviderUtil;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.GroupService;
 import com.liferay.portal.kernel.service.LayoutLocalService;
@@ -89,6 +90,7 @@ import com.liferay.portal.kernel.util.StringUtil_IW;
 import com.liferay.portal.kernel.util.TimeZoneUtil_IW;
 import com.liferay.portal.kernel.util.URLCodec_IW;
 import com.liferay.portal.kernel.util.UnicodeFormatter_IW;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.Validator_IW;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.webserver.WebServerServletTokenUtil;
@@ -211,6 +213,20 @@ public class TemplateContextHelper {
 	public void prepare(
 		Map<String, Object> contextObjects,
 		HttpServletRequest httpServletRequest) {
+
+		// CSP nonce
+
+		String cspNonce = CSPNonceProviderUtil.getCSPNonce(httpServletRequest);
+
+		contextObjects.put("cspNonce", cspNonce);
+
+		if (Validator.isNull(cspNonce)) {
+			contextObjects.put("cspNonceAttr", StringPool.BLANK);
+		}
+		else {
+			contextObjects.put(
+				"cspNonceAttr", "nonce=\"" + cspNonce + StringPool.QUOTE);
+		}
 
 		// Request
 
@@ -422,6 +438,11 @@ public class TemplateContextHelper {
 		// Calendar factory
 
 		variables.put("calendarFactory", CalendarFactoryUtil_IW.getInstance());
+
+		// CSP nonce provider util
+
+		variables.put(
+			"cspNonceProvider", CSPNonceProviderUtil.getCSPNonceProvider());
 
 		// Date format
 

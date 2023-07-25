@@ -1,6 +1,6 @@
 <div class="product-highlight speedwell-slider" data-will-load>
 	<#if (Image2x9w)?? && Image2x9w.getSiblings()?has_content>
-<script class="slider-dataset" type="application/ld+json">
+<script class="slider-dataset" ${cspNonceAttr} type="application/ld+json">
 			[
 			<#list Image2x9w.getSiblings() as cur_Image2x9w>
 				{
@@ -41,7 +41,7 @@
 		</div>
 	</div>
 
-	<script>
+	<script ${cspNonceAttr}>
 		var Speedwell = Speedwell || { features: {} };
 
 		Speedwell.features.sliderCallbacks =
