@@ -39,12 +39,14 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.portlet.PortletURLFactory;
 import com.liferay.portal.kernel.portlet.url.builder.PortletURLBuilder;
+import com.liferay.portal.kernel.security.csp.CSPNonceProvider;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.Html;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.template.react.renderer.ComponentDescriptor;
 import com.liferay.portal.template.react.renderer.ReactRenderer;
@@ -135,6 +137,15 @@ public class AnalyticsReportsProductNavigationControlMenuEntry
 		}
 		else {
 			values.put("cssClass", StringPool.BLANK);
+		}
+
+		String cspNonce = _cspNonceProvider.getCSPNonce(httpServletRequest);
+
+		if (Validator.isNull(cspNonce)) {
+			values.put("cspNonceAttr", StringPool.BLANK);
+		} else {
+			values.put(
+				"cspNonceAttr", "nonce=\"" + cspNonce + StringPool.QUOTE);
 		}
 
 		ResourceBundle resourceBundle = ResourceBundleUtil.getBundle(
@@ -419,6 +430,9 @@ public class AnalyticsReportsProductNavigationControlMenuEntry
 
 	@Reference
 	private AnalyticsSettingsManager _analyticsSettingsManager;
+
+	@Reference
+	private CSPNonceProvider _cspNonceProvider;
 
 	@Reference
 	private Html _html;

@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.portlet.PortalPreferences;
 import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.portlet.PortletURLFactory;
 import com.liferay.portal.kernel.portlet.url.builder.PortletURLBuilder;
+import com.liferay.portal.kernel.security.csp.CSPNonceProvider;
 import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.service.permission.LayoutPermissionUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -141,6 +142,15 @@ public class SegmentsExperimentProductNavigationControlMenuEntry
 		}
 		else {
 			values.put("cssClass", StringPool.BLANK);
+		}
+
+		String cspNonce = _cspNonceProvider.getCSPNonce(httpServletRequest);
+
+		if (Validator.isNull(cspNonce)) {
+			values.put("cspNonceAttr", StringPool.BLANK);
+		} else {
+			values.put(
+				"cspNonceAttr", "nonce=\"" + cspNonce + StringPool.QUOTE);
 		}
 
 		ResourceBundle resourceBundle = ResourceBundleUtil.getBundle(
@@ -474,6 +484,9 @@ public class SegmentsExperimentProductNavigationControlMenuEntry
 
 	@Reference
 	private AnalyticsSettingsManager _analyticsSettingsManager;
+
+	@Reference
+	private CSPNonceProvider _cspNonceProvider;
 
 	@Reference
 	private Html _html;
