@@ -17,6 +17,7 @@ package com.liferay.frontend.theme.contributor.extender.internal.servlet.taglib;
 import com.liferay.frontend.theme.contributor.extender.internal.BundleWebResources;
 import com.liferay.osgi.util.ServiceTrackerFactory;
 import com.liferay.petra.string.StringBundler;
+import com.liferay.portal.kernel.security.csp.CSPNonceProvider;
 import com.liferay.portal.kernel.servlet.PortalWebResourceConstants;
 import com.liferay.portal.kernel.servlet.PortalWebResourcesUtil;
 import com.liferay.portal.kernel.servlet.taglib.DynamicInclude;
@@ -242,7 +243,9 @@ public class ThemeContributorTopHeadDynamicInclude implements DynamicInclude {
 		long themeLastModified, HttpServletRequest httpServletRequest,
 		String portalURL, PrintWriter printWriter) {
 
-		printWriter.write("<script data-senna-track=\"permanent\" src=\"");
+		printWriter.write("<script data-senna-track=\"permanent\" nonce=\"");
+		printWriter.write(_cspNonceProvider.getCSPNonce(httpServletRequest));
+		printWriter.write("\" src=\"");
 
 		String staticResourceURL = _portal.getStaticResourceURL(
 			httpServletRequest, _comboContextPath, "minifierType=js",
@@ -275,8 +278,13 @@ public class ThemeContributorTopHeadDynamicInclude implements DynamicInclude {
 		long themeLastModified, HttpServletRequest httpServletRequest,
 		String portalURL, PrintWriter printWriter, List<String> resourceURLs) {
 
+		String nonce = _cspNonceProvider.getCSPNonce(httpServletRequest);
+
 		for (String resourceURL : resourceURLs) {
-			printWriter.write("<script data-senna-track=\"permanent\" src=\"");
+			printWriter.write("<script data-senna-track=\"permanent\" ");
+			printWriter.write("nonce=\"");
+			printWriter.write(nonce);
+			printWriter.write("\" src=\"");
 			printWriter.write(
 				_portal.getStaticResourceURL(
 					httpServletRequest,
@@ -291,6 +299,9 @@ public class ThemeContributorTopHeadDynamicInclude implements DynamicInclude {
 	private final Collection<ServiceReference<BundleWebResources>>
 		_bundleWebResourcesServiceReferences = new TreeSet<>();
 	private String _comboContextPath;
+
+	@Reference
+	private CSPNonceProvider _cspNonceProvider;
 
 	@Reference
 	private Portal _portal;

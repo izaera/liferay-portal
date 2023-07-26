@@ -21,6 +21,7 @@ import com.liferay.oauth2.provider.service.OAuth2ApplicationLocalService;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.security.csp.CSPNonceProvider;
 import com.liferay.portal.kernel.servlet.taglib.DynamicInclude;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.Portal;
@@ -80,7 +81,9 @@ public class OAuth2ProviderTopJSDynamicInclude implements DynamicInclude {
 		}
 
 		String string = StringBundler.concat(
-			"<script data-senna-track=\"temporary\" type=\"",
+			"<script data-senna-track=\"temporary\" nonce=\"",
+			_cspNonceProvider.getCSPNonce(httpServletRequest),
+			"\" type=\"",
 			ContentTypes.TEXT_JAVASCRIPT,
 			"\">window.Liferay = Liferay || {}; window.Liferay.OAuth2 = ",
 			"{getAuthorizeURL: function() {return '", url,
@@ -101,6 +104,9 @@ public class OAuth2ProviderTopJSDynamicInclude implements DynamicInclude {
 		dynamicIncludeRegistry.register(
 			"/html/common/themes/top_js.jspf#resources");
 	}
+
+	@Reference
+	private CSPNonceProvider _cspNonceProvider;
 
 	@Reference
 	private JSONFactory _jsonFactory;

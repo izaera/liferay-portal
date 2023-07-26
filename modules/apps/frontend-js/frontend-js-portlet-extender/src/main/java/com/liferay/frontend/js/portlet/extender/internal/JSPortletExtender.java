@@ -26,6 +26,8 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.ConfigurationAction;
+import com.liferay.portal.kernel.security.csp.CSPNonceProvider;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
@@ -225,8 +227,8 @@ public class JSPortletExtender {
 				ManagedService.class.getName(), Portlet.class.getName()
 			},
 			new JSPortlet(
-				_jsonFactory, packageName, packageVersion,
-				portletPreferencesFieldNames),
+				_cspNonceProvider, _jsonFactory, packageName, packageVersion,
+				_portal, portletPreferencesFieldNames),
 			properties);
 	}
 
@@ -305,6 +307,9 @@ public class JSPortletExtender {
 			};
 
 	@Reference
+	private CSPNonceProvider _cspNonceProvider;
+
+	@Reference
 	private DDM _ddm;
 
 	@Reference
@@ -315,5 +320,8 @@ public class JSPortletExtender {
 
 	@Reference
 	private JSONFactory _jsonFactory;
+
+	@Reference
+	private Portal _portal;
 
 }

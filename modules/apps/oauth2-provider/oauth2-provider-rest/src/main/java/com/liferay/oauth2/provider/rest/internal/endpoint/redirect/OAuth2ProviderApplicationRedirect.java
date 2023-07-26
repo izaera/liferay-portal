@@ -25,7 +25,9 @@ import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import com.liferay.portal.kernel.security.csp.CSPNonceProvider;
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Raymond Augé
@@ -50,10 +52,15 @@ public class OAuth2ProviderApplicationRedirect {
 		return Response.ok(
 			StringBundler.concat(
 				"<html><head><title>Liferay OAuth2 Redirect</title></head>",
-				"<body><script type=\"text/javascript\">window.postMessage(",
+				"<body><script nonce=\"",
+				_cspNonceProvider.getCSPNonce(null),
+				"\" type=\"text/javascript\">window.postMessage(",
 				"{code: \"", code, "\", error: \"", error,
 				"\"}, document.location.href);</script></body></html>")
 		).build();
 	}
+
+	@Reference
+	private CSPNonceProvider _cspNonceProvider;
 
 }

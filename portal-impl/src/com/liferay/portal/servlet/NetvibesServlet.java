@@ -19,6 +19,7 @@ import com.liferay.portal.kernel.exception.NoSuchLayoutException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Portlet;
+import com.liferay.portal.kernel.security.csp.CSPNonceProviderUtil;
 import com.liferay.portal.kernel.service.PortletLocalServiceUtil;
 import com.liferay.portal.kernel.servlet.ServletResponseUtil;
 import com.liferay.portal.kernel.util.ContentTypes;
@@ -119,7 +120,9 @@ public class NetvibesServlet extends HttpServlet {
 		sb.append(_NETVIBES_CSS);
 		sb.append("\" rel=\"stylesheet\" type=\"text/css\" ");
 		sb.append("/>");
-		sb.append("<script src=\"");
+		sb.append("<script nonce=\"");
+		sb.append(CSPNonceProviderUtil.getCSPNonce(httpServletRequest));
+		sb.append("\" src=\"");
 		sb.append(_NETVIBES_JS);
 		sb.append("\" ");
 		sb.append("type=\"text/javascript\"></script>");

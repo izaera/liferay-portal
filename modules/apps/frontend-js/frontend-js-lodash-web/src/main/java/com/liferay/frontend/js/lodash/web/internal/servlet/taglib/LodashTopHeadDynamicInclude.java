@@ -16,6 +16,7 @@ package com.liferay.frontend.js.lodash.web.internal.servlet.taglib;
 
 import com.liferay.frontend.js.lodash.web.internal.configuration.JSLodashConfiguration;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
+import com.liferay.portal.kernel.security.csp.CSPNonceProvider;
 import com.liferay.portal.kernel.servlet.taglib.BaseDynamicInclude;
 import com.liferay.portal.kernel.servlet.taglib.DynamicInclude;
 import com.liferay.portal.url.builder.AbsolutePortalURLBuilder;
@@ -62,7 +63,9 @@ public class LodashTopHeadDynamicInclude extends BaseDynamicInclude {
 				httpServletRequest);
 
 		for (String fileName : _FILE_NAMES) {
-			printWriter.print("<script data-senna-track=\"permanent\" src=\"");
+			printWriter.print("<script data-senna-track=\"permanent\" nonce=\"");
+			printWriter.print(_cspNonceProvider.getCSPNonce(httpServletRequest));
+			printWriter.print("\" src=\"");
 
 			printWriter.print(
 				absolutePortalURLBuilder.forBundleScript(
@@ -99,6 +102,10 @@ public class LodashTopHeadDynamicInclude extends BaseDynamicInclude {
 	private AbsolutePortalURLBuilderFactory _absolutePortalURLBuilderFactory;
 
 	private volatile BundleContext _bundleContext;
+
+	@Reference
+	private CSPNonceProvider _cspNonceProvider;
+
 	private volatile JSLodashConfiguration _jsLodashConfiguration;
 
 }

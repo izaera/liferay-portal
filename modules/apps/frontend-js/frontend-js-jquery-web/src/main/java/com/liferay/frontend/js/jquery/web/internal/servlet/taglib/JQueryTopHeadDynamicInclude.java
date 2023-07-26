@@ -17,6 +17,7 @@ package com.liferay.frontend.js.jquery.web.internal.servlet.taglib;
 import com.liferay.frontend.js.jquery.web.internal.configuration.JSJQueryConfiguration;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
+import com.liferay.portal.kernel.security.csp.CSPNonceProvider;
 import com.liferay.portal.kernel.servlet.taglib.BaseDynamicInclude;
 import com.liferay.portal.kernel.servlet.taglib.DynamicInclude;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -72,7 +73,9 @@ public class JQueryTopHeadDynamicInclude extends BaseDynamicInclude {
 				WebKeys.THEME_DISPLAY);
 
 		if (themeDisplay.isThemeJsFastLoad()) {
-			sb.append("<script data-senna-track=\"permanent\" src=\"");
+			printWriter.print("<script data-senna-track=\"permanent\" nonce=\"");
+			printWriter.print(_cspNonceProvider.getCSPNonce(httpServletRequest));
+			printWriter.print("\" src=\"");
 
 			ComboRequestAbsolutePortalURLBuilder
 				comboRequestAbsolutePortalURLBuilder =
@@ -138,6 +141,10 @@ public class JQueryTopHeadDynamicInclude extends BaseDynamicInclude {
 	private AbsolutePortalURLBuilderFactory _absolutePortalURLBuilderFactory;
 
 	private volatile BundleContext _bundleContext;
+
+	@Reference
+	private CSPNonceProvider _cspNonceProvider;
+
 	private volatile JSJQueryConfiguration _jsJQueryConfiguration;
 	private volatile long _lastModified;
 

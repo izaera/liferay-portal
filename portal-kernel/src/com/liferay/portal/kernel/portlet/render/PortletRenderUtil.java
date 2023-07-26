@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.frontend.esm.FrontendESMUtil;
 import com.liferay.portal.kernel.model.LayoutTypePortlet;
 import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.model.Theme;
+import com.liferay.portal.kernel.security.csp.CSPNonceProviderUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.HtmlUtil;
@@ -496,7 +497,9 @@ public class PortletRenderUtil {
 			type = FrontendESMUtil.getScriptType();
 		}
 
-		printWriter.print("<script src=\"");
+		printWriter.print("<script nonce=\"");
+		printWriter.print(CSPNonceProviderUtil.getCSPNonce(null));
+		printWriter.print("\" src=\"");
 		printWriter.print(HtmlUtil.escapeAttribute(javaScriptPath));
 		printWriter.print("\" type=\"");
 		printWriter.print(type);

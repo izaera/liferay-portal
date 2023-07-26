@@ -20,6 +20,7 @@ import com.liferay.portal.kernel.cookies.CookiesManagerUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.security.csp.CSPNonceProvider;
 import com.liferay.portal.kernel.servlet.taglib.BaseDynamicInclude;
 import com.liferay.portal.kernel.servlet.taglib.DynamicInclude;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -85,7 +86,9 @@ public class KeepAliveSPPortalDynamicInclude extends BaseDynamicInclude {
 		try {
 			PrintWriter printWriter = httpServletResponse.getWriter();
 
-			printWriter.write("<script src=\"");
+			printWriter.write("<script nonce=\"");
+			printWriter.write(_cspNonceProvider.getCSPNonce(httpServletRequest));
+			printWriter.write("\" src=\"");
 			printWriter.write(HtmlUtil.escapeHREF(keepAliveURL));
 			printWriter.write("\" type=\"text/javascript\"></script>");
 		}
@@ -205,6 +208,9 @@ public class KeepAliveSPPortalDynamicInclude extends BaseDynamicInclude {
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		KeepAliveSPPortalDynamicInclude.class);
+
+	@Reference
+	private CSPNonceProvider _cspNonceProvider;
 
 	@Reference
 	private SamlPeerBindingLocalService _samlPeerBindingLocalService;

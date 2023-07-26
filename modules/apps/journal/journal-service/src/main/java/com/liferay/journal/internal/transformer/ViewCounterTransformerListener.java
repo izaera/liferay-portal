@@ -18,6 +18,7 @@ import com.liferay.journal.constants.JournalPortletKeys;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.security.csp.CSPNonceProvider;
 import com.liferay.portal.kernel.templateparser.BaseTransformerListener;
 import com.liferay.portal.kernel.templateparser.TransformerListener;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -25,6 +26,7 @@ import com.liferay.portal.kernel.util.StringUtil;
 import java.util.Map;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Raymond Augé
@@ -61,7 +63,8 @@ public class ViewCounterTransformerListener extends BaseTransformerListener {
 		return StringUtil.replace(
 			s, _COUNTER_TOKEN,
 			StringBundler.concat(
-				"<script type=\"text/javascript\">",
+				"<script nonce=\"", _cspNonceProvider.getCSPNonce(null),
+				"\" type=\"text/javascript\">",
 				"Liferay.Service('/assetentry/increment-view-counter',",
 				"{userId:0, className:'",
 				"com.liferay.journal.model.JournalArticle', classPK:",
@@ -72,5 +75,8 @@ public class ViewCounterTransformerListener extends BaseTransformerListener {
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		ViewCounterTransformerListener.class);
+
+	@Reference
+	private CSPNonceProvider _cspNonceProvider;
 
 }

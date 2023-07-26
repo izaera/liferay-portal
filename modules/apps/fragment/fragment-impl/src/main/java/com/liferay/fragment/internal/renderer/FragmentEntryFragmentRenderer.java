@@ -42,6 +42,7 @@ import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.security.csp.CSPNonceProvider;
 import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.servlet.PipingServletResponse;
 import com.liferay.portal.kernel.servlet.taglib.util.OutputData;
@@ -302,7 +303,9 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 		}
 
 		if (Validator.isNotNull(fragmentEntryLink.getJs())) {
-			sb.append("<script>(function() {");
+			sb.append("<script nonce=\"");
+			sb.append(_cspNonceProvider.getCSPNonce(httpServletRequest));
+			sb.append("\">(function() {");
 			sb.append("const configuration = ");
 			sb.append(configuration);
 			sb.append("; const fragmentElement = document.querySelector('#");
@@ -451,6 +454,9 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 
 		return unsyncStringWriter.toString();
 	}
+
+	@Reference
+	private CSPNonceProvider _cspNonceProvider;
 
 	@Reference
 	private DLAppLocalService _dlAppLocalService;

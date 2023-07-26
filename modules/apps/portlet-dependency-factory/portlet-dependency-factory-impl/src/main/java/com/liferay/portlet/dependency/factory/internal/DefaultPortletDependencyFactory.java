@@ -16,6 +16,7 @@ package com.liferay.portlet.dependency.factory.internal;
 
 import com.liferay.portal.kernel.model.portlet.PortletDependency;
 import com.liferay.portal.kernel.model.portlet.PortletDependencyFactory;
+import com.liferay.portal.kernel.security.csp.CSPNonceProvider;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.url.builder.AbsolutePortalURLBuilder;
 import com.liferay.portal.url.builder.AbsolutePortalURLBuilderFactory;
@@ -40,7 +41,8 @@ public class DefaultPortletDependencyFactory
 	public PortletDependency createPortletDependency(
 		String name, String scope, String version) {
 
-		return new PortletDependencyImpl(name, scope, version, null, null);
+		return new PortletDependencyImpl(
+			name, scope, version, null, null, null);
 	}
 
 	@Override
@@ -53,11 +55,15 @@ public class DefaultPortletDependencyFactory
 				_portal.getHttpServletRequest(portletRequest));
 
 		return new PortletDependencyImpl(
-			name, scope, version, markup, absolutePortalURLBuilder);
+			name, scope, version, markup, absolutePortalURLBuilder,
+			_cspNonceProvider);
 	}
 
 	@Reference
 	private AbsolutePortalURLBuilderFactory _absolutePortalURLBuilderFactory;
+
+	@Reference
+	private CSPNonceProvider _cspNonceProvider;
 
 	@Reference
 	private Portal _portal;

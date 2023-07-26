@@ -20,6 +20,7 @@ import com.liferay.client.extension.model.ClientExtensionEntryRel;
 import com.liferay.client.extension.type.GlobalJSCET;
 import com.liferay.client.extension.type.manager.CETManager;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.security.csp.CSPNonceProvider;
 import com.liferay.portal.kernel.servlet.taglib.DynamicInclude;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.UnicodeProperties;
@@ -100,7 +101,9 @@ public class ClientExtensionTopJSDynamicInclude implements DynamicInclude {
 				printWriter.print(StringPool.SPACE);
 			}
 
-			printWriter.print("data-senna-track=\"temporary\" src=\"");
+			printWriter.print("data-senna-track=\"temporary\" nonce=\"");
+			printWriter.print(_cspNonceProvider.getCSPNonce(httpServletRequest));
+			printWriter.print("\" src=\"");
 			printWriter.print(globalJSCET.getURL());
 			printWriter.print("\" type=\"text/javascript\"></script>");
 		}
@@ -114,5 +117,8 @@ public class ClientExtensionTopJSDynamicInclude implements DynamicInclude {
 
 	@Reference
 	private CETManager _cetManager;
+
+	@Reference
+	private CSPNonceProvider _cspNonceProvider;
 
 }

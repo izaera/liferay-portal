@@ -15,6 +15,7 @@
 package com.liferay.frontend.icons.web.internal.servlet.taglib;
 
 import com.liferay.petra.string.StringBundler;
+import com.liferay.portal.kernel.security.csp.CSPNonceProvider;
 import com.liferay.portal.kernel.servlet.taglib.BaseDynamicInclude;
 import com.liferay.portal.kernel.servlet.taglib.DynamicInclude;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -27,6 +28,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Reference;
 
 /**
  * @author Bryce Osterhaus
@@ -45,7 +47,9 @@ public class FrontendIconsSpritemapTopHeadDynamicInclude
 
 		StringBundler sb = new StringBundler(5);
 
-		sb.append("<script data-senna-track=\"temporary\">");
+		sb.append("<script data-senna-track=\"temporary\" nonce=\"");
+		sb.append(_cspNonceProvider.getCSPNonce(httpServletRequest));
+		sb.append("\">");
 		sb.append("var Liferay = window.Liferay || {};");
 		sb.append("Liferay.Icons = Liferay.Icons || {};");
 
@@ -71,5 +75,8 @@ public class FrontendIconsSpritemapTopHeadDynamicInclude
 	public void register(DynamicIncludeRegistry dynamicIncludeRegistry) {
 		dynamicIncludeRegistry.register("/html/common/themes/top_head.jsp#pre");
 	}
+
+	@Reference
+	private CSPNonceProvider _cspNonceProvider;
 
 }

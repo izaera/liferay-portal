@@ -16,6 +16,7 @@ package com.liferay.portlet.dependency.factory.internal;
 
 import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.model.portlet.PortletDependency;
+import com.liferay.portal.kernel.security.csp.CSPNonceProvider;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.url.builder.AbsolutePortalURLBuilder;
@@ -27,15 +28,17 @@ import com.liferay.portal.util.PropsValues;
  */
 public class PortletDependencyImpl implements PortletDependency {
 
-	public PortletDependencyImpl(
+	public  PortletDependencyImpl(
 		String name, String scope, String version, String markup,
-		AbsolutePortalURLBuilder absolutePortalURLBuilder) {
+		AbsolutePortalURLBuilder absolutePortalURLBuilder,
+		CSPNonceProvider cspNonceProvider) {
 
 		_name = name;
 		_scope = scope;
 		_version = version;
 		_markup = markup;
 		_absolutePortalURLBuilder = absolutePortalURLBuilder;
+		_cspNonceProvider = cspNonceProvider;
 
 		if (name == null) {
 			_type = Type.OTHER;
@@ -104,6 +107,9 @@ public class PortletDependencyImpl implements PortletDependency {
 			}
 			else if (_type == Type.JAVASCRIPT) {
 				sb.append("<script ");
+				sb.append("nonce=\"");
+				sb.append(_cspNonceProvider.getCSPNonce(null));
+				sb.append("\" ");
 				sb.append("src=\"");
 				sb.append(_getURL());
 				sb.append("\" type=\"text/javascript\"></script>");
@@ -137,6 +143,7 @@ public class PortletDependencyImpl implements PortletDependency {
 	private static final long serialVersionUID = 1L;
 
 	private final AbsolutePortalURLBuilder _absolutePortalURLBuilder;
+	private final CSPNonceProvider _cspNonceProvider;
 	private final String _markup;
 	private final String _name;
 	private final String _scope;
