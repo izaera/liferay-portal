@@ -13,6 +13,7 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.security.csp.CSPNonceProvider;
+import com.liferay.portal.kernel.security.csp.CSPNonceProviderUtil;
 import com.liferay.portal.kernel.servlet.taglib.BaseDynamicInclude;
 import com.liferay.portal.kernel.servlet.taglib.DynamicInclude;
 import com.liferay.portal.kernel.util.ContentTypes;
@@ -64,8 +65,10 @@ public class JSBundleConfigTopHeadDynamicInclude extends BaseDynamicInclude {
 			_jsBundleConfigRegistry.getJSConfigs();
 
 		if (!jsConfigs.isEmpty()) {
-			stringWriter.write("<script data-senna-track=\"temporary\" ");
-			stringWriter.write("type=\"");
+			stringWriter.write("<script");
+			stringWriter.write(
+				CSPNonceProviderUtil.getCSPNonceAttr(httpServletRequest));
+			stringWriter.write(" data-senna-track=\"temporary\" type=\"");
 			stringWriter.write(ContentTypes.TEXT_JAVASCRIPT);
 			stringWriter.write("\">");
 

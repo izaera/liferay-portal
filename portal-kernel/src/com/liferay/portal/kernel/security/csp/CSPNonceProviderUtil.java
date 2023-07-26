@@ -9,6 +9,7 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.module.util.SystemBundleUtil;
+import com.liferay.portal.kernel.util.Validator;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -32,6 +33,18 @@ public class CSPNonceProviderUtil {
 		}
 
 		return cspNonceProvider.getCSPNonce(httpServletRequest);
+	}
+
+	public static String getCSPNonceAttr(
+		HttpServletRequest httpServletRequest) {
+
+		String cspNonce = getCSPNonce(httpServletRequest);
+
+		if (Validator.isNull(cspNonce)) {
+			return StringPool.BLANK;
+		}
+
+		return " nonce=\"" + cspNonce + StringPool.QUOTE;
 	}
 
 	public static CSPNonceProvider getCSPNonceProvider() {

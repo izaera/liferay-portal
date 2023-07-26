@@ -11,6 +11,7 @@ import com.liferay.portal.kernel.cookies.CookiesManagerUtil;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.security.csp.CSPNonceProviderUtil;
 import com.liferay.portal.kernel.servlet.taglib.BaseDynamicInclude;
 import com.liferay.portal.kernel.servlet.taglib.DynamicInclude;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -76,7 +77,10 @@ public class KeepAliveSPPortalDynamicInclude extends BaseDynamicInclude {
 		try {
 			PrintWriter printWriter = httpServletResponse.getWriter();
 
-			printWriter.write("<script src=\"");
+			printWriter.write("<script");
+			printWriter.write(
+				CSPNonceProviderUtil.getCSPNonceAttr(httpServletRequest));
+			printWriter.write(" src=\"");
 			printWriter.write(HtmlUtil.escapeHREF(keepAliveURL));
 			printWriter.write("\" type=\"text/javascript\"></script>");
 		}

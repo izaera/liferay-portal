@@ -11,6 +11,7 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
 import com.liferay.portal.kernel.frontend.esm.FrontendESMUtil;
 import com.liferay.portal.kernel.security.csp.CSPNonceProvider;
+import com.liferay.portal.kernel.security.csp.CSPNonceProviderUtil;
 import com.liferay.portal.kernel.servlet.PortalWebResourceConstants;
 import com.liferay.portal.kernel.servlet.PortalWebResourcesUtil;
 import com.liferay.portal.kernel.servlet.taglib.BaseDynamicInclude;
@@ -18,7 +19,6 @@ import com.liferay.portal.kernel.servlet.taglib.DynamicInclude;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.Portal;
-import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.url.builder.AbsolutePortalURLBuilder;
 import com.liferay.portal.url.builder.AbsolutePortalURLBuilderFactory;
@@ -56,17 +56,10 @@ public class JSLoaderTopHeadDynamicInclude extends BaseDynamicInclude {
 
 		PrintWriter printWriter = httpServletResponse.getWriter();
 
-		String cspNonce = _cspNonceProvider.getCSPNonce(httpServletRequest);
-
-		printWriter.write("<script data-senna-track=\"temporary\"");
-
-		if (Validator.isNotNull(cspNonce)) {
-			printWriter.write(" nonce=\"");
-			printWriter.write(cspNonce);
-			printWriter.write(StringPool.QUOTE);
-		}
-
-		printWriter.write(" type=\"");
+		printWriter.write("<script");
+		printWriter.write(
+			CSPNonceProviderUtil.getCSPNonceAttr(httpServletRequest));
+		printWriter.write(" data-senna-track=\"temporary\" type=\"");
 		printWriter.write(ContentTypes.TEXT_JAVASCRIPT);
 		printWriter.write("\">window.__CONFIG__= {basePath: '',");
 
@@ -87,7 +80,7 @@ public class JSLoaderTopHeadDynamicInclude extends BaseDynamicInclude {
 		printWriter.write("', moduleType: '");
 		printWriter.write(FrontendESMUtil.getScriptType());
 		printWriter.write("', namespace:'Liferay', nonce: '");
-		printWriter.write(cspNonce);
+		printWriter.write(_cspNonceProvider.getCSPNonce(httpServletRequest));
 		printWriter.write("', ");
 		printWriter.write(
 			"reportMismatchedAnonymousModules: 'warn', resolvePath: '");
@@ -96,8 +89,10 @@ public class JSLoaderTopHeadDynamicInclude extends BaseDynamicInclude {
 		printWriter.write(_getURL(httpServletRequest, themeDisplay));
 		printWriter.write("', waitTimeout: ");
 		printWriter.write(String.valueOf(_details.waitTimeout() * 1000));
+		printWriter.write("};</script><script");
 		printWriter.write(
-			"};</script><script data-senna-track=\"permanent\" src=\"");
+			CSPNonceProviderUtil.getCSPNonceAttr(httpServletRequest));
+		printWriter.write(" data-senna-track=\"permanent\" src=\"");
 
 		AbsolutePortalURLBuilder absolutePortalURLBuilder =
 			_absolutePortalURLBuilderFactory.getAbsolutePortalURLBuilder(

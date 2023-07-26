@@ -33,6 +33,7 @@ import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.security.csp.CSPNonceProviderUtil;
 import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.servlet.PipingServletResponse;
 import com.liferay.portal.kernel.servlet.taglib.util.OutputData;
@@ -229,7 +230,7 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 		FragmentRendererContext fragmentRendererContext, String html,
 		HttpServletRequest httpServletRequest) {
 
-		StringBundler sb = new StringBundler(25);
+		StringBundler sb = new StringBundler(26);
 
 		sb.append("<div id=\"");
 
@@ -293,8 +294,9 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 		}
 
 		if (Validator.isNotNull(fragmentEntryLink.getJs())) {
-			sb.append("<script>(function() {");
-			sb.append("const configuration = ");
+			sb.append("<script");
+			sb.append(CSPNonceProviderUtil.getCSPNonceAttr(httpServletRequest));
+			sb.append(">(function() {const configuration = ");
 			sb.append(configuration);
 			sb.append("; const fragmentElement = document.querySelector('#");
 			sb.append(fragmentRendererContext.getFragmentElementId());

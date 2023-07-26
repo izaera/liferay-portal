@@ -16,6 +16,7 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutSet;
+import com.liferay.portal.kernel.security.csp.CSPNonceProviderUtil;
 import com.liferay.portal.kernel.servlet.taglib.BaseDynamicInclude;
 import com.liferay.portal.kernel.servlet.taglib.DynamicInclude;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -100,7 +101,10 @@ public class SVG4EverybodyTopHeadDynamicInclude extends BaseDynamicInclude {
 				httpServletRequest);
 
 		for (String jsFileName : _JS_FILE_NAMES) {
-			printWriter.print("<script data-senna-track=\"permanent\" src=\"");
+			printWriter.print("<script");
+			printWriter.write(
+				CSPNonceProviderUtil.getCSPNonceAttr(httpServletRequest));
+			printWriter.print(" data-senna-track=\"permanent\" src=\"");
 
 			BundleScriptAbsolutePortalURLBuilder
 				bundleScriptAbsolutePortalURLBuilder =

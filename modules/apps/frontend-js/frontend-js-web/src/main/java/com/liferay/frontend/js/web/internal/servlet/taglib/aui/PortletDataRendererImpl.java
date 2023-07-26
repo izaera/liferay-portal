@@ -7,6 +7,7 @@ package com.liferay.frontend.js.web.internal.servlet.taglib.aui;
 
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.frontend.esm.FrontendESMUtil;
+import com.liferay.portal.kernel.security.csp.CSPNonceProviderUtil;
 import com.liferay.portal.kernel.servlet.taglib.aui.AMDRequire;
 import com.liferay.portal.kernel.servlet.taglib.aui.ESImport;
 import com.liferay.portal.kernel.servlet.taglib.aui.JSFragment;
@@ -41,7 +42,9 @@ public class PortletDataRendererImpl implements PortletDataRenderer {
 		String rawCode = _computeRawCode(portletDatas);
 
 		if (!Validator.isBlank(rawCode)) {
-			writer.write("<script type=\"text/javascript\">\n");
+			writer.write("<script");
+			writer.write(CSPNonceProviderUtil.getCSPNonceAttr(null));
+			writer.write(" type=\"text/javascript\">\n");
 			writer.write(rawCode);
 			writer.write("\n</script>");
 		}
@@ -52,10 +55,14 @@ public class PortletDataRendererImpl implements PortletDataRenderer {
 			portletDatas, usedAliases);
 
 		if (esImportsMap.isEmpty()) {
-			writer.write("<script>\n");
+			writer.write("<script");
+			writer.write(CSPNonceProviderUtil.getCSPNonceAttr(null));
+			writer.write(">\n");
 		}
 		else {
-			writer.write("<script type=\"");
+			writer.write("<script");
+			writer.write(CSPNonceProviderUtil.getCSPNonceAttr(null));
+			writer.write(" type=\"");
 			writer.write(FrontendESMUtil.getScriptType());
 			writer.write("\">\n");
 		}
