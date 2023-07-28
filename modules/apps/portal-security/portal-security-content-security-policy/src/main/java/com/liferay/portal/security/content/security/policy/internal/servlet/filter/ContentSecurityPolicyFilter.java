@@ -110,10 +110,6 @@ public class ContentSecurityPolicyFilter extends BasePortalFilter {
 			content = content.replaceAll(
 				"<(?i)link>", "<link nonce=\"" + nonce + "\">");
 			content = content.replaceAll(
-				"<(?i)script ", "<script nonce=\"" + nonce + "\" ");
-			content = content.replaceAll(
-				"<(?i)script>", "<script nonce=\"" + nonce + "\">");
-			content = content.replaceAll(
 				"<(?i)style ", "<style nonce=\"" + nonce + "\" ");
 			content = content.replaceAll(
 				"<(?i)style>", "<style nonce=\"" + nonce + "\">");
