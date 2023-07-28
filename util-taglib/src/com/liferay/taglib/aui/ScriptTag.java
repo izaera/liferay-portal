@@ -15,16 +15,24 @@
 package com.liferay.taglib.aui;
 
 import com.liferay.petra.string.StringBundler;
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.model.Portlet;
+import com.liferay.portal.kernel.security.csp.CSPNonceProviderUtil;
 import com.liferay.portal.kernel.servlet.FileAvailabilityUtil;
 import com.liferay.portal.kernel.servlet.taglib.BodyContentWrapper;
 import com.liferay.portal.kernel.servlet.taglib.aui.ScriptData;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.taglib.aui.base.BaseScriptTag;
 import com.liferay.taglib.util.PortalIncludeUtil;
 
+import java.io.IOException;
+
+import java.util.Objects;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.jsp.JspException;
+import javax.servlet.jsp.JspWriter;
 import javax.servlet.jsp.PageContext;
 import javax.servlet.jsp.tagext.BodyContent;
 
@@ -103,6 +111,20 @@ public class ScriptTag extends BaseScriptTag {
 			(HttpServletRequest)pageContext.getRequest();
 
 		try {
+			if ((Validator.isNotNull(getType()) &&
+				 !Objects.equals(getType(), "text/javascript")) ||
+				Validator.isNotNull(getBlocking()) ||
+				Validator.isNotNull(getCrossorigin()) ||
+				Validator.isNotNull(getFetchpriority()) ||
+				Validator.isNotNull(getId()) ||
+				Validator.isNotNull(getIntegrity()) ||
+				Validator.isNotNull(getReferrerpolicy()) ||
+				Validator.isNotNull(getSenna()) ||
+				Validator.isNotNull(getSrc()) || getAsync() || getDefer()) {
+
+				return _endTagDirect();
+			}
+
 			String portletId = null;
 
 			Portlet portlet = (Portlet)httpServletRequest.getAttribute(
@@ -218,6 +240,92 @@ public class ScriptTag extends BaseScriptTag {
 		setPosition(null);
 		setRequire(null);
 		setUse(null);
+	}
+
+	private int _endTagDirect() throws IOException, JspException {
+		if (!Objects.equals(getPosition(), "auto")) {
+			throw new JspException(
+				"Attribute position can only be 'auto' when using direct " +
+					"rendering");
+		}
+
+		if (Validator.isNotNull(getRequire())) {
+			throw new JspException(
+				"Attribute require may not be used when using direct " +
+					"rendering");
+		}
+
+		if (getSandbox()) {
+			throw new JspException(
+				"Attribute sandbox can only be false when using direct " +
+					"rendering");
+		}
+
+		if (Validator.isNotNull(getUse())) {
+			throw new JspException(
+				"Attribute use may not be used when using direct rendering");
+		}
+
+		JspWriter jspWriter = pageContext.getOut();
+
+		jspWriter.write("<script");
+
+		String nonce = CSPNonceProviderUtil.getCSPNonce(getRequest());
+
+		if (Validator.isNotNull(nonce)) {
+			_writeAttr(jspWriter, "nonce", nonce);
+		}
+
+		_writeAttr(jspWriter, "async", getAsync());
+		_writeAttr(jspWriter, "blocking", getBlocking());
+		_writeAttr(jspWriter, "crossorigin", getCrossorigin());
+		_writeAttr(jspWriter, "defer", getDefer());
+		_writeAttr(jspWriter, "fetchpriority", getFetchpriority());
+		_writeAttr(jspWriter, "id", getId());
+		_writeAttr(jspWriter, "integrity", getIntegrity());
+		_writeAttr(jspWriter, "referrerpolicy", getReferrerpolicy());
+		_writeAttr(jspWriter, "src", getSrc());
+		_writeAttr(jspWriter, "type", getType());
+
+		String senna = getSenna();
+
+		if (Objects.equals(senna, "off")) {
+			_writeAttr(jspWriter, "data-senna-off", "true");
+		}
+		else if (Validator.isNotNull(senna)) {
+			_writeAttr(jspWriter, "data-senna-track", senna);
+		}
+
+		jspWriter.write(">");
+
+		StringBundler bodyContentSB = getBodyContentAsStringBundler();
+
+		jspWriter.write(bodyContentSB.toString());
+
+		jspWriter.write("</script>");
+
+		return EVAL_PAGE;
+	}
+
+	private void _writeAttr(JspWriter jspWriter, String name, boolean value)
+		throws IOException {
+
+		if (value) {
+			jspWriter.write(StringPool.SPACE);
+			jspWriter.write(name);
+		}
+	}
+
+	private void _writeAttr(JspWriter jspWriter, String name, String value)
+		throws IOException {
+
+		if (Validator.isNotNull(value)) {
+			jspWriter.write(StringPool.SPACE);
+			jspWriter.write(name);
+			jspWriter.write(StringPool.QUOTE);
+			jspWriter.write(value);
+			jspWriter.write(StringPool.QUOTE);
+		}
 	}
 
 }
