@@ -1334,13 +1334,63 @@
 		<dynamic-attributes>true</dynamic-attributes>
 	</tag>
 	<tag>
-		<description>Creates a script component in which to write JavaScript that facilitates using AlloyUI modules.</description>
+		<description><![CDATA[Creates a script component in which to write JavaScript that facilitates using AlloyUI modules.]]></description>
 		<name>script</name>
 		<tag-class>com.liferay.taglib.aui.ScriptTag</tag-class>
 		<body-content>JSP</body-content>
 		<attribute>
-			<description>A position for the script.</description>
+			<description><![CDATA[]]></description>
+			<name>async</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[]]></description>
+			<name>blocking</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[]]></description>
+			<name>crossorigin</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[]]></description>
+			<name>defer</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+			<type>boolean</type>
+		</attribute>
+		<attribute>
+			<description><![CDATA[]]></description>
+			<name>fetchpriority</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[]]></description>
+			<name>id</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[]]></description>
+			<name>integrity</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[A position for the script.]]></description>
 			<name>position</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[]]></description>
+			<name>referrerpolicy</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
@@ -1356,11 +1406,30 @@
 			<type>boolean</type>
 		</attribute>
 		<attribute>
-			<description>AlloyUI modules to be used in the script. Names of multiple modules must be separated by commas.</description>
+			<description><![CDATA[Can be 'permanent'/'temporary' (emits 'data-senna-track') or 'off' (emits 'data-senna-off').]]></description>
+			<name>senna</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[]]></description>
+			<name>src</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[]]></description>
+			<name>type</name>
+			<required>false</required>
+			<rtexprvalue>true</rtexprvalue>
+		</attribute>
+		<attribute>
+			<description><![CDATA[AlloyUI modules to be used in the script. Names of multiple modules must be separated by commas.]]></description>
 			<name>use</name>
 			<required>false</required>
 			<rtexprvalue>true</rtexprvalue>
 		</attribute>
+
 	</tag>
 	<tag>
 		<description>Creates a select field (or combo box) for holding <![CDATA[<code>&lt;aui:option&gt;</code>]]> components.</description>
