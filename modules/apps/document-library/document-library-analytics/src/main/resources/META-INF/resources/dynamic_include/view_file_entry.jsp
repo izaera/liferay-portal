@@ -11,11 +11,11 @@
 FileEntry fileEntry = (FileEntry)request.getAttribute(WebKeys.DOCUMENT_LIBRARY_FILE_ENTRY);
 %>
 
-<script data-senna-track="temporary" type="text/javascript">
+<aui:script senna="temporary" type="text/javascript">
 	if (window.Analytics) {
 		window.<%= DocumentLibraryAnalyticsConstants.JS_PREFIX %>isViewFileEntry = true;
 	}
-</script>
+</aui:script>
 
 <aui:script>
 	if (window.Analytics) {

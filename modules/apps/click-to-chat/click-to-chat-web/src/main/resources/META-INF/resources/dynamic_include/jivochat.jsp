@@ -7,7 +7,7 @@
 
 <%@ include file="/dynamic_include/init.jsp" %>
 
-<script async src="//code.jivosite.com/widget/<%= clickToChatChatProviderAccountId %>"></script>
+<aui:script async="<%= true %>" src='<%= "//code.jivosite.com/widget/" + clickToChatChatProviderAccountId %>'></aui:script>
 
 <c:if test="<%= themeDisplay.isSignedIn() %>">
 	<script>

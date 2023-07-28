@@ -349,7 +349,7 @@ if (iteratorURL != null) {
 </div>
 
 <c:if test="<%= (rowChecker != null) && !resultRows.isEmpty() && Validator.isNotNull(rowChecker.getAllRowsId()) && allRowsIsChecked %>">
-	<script>
+	<aui:script>
 		(function() {
 			var form = document.<%= rowChecker.getFormName() %>;
 
@@ -359,7 +359,7 @@ if (iteratorURL != null) {
 				allRowsIdCheckbox.checked = true;
 			}
 		})();
-	</script>
+	</aui:script>
 </c:if>
 
 <c:if test="<%= Validator.isNotNull(id) %>">

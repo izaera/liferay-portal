@@ -152,7 +152,7 @@ else {
 
 	<aui:input label="<%= dateTogglerCheckboxLabel %>" name="<%= randomNamespace + dateTogglerCheckboxName %>" type="checkbox" value="<%= disabled %>" />
 
-	<script>
+	<aui:script>
 		(function() {
 			var form = document.<%= namespace + formName %>;
 
@@ -211,7 +211,7 @@ else {
 				);
 			}
 		})();
-	</script>
+	</aui:script>
 </c:if>
 
 <aui:script use='<%= "aui-datepicker" + (BrowserSnifferUtil.isMobile(request) ? "-native" : StringPool.BLANK) %>'>
