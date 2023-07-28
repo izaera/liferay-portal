@@ -16,8 +16,12 @@
 
 <%@ include file="/captcha/init.jsp" %>
 
+<%
+String cspNonce = CSPNonceProviderUtil.getCSPNonce(request);
+%>
+
 <c:if test="<%= captchaEnabled %>">
-	<script src="<%= HtmlUtil.escapeAttribute(captchaConfiguration.reCaptchaScriptURL()) %>?hl=<%= HtmlUtil.escapeAttribute(locale.getLanguage()) %>" type="text/javascript"></script>
+	<script nonce="<%= cspNonce %>" src="<%= HtmlUtil.escapeAttribute(captchaConfiguration.reCaptchaScriptURL()) %>?hl=<%= HtmlUtil.escapeAttribute(locale.getLanguage()) %>" type="text/javascript"></script>
 
 	<div class="g-recaptcha" data-sitekey="<%= HtmlUtil.escapeAttribute(captchaConfiguration.reCaptchaPublicKey()) %>"></div>
 

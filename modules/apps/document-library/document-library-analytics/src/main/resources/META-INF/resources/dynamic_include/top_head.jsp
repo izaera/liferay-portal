@@ -16,7 +16,11 @@
 
 <%@ include file="/dynamic_include/init.jsp" %>
 
-<script data-senna-track="temporary" type="text/javascript">
+<%
+String cspNonce = CSPNonceProviderUtil.getCSPNonce(request);
+%>
+
+<script data-senna-track="temporary" nonce="<%= cspNonce %>" type="text/javascript">
 	if (window.Analytics) {
 		window.<%= DocumentLibraryAnalyticsConstants.JS_PREFIX %>isViewFileEntry = false;
 	}

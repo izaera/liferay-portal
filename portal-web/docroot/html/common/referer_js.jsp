@@ -14,6 +14,10 @@
  */
 --%>
 
+<%
+String cspNonce = CSPNonceProviderUtil.getCSPNonce(request);
+%>
+
 <%@ page session="false" %>
 
 <%
@@ -22,7 +26,7 @@ pageContext.setAttribute(WebKeys.THEME_DEFINE_OBJECTS, Boolean.FALSE);
 
 <%@ include file="/html/common/referer_common.jsp" %>
 
-<script type="text/javascript">
+<script nonce="<%= cspNonce %>" type="text/javascript">
 
 	<%
 	Boolean logout = (Boolean)request.getAttribute(WebKeys.LOGOUT);

@@ -17,10 +17,12 @@
 <%@ include file="/dynamic_include/init.jsp" %>
 
 <%
+String cspNonce = CSPNonceProviderUtil.getCSPNonce(request);
+
 FileEntry fileEntry = (FileEntry)request.getAttribute(WebKeys.DOCUMENT_LIBRARY_FILE_ENTRY);
 %>
 
-<script data-senna-track="temporary" type="text/javascript">
+<script data-senna-track="temporary" nonce="<%= cspNonce %>" type="text/javascript">
 	if (window.Analytics) {
 		window.<%= DocumentLibraryAnalyticsConstants.JS_PREFIX %>isViewFileEntry = true;
 	}

@@ -18,6 +18,10 @@
 <%@ include file="/html/common/themes/top_meta.jspf" %>
 <%@ include file="/html/common/themes/top_meta-ext.jsp" %>
 
+<%
+String cspNonce = CSPNonceProviderUtil.getCSPNonce(request);
+%>
+
 <liferay-util:dynamic-include key="/html/common/themes/top_head.jsp#pre" />
 
 <link href="<%= themeDisplay.getFaviconURL() %>" rel="apple-touch-icon" />
@@ -164,7 +168,7 @@ for (Portlet portlet : portletTreeSet) {
 %>
 
 <c:if test="<%= portletHubRequired %>">
-	<script type="text/javascript">
+	<script nonce="<%= cspNonce %>" type="text/javascript">
 		var portlet = portlet || {};
 
 		portlet.data = portlet.data || {};

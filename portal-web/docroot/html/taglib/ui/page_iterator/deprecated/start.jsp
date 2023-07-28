@@ -17,6 +17,8 @@
 <%@ include file="/html/taglib/init.jsp" %>
 
 <%
+String cspNonce = CSPNonceProviderUtil.getCSPNonce(request);
+
 String randomNamespace = StringUtil.randomId() + StringPool.UNDERLINE;
 
 String formName = namespace + request.getAttribute("liferay-ui:page-iterator:formName");
@@ -305,7 +307,7 @@ NumberFormat numberFormat = NumberFormat.getNumberInstance(locale);
 	</div>
 </c:if>
 
-<script>
+<script nonce="<%= cspNonce %>">
 	function <portlet:namespace />submitForm(curParam, cur) {
 		var data = {};
 

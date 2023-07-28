@@ -24,6 +24,8 @@ ServiceContext#deriveDefaultPermissions(long, String).
 <%@ include file="/html/taglib/ui/input_permissions/init.jsp" %>
 
 <%
+String cspNonce = CSPNonceProviderUtil.getCSPNonce(request);
+
 String uniqueNamespace = namespace + PortalUtil.getUniqueElementId(request, namespace, StringPool.BLANK);
 
 if (!uniqueNamespace.endsWith(StringPool.UNDERLINE)) {
@@ -138,7 +140,7 @@ String modelName = (String)request.getAttribute("liferay-ui:input-permissions:mo
 			</c:otherwise>
 		</c:choose>
 
-		<script>
+		<script nonce="<%= cspNonce %>">
 
 			function <%= uniqueNamespace %>inputPermissionsToggle() {
 				var isInputPermissionsShowOptionsTrue = (document.getElementById('<%= uniqueNamespace %>inputPermissionsShowOptions').value === 'true');

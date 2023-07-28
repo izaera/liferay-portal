@@ -197,7 +197,7 @@ if (layout != null) {
 
 </aui:script>
 
-<script type="text/javascript">
+<script nonce="<%= cspNonce %>" type="text/javascript">
 	// <![CDATA[
 
 		<%
@@ -232,7 +232,7 @@ if (layout != null) {
 	UnicodeProperties layoutTypeSettingsUnicodeProperties = layout.getTypeSettingsProperties();
 	%>
 
-	<script type="text/javascript">
+	<script nonce="<%= cspNonce %>" type="text/javascript">
 		// <![CDATA[
 			<c:if test="<%= !layout.isTypeControlPanel() %>">
 				<%= GetterUtil.getString(layoutSetSettingsUnicodeProperties.getProperty("javascript")) %>

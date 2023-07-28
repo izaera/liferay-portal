@@ -17,6 +17,8 @@
 <%@ include file="/init.jsp" %>
 
 <%
+String cspNonce = CSPNonceProviderUtil.getCSPNonce(request);
+
 String portletId = portletDisplay.getId();
 
 boolean autoCreate = GetterUtil.getBoolean((String)request.getAttribute(AlloyEditorConstants.ATTRIBUTE_NAMESPACE + ":autoCreate"));
@@ -65,7 +67,7 @@ if (editorOptions != null) {
 	/>
 </c:if>
 
-<script data-senna-track="temporary" type="text/javascript">
+<script data-senna-track="temporary" nonce="<%= cspNonce %>" type="text/javascript">
 	CKEDITOR.ADDITIONAL_RESOURCE_PARAMS = {
 		languageId: themeDisplay.getLanguageId(),
 	};

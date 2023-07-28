@@ -17,6 +17,8 @@
 <%@ include file="/html/portal/init.jsp" %>
 
 <%
+String cspNonce = CSPNonceProviderUtil.getCSPNonce(request);
+
 String sessionKey = ParamUtil.getString(request, "sessionKey");
 String progressId = ParamUtil.getString(request, "progressId");
 
@@ -37,7 +39,7 @@ if (progressTracker != null) {
 
 <html>
 	<body>
-		<script type="text/javascript">
+		<script nonce="<%= cspNonce %>" type="text/javascript">
 			;(function() {
 				var progressId = parent['<%= HtmlUtil.escapeJS(progressId) %>'];
 

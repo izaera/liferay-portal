@@ -16,7 +16,11 @@
 
 <%@ include file="/html/common/forward_common.jsp" %>
 
-<script type="text/javascript">
+<%
+String cspNonce = CSPNonceProviderUtil.getCSPNonce(request);
+%>
+
+<script nonce="<%= cspNonce %>" type="text/javascript">
 
 	<%
 	forwardURL = HtmlUtil.escapeJSLink(forwardURL);

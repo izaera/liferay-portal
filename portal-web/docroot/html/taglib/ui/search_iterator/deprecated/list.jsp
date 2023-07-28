@@ -17,6 +17,8 @@
 <%@ include file="/html/taglib/ui/search_iterator/init.jsp" %>
 
 <%
+String cspNonce = CSPNonceProviderUtil.getCSPNonce(request);
+
 if (searchResultCssClass == null) {
 	searchResultCssClass = "table table-bordered table-hover table-striped";
 }
@@ -358,7 +360,7 @@ if (iteratorURL != null) {
 </div>
 
 <c:if test="<%= (rowChecker != null) && !resultRows.isEmpty() && Validator.isNotNull(rowChecker.getAllRowsId()) && allRowsIsChecked %>">
-	<script>
+	<script nonce="<%= cspNonce %>">
 		(function() {
 			var form = document.<%= rowChecker.getFormName() %>;
 

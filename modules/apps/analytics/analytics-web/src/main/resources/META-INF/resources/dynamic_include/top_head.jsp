@@ -16,9 +16,13 @@
 
 <%@ include file="/init.jsp" %>
 
+<%
+String cspNonce = CSPNonceProviderUtil.getCSPNonce(request);
+%>
+
 <meta content="<%= (String)request.getAttribute(AnalyticsWebKeys.ANALYTICS_CLIENT_READABLE_CONTENT) %>" name="data-analytics-readable-content" />
 
-<script data-senna-track="temporary" type="text/javascript">
+<script data-senna-track="temporary" nonce="<%= cspNonce %>" type="text/javascript">
 	var runMiddlewares = function () {
 		<liferay-util:dynamic-include key="/dynamic_include/top_head.jsp#analytics" />
 	};
@@ -28,7 +32,7 @@
 	var analyticsClientGroupIds = <%= (String)request.getAttribute(AnalyticsWebKeys.ANALYTICS_CLIENT_GROUP_IDS) %>;
 </script>
 
-<script data-senna-track="permanent" id="liferayAnalyticsScript" type="text/javascript">
+<script data-senna-track="permanent" id="liferayAnalyticsScript" nonce="<%= cspNonce %>" type="text/javascript">
 	(function (u, c, a, m, o, l) {
 		o = 'script';
 		l = document;
