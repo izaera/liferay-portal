@@ -14,10 +14,6 @@
  */
 --%>
 
-<%
-String cspNonce = CSPNonceProviderUtil.getCSPNonce(request);
-%>
-
 <%@ page session="false" %>
 
 <%
@@ -26,7 +22,7 @@ pageContext.setAttribute(WebKeys.THEME_DEFINE_OBJECTS, Boolean.FALSE);
 
 <%@ include file="/html/common/referer_common.jsp" %>
 
-<script nonce="<%= cspNonce %>" type="text/javascript">
+<aui:script type="text/javascript">
 
 	<%
 	Boolean logout = (Boolean)request.getAttribute(WebKeys.LOGOUT);
@@ -41,4 +37,4 @@ pageContext.setAttribute(WebKeys.THEME_DEFINE_OBJECTS, Boolean.FALSE);
 	%>
 
 	location.href = '<%= referer %>';
-</script>
+</aui:script>

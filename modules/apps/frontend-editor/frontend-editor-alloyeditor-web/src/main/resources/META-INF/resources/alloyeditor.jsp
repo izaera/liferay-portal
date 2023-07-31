@@ -17,8 +17,6 @@
 <%@ include file="/init.jsp" %>
 
 <%
-String cspNonce = CSPNonceProviderUtil.getCSPNonce(request);
-
 String portletId = portletDisplay.getId();
 
 boolean autoCreate = GetterUtil.getBoolean((String)request.getAttribute(AlloyEditorConstants.ATTRIBUTE_NAMESPACE + ":autoCreate"));
@@ -67,7 +65,7 @@ if (editorOptions != null) {
 	/>
 </c:if>
 
-<script data-senna-track="temporary" nonce="<%= cspNonce %>" type="text/javascript">
+<aui:script senna="temporary" type="text/javascript">
 	CKEDITOR.ADDITIONAL_RESOURCE_PARAMS = {
 		languageId: themeDisplay.getLanguageId(),
 	};
@@ -78,7 +76,7 @@ if (editorOptions != null) {
 	CKEDITOR.dtd.$removeEmpty.span = 0;
 
 	CKEDITOR.env.isCompatible = true;
-</script>
+</aui:script>
 
 <liferay-util:html-top>
 	<link href="<%= PortalUtil.getStaticResourceURL(request, PortalUtil.getPathProxy() + application.getContextPath() + "/css/main.css") %>" rel="stylesheet" type="text/css" />

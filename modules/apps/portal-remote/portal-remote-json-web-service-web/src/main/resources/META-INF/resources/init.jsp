@@ -30,7 +30,6 @@ page import="com.liferay.petra.string.StringPool" %><%@
 page import="com.liferay.portal.kernel.jsonwebservice.JSONWebServiceActionMapping" %><%@
 page import="com.liferay.portal.kernel.jsonwebservice.JSONWebServiceActionsManagerUtil" %><%@
 page import="com.liferay.portal.kernel.security.auth.AuthTokenUtil" %><%@
-page import="com.liferay.portal.kernel.security.csp.CSPNonceProviderUtil" %><%@
 page import="com.liferay.portal.kernel.util.HtmlUtil" %><%@
 page import="com.liferay.portal.kernel.util.HttpComponentsUtil" %><%@
 page import="com.liferay.portal.kernel.util.MethodParameter" %><%@

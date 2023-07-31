@@ -16,11 +16,7 @@
 
 <%@ include file="/html/common/forward_common.jsp" %>
 
-<%
-String cspNonce = CSPNonceProviderUtil.getCSPNonce(request);
-%>
-
-<script nonce="<%= cspNonce %>" type="text/javascript">
+<aui:script type="text/javascript">
 
 	<%
 	forwardURL = HtmlUtil.escapeJSLink(forwardURL);
@@ -29,4 +25,4 @@ String cspNonce = CSPNonceProviderUtil.getCSPNonce(request);
 	%>
 
 	location.href = '<%= forwardURL %>';
-</script>
+</aui:script>

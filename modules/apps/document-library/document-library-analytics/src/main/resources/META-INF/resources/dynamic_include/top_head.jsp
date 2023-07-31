@@ -16,15 +16,11 @@
 
 <%@ include file="/dynamic_include/init.jsp" %>
 
-<%
-String cspNonce = CSPNonceProviderUtil.getCSPNonce(request);
-%>
-
-<script data-senna-track="temporary" nonce="<%= cspNonce %>" type="text/javascript">
+<aui:script senna="temporary" type="text/javascript">
 	if (window.Analytics) {
 		window.<%= DocumentLibraryAnalyticsConstants.JS_PREFIX %>isViewFileEntry = false;
 	}
-</script>
+</aui:script>
 
 <aui:script>
 	function getValueByAttribute(node, attr) {

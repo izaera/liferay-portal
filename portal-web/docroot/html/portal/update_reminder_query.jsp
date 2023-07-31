@@ -17,8 +17,6 @@
 <%@ include file="/html/portal/init.jsp" %>
 
 <%
-String cspNonce = CSPNonceProviderUtil.getCSPNonce(request);
-
 String currentURL = PortalUtil.getCurrentURL(request);
 
 String referer = ParamUtil.getString(request, WebKeys.REFERER, currentURL);
@@ -98,7 +96,7 @@ if (referer.equals(themeDisplay.getPathMain() + "/portal/update_reminder_query")
 	</div>
 </div>
 
-<script nonce="<%= cspNonce %>">
+<aui:script>
 	(function() {
 		var customQuestionContainer = document.getElementById('customQuestionContainer');
 		var reminderQueryQuestion = document.getElementById('reminderQueryQuestion');
@@ -130,4 +128,4 @@ if (referer.equals(themeDisplay.getPathMain() + "/portal/update_reminder_query")
 			);
 		}
 	})();
-</script>
+</aui:script>

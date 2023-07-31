@@ -16,10 +16,6 @@
 
 <%@ include file="/init.jsp" %>
 
-<%
-String cspNonce = CSPNonceProviderUtil.getCSPNonce(request);
-%>
-
 <c:if test="<%= PropsValues.JSONWS_WEB_SERVICE_API_DISCOVERABLE %>">
 	<style>
 		<%@ include file="/css.jspf" %>
@@ -75,7 +71,7 @@ String cspNonce = CSPNonceProviderUtil.getCSPNonce(request);
 		</footer>
 	</div>
 
-	<script data-senna-track="permanent" id="APIScrollIntoView" nonce="<%= cspNonce %>" type="text/javascript">
+	<aui:script id="APIScrollIntoView" senna="permanent" type="text/javascript">
 		Liferay.once('endNavigate', (event) => {
 			var selected = document.querySelector(
 				'#services .lfr-api-signature.selected'
@@ -85,5 +81,5 @@ String cspNonce = CSPNonceProviderUtil.getCSPNonce(request);
 				selected.scrollIntoView({behavior: 'smooth'});
 			}
 		});
-	</script>
+	</aui:script>
 </c:if>

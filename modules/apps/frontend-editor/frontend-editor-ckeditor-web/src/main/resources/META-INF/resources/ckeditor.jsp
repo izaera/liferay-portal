@@ -17,8 +17,6 @@
 <%@ include file="/init.jsp" %>
 
 <%
-String cspNonce = CSPNonceProviderUtil.getCSPNonce(request);
-
 String portletId = portletDisplay.getId();
 
 boolean autoCreate = GetterUtil.getBoolean((String)request.getAttribute(CKEditorConstants.ATTRIBUTE_NAMESPACE + ":autoCreate"));
@@ -125,7 +123,7 @@ if (inlineEdit && Validator.isNotNull(inlineEditSaveURL)) {
 	</c:if>
 </div>
 
-<script nonce="<%= cspNonce %>" type="text/javascript">
+<aui:script type="text/javascript">
 	CKEDITOR.ADDITIONAL_RESOURCE_PARAMS = {
 		languageId: themeDisplay.getLanguageId(),
 	};
@@ -134,7 +132,7 @@ if (inlineEdit && Validator.isNotNull(inlineEditSaveURL)) {
 
 	CKEDITOR.dtd.$removeEmpty.i = 0;
 	CKEDITOR.dtd.$removeEmpty.span = 0;
-</script>
+</aui:script>
 
 <%
 name = HtmlUtil.escapeJS(name);

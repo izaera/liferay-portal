@@ -16,13 +16,9 @@
 
 <%@ include file="/init.jsp" %>
 
-<%
-String cspNonce = CSPNonceProviderUtil.getCSPNonce(request);
-%>
-
 <meta content="<%= (String)request.getAttribute(AnalyticsWebKeys.ANALYTICS_CLIENT_READABLE_CONTENT) %>" name="data-analytics-readable-content" />
 
-<script data-senna-track="temporary" nonce="<%= cspNonce %>" type="text/javascript">
+<aui:script senna="temporary" type="text/javascript">
 	var runMiddlewares = function () {
 		<liferay-util:dynamic-include key="/dynamic_include/top_head.jsp#analytics" />
 	};
@@ -30,9 +26,9 @@ String cspNonce = CSPNonceProviderUtil.getCSPNonce(request);
 	var analyticsClientChannelId =
 		'<%= (String)request.getAttribute(AnalyticsWebKeys.ANALYTICS_CLIENT_CHANNEL_ID) %>';
 	var analyticsClientGroupIds = <%= (String)request.getAttribute(AnalyticsWebKeys.ANALYTICS_CLIENT_GROUP_IDS) %>;
-</script>
+</aui:script>
 
-<script data-senna-track="permanent" id="liferayAnalyticsScript" nonce="<%= cspNonce %>" type="text/javascript">
+<aui:script id="liferayAnalyticsScript" senna="permanent" type="text/javascript">
 	(function (u, c, a, m, o, l) {
 		o = 'script';
 		l = document;
@@ -66,7 +62,7 @@ String cspNonce = CSPNonceProviderUtil.getCSPNonce(request);
 
 		Analytics.send('pageViewed', 'Page');
 
-		<c:if test="<%= GetterUtil.getBoolean(PropsUtil.get(PropsKeys.JAVASCRIPT_SINGLE_PAGE_APPLICATION_ENABLED)) %>">
+		<% if (GetterUtil.getBoolean(PropsUtil.get(PropsKeys.JAVASCRIPT_SINGLE_PAGE_APPLICATION_ENABLED))) { %>
 			Liferay.on('endNavigate', (event) => {
 				Analytics.dispose();
 
@@ -90,6 +86,6 @@ String cspNonce = CSPNonceProviderUtil.getCSPNonce(request);
 					Analytics.send('pageViewed', 'Page', {page: event.path});
 				}
 			});
-		</c:if>
+		<% } %>
 	});
-</script>
+</aui:script>

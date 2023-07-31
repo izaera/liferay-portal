@@ -17,8 +17,6 @@
 <%@ include file="/init.jsp" %>
 
 <%
-String cspNonce = CSPNonceProviderUtil.getCSPNonce(request);
-
 String activeView = ParamUtil.getString(request, "activeView", sessionClicksDefaultView);
 long date = ParamUtil.getLong(request, "date", System.currentTimeMillis());
 String editCalendarBookingURL = ParamUtil.getString(request, "editCalendarBookingURL");

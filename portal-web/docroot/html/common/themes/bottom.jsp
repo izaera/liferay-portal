@@ -16,10 +16,6 @@
 
 <%@ include file="/html/common/themes/init.jsp" %>
 
-<%
-String cspNonce = CSPNonceProviderUtil.getCSPNonce(request);
-%>
-
 <liferay-util:dynamic-include key="/html/common/themes/bottom.jsp#pre" />
 
 <%
@@ -64,7 +60,7 @@ com.liferay.petra.string.StringBundler pageBottomSB = OutputTag.getDataSB(reques
 
 <%-- Theme JavaScript --%>
 
-<script nonce="<%= cspNonce %>" src="<%= HtmlUtil.escape(themeDisplay.getMainJSURL()) %>" type="text/javascript"></script>
+<aui:script src="<%= HtmlUtil.escape(themeDisplay.getMainJSURL()) %>" type="text/javascript"></aui:script>
 
 <liferay-util:include page="/html/common/themes/bottom-ext.jsp" />
 <liferay-util:include page="/html/common/themes/bottom-test.jsp" />

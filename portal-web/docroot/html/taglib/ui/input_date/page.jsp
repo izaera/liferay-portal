@@ -17,8 +17,6 @@
 <%@ include file="/html/taglib/init.jsp" %>
 
 <%
-String cspNonce = CSPNonceProviderUtil.getCSPNonce(request);
-
 String randomNamespace = PortalUtil.generateRandomKey(request, "taglib_ui_input_date_page") + StringPool.UNDERLINE;
 
 if (GetterUtil.getBoolean((String)request.getAttribute("liferay-ui:input-date:disableNamespace"))) {
@@ -157,7 +155,7 @@ else {
 
 	<aui:input label="<%= dateTogglerCheckboxLabel %>" name="<%= randomNamespace + dateTogglerCheckboxName %>" type="checkbox" value="<%= disabled %>" />
 
-	<script nonce="<%= cspNonce %>">
+	<aui:script>
 		(function() {
 			var form = document.<%= namespace + formName %>;
 
@@ -216,7 +214,7 @@ else {
 				);
 			}
 		})();
-	</script>
+	</aui:script>
 </c:if>
 
 <aui:script use='<%= "aui-datepicker" + (BrowserSnifferUtil.isMobile(request) ? "-native" : StringPool.BLANK) %>'>

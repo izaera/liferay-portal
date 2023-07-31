@@ -19,6 +19,4 @@
 <%
 String clickToChatChatProviderAccountId = (String)request.getAttribute(ClickToChatWebKeys.CLICK_TO_CHAT_CHAT_PROVIDER_ACCOUNT_ID);
 String clickToChatChatProviderId = (String)request.getAttribute(ClickToChatWebKeys.CLICK_TO_CHAT_CHAT_PROVIDER_ID);
-
-String cspNonce = CSPNonceProviderUtil.getCSPNonce(request);
 %>
