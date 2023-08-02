@@ -17,6 +17,11 @@ package com.liferay.cookies.banner.web.internal.servlet.taglib;
 import com.liferay.frontend.js.loader.modules.extender.npm.NPMResolver;
 import com.liferay.portal.kernel.servlet.taglib.DynamicInclude;
 import com.liferay.portal.kernel.servlet.taglib.aui.ScriptData;
+import com.liferay.portal.kernel.servlet.taglib.aui.JSFragment;
+import com.liferay.frontend.js.loader.modules.extender.esm.ESImportUtil;
+import com.liferay.portal.url.builder.AbsolutePortalURLBuilder;
+import com.liferay.portal.url.builder.AbsolutePortalURLBuilderFactory;
+import com.liferay.portal.kernel.util.Portal;
 
 import java.io.IOException;
 
@@ -25,6 +30,8 @@ import javax.servlet.http.HttpServletResponse;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
+
+import java.util.Arrays;
 
 /**
  * @author Bryce Osterhaus
@@ -39,15 +46,24 @@ public class EnableThirdPartyCookiesBottomJSDynamicInclude
 			HttpServletResponse httpServletResponse, String key)
 		throws IOException {
 
+		AbsolutePortalURLBuilder absolutePortalURLBuilder =
+			_absolutePortalURLBuilderFactory.getAbsolutePortalURLBuilder(
+				httpServletRequest);
+
 		ScriptData scriptData = new ScriptData();
 
-		String initModuleName = _npmResolver.resolveModuleName(
-			"@liferay/cookies-banner-web/js/toggleThirdPartyCookies");
-
 		scriptData.append(
-			null, "toggleThirdPartyCookies.default()",
-			initModuleName + " as toggleThirdPartyCookies",
-			ScriptData.ModulesType.ES6);
+			_portal.getPortletId(httpServletRequest),
+			new JSFragment(
+				"toggleThirdPartyCookies();",
+				Arrays.asList(
+					ESImportUtil.getESImport(
+						absolutePortalURLBuilder,
+						"{toggleThirdPartyCookies} from cookies-banner-web/index.js"
+					)
+				)
+			)
+		);
 
 		scriptData.writeTo(httpServletResponse.getWriter());
 	}
@@ -61,5 +77,11 @@ public class EnableThirdPartyCookiesBottomJSDynamicInclude
 
 	@Reference
 	private NPMResolver _npmResolver;
+
+	@Reference
+	private Portal _portal;
+
+		@Reference
+	private AbsolutePortalURLBuilderFactory _absolutePortalURLBuilderFactory;
 
 }
