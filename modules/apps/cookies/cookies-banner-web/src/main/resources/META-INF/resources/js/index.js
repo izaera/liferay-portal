@@ -11,4 +11,4 @@ export {
 } from '../cookies_banner/js/CookiesBanner';
 
 
-export {toggleThirdPartyCookies} from './toggleThirdPartyCookies';
+export {default as toggleThirdPartyCookies} from './toggleThirdPartyCookies';
