@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.portlet.PortalPreferences;
 import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.portlet.PortletURLFactory;
 import com.liferay.portal.kernel.portlet.url.builder.PortletURLBuilder;
+import com.liferay.portal.kernel.security.csp.CSPNonceProviderUtil;
 import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.service.permission.LayoutPermissionUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -52,7 +53,6 @@ import com.liferay.taglib.util.BodyBottomTag;
 import java.io.IOException;
 import java.io.Writer;
 
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -121,40 +121,45 @@ public class SegmentsExperimentProductNavigationControlMenuEntry
 			HttpServletResponse httpServletResponse)
 		throws IOException {
 
-		Map<String, String> values = new HashMap<>();
-
-		if (isPanelStateOpen(
-				httpServletRequest,
-				ProductNavigationControlMenuEntryConstants.
-					SESSION_CLICKS_KEY)) {
-
-			values.put("cssClass", "active");
-		}
-		else {
-			values.put("cssClass", StringPool.BLANK);
-		}
-
-		ResourceBundle resourceBundle = ResourceBundleUtil.getBundle(
-			_portal.getLocale(httpServletRequest), getClass());
-
-		values.put(
-			"title", _html.escape(_language.get(resourceBundle, "ab-test")));
-
-		IconTag iconTag = new IconTag();
-
-		iconTag.setCssClass("icon-monospaced");
-		iconTag.setSymbol("test");
+		Map<String, String> values;
 
 		try {
-			values.put(
+			ResourceBundle resourceBundle = ResourceBundleUtil.getBundle(
+				_portal.getLocale(httpServletRequest), getClass());
+
+			IconTag iconTag = new IconTag();
+
+			iconTag.setCssClass("icon-monospaced");
+			iconTag.setSymbol("test");
+
+			values = HashMapBuilder.put(
+				"cspNonceAttr",
+				CSPNonceProviderUtil.getCSPNonceAttr(httpServletRequest)
+			).put(
+				"cssClass",
+				() -> {
+					if (isPanelStateOpen(
+							httpServletRequest,
+							ProductNavigationControlMenuEntryConstants.
+								SESSION_CLICKS_KEY)) {
+
+						return "active";
+					}
+
+					return StringPool.BLANK;
+				}
+			).put(
 				"iconTag",
-				iconTag.doTagAsString(httpServletRequest, httpServletResponse));
+				iconTag.doTagAsString(httpServletRequest, httpServletResponse)
+			).put(
+				"portletNamespace", _portletNamespace
+			).put(
+				"title", _html.escape(_language.get(resourceBundle, "ab-test"))
+			).build();
 		}
 		catch (JspException jspException) {
-			ReflectionUtil.throwException(jspException);
+			throw new IOException(jspException);
 		}
-
-		values.put("portletNamespace", _portletNamespace);
 
 		Writer writer = httpServletResponse.getWriter();
 

@@ -12,6 +12,7 @@ import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.portlet.LiferayWindowState;
 import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.portlet.url.builder.PortletURLBuilder;
+import com.liferay.portal.kernel.security.csp.CSPNonceProviderUtil;
 import com.liferay.portal.kernel.theme.PortletDisplay;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.HashMapBuilder;
@@ -86,6 +87,9 @@ public class ProductMenuProductNavigationControlMenuEntry
 			"closeProductMenuTitle",
 			HtmlUtil.escape(
 				_language.get(httpServletRequest, "close-product-menu"))
+		).put(
+			"cspNonceAttr",
+			CSPNonceProviderUtil.getCSPNonceAttr(httpServletRequest)
 		).put(
 			"cssClass",
 			() -> {

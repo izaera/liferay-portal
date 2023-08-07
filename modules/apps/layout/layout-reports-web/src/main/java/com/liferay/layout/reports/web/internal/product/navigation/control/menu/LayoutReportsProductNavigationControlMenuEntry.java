@@ -22,6 +22,7 @@ import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Layout;
+import com.liferay.portal.kernel.security.csp.CSPNonceProviderUtil;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.security.permission.PermissionThreadLocal;
@@ -48,7 +49,6 @@ import com.liferay.taglib.util.BodyBottomTag;
 import java.io.IOException;
 import java.io.Writer;
 
-import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
 import java.util.ResourceBundle;
@@ -113,39 +113,45 @@ public class LayoutReportsProductNavigationControlMenuEntry
 			HttpServletResponse httpServletResponse)
 		throws IOException {
 
-		Map<String, String> values = new HashMap<>();
-
-		if (isPanelStateOpen(
-				httpServletRequest,
-				ProductNavigationControlMenuEntryConstants.
-					SESSION_CLICKS_KEY)) {
-
-			values.put("cssClass", "active");
-		}
-		else {
-			values.put("cssClass", StringPool.BLANK);
-		}
-
-		ResourceBundle resourceBundle = ResourceBundleUtil.getBundle(
-			_portal.getLocale(httpServletRequest), getClass());
-
-		values.put("title", _language.get(resourceBundle, "page-audit"));
-
-		IconTag iconTag = new IconTag();
-
-		iconTag.setCssClass("icon-monospaced");
-
-		if (FeatureFlagManagerUtil.isEnabled("LPS-187284")) {
-			iconTag.setSymbol("search-experiences");
-		}
-		else {
-			iconTag.setSymbol("info-circle");
-		}
+		Map<String, String> values;
 
 		try {
-			values.put(
+			ResourceBundle resourceBundle = ResourceBundleUtil.getBundle(
+				_portal.getLocale(httpServletRequest), getClass());
+
+			IconTag iconTag = new IconTag();
+
+			iconTag.setCssClass("icon-monospaced");
+
+			if (FeatureFlagManagerUtil.isEnabled("LPS-187284")) {
+				iconTag.setSymbol("search-experiences");
+			}
+			else {
+				iconTag.setSymbol("info-circle");
+			}
+
+			values = HashMapBuilder.put(
+				"cspNonceAttr",
+				CSPNonceProviderUtil.getCSPNonceAttr(httpServletRequest)
+			).put(
+				"cssClass",
+				() -> {
+					if (isPanelStateOpen(
+							httpServletRequest,
+							ProductNavigationControlMenuEntryConstants.
+								SESSION_CLICKS_KEY)) {
+
+						return "active";
+					}
+
+					return StringPool.BLANK;
+				}
+			).put(
 				"iconTag",
-				iconTag.doTagAsString(httpServletRequest, httpServletResponse));
+				iconTag.doTagAsString(httpServletRequest, httpServletResponse)
+			).put(
+				"title", _language.get(resourceBundle, "page-audit")
+			).build();
 		}
 		catch (JspException jspException) {
 			throw new IOException(jspException);
