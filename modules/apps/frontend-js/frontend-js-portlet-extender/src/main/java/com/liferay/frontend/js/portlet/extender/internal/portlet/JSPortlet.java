@@ -11,6 +11,8 @@ import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
+import com.liferay.portal.kernel.security.csp.CSPNonceProviderUtil;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.IOException;
@@ -42,11 +44,12 @@ public class JSPortlet extends MVCPortlet implements ManagedService {
 
 	public JSPortlet(
 		JSONFactory jsonFactory, String packageName, String packageVersion,
-		Set<String> portletPreferencesFieldNames) {
+		Portal portal, Set<String> portletPreferencesFieldNames) {
 
 		_jsonFactory = jsonFactory;
 		_packageName = packageName;
 		_packageVersion = packageVersion;
+		_portal = portal;
 		_portletPreferencesFieldNames = portletPreferencesFieldNames;
 	}
 
@@ -69,14 +72,17 @@ public class JSPortlet extends MVCPortlet implements ManagedService {
 				StringUtil.replace(
 					_TPL_JAVA_SCRIPT,
 					new String[] {
-						"[$CONTEXT_PATH$]", "[$PACKAGE_NAME$]",
-						"[$PACKAGE_VERSION$]", "[$PORTLET_ELEMENT_ID$]",
+						"[$CONTEXT_PATH$]", "[$CSP_NONCE_ATTR$]",
+						"[$PACKAGE_NAME$]", "[$PACKAGE_VERSION$]",
+						"[$PORTLET_ELEMENT_ID$]",
 						"[$PORTLET_INSTANCE_CONFIGURATION$]",
 						"[$PORTLET_NAMESPACE$]", "[$SYSTEM_CONFIGURATION$]"
 					},
 					new String[] {
-						renderRequest.getContextPath(), _packageName,
-						_packageVersion, portletElementId,
+						renderRequest.getContextPath(),
+						CSPNonceProviderUtil.getCSPNonceAttr(
+							_portal.getHttpServletRequest(renderRequest)),
+						_packageName, _packageVersion, portletElementId,
 						_getPortletInstanceConfiguration(renderRequest),
 						renderResponse.getNamespace(), _getSystemConfiguration()
 					}));
@@ -195,6 +201,7 @@ public class JSPortlet extends MVCPortlet implements ManagedService {
 	private final JSONFactory _jsonFactory;
 	private final String _packageName;
 	private final String _packageVersion;
+	private final Portal _portal;
 	private final Set<String> _portletPreferencesFieldNames;
 
 }
