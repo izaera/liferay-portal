@@ -90,7 +90,7 @@
 
 <#assign applicationNameSpace = randomNamespace />
 
-<script>
+<script ${cspNonceAttr}>
 	function ${applicationNameSpace}backToEdit() {
 		let siteName = '';
 

@@ -31,6 +31,7 @@ import com.liferay.portal.kernel.portlet.PortletRequestModelFactory;
 import com.liferay.portal.kernel.portlet.PortletURLFactoryUtil;
 import com.liferay.portal.kernel.portlet.WindowStateFactory_IW;
 import com.liferay.portal.kernel.security.auth.PrincipalThreadLocal;
+import com.liferay.portal.kernel.security.csp.CSPNonceProviderUtil;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.GroupService;
 import com.liferay.portal.kernel.service.LayoutLocalService;
@@ -202,6 +203,12 @@ public class TemplateContextHelper {
 	public void prepare(
 		Map<String, Object> contextObjects,
 		HttpServletRequest httpServletRequest) {
+
+		// CSP nonce
+
+		contextObjects.put(
+			"cspNonceAttr",
+			CSPNonceProviderUtil.getCSPNonceAttr(httpServletRequest));
 
 		// Request
 
