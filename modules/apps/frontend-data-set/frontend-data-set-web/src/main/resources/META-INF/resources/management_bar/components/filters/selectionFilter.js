@@ -80,7 +80,6 @@ const getOdataString = ({entityFieldType, id, selectedData}) => {
 function SelectionFilter({
 	apiURL,
 	autocompleteEnabled,
-	entityFieldType,
 	id,
 	inputPlaceholder,
 	itemKey,
@@ -393,7 +392,7 @@ function SelectionFilter({
 					disabled={submitDisabled}
 					onClick={() => {
 						if (actionType === 'delete') {
-							setFilter({active: false, id});
+							setFilter({active: false});
 						}
 						else {
 							const newSelectedData = {
@@ -403,17 +402,7 @@ function SelectionFilter({
 
 							setFilter({
 								active: true,
-								id,
-								odataFilterString: getOdataString({
-									entityFieldType,
-									id,
-									multiple,
-									selectedData: newSelectedData,
-								}),
 								selectedData: newSelectedData,
-								selectedItemsLabel: getSelectedItemsLabel({
-									selectedData: newSelectedData,
-								}),
 							});
 						}
 					}}
@@ -447,7 +436,6 @@ const Item = ({multiple, ...props}) => {
 SelectionFilter.propTypes = {
 	apiURL: PropTypes.string,
 	autocompleteEnabled: PropTypes.bool,
-	entityFieldType: PropTypes.string,
 	id: PropTypes.string.isRequired,
 	inputPlaceholder: PropTypes.string,
 	itemKey: PropTypes.string,
@@ -477,5 +465,8 @@ SelectionFilter.propTypes = {
 	setFilter: PropTypes.func.isRequired,
 };
 
-export {getSelectedItemsLabel, getOdataString};
-export default SelectionFilter;
+export default {
+	Component: SelectionFilter,
+	getSelectedItemsLabel,
+	getOdataString
+};

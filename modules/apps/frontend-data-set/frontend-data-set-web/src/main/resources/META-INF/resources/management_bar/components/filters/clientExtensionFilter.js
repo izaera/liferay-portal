@@ -16,9 +16,7 @@ const getOdataString = ({entityFieldType, id, selectedData}) => {
 };
 
 function ClientExtensionFilter({
-	entityFieldType,
 	esmURL,
-	id,
 	selectedData,
 	setFilter,
 }) {
@@ -45,18 +43,11 @@ function ClientExtensionFilter({
 					selectedData
 				},
 				setFilter: ({
-					odataFilterString,
 					selectedData,
-					selectedItemsLabel
 				}) =>
 					setFilter({
 						active: true,
-						id: id,
-						... {
-							odataFilterString,
-							selectedData,
-							selectedItemsLabel
-						},
+						selectedData,
 					}),
 			}}
 			htmlElementBuilder={htmlElementBuilder}
@@ -65,9 +56,7 @@ function ClientExtensionFilter({
 }
 
 ClientExtensionFilter.propTypes = {
-	entityFieldType: PropTypes.string,
 	esmURL: PropTypes.string,
-	id: PropTypes.string.isRequired,
 	selectedData: PropTypes.shape({
 		exclude: PropTypes.bool,
 		data: PropTypes.object,
@@ -75,5 +64,8 @@ ClientExtensionFilter.propTypes = {
 	setFilter: PropTypes.func.isRequired,
 };
 
-export {getSelectedItemsLabel, getOdataString};
-export default ClientExtensionFilter;
+export default {
+	Component: ClientExtensionFilter,
+	getSelectedItemsLabel,
+	getOdataString
+};

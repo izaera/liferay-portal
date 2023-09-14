@@ -9,68 +9,28 @@ import React, {useContext, useEffect, useState} from 'react';
 import {getComponentByModuleURL} from '../../../utils/modules';
 import ViewsContext from '../../../views/ViewsContext';
 import {VIEWS_ACTION_TYPES} from '../../../views/viewsReducer';
-import ClientExtensionFilter, {
-	getOdataString as getClientExtensionFilterOdataString,
-	getSelectedItemsLabel as getClientExtensionFilterSelectedItemsLabel,
-} from './ClientExtensionFilter';
-import DateRangeFilter, {
-	getOdataString as getDateRangeFilterOdataString,
-	getSelectedItemsLabel as getDateRangeFilterSelectedItemsLabel,
-} from './DateRangeFilter';
-import SelectionFilter, {
-	getOdataString as getSelectionFilterOdataString,
-	getSelectedItemsLabel as getSelectionFilterSelectedItemsLabel,
-} from './SelectionFilter';
+import clientExtensionFilter from './clientExtensionFilter';
+import dateRangeFilter from './dateRangeFilter';
+import selectionFilter from './selectionFilter';
 
-const FILTER_TYPE_COMPONENT = {
-	clientExtension: ClientExtensionFilter,
-	dateRange: DateRangeFilter,
-	selection: SelectionFilter,
+const FILTER_IMPL_MAP = {
+	clientExtension: clientExtensionFilter,
+	dateRange: dateRangeFilter,
+	selection: selectionFilter,
 };
 
-const getFilterSelectedItemsLabel = (filter) => {
-	switch (filter.type) {
-		case 'clientExtension':
-			return getClientExtensionFilterSelectedItemsLabel(filter);
-		case 'dateRange':
-			return getDateRangeFilterSelectedItemsLabel(filter);
-		case 'selection':
-			return getSelectionFilterSelectedItemsLabel(filter);
-		default:
-			return '';
-	}
-};
-
-const getOdataFilterString = (filter) => {
-	switch (filter.type) {
-		case 'clientExtension':
-			return getClientExtensionFilterOdataString(filter);
-		case 'dateRange':
-			return getDateRangeFilterOdataString(filter);
-		case 'selection':
-			return getSelectionFilterOdataString(filter);
-		default:
-			return '';
-	}
-};
-
-const Filter = ({moduleURL, type, ...otherProps}) => {
+const Filter = ({id, moduleURL, type, ...otherProps}) => {
 	const [{filters}, viewsDispatch] = useContext(ViewsContext);
 
-	const [Component, setComponent] = useState(() => {
-		if (!moduleURL) {
-			const Matched = FILTER_TYPE_COMPONENT[type];
+	const filterImpl = FILTER_IMPL_MAP[type];
 
-			if (!Matched) {
-				throw new Error(`Filter type '${type}' not found.`);
-			}
+	if (!filterImpl) {
+		throw new Error(`Filter type '${type}' not found.`);
+	}
 
-			return Matched;
-		}
-		else {
-			return null;
-		}
-	});
+	const [Component, setComponent] = useState(
+		() => moduleURL ? null : filterImpl.Component
+	);
 
 	useEffect(() => {
 		if (moduleURL) {
@@ -80,24 +40,47 @@ const Filter = ({moduleURL, type, ...otherProps}) => {
 		}
 	}, [moduleURL]);
 
-	const setFilter = ({id, ...otherProps}) => {
+	const filterId = id;
+
+	const setFilter = ({id, selectedData, ...otherProps}) => {
+		if (id !== undefined && id !== filterId) {
+			throw new Error(
+				`Trying to modify filter ${id} from filter ${filterId}`
+			);
+		}
+
+		const newFilter = {
+			...(filters.find(filter => filter.id === filterId)),
+			selectedData,
+			...otherProps,
+		};
+
+		newFilter.odataFilterString = filterImpl.getOdataString(newFilter);
+		newFilter.selectedItemsLabel = filterImpl.getSelectedItemsLabel(
+			newFilter
+		);
+
 		viewsDispatch({
 			type: VIEWS_ACTION_TYPES.UPDATE_FILTERS,
-			value: filters.map((filter) => ({
-				...filter,
-				...(filter.id === id ? {...otherProps} : {}),
-			})),
+			value: filters.map(
+				(filter) => filter.id === filterId ? newFilter : filter
+			),
 		});
 	};
 
 	return Component ? (
 		<div className="data-set-filter">
-			<Component setFilter={setFilter} {...otherProps} />
+			<Component
+				id={id}
+				setFilter={setFilter}
+				type={type}
+				{...otherProps}
+			/>
 		</div>
 	) : (
 		<ClayLoadingIndicator size="sm" />
 	);
 };
 
-export {getFilterSelectedItemsLabel, getOdataFilterString};
+export {FILTER_IMPL_MAP};
 export default Filter;
