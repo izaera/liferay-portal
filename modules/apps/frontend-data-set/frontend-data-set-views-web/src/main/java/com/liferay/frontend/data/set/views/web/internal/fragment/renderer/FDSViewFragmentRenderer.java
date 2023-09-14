@@ -500,11 +500,11 @@ public class FDSViewFragmentRenderer implements FragmentRenderer {
 					return JSONUtil.put(
 						"entityFieldType", FDSEntityFieldTypes.STRING
 					).put(
+						"esmURL", fdsFilterCET.getURL()
+					).put(
 						"id", properties.get("fieldName")
 					).put(
 						"label", properties.get("name")
-					).put(
-						"moduleURL", fdsFilterCET.getURL()
 					).put(
 						"type", "clientExtension"
 					);
