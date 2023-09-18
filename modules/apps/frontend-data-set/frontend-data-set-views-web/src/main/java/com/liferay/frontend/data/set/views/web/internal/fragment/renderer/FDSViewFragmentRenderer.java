@@ -405,6 +405,26 @@ public class FDSViewFragmentRenderer implements FragmentRenderer {
 				fdsViewObjectDefinition, fdsViewObjectEntry,
 				"fdsViewFDSDynamicFilterRelationship"));
 
+
+		// {{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{{
+		ObjectEntry objectEntry = new ObjectEntry();
+
+		objectEntry.setId(Long.MAX_VALUE);
+
+		objectEntry.setProperties(
+			HashMapBuilder.<String, Object>put(
+				"clientExtensionERC", "LXC:liferay-sample-fds-filter"
+			).put(
+				"fieldName", "id"
+			).put(
+				"filterName", "id"
+			).put(
+				"name", "id"
+			).build());
+
+		fdsFilterObjectEntries.add(objectEntry);
+		// }}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}}
+
 		return JSONUtil.toJSONArray(
 			fdsFilterObjectEntries,
 			(ObjectEntry fdsFilterObjectEntry) -> {
