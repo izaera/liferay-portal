@@ -6,6 +6,7 @@
 package com.liferay.frontend.data.set.views.web.internal.fragment.renderer;
 
 import com.liferay.client.extension.type.FDSCellRendererCET;
+import com.liferay.client.extension.type.FDSFilterCET;
 import com.liferay.client.extension.type.manager.CETManager;
 import com.liferay.fragment.model.FragmentEntryLink;
 import com.liferay.fragment.renderer.FragmentRenderer;
@@ -481,6 +482,31 @@ public class FDSViewFragmentRenderer implements FragmentRenderer {
 						)
 					).put(
 						"type", "selection"
+					);
+				}
+
+				String clientExtensionERC = MapUtil.getString(
+					properties, "clientExtensionERC");
+
+				if (Validator.isNotNull(clientExtensionERC)) {
+					ThemeDisplay themeDisplay =
+						(ThemeDisplay)httpServletRequest.getAttribute(
+							WebKeys.THEME_DISPLAY);
+
+					FDSFilterCET fdsFilterCET =
+						(FDSFilterCET)_cetManager.getCET(
+							themeDisplay.getCompanyId(), clientExtensionERC);
+
+					return JSONUtil.put(
+						"entityFieldType", FDSEntityFieldTypes.STRING
+					).put(
+						"id", properties.get("fieldName")
+					).put(
+						"label", properties.get("name")
+					).put(
+						"moduleURL", fdsFilterCET.getURL()
+					).put(
+						"type", "clientExtension"
 					);
 				}
 
