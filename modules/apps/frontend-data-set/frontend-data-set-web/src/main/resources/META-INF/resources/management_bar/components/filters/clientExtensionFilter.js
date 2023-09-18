@@ -5,37 +5,19 @@
 
 import {ClientExtension} from 'frontend-js-components-web';
 import PropTypes from 'prop-types';
-import React, {useEffect, useState} from "react";
+import React from "react";
 
-const getSelectedItemsLabel = ({selectedData}) => {
-	return '';
-};
-
-const getOdataString = ({entityFieldType, id, selectedData}) => {
-	return '';
-};
+const getSelectedItemsLabel =
+	(filterProps) =>
+		filterProps.cxFilterImpl.getSelectedItemsLabel(filterProps);
+const getOdataString =
+	(filterProps) => filterProps.cxFilterImpl.getOdataString(filterProps);
 
 function ClientExtensionFilter({
-	esmURL,
+	cxFilterImpl,
 	selectedData,
 	setFilter,
 }) {
-	const [htmlElementBuilder, setHTMLElementBuilder] = useState(() =>
-		(() => document.createElement("div"))
-	);
-
-	useEffect(() => {
-		const getModule = async () => {
-			const cetModule = await import(
-				/* webpackIgnore: true */ esmURL
-			);
-
-			setHTMLElementBuilder(() => cetModule['default']);
-		};
-
-		getModule();
-	}, [esmURL]);
-
 	return (
 		<ClientExtension
 			args={{
@@ -50,13 +32,17 @@ function ClientExtensionFilter({
 						selectedData,
 					}),
 			}}
-			htmlElementBuilder={htmlElementBuilder}
+			htmlElementBuilder={cxFilterImpl.htmlElementBuilder}
 		/>
 	);
 }
 
 ClientExtensionFilter.propTypes = {
-	esmURL: PropTypes.string,
+	cxFilterImpl: PropTypes.shape({
+		getOdataString: PropTypes.func,
+		getSelectedItemsLabel: PropTypes.func,
+		htmlElementBuilder: PropTypes.func,
+	}),
 	selectedData: PropTypes.shape({
 		exclude: PropTypes.bool,
 		data: PropTypes.object,

@@ -212,7 +212,7 @@ public class FDSViewFragmentRenderer implements FragmentRenderer {
 		sb.append("\" >");
 
 		ComponentDescriptor componentDescriptor = new ComponentDescriptor(
-			"{FrontendDataSet} from frontend-data-set-web",
+			"{FDSViewFragment} from frontend-data-set-views-web",
 			fragmentRendererContext.getFragmentElementId(), null, true);
 
 		Writer writer = new CharArrayWriter();
@@ -520,7 +520,7 @@ public class FDSViewFragmentRenderer implements FragmentRenderer {
 					return JSONUtil.put(
 						"entityFieldType", FDSEntityFieldTypes.STRING
 					).put(
-						"esmURL", fdsFilterCET.getURL()
+						"cxFilterImplURL", fdsFilterCET.getURL()
 					).put(
 						"id", properties.get("fieldName")
 					).put(
