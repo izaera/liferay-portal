@@ -5,7 +5,15 @@
 
 import type {FDSFilterHTMLElementBuilder} from '@liferay/js-api/data-set';
 
-const mySampleFilter: FDSFilterHTMLElementBuilder = ({filter, setFilter}) => {
+function getOdataString(filter: any) {
+	return filter.selectedData;
+}
+
+function getSelectedItemsLabel(filter: any) {
+	return filter.selectedData;
+}
+
+const htmlElementBuilder: FDSFilterHTMLElementBuilder = ({filter, setFilter}) => {
 	const div = document.createElement('div');
 	const button = document.createElement('button');
 	const input = document.createElement('input');
@@ -16,9 +24,8 @@ const mySampleFilter: FDSFilterHTMLElementBuilder = ({filter, setFilter}) => {
 	button.innerText = 'Submit';
 	button.onclick = () =>
 		setFilter({
-			odataFilterString: input.value,
 			selectedData: input.value,
-		});
+		} as any);
 
 	if (filter.selectedData) {
 		input.value = filter.selectedData;
@@ -33,4 +40,8 @@ const mySampleFilter: FDSFilterHTMLElementBuilder = ({filter, setFilter}) => {
 	return div;
 };
 
-export default mySampleFilter;
+export {
+	getOdataString, 
+	getSelectedItemsLabel, 
+	htmlElementBuilder 
+};
