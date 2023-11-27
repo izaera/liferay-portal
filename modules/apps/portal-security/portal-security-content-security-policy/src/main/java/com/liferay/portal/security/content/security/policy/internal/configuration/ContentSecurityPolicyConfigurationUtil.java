@@ -22,15 +22,10 @@ public class ContentSecurityPolicyConfigurationUtil {
 			ConfigurationProvider configurationProvider,
 			HttpServletRequest httpServletRequest, Portal portal) {
 
-		ContentSecurityPolicyConfiguration contentSecurityPolicyConfiguration =
-			(ContentSecurityPolicyConfiguration)httpServletRequest.getAttribute(
-				ContentSecurityPolicyConfigurationUtil.class.getName());
-
-		if (contentSecurityPolicyConfiguration != null) {
-			return contentSecurityPolicyConfiguration;
-		}
-
 		try {
+			ContentSecurityPolicyConfiguration
+				contentSecurityPolicyConfiguration;
+
 			long groupId = portal.getScopeGroupId(httpServletRequest);
 
 			if (groupId > 0) {
@@ -44,16 +39,12 @@ public class ContentSecurityPolicyConfigurationUtil {
 						ContentSecurityPolicyConfiguration.class,
 						portal.getCompanyId(httpServletRequest));
 			}
+
+			return contentSecurityPolicyConfiguration;
 		}
 		catch (PortalException portalException) {
 			return ReflectionUtil.throwException(portalException);
 		}
-
-		httpServletRequest.setAttribute(
-			ContentSecurityPolicyConfigurationUtil.class.getName(),
-			contentSecurityPolicyConfiguration);
-
-		return contentSecurityPolicyConfiguration;
 	}
 
 }
