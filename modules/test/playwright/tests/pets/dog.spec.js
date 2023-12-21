@@ -11,8 +11,14 @@ export const test = mergeTests(
 	needPetTest('dog'),
 );
 
-test('get a dog pet', async ({
+test('get first dog pet', async ({
 	_needPet,
 }) => {
-	console.log('======> got dot pet named:', _needPet);
+	console.log('======> got first dog pet named:', _needPet);
+});
+
+test('get second dog pet', async ({
+	_needPet,
+}) => {
+	console.log('======> got secong dog pet named:', _needPet);
 });

@@ -7,13 +7,16 @@ import {test} from '@playwright/test';
 
 import {ApiHelpers} from '../helpers/ApiHelpers';
 
+let index = 0;
+
 exports.test = (petType) => 
 	test.extend({
 		_needPet: async ({page}, use) => {
 			// This 👇 simulates creating a pet in the DB 
 			let pet = {
 				type: petType,
-				name: petType == 'cat' ? 'Garfield' : 'Tony'
+				name: petType == 'cat' ? 'Garfield' : 'Tony',
+				i: index++
 			};
 
 			try {
