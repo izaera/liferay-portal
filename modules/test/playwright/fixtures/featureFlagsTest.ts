@@ -7,7 +7,7 @@ import {Page, mergeTests, test} from '@playwright/test';
 
 import {loginTest} from './loginTest';
 
-export type FeatureFlagsOptions = {
+export interface FeatureFlagsOptions {
 	[key: string]: boolean;
 };
 
