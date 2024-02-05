@@ -1,0 +1,8 @@
+{
+	"baseDir": "assets",
+	"buildDir": "build/static",
+	"entryPoints": [
+		"index.js",
+		"style.css"
+	]
+}

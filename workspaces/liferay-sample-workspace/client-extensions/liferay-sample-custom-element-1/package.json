@@ -1,0 +1,13 @@
+{
+	"devDependencies": {
+		"acorn": "8.11.3",
+		"acorn-walk": "8.3.2",
+		"escodegen": "2.1.0"
+	},
+	"name": "@liferay/liferay-sample-custom-element-1",
+	"private": true,
+	"scripts": {
+		"build": "node scripts/build.js"
+	},
+	"version": "0.1.0"
+}
