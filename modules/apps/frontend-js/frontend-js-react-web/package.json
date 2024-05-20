@@ -22,7 +22,9 @@
 		"build": "liferay-npm-scripts build",
 		"checkFormat": "liferay-npm-scripts check",
 		"format": "liferay-npm-scripts fix",
-		"test": "liferay-npm-scripts test"
+		"test": "liferay-npm-scripts test",
+		"tsc": "tsc -b src/main/resources/META-INF/resources/tsconfig.json --verbose",
+		"tsc:watch": "tsc -b src/main/resources/META-INF/resources/tsconfig.json --verbose --watch"
 	},
 	"version": "5.0.41"
 }
