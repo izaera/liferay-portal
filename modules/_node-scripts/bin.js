@@ -35,7 +35,12 @@ mainPromise
 
 function showHelpAndExit() {
 	console.error(`
-Usage: node-scripts build
+Usage: node-scripts <command>
+
+Available commands:
+
+	build
+	generate:tsconfig
 
 `);
 
