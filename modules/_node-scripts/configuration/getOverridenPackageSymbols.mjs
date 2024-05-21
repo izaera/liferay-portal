@@ -5,7 +5,7 @@
 
 import path from 'path';
 
-import getRootDir from '../util/getRootDir.mjs';
+import {ROOT_DIR} from '../util/constants.mjs';
 import projectScopeRequire from '../util/projectScopeRequire.mjs';
 
 /**
@@ -17,10 +17,8 @@ import projectScopeRequire from '../util/projectScopeRequire.mjs';
  * }
  */
 export default async function getOverridenPackageSymbols() {
-	const rootDir = await getRootDir();
-
 	const {symbols} = projectScopeRequire(
-		path.join(rootDir, 'node-scripts.config.js')
+		path.join(ROOT_DIR, 'node-scripts.config.js')
 	);
 
 	return symbols || {};

@@ -7,7 +7,7 @@ import {constants} from 'fs';
 import * as fs from 'fs/promises';
 import * as path from 'path';
 
-import getRootDir from './getRootDir.mjs';
+import {ROOT_DIR} from './constants.mjs';
 
 export default async function writeTimings(start, endConfig) {
 	const {LIFERAY_NPM_SCRIPTS_TIMING} = process.env;
@@ -15,7 +15,7 @@ export default async function writeTimings(start, endConfig) {
 	if (LIFERAY_NPM_SCRIPTS_TIMING) {
 		const end = Date.now();
 
-		const projectDir = path.relative(await getRootDir(), process.cwd());
+		const projectDir = path.relative(ROOT_DIR, process.cwd());
 
 		const csvFilePath = path.join(
 			LIFERAY_NPM_SCRIPTS_TIMING,

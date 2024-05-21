@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
+import fs from 'fs/promises';
 import path from 'path';
 
 export const BUILD_PATH = path.join('build', 'node', 'packageRunBuild');
@@ -17,6 +18,8 @@ export const BUILD_NPM_EXPORTS_PATH = path.join(
 	'exports'
 );
 
+export const ROOT_DIR = await getRootDir();
+
 export const SRC_PATH = path.join(
 	'src',
 	'main',
@@ -24,6 +27,36 @@ export const SRC_PATH = path.join(
 	'META-INF',
 	'resources'
 );
+export const SRC_TSCONFIG_PATH = path.join(SRC_PATH, 'tsconfig.json');
 
 export const WORK_PATH = path.join('build', 'node-scripts');
 export const WORK_EXPORT_PATH = path.join(WORK_PATH, 'export');
+
+async function getRootDir() {
+	let rootDir = path.resolve('.');
+	let found = false;
+
+	while (path.dirname(rootDir) !== rootDir) {
+		try {
+			await fs.stat(path.join(rootDir, 'yarn.lock'));
+
+			found = true;
+
+			break;
+		} catch (error) {
+			if (error.code !== 'ENOENT') {
+				throw error;
+			}
+
+			rootDir = path.resolve(rootDir, '..');
+		}
+	}
+
+	if (!found) {
+		throw new Error(
+			'Unable to find root project folder (is yarn.lock missing?)'
+		);
+	}
+
+	return rootDir;
+}
