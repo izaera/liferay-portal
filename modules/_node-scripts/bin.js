@@ -39,6 +39,7 @@ Usage: node-scripts <command>
 
 Available commands:
 
+	check:tsc [...tsc arguments]
 	build
 	generate:tsconfig
 
