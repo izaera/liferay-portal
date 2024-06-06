@@ -8,6 +8,7 @@ package com.liferay.gradle.plugins.workspace.configurator;
 import com.liferay.ant.bnd.metatype.MetatypePlugin;
 import com.liferay.gradle.plugins.JspCDefaultsPlugin;
 import com.liferay.gradle.plugins.LiferayOSGiPlugin;
+import com.liferay.gradle.plugins.css.builder.CSSBuilderPlugin;
 import com.liferay.gradle.plugins.extensions.BundleExtension;
 import com.liferay.gradle.plugins.extensions.LiferayOSGiExtension;
 import com.liferay.gradle.plugins.js.module.config.generator.JSModuleConfigGeneratorPlugin;
@@ -121,6 +122,8 @@ public class ModulesProjectConfigurator extends BaseProjectConfigurator {
 					JspCDefaultsPlugin.COMPILE_JSP_INCLUDE_PROPERTY_NAME,
 					isJspPrecompileEnabled());
 			}
+
+			GradleUtil.applyPlugin(project, CSSBuilderPlugin.class);
 
 			GradleUtil.applyPlugin(project, LiferayOSGiPlugin.class);
 

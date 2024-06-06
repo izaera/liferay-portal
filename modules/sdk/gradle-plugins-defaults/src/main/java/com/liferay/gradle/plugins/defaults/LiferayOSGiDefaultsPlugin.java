@@ -19,6 +19,7 @@ import com.liferay.gradle.plugins.baseline.BaselinePlugin;
 import com.liferay.gradle.plugins.cache.CacheExtension;
 import com.liferay.gradle.plugins.cache.CachePlugin;
 import com.liferay.gradle.plugins.cache.task.TaskCache;
+import com.liferay.gradle.plugins.css.builder.CSSBuilderPlugin;
 import com.liferay.gradle.plugins.defaults.internal.BaselineDefaultsPlugin;
 import com.liferay.gradle.plugins.defaults.internal.FindSecurityBugsPlugin;
 import com.liferay.gradle.plugins.defaults.internal.JSDocDefaultsPlugin;
@@ -345,7 +346,7 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 			deployToTools = true;
 		}
 
-		_applyPlugins(project, bundleExtension);
+		_applyPlugins(project, bundleExtension, portalVersion);
 
 		_applyConfigScripts(project);
 
@@ -1574,13 +1575,23 @@ public class LiferayOSGiDefaultsPlugin implements Plugin<Project> {
 	}
 
 	private void _applyPlugins(
-		Project project, BundleExtension bundleExtension) {
+		Project project, BundleExtension bundleExtension,
+		String portalVersion) {
 
 		if (Validator.isNotNull(bundleExtension.getInstruction("Main-Class"))) {
 			GradleUtil.applyPlugin(project, ApplicationPlugin.class);
 		}
 
 		GradleUtil.applyPlugin(project, BaselinePlugin.class);
+
+		if (PortalTools.PORTAL_VERSION_7_0_X.equals(portalVersion) ||
+			PortalTools.PORTAL_VERSION_7_1_X.equals(portalVersion) ||
+			PortalTools.PORTAL_VERSION_7_2_X.equals(portalVersion) ||
+			PortalTools.PORTAL_VERSION_7_3_X.equals(portalVersion)) {
+
+			GradleUtil.applyPlugin(project, CSSBuilderPlugin.class);
+		}
+
 		GradleUtil.applyPlugin(project, DependencyCheckerPlugin.class);
 		GradleUtil.applyPlugin(project, IdeaPlugin.class);
 		GradleUtil.applyPlugin(project, JSDocPlugin.class);

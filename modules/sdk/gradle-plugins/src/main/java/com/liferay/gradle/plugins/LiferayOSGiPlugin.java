@@ -17,7 +17,6 @@ import aQute.bnd.version.Version;
 
 import aQute.lib.utf8properties.UTF8Properties;
 
-import com.liferay.gradle.plugins.css.builder.CSSBuilderPlugin;
 import com.liferay.gradle.plugins.extensions.BundleExtension;
 import com.liferay.gradle.plugins.extensions.LiferayExtension;
 import com.liferay.gradle.plugins.extensions.LiferayOSGiExtension;
@@ -375,8 +374,6 @@ public class LiferayOSGiPlugin implements Plugin<Project> {
 		GradleUtil.applyPlugin(project, LiferayBasePlugin.class);
 
 		GradleUtil.applyPlugin(project, JavaLibraryPlugin.class);
-
-		GradleUtil.applyPlugin(project, CSSBuilderPlugin.class);
 
 		GradleUtil.applyPlugin(project, NodePlugin.class);
 
