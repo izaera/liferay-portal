@@ -1,5 +1,6 @@
 import com.liferay.gradle.util.copy.StripPathSegmentsAction
 
+apply plugin: "com.liferay.css.builder"
 apply plugin: "com.liferay.maven.plugin.builder"
 
 task copyPortalCommonCSSJar(type: Copy)

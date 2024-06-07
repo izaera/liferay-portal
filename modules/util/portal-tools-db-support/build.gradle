@@ -19,10 +19,6 @@ configurations {
 	mavenDistribution
 }
 
-copyCSS {
-	mustRunAfter buildPluginDescriptor
-}
-
 dependencies {
 	compileInclude group: "com.beust", name: "jcommander", version: "1.58"
 

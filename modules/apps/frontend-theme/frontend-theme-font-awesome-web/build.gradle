@@ -4,12 +4,6 @@ task buildFontAwesome(type: Copy)
 
 File fontAwesomeDestinationDir = new File("classes/META-INF/resources/font")
 
-buildCSS {
-	imports = [
-		new File(npmInstall.nodeModulesDir, "liferay-font-awesome")
-	]
-}
-
 buildFontAwesome {
 	eachFile new StripPathSegmentsAction(2)
 	from npmInstall.nodeModulesDir

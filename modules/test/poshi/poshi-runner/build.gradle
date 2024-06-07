@@ -3,12 +3,6 @@ import com.liferay.gradle.util.copy.RenameDependencyClosure
 
 apply plugin: "com.liferay.poshi.runner"
 
-buildCSS {
-	ext {
-		autoClean = false
-	}
-}
-
 dependencies {
 	api group: "com.deque.html.axe-core", name: "selenium", version: "4.6.0"
 	api group: "com.github.lewka", name: "ocular", version: "1.0.5"

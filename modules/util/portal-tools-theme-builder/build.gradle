@@ -28,10 +28,6 @@ configurations {
 	testThemes
 }
 
-copyCSS {
-	mustRunAfter buildPluginDescriptor
-}
-
 dependencies {
 	compileInclude group: "com.beust", name: "jcommander", version: "1.48"
 	compileInclude group: "net.coobird", name: "thumbnailator", version: "0.4.8"
