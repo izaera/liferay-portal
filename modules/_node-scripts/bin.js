@@ -6,106 +6,106 @@
 
 /* eslint-disable no-undef */
 
-const COMMANDS = {
-	'build': {
-		description: 'builds frontend stuff of current project',
-		parameters: '',
-		script: './bundle/index.mjs',
-	},
-	'build:report': {
-		description: 'generates an aggregated report of build timings',
-		parameters:
-			'[<timings directory> (falls back to LIFERAY_NPM_SCRIPTS_TIMING env var)]',
-		script: './bundle/report.mjs',
-	},
-	'check:preflight': {
-		description: 'runs several other infra-type checks',
-		parameters: '',
-		script: './preflight/index.mjs',
-	},
-	'check:tsc': {
-		description:
-			'runs TypeScript checks in the current project or globally (if run from modules)',
-		parameters: '[--modified-since=<git commit>]',
-		script: './tsc/index.mjs',
-	},
-	'format': {
-		description:
-			'formats source files or optionally only checks with "--check" flag.',
-		parameters: '[--check]',
-		script: './format/index.mjs',
-	},
-	'generate:tsconfig': {
-		description: 'generates tsconfig.json files for all projects',
-		parameters: '',
-		script: './tsconfig/index.mjs',
-	},
-};
+// const COMMANDS = {
+// 	'build': {
+// 		description: 'builds frontend stuff of current project',
+// 		parameters: '',
+// 		script: './bundle/index.mjs',
+// 	},
+// 	'build:report': {
+// 		description: 'generates an aggregated report of build timings',
+// 		parameters:
+// 			'[<timings directory> (falls back to LIFERAY_NPM_SCRIPTS_TIMING env var)]',
+// 		script: './bundle/report.mjs',
+// 	},
+// 	'check:preflight': {
+// 		description: 'runs several other infra-type checks',
+// 		parameters: '',
+// 		script: './preflight/index.mjs',
+// 	},
+// 	'check:tsc': {
+// 		description:
+// 			'runs TypeScript checks in the current project or globally (if run from modules)',
+// 		parameters: '[--modified-since=<git commit>]',
+// 		script: './tsc/index.mjs',
+// 	},
+// 	'format': {
+// 		description:
+// 			'formats source files or optionally only checks with "--check" flag.',
+// 		parameters: '[--check]',
+// 		script: './format/index.mjs',
+// 	},
+// 	'generate:tsconfig': {
+// 		description: 'generates tsconfig.json files for all projects',
+// 		parameters: '',
+// 		script: './tsconfig/index.mjs',
+// 	},
+// };
 
-const command = process.argv[2];
+// const command = process.argv[2];
 
-if (COMMANDS[command] === undefined) {
-	showHelpAndExit();
-}
+// if (COMMANDS[command] === undefined) {
+// 	showHelpAndExit();
+// }
 
-const {script} = COMMANDS[command];
+// const {script} = COMMANDS[command];
 
-const mainPromise = import(script);
+// const mainPromise = import(script);
 
-mainPromise
-	.then(({default: main}) => main())
-	.catch((error) => {
-		console.error(error);
+// mainPromise
+// 	.then(({default: main}) => main())
+// 	.catch((error) => {
+// 		console.error(error);
 
-		process.exit(1);
-	});
+// 		process.exit(1);
+// 	});
 
-function showHelpAndExit() {
-	console.error(`
-Usage: node-scripts <command>
+// function showHelpAndExit() {
+// 	console.error(`
+// Usage: node-scripts <command>
 
-Available commands:
-`);
+// Available commands:
+// `);
 
-	const maxCommandLength = Object.entries(COMMANDS).reduce(
-		(max, [command, {parameters}]) =>
-			Math.max(max, getCommandDisplayLength(command, parameters)),
-		0
-	);
+// 	const maxCommandLength = Object.entries(COMMANDS).reduce(
+// 		(max, [command, {parameters}]) =>
+// 			Math.max(max, getCommandDisplayLength(command, parameters)),
+// 		0
+// 	);
 
-	for (const [command, {description, parameters}] of Object.entries(
-		COMMANDS
-	)) {
-		let line = '    ';
+// 	for (const [command, {description, parameters}] of Object.entries(
+// 		COMMANDS
+// 	)) {
+// 		let line = '    ';
 
-		line += command;
+// 		line += command;
 
-		if (parameters) {
-			line += ` ${parameters}`;
-		}
+// 		if (parameters) {
+// 			line += ` ${parameters}`;
+// 		}
 
-		for (
-			let i = getCommandDisplayLength(command, parameters);
-			i < maxCommandLength + 4;
-			i++
-		) {
-			line += ' ';
-		}
+// 		for (
+// 			let i = getCommandDisplayLength(command, parameters);
+// 			i < maxCommandLength + 4;
+// 			i++
+// 		) {
+// 			line += ' ';
+// 		}
 
-		line += description;
+// 		line += description;
 
-		console.error(line);
-	}
+// 		console.error(line);
+// 	}
 
-	console.error('');
+// 	console.error('');
 
-	process.exit(2);
-}
+// 	process.exit(2);
+// }
 
-function getCommandDisplayLength(command, parameters) {
-	if (!parameters) {
-		return command.length;
-	}
+// function getCommandDisplayLength(command, parameters) {
+// 	if (!parameters) {
+// 		return command.length;
+// 	}
 
-	return command.length + 1 + parameters.length;
-}
+// 	return command.length + 1 + parameters.length;
+// }
