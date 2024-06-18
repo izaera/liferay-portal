@@ -9,7 +9,7 @@ import runTscChecks from '../tsc/runTscChecks.mjs';
 import generateTscConfig from '../tsconfig/index.mjs';
 
 export async function checkTsc() {
-	let commitHash;
+	let commitHash = 'master';
 
 	if (process.env.LIFERAY_NPM_SCRIPTS_WORKING_BRANCH_NAME) {
 		const {stdout} =
@@ -20,6 +20,8 @@ export async function checkTsc() {
 
 	console.log('📜 Validating tsconfig files...');
 	await generateTscConfig();
+
+	console.log('🕵️ Checking modified typescript files...');
 
 	return await runTscChecks(commitHash);
 }
