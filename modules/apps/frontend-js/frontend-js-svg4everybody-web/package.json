@@ -1,9 +1,11 @@
 {
-	"main": "svg4everybody.js",
+	"devDependencies": {
+		"esbuild": "0.20.2"
+	},
 	"name": "frontend-js-svg4everybody-web",
 	"private": true,
 	"scripts": {
-		"build": "node-scripts build",
+		"build": "node scripts/buildSvg4everybodyJs.mjs",
 		"checkFormat": "node-scripts format --check",
 		"format": "node-scripts format"
 	},
