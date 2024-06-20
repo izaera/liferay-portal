@@ -5,7 +5,9 @@
 
 import fg from 'fast-glob';
 import fs from 'fs';
+import fsPromises from 'fs/promises';
 import path from 'path';
+import url from 'url';
 
 import {getRootDir} from '../util/constants.mjs';
 import projectScopeRequire from '../util/projectScopeRequire.mjs';
@@ -49,18 +51,91 @@ export async function checkPackageJSONFiles() {
 		);
 	});
 
+	// Read package.json files
+
+	packages = await Promise.all(
+		packages.map(async (pkg) => ({
+			json: JSON.parse(await fsPromises.readFile(pkg, 'utf-8')),
+			path: pkg,
+		}))
+	);
+
 	const errors = [];
+
+	//
+	// Global checks
+	//
+
+	// Check devDependencies so that custom builds don't introduce multiple versions of a package
+
+	const allDevDependencies = packages.reduce((allDevDependencies, pkg) => {
+		const {devDependencies} = pkg.json;
+
+		if (!devDependencies) {
+			return allDevDependencies;
+		}
+
+		for (const [dependency, version] of Object.entries(devDependencies)) {
+			if (!allDevDependencies[dependency]) {
+				allDevDependencies[dependency] = {
+					paths: [],
+					versions: new Set(),
+				};
+			}
+
+			allDevDependencies[dependency].paths.push(pkg.path);
+			allDevDependencies[dependency].versions.add(version);
+		}
+
+		return allDevDependencies;
+	}, {});
+
+	const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
+
+	const nodeScriptsPackageJson = JSON.parse(
+		await fsPromises.readFile(
+			path.join(__dirname, '..', 'package.json'),
+			'utf-8'
+		)
+	);
+
+	for (const [dependency, version] of Object.entries(
+		nodeScriptsPackageJson.dependencies
+	)) {
+		if (!allDevDependencies[dependency]) {
+			allDevDependencies[dependency] = {
+				paths: [],
+				versions: new Set(),
+			};
+		}
+
+		allDevDependencies[dependency].paths.push('_node-scripts/package.json');
+		allDevDependencies[dependency].versions.add(version);
+	}
+
+	for (const [dependency, {paths, versions}] of Object.entries(
+		allDevDependencies
+	)) {
+		if (versions.size > 1) {
+			errors.push(
+				`Multiple versions for dev dependency '${dependency}' ` +
+					`have been found: ${[...versions].join(', ')}\n` +
+					`${paths.map((path) => `       - ${path}`).join('\n')}`
+			);
+		}
+	}
+
+	//
+	// Per project checks
+	//
 
 	const definedDependenciesSet = await collectDefinedDependencies();
 
 	packages.forEach((pkg) => {
-		const bad = (message) => errors.push(`${pkg}: BAD - ${message}`);
+		const bad = (message) => errors.push(`${pkg.path}: BAD - ${message}`);
 
 		try {
-			const {dependencies, main, name, scripts} = JSON.parse(
-				fs.readFileSync(pkg),
-				'utf8'
-			);
+			const {dependencies, main, name, scripts} = pkg.json;
 
 			// Check for bad package names.
 
@@ -93,7 +168,7 @@ export async function checkPackageJSONFiles() {
 
 			// Check for main entry point
 
-			const moduleDir = path.join(pkg, '..');
+			const moduleDir = path.join(pkg.path, '..');
 
 			if (!main) {
 				const indexExists = [
