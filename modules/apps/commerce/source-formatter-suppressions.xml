@@ -18,11 +18,6 @@
 		<suppress checks="JavaUpgradeVersionCheck" files="commerce-product-type-virtual-service/src/main/java/com/liferay/commerce/product/type/virtual/internal/upgrade/registry/CommerceProductTypeVirtualServiceUpgradeStepRegistrator\.java" />
 		<suppress checks="JavaUpgradeVersionCheck" files="commerce-shipping-engine-fixed-service/src/main/java/com/liferay/commerce/shipping/engine/fixed/internal/upgrade/registry/CommerceShippingEngineFixedServiceUpgradeStepRegistrator\.java" />
 		<suppress checks="JavaVariableTypeCheck" files="commerce-product-api/src/main/java/com/liferay/commerce/product/option/CommerceOptionValue\.java" />
-		<suppress checks="JSONPackageJSONCheck" files="commerce-cart-taglib/package\.json" />
-		<suppress checks="JSONPackageJSONCheck" files="commerce-frontend-js/package\.json" />
-		<suppress checks="JSONPackageJSONCheck" files="commerce-frontend-taglib/package\.json" />
-		<suppress checks="JSONPackageJSONCheck" files="commerce-product-content-web/package\.json" />
-		<suppress checks="JSONPackageJSONCheck" files="commerce-product-options-web/package\.json" />
 		<suppress checks="PoshiPauseUsageCheck" files="commerce-product-test/src/testFunctional/tests/CPCommerceDiscounts\.testcase" />
 		<suppress checks="PoshiPauseUsageCheck" files="commerce-product-test/src/testFunctional/tests/CPCommercePriceLists\.testcase" />
 		<suppress checks="PoshiPauseUsageCheck" files="commerce-product-test/src/testFunctional/tests/CPCommercePromotions\.testcase" />

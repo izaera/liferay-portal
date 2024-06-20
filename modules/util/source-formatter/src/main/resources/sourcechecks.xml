@@ -1033,14 +1033,6 @@
 			<category name="Bug Prevention" />
 			<description name="Checks the version for dependencies in `package.json` files." />
 		</check>
-		<check name="JSONPackageJSONCheck">
-			<category name="Bug Prevention" />
-			<description name="Checks content of `package.json` files." />
-		</check>
-		<check name="JSONPackageJSONDependencyVersionCheck">
-			<category name="Bug Prevention" />
-			<description name="Checks the version for dependencies in `package.json` files." />
-		</check>
 		<check name="JSONPageFileCheck">
 			<category name="Styling" />
 			<description name="Sorts by `roleName` in `page.json` files." />

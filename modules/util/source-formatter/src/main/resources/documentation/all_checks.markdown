@@ -133,8 +133,6 @@ JSONBatchEngineDataFileCheck | [Styling](styling_checks.markdown#styling-checks)
 [JSONDeprecatedPackagesCheck](check/json_deprecated_packages_check.markdown#jsondeprecatedpackagescheck) | [Bug Prevention](bug_prevention_checks.markdown#bug-prevention-checks) | .ipynb, .json or .npmbridgerc | Finds incorrect use of deprecated packages in `package.json` files. |
 JSONNamingCheck | [Naming Conventions](naming_conventions_checks.markdown#naming-conventions-checks) | .java, .jsp, .jspf, .jspx, .tag, .tpl or .vm | Checks if variable names follow naming conventions. |
 JSONPackageJSONBNDVersionCheck | [Bug Prevention](bug_prevention_checks.markdown#bug-prevention-checks) | .ipynb, .json or .npmbridgerc | Checks the version for dependencies in `package.json` files. |
-JSONPackageJSONCheck | [Bug Prevention](bug_prevention_checks.markdown#bug-prevention-checks) | .ipynb, .json or .npmbridgerc | Checks content of `package.json` files. |
-JSONPackageJSONDependencyVersionCheck | [Bug Prevention](bug_prevention_checks.markdown#bug-prevention-checks) | .ipynb, .json or .npmbridgerc | Checks the version for dependencies in `package.json` files. |
 JSONPageFileCheck | [Styling](styling_checks.markdown#styling-checks) | .ipynb, .json or .npmbridgerc | Sorts by `roleName` in `page.json` files. |
 JSONPortletResponseUtilCheck | [Styling](styling_checks.markdown#styling-checks) | .java | Checks if `JSONPortletResponseUtil.writeJSON ` should come before method calling `hideDefaultSuccessMessage`. |
 JSONReplacementsFileCheck | [Styling](styling_checks.markdown#styling-checks) | .ipynb, .json or .npmbridgerc | Sorts by `issueKey`, `from` and `to` in `replacements.json` file. |

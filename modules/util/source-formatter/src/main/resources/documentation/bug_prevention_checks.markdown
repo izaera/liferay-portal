@@ -63,8 +63,6 @@ JSCompatibilityCheck | | Checks for JavaScript compatibility. |
 [JSLodashDependencyCheck](check/js_lodash_dependency_check.markdown#jslodashdependencycheck) | .js or .jsx | Finds incorrect use of `AUI._`. |
 [JSONDeprecatedPackagesCheck](check/json_deprecated_packages_check.markdown#jsondeprecatedpackagescheck) | .ipynb, .json or .npmbridgerc | Finds incorrect use of deprecated packages in `package.json` files. |
 JSONPackageJSONBNDVersionCheck | .ipynb, .json or .npmbridgerc | Checks the version for dependencies in `package.json` files. |
-JSONPackageJSONCheck | .ipynb, .json or .npmbridgerc | Checks content of `package.json` files. |
-JSONPackageJSONDependencyVersionCheck | .ipynb, .json or .npmbridgerc | Checks the version for dependencies in `package.json` files. |
 [JSONValidationCheck](check/json_validation_check.markdown#jsonvalidationcheck) | .ipynb, .json or .npmbridgerc | Validates content of `.json` files. |
 [JSPArrowFunctionCheck](check/jsp_arrow_function_check.markdown#jsparrowfunctioncheck) | .jsp, .jspf, .jspx, .tag, .tpl or .vm | Checks that there are no array functions. |
 JSPGetStaticResourceURLCheck | .jsp, .jspf, .jspx, .tag, .tpl or .vm | Checks calls to `PortalUtil.getStaticResourceURL` and `getContextPath` without `getPathProxy`. |
