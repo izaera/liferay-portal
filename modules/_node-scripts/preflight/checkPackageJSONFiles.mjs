@@ -15,6 +15,7 @@ import projectScopeRequire from '../util/projectScopeRequire.mjs';
  *
  * - Bad package names (ie. packages without named scopes).
  * - Banned dependencies.
+ * - Incorrect npm scripts
  *
  * Returns a (possibly empty) array of error messages.
  */
@@ -56,7 +57,7 @@ export async function checkPackageJSONFiles() {
 		const bad = (message) => errors.push(`${pkg}: BAD - ${message}`);
 
 		try {
-			const {dependencies, main, name} = JSON.parse(
+			const {dependencies, main, name, scripts} = JSON.parse(
 				fs.readFileSync(pkg),
 				'utf8'
 			);
@@ -146,6 +147,39 @@ export async function checkPackageJSONFiles() {
 						bad(
 							`package.json's "main" entry point contains "export default". Use named exports only.`
 						);
+					}
+				}
+			}
+
+			// Check whether npm scripts are valid
+
+			if (scripts) {
+				for (const name of Object.keys(scripts)) {
+					if (!ALLOWED_NPM_SCRIPTS[name]) {
+						bad(
+							`package.json's script "${name}" is not allowed: ${scripts[name]}`
+						);
+					}
+					else {
+						const script = scripts[name];
+
+						let ok = false;
+
+						for (const expr of ALLOWED_NPM_SCRIPTS[name]) {
+							if (
+								(typeof expr === 'string' && script === expr) ||
+								(expr instanceof RegExp && script.match(expr))
+							) {
+								ok = true;
+								break;
+							}
+						}
+
+						if (!ok) {
+							bad(
+								`package.json's script "${name}" contains invalid value: ${scripts[name]}`
+							);
+						}
 					}
 				}
 			}
@@ -479,3 +513,40 @@ const ALLOWED_NON_GLOBAL_DEPENDENCIES = [
 	'timers-browserify',
 	'webpack',
 ];
+
+const ALLOWED_NPM_SCRIPTS = {
+	'build': [
+		'liferay-npm-scripts theme build',
+		'node-scripts build',
+		'webpack',
+
+		// Format for custom builds is node scripts/buildXXX.mjs. A custom build can appear alone or
+		// after `node-scripts build`.
+
+		/^node scripts\/build.*\.mjs$/,
+		/^node-scripts build && node scripts\/build.*\.mjs$/,
+	],
+	'checkFormat': ['node-scripts format --check'],
+	'coverage': [
+
+		// Some scripts pass extra arguments.
+
+		/^liferay-npm-scripts test --coverage[^;&].*$/,
+	],
+	'format': ['node-scripts format'],
+	'start': ['webpack serve'],
+	'test': [
+
+		// Some scripts define env vars before `liferay-npm-scripts test` and others pass extra
+		// arguments.
+
+		/^[^&;]*liferay-npm-scripts test[^&;]*$/,
+	],
+	'test:watch': [
+
+		// Some scripts define env vars before `liferay-npm-scripts test --watch` and others may
+		// want to pass extra arguments.
+
+		/^[^&;]*liferay-npm-scripts test --watch[^&;]*$/,
+	],
+};
