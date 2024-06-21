@@ -3,19 +3,30 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
+import {checkBannedDependencies} from './checkBannedDependencies.mjs';
 import {checkConfigFileNames} from './checkConfigFileNames.mjs';
-import {checkPackageJSONFiles} from './checkPackageJSONFiles.mjs';
+import {checkDependencyVersions} from './checkDependencyVersions.mjs';
+import {checkMainEntryPoints} from './checkMainEntryPoints.mjs';
+import {checkNpmScripts} from './checkNpmScripts.mjs';
+import {checkPackageNames} from './checkPackageNames.mjs';
 import {checkTsc} from './checkTsc.mjs';
 import {checkYarnLock} from './checkYarnLock.mjs';
+import getPackageJSONFiles from './util/getPackageJSONFiles.mjs';
 
 /**
  * Runs the "preflight" checks (basically everything that is not already covered
  * by Prettier or ESLint).
  */
 export default async function preflight() {
+	const packageJSONFiles = await getPackageJSONFiles();
+
 	const results = await Promise.all([
+		checkBannedDependencies(packageJSONFiles),
 		checkConfigFileNames(),
-		checkPackageJSONFiles(),
+		checkDependencyVersions(packageJSONFiles),
+		checkMainEntryPoints(packageJSONFiles),
+		checkNpmScripts(packageJSONFiles),
+		checkPackageNames(packageJSONFiles),
 		checkYarnLock(),
 		checkTsc(),
 	]);
