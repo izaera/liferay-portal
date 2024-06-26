@@ -20,24 +20,18 @@ const ALLOWED_NPM_SCRIPTS = {
 
 		// Some scripts pass extra arguments.
 
-		/^liferay-npm-scripts test --coverage[^;&].*$/,
+		/^node-scripts test --coverage[^;&]*$/,
 	],
 	'format': ['node-scripts format'],
 	'start': ['webpack serve'],
 	'test': [
 
-		// Some scripts define env vars before `liferay-npm-scripts test` and others pass extra
-		// arguments.
+		// Some scripts define env vars before `node-scripts test` and others pass extra arguments.
 
-		/^[^&;]*liferay-npm-scripts test[^&;]*$/,
+		/^[^&;]*node-scripts test[^;&]*$/,
 	],
-	'test:watch': [
-
-		// Some scripts define env vars before `liferay-npm-scripts test --watch` and others may
-		// want to pass extra arguments.
-
-		/^[^&;]*liferay-npm-scripts test --watch[^&;]*$/,
-	],
+	'test:all': ['node-scripts test'],
+	'test:watch': ['node-scripts test --watch'],
 };
 
 export async function checkNpmScripts(packageJSONFiles) {
