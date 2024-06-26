@@ -8,20 +8,27 @@ import {$} from 'execa';
 import runTscChecks from '../tsc/runTscChecks.mjs';
 import generateTscConfig from '../tsconfig/index.mjs';
 
-export async function checkTsc() {
-	let commitHash = 'master';
+export async function checkTsc({allFiles} = {allFiles: false}) {
+	let commitHash;
 
-	if (process.env.LIFERAY_NPM_SCRIPTS_WORKING_BRANCH_NAME) {
-		const {stdout} =
-			await $`git rev-parse ${process.env.LIFERAY_NPM_SCRIPTS_WORKING_BRANCH_NAME}`;
+	if (!allFiles) {
+		commitHash = 'master';
 
-		commitHash = stdout;
+		if (process.env.LIFERAY_NPM_SCRIPTS_WORKING_BRANCH_NAME) {
+			const {stdout} =
+				await $`git rev-parse ${process.env.LIFERAY_NPM_SCRIPTS_WORKING_BRANCH_NAME}`;
+
+			commitHash = stdout;
+		}
 	}
 
 	console.log('📜 Validating tsconfig files...');
+
 	await generateTscConfig();
 
-	console.log('🕵️ Checking modified typescript files...');
+	console.log(
+		`🕵️ Checking ${allFiles ? 'all' : 'modified'} typescript files...`
+	);
 
 	return await runTscChecks(commitHash);
 }

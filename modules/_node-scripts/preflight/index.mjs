@@ -17,7 +17,7 @@ import getPackageJSONFiles from './util/getPackageJSONFiles.mjs';
  * Runs the "preflight" checks (basically everything that is not already covered
  * by Prettier or ESLint).
  */
-export default async function preflight() {
+export default async function preflight({allFiles} = {allFiles: false}) {
 	const packageJSONFiles = await getPackageJSONFiles();
 
 	const results = await Promise.all([
@@ -28,7 +28,7 @@ export default async function preflight() {
 		checkNpmScripts(packageJSONFiles),
 		checkPackageNames(packageJSONFiles),
 		checkYarnLock(),
-		checkTsc(),
+		checkTsc({allFiles}),
 	]);
 
 	const errors = results.flat();
