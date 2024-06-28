@@ -21,10 +21,10 @@
 		"frontend-js-components-web": "*",
 		"frontend-js-web": "*",
 		"history": "4.9.0",
-		"image-promise": "^5.0.1",
+		"image-promise": "5.0.1",
 		"moment": "2.29.4",
 		"prop-types": "15.7.2",
-		"qs": "^6.9.6",
+		"qs": "6.9.6",
 		"react": "16.12.0",
 		"react-router-dom": "^5.0.1"
 	},

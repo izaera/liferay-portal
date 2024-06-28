@@ -6,7 +6,7 @@
 		"@liferay/document-library-preview-css": "*",
 		"@liferay/frontend-js-react-web": "*",
 		"frontend-js-web": "*",
-		"image-promise": "^5.0.1",
+		"image-promise": "5.0.1",
 		"prop-types": "15.7.2",
 		"react": "16.12.0"
 	},

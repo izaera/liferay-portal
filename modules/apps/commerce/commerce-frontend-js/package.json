@@ -33,9 +33,9 @@
 	},
 	"devDependencies": {
 		"faker": "^5.1.0",
-		"fetch-mock": "5.13.1",
+		"fetch-mock": "^5.13.1",
 		"html-webpack-plugin": "5.5.0",
-		"webpack": "5.76.0"
+		"webpack": "5.89.0"
 	},
 	"jest": {
 		"collectCoverageFrom": [
@@ -58,7 +58,7 @@
 		"build": "node-scripts build",
 		"checkFormat": "node-scripts format --check",
 		"coverage": "node-scripts test --coverage --silent --verbose",
-		"format": "liferay-npm-scripts format",
+		"format": "node-scripts format",
 		"test": "node-scripts test"
 	},
 	"version": "4.0.115"
