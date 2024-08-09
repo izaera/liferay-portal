@@ -58,6 +58,12 @@ const COMMANDS = {
 		parameters: '',
 		script: './tsconfig/index.mjs',
 	},
+	'gitmerge:self': {
+		description: `implements a Git merge driver for node-scripts' package.json file`,
+		parameters:
+			'--current=<current file> --base=<base file> --other=<other file>',
+		script: './gitmerge/self.mjs',
+	},
 	'setup': {
 		description: 'setup working environment used by node-scripts',
 		parameters: '',
