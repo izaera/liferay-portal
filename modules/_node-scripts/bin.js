@@ -64,6 +64,11 @@ const COMMANDS = {
 			'--current=<current file> --base=<base file> --other=<other file>',
 		script: './gitmerge/self.mjs',
 	},
+	'gitmerge:setup': {
+		description: 'adds gitmerge:self to .git/config file',
+		parameters: '',
+		script: './gitmerge/setup.mjs',
+	},
 	'setup': {
 		description: 'setup working environment used by node-scripts',
 		parameters: '',
