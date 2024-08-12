@@ -1,5 +1,5 @@
 <html>
-	<style type="text/css">
+	<@liferay_aui.style type="text/css">
 		body {
 			margin: 0;
 			overflow: visible;
@@ -75,7 +75,7 @@
 			text-align: center;
 			text-decoration: none;
 		}
-	</style>
+	</@liferay_aui.style>
 
 	<head>
 		<title>${formName}</title>

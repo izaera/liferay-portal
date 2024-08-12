@@ -88,7 +88,7 @@
 
 <@liferay.silently featureCollectionJSONObject.put("features", featureJSONArray) />
 
-<style type="text/css">
+<@liferay_aui.style type="text/css">
 	.asset-entry-abstract {
 		min-width: 400px;
 	}
@@ -114,7 +114,7 @@
 	.asset-entry-abstract .taglib-icon {
 		float: right;
 	}
-</style>
+</@liferay_aui.style>
 
 <@liferay_map["map-display"]
 	name='Map'

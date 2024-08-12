@@ -1,13 +1,13 @@
 <#include "../init.ftl">
 
-<style type="text/css">
+<@liferay_aui.style type="text/css">
 	pre.lfr-ddm-readonly-textarea {
 		font-family: inherit;
 		font-size: inherit;
 		font-style: inherit;
 		font-weight: inherit;
 	}
-</style>
+</@liferay_aui.style>
 
 <div class="field-wrapper-content lfr-forms-field-wrapper">
 	<#if hasFieldValue || showEmptyFieldLabel>

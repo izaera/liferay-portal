@@ -1,4 +1,4 @@
-<style type="text/css">
+<@liferay_aui.style type="text/css">
 	.order-item-discount-price {
 		color:#FF0000;
 	}
@@ -59,7 +59,7 @@
 		font-family: 'Roboto', sans-serif;
 		text-align: left;
 	}
-</style>
+</@liferay_aui.style>
 
 <div>
 	<div class="h4">
