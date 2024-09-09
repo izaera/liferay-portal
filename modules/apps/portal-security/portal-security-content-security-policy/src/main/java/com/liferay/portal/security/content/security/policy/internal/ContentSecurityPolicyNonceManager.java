@@ -26,6 +26,8 @@ import org.osgi.service.component.annotations.Reference;
 @Component(service = ContentSecurityPolicyNonceManager.class)
 public class ContentSecurityPolicyNonceManager {
 
+	public static final String TEST_NONCE = "_TEST_CSP_NONCE_";
+
 	public void cleanUpNonce(HttpServletRequest httpServletRequest) {
 		httpServletRequest = _portal.getOriginalServletRequest(
 			httpServletRequest);
@@ -84,6 +86,23 @@ public class ContentSecurityPolicyNonceManager {
 		_threadLocal.set(nonce);
 
 		return nonce;
+	}
+
+	public String setTestNonce(HttpServletRequest httpServletRequest) {
+		httpServletRequest = _portal.getOriginalServletRequest(
+			httpServletRequest);
+
+		if (PropsValues.JAVASCRIPT_SINGLE_PAGE_APPLICATION_ENABLED) {
+			HttpSession httpSession = httpServletRequest.getSession();
+
+			httpSession.setAttribute(_NONCE, TEST_NONCE);
+		}
+
+		httpServletRequest.setAttribute(_NONCE, TEST_NONCE);
+
+		_threadLocal.set(TEST_NONCE);
+
+		return TEST_NONCE;
 	}
 
 	private String _generateNonce() {
