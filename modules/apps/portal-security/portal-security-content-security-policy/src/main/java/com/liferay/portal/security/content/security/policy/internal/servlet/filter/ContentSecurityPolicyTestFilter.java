@@ -55,8 +55,18 @@ import org.osgi.service.component.annotations.Reference;
 public class ContentSecurityPolicyTestFilter extends BasePortalFilter {
 
 	@Override
-	public boolean isFilterEnabled() {
-		return PortalRunMode.isTestMode();
+	public boolean isFilterEnabled(
+		HttpServletRequest httpServletRequest,
+		HttpServletResponse httpServletResponse) {
+
+		if (PortalRunMode.isTestMode() ||
+			StringUtil.equals(
+				httpServletRequest.getServerName(), "localhost")) {
+
+			return true;
+		}
+
+		return false;
 	}
 
 	@Override
