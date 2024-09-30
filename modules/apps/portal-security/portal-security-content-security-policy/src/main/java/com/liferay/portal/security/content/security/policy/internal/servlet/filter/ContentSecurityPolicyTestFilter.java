@@ -169,16 +169,19 @@ public class ContentSecurityPolicyTestFilter extends BasePortalFilter {
 
 			String nonce = attributes.get("nonce");
 
-			if ((nonce == null) || !Objects.equals(nonce, expectedNonce)) {
+			if (Validator.isNull(nonce) ||
+				!Objects.equals(nonce, expectedNonce)) {
+
 				sb.append("Generated HTML contains a <");
 				sb.append(name);
-				sb.append("> tag without a CSP nonce.\n\nPlease check your ");
-				sb.append("changes to the source code and make sure you ");
-				sb.append("always use <aui:");
+				sb.append("> tag without a valid content security policy ");
+				sb.append("nonce.\n\nPlease check your changes to the source ");
+				sb.append("code and make sure you always use <aui:");
 				sb.append(name);
-				sb.append("> tag in JSP and template files or ");
-				sb.append("CSPNonceProviderUtil in Java files.\n\nThe ");
-				sb.append("failing code and context follows:\n\n");
+				sb.append("> tag in JSP and template files or the ");
+				sb.append("ContentSecurityPolicyNonceProviderUtil utility ");
+				sb.append("class in Java files.\n\nThe failing code and ");
+				sb.append("context follows:\n\n");
 			}
 		}
 		else {
@@ -187,11 +190,15 @@ public class ContentSecurityPolicyTestFilter extends BasePortalFilter {
 					sb.append("Generated HTML has a node containing the '");
 					sb.append(forbiddenAttribute);
 					sb.append("' attribute.\n\nPlease check your changes to ");
-					sb.append("the source code and make sure do not use the '");
+					sb.append("the source code and make sure you do not use ");
+					sb.append("the '");
 					sb.append(forbiddenAttribute);
 					sb.append("' attribute in any Java, JSP, or template ");
-					sb.append("file.\n\nThe failing code and context ");
-					sb.append("follows:\n\n");
+					sb.append("file. This is to allow DXP users to enable ");
+					sb.append("content security policies with restrictive ");
+					sb.append("values for directives like 'script-src-attr' ");
+					sb.append("or 'style-src-attr'.\n\nThe failing code and ");
+					sb.append("its context follows:\n\n");
 				}
 			}
 		}
