@@ -129,15 +129,25 @@ NumberFormat numberFormat = NumberFormat.getNumberInstance(locale);
 				else {
 					sb.append("<a class='journal-article-page-number' href='");
 					sb.append(_getHREF(formName, namespace + curParam, i, jsCall, url, urlAnchor));
+					sb.append("' id='");
 
-					if (forcePost) {
-						sb.append("' onClick='");
-						sb.append(_getOnClick(namespace, curParam, i));
-					}
+					String randomId = StringUtil.randomId();
+
+					sb.append(randomId);
 
 					sb.append("'>");
 					sb.append(i);
 					sb.append("</a>");
+
+					if (forcePost) {
+						sb.append("<script");
+						sb.append(ContentSecurityPolicyNonceProviderUtil.getNonceAttribute(request));
+						sb.append(">document.getElementById('");
+						sb.append(randomId);
+						sb.append("').onclick = function() {");
+						sb.append(_getOnClick(namespace, curParam, i));
+						sb.append("};</script>");
+					}
 				}
 
 				sb.append("&nbsp;&nbsp;");
@@ -257,19 +267,50 @@ NumberFormat numberFormat = NumberFormat.getNumberInstance(locale);
 		<ul class="lfr-pagination-buttons pagination">
 			<c:if test='<%= type.equals("approximate") || type.equals("more") || type.equals("regular") %>'>
 				<li class="<%= (cur != 1) ? "" : "disabled" %> first page-item">
-					<a href="<%= (cur != 1) ? _getHREF(formName, namespace + curParam, 1, jsCall, url, urlAnchor) : "javascript:void(0);" %>" page-link onclick="<%= ((cur != 1) && forcePost) ? _getOnClick(namespace, curParam, 1) : "" %>" tabIndex="<%= (cur != 1) ? "0" : "-1" %>" target="<%= target %>">
+
+					<%
+					String randomId = StringUtil.randomId();
+					%>
+
+					<a href="<%= (cur != 1) ? _getHREF(formName, namespace + curParam, 1, jsCall, url, urlAnchor) : "javascript:void(0);" %>" id="<%= randomId %>" page-link tabIndex="<%= (cur != 1) ? "0" : "-1" %>" target="<%= target %>">
 						<%= PortalUtil.isRightToLeft(request) ? "&rarr;" : "&larr;" %> <liferay-ui:message key="first" />
 					</a>
+
+					<c:if test="<%= (cur != 1) && forcePost %>">
+						<aui:script position="inline">
+							document.getElementById('<%= randomId %>').onclick = function() {
+								<%= _getOnClick(namespace, curParam, 1) %>
+							}
+						</aui:script>
+					</c:if>
 				</li>
 			</c:if>
 
 			<li class="<%= (cur != 1) ? "" : "disabled" %> page-item">
-				<a href="<%= (cur != 1) ? _getHREF(formName, namespace + curParam, cur - 1, jsCall, url, urlAnchor) : "javascript:void(0);" %>" page-link onclick="<%= ((cur != 1) && forcePost) ? _getOnClick(namespace, curParam, cur - 1) : "" %>" tabIndex="<%= (cur != 1) ? "0" : "-1" %>" target="<%= target %>">
+
+				<%
+				String randomId = StringUtil.randomId();
+				%>
+
+				<a href="<%= (cur != 1) ? _getHREF(formName, namespace + curParam, cur - 1, jsCall, url, urlAnchor) : "javascript:void(0);" %>" id="<%= randomId %>" page-link tabIndex="<%= (cur != 1) ? "0" : "-1" %>" target="<%= target %>">
 					<liferay-ui:message key="previous" />
 				</a>
+
+				<c:if test="<%= (cur != 1) && forcePost %>">
+					<aui:script position="inline">
+						document.getElementById('<%= randomId %>').onclick = function() {
+							<%= _getOnClick(namespace, curParam, cur - 1) %>
+						}
+					</aui:script>
+				</c:if>
 			</li>
 			<li class="<%= (cur != pages) ? "" : "disabled" %> page-item">
-				<a href="<%= (cur != pages) ? _getHREF(formName, namespace + curParam, cur + 1, jsCall, url, urlAnchor) : "javascript:void(0);" %>" page-link onclick="<%= ((cur != pages) && forcePost) ? _getOnClick(namespace, curParam, cur + 1) : "" %>" tabIndex="<%= (cur != pages) ? "0" : "-1" %>" target="<%= target %>">
+
+				<%
+				randomId = StringUtil.randomId();
+				%>
+
+				<a href="<%= (cur != pages) ? _getHREF(formName, namespace + curParam, cur + 1, jsCall, url, urlAnchor) : "javascript:void(0);" %>" id="<%= randomId %>" page-link tabIndex="<%= (cur != pages) ? "0" : "-1" %>" target="<%= target %>">
 					<c:choose>
 						<c:when test='<%= type.equals("approximate") || type.equals("more") %>'>
 							<liferay-ui:message key="more" />
@@ -279,13 +320,34 @@ NumberFormat numberFormat = NumberFormat.getNumberInstance(locale);
 						</c:otherwise>
 					</c:choose>
 				</a>
+
+				<c:if test="<%= (cur != pages) && forcePost %>">
+					<aui:script position="inline">
+						document.getElementById('<%= randomId %>').onclick = function() {
+							<%= _getOnClick(namespace, curParam, cur + 1) %>
+						}
+					</aui:script>
+				</c:if>
 			</li>
 
 			<c:if test='<%= type.equals("regular") %>'>
 				<li class="<%= (cur != pages) ? "" : "disabled" %> last page-item">
-					<a href="<%= (cur != pages) ? _getHREF(formName, namespace + curParam, pages, jsCall, url, urlAnchor) : "javascript:void(0);" %>" page-link onclick="<%= ((cur != pages) && forcePost) ? _getOnClick(namespace, curParam, pages) : "" %>" tabIndex="<%= (cur != pages) ? "0" : "-1" %>" target="<%= target %>">
+
+					<%
+					randomId = StringUtil.randomId();
+					%>
+
+					<a href="<%= (cur != pages) ? _getHREF(formName, namespace + curParam, pages, jsCall, url, urlAnchor) : "javascript:void(0);" %>" id="<%= randomId %>" page-link tabIndex="<%= (cur != pages) ? "0" : "-1" %>" target="<%= target %>">
 						<liferay-ui:message key="last" /> <%= PortalUtil.isRightToLeft(request) ? "&larr;" : "&rarr;" %>
 					</a>
+
+					<c:if test="<%= (cur != pages) && forcePost %>">
+						<aui:script position="inline">
+							document.getElementById('<%= randomId %>').onclick = function() {
+								<%= _getOnClick(namespace, curParam, pages) %>
+							}
+						</aui:script>
+					</c:if>
 				</li>
 			</c:if>
 		</ul>
