@@ -32,7 +32,7 @@
 		</form>
 
 		<aui:script position="inline">
-			window.body.onload = function () {
+			document.body.onload = function () {
 				setTimeout('document.fm.submit()', 100);
 			};
 		</aui:script>
