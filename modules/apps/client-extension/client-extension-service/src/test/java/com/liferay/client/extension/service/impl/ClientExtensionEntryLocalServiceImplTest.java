@@ -65,9 +65,6 @@ public class ClientExtensionEntryLocalServiceImplTest {
 
 	@Test
 	public void testUpdateClientExtensionEntry() throws Exception {
-
-		// Prepare clientExtensionEntryLocalServiceImpl for test
-
 		_mockClusterableInvokerUtil();
 
 		_mockClusterExecutorUtil();
@@ -91,17 +88,13 @@ public class ClientExtensionEntryLocalServiceImplTest {
 		ReflectionTestUtil.setFieldValue(
 			clientExtensionEntryLocalServiceImpl, "_cetFactory",
 			Mockito.mock(CETFactory.class));
-
 		ReflectionTestUtil.setFieldValue(
 			clientExtensionEntryLocalServiceImpl,
 			"_clientExtensionConfiguration",
 			_mockClientExtensionConfiguration());
-
 		ReflectionTestUtil.setFieldValue(
 			clientExtensionEntryLocalServiceImpl, "_companyLocalService",
 			_mockCompanyLocalService());
-
-		// Perform test
 
 		clientExtensionEntryLocalServiceImpl.updateClientExtensionEntry(
 			1, 2, "description", new HashMap<>(), StringPool.BLANK,
