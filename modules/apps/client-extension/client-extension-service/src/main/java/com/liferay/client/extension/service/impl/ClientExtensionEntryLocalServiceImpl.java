@@ -666,9 +666,7 @@ public class ClientExtensionEntryLocalServiceImpl
 					"undeployClientExtensionEntry", ClientExtensionEntry.class);
 		}
 		catch (NoSuchMethodException noSuchMethodException) {
-			_log.error(
-				"Unable to get undeployClientExtensionEntry method",
-				noSuchMethodException);
+			_log.error(noSuchMethodException);
 
 			throw new RuntimeException(noSuchMethodException);
 		}
