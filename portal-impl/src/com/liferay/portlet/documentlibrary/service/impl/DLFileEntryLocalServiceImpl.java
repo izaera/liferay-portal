@@ -2131,8 +2131,6 @@ public class DLFileEntryLocalServiceImpl
 				Objects.equals(
 					dlFileEntry.getVersion(), dlFileVersion.getVersion())) {
 
-				String newVersion = DLFileEntryConstants.VERSION_DEFAULT;
-
 				List<DLFileVersion> approvedFileVersions =
 					_dlFileVersionPersistence.findByF_S(
 						dlFileEntry.getFileEntryId(),
@@ -2142,10 +2140,10 @@ public class DLFileEntryLocalServiceImpl
 					DLFileVersion firstApprovedFileVersion =
 						approvedFileVersions.get(0);
 
-					newVersion = firstApprovedFileVersion.getVersion();
+					dlFileEntry.setVersion(
+						firstApprovedFileVersion.getVersion());
 				}
 
-				dlFileEntry.setVersion(newVersion);
 				dlFileEntry.setDisplayDate(dlFileVersion.getDisplayDate());
 				dlFileEntry.setExpirationDate(
 					dlFileVersion.getExpirationDate());
