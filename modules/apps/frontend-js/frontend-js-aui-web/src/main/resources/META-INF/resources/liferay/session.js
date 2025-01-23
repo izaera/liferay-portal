@@ -521,6 +521,7 @@ AUI.add(
 								}
 							},
 							renderData: {
+								__reactDOMFlushSync: true,
 								componentId: TOAST_ID,
 							},
 							toastProps: {
