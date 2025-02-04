@@ -28,6 +28,23 @@ export {
 
 export {default as ManagementToolbar} from './management_toolbar/ManagementToolbar';
 
+export {default as openAlertModal} from './modal/commands/openAlertModal';
+export {default as openCategorySelectionModal} from './modal/commands/openCategorySelectionModal';
+export {default as openConfirmModal} from './modal/commands/openConfirmModal';
+export {default as openModal} from './modal/commands/openModal';
+export {default as openPortletModal} from './modal/commands/openPortletModal';
+export {default as openPortletWindow} from './modal/commands/openPortletWindow';
+export {
+	default as openSelectionModal,
+	OpenSelectionModalSelectedItem,
+} from './modal/commands/openSelectionModal';
+export {default as openSimpleInputModal} from './modal/commands/openSimpleInputModal';
+export {default as openTagSelectionModal} from './modal/commands/openTagSelectionModal';
+
+export {ModalStatus} from './modal/components/Modal';
+
+export {default as openToast} from './toast/openToast';
+
 export {Locale} from './translation_manager/TranslationAdminContent';
 export {default as TranslationAdminItem} from './translation_manager/TranslationAdminItem';
 export {default as TranslationAdminModal} from './translation_manager/TranslationAdminModal';
@@ -41,3 +58,27 @@ export {
 	selectedLanguageIdAtom,
 } from './translation_manager/state';
 export {default as Treeview} from './treeview/Treeview';
+
+export function populateLiferayGlobalObject() {
+	const getStub =
+		(symbol: string) =>
+		(...args: any[]) => {
+
+			// @ts-ignore
+
+			import(
+				Liferay.ThemeDisplay.getPathContext() +
+					'/o/frontend-js-components-web/__liferay__/index.js'
+			).then((exports) => exports[symbol](...args));
+		};
+
+	Liferay.Portlet.openModal = getStub('openPortletModal');
+	Liferay.Portlet.openWindow = getStub('openPortletWindow');
+
+	Liferay.Util.openAlertModal = getStub('openAlertModal');
+	Liferay.Util.openConfirmModal = getStub('openConfirmModal');
+	Liferay.Util.openModal = getStub('openModal');
+	Liferay.Util.openSelectionModal = getStub('openSelectionModal');
+	Liferay.Util.openSimpleInputModal = getStub('openSimpleInputModal');
+	Liferay.Util.openToast = getStub('openToast');
+}
