@@ -27,7 +27,7 @@ import com.liferay.portal.kernel.model.UserGroup;
 import com.liferay.portal.kernel.module.configuration.ConfigurationException;
 import com.liferay.portal.kernel.portlet.LiferayPortletRequest;
 import com.liferay.portal.kernel.service.LayoutLocalService;
-import com.liferay.portal.kernel.service.UserLocalServiceUtil;
+import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Portal;
@@ -65,12 +65,13 @@ public class SearchBarPortletDisplayContextFactory {
 
 	public SearchBarPortletDisplayContextFactory(
 			LayoutLocalService layoutLocalService, Portal portal,
-			RenderRequest renderRequest)
+			RenderRequest renderRequest, UserLocalService userLocalService)
 		throws ConfigurationException {
 
 		_layoutLocalService = layoutLocalService;
 		_portal = portal;
 		_renderRequest = renderRequest;
+		_userLocalService = userLocalService;
 
 		_searchBarPortletInstanceConfiguration =
 			ConfigurationProviderUtil.getPortletInstanceConfiguration(
@@ -362,7 +363,7 @@ public class SearchBarPortletDisplayContextFactory {
 
 		long scopeGroupClassPK = scopeGroup.getClassPK();
 
-		User user = UserLocalServiceUtil.fetchUserById(scopeGroupClassPK);
+		User user = _userLocalService.fetchUserById(scopeGroupClassPK);
 
 		if (user == null) {
 			user = themeDisplay.getUser();
@@ -585,5 +586,6 @@ public class SearchBarPortletDisplayContextFactory {
 	private final RenderRequest _renderRequest;
 	private final SearchBarPortletInstanceConfiguration
 		_searchBarPortletInstanceConfiguration;
+	private final UserLocalService _userLocalService;
 
 }
