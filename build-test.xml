@@ -13976,6 +13976,14 @@ ANT_OPTS=${env.ANT_OPTS}</echo>
 
 				<basename file="${test.build.bundle.zip.url}" property="bundle.file.name" />
 
+				<propertyregex
+					input="${test.build.bundle.zip.url}"
+					override="true"
+					property="test.build.bundle.zip.url"
+					regexp="https:\/\/storage.(cloud\.google\.com|googleapis\.com)/"
+					replace="gs://"
+				/>
+
 				<mirrors-get
 					dest="${java.io.tmpdir}/${bundle.file.name}"
 					src="${test.build.bundle.zip.url}"
@@ -14057,6 +14065,14 @@ ANT_OPTS=${env.ANT_OPTS}</echo>
 				<if>
 					<matches pattern="(file|https?)://" string="${test.build.portal.war.url}" />
 					<then>
+						<propertyregex
+							input="${test.build.portal.war.url}"
+							override="true"
+							property="test.build.portal.war.url"
+							regexp="https:\/\/storage.(cloud\.google\.com|googleapis\.com)/"
+							replace="gs://"
+						/>
+
 						<mirrors-get
 							dest="liferay-portal.war"
 							src="${test.build.portal.war.url}"
@@ -14162,6 +14178,14 @@ ANT_OPTS=${env.ANT_OPTS}</echo>
 				<if>
 					<matches pattern="(file|https?)://" string="${test.build.portal.osgi.zip.url}" />
 					<then>
+						<propertyregex
+							input="${test.build.portal.osgi.zip.url}"
+							override="true"
+							property="test.build.portal.osgi.zip.url"
+							regexp="https:\/\/storage.(cloud\.google\.com|googleapis\.com)/"
+							replace="gs://"
+						/>
+
 						<mirrors-get
 							dest="liferay-portal-osgi.zip"
 							src="${test.build.portal.osgi.zip.url}"
@@ -14185,6 +14209,14 @@ ANT_OPTS=${env.ANT_OPTS}</echo>
 				<if>
 					<matches pattern="(file|https?)://" string="${test.build.portal.tools.zip.url}" />
 					<then>
+						<propertyregex
+							input="${test.build.portal.tools.zip.url}"
+							override="true"
+							property="test.build.portal.tools.zip.url"
+							regexp="https:\/\/storage.(cloud\.google\.com|googleapis\.com)/"
+							replace="gs://"
+						/>
+
 						<mirrors-get
 							dest="liferay-portal-tools.zip"
 							src="${test.build.portal.tools.zip.url}"
@@ -14277,6 +14309,8 @@ ANT_OPTS=${env.ANT_OPTS}</echo>
 
 		<if>
 			<or>
+				<matches pattern="gs://" string="${test.build.bundle.zip.url}" />
+				<matches pattern="gs://" string="${test.build.portal.osgi.zip.url}" />
 				<matches pattern="https?://" string="${test.build.bundle.zip.url}" />
 				<matches pattern="https?://" string="${test.build.portal.osgi.zip.url}" />
 			</or>
@@ -14284,7 +14318,10 @@ ANT_OPTS=${env.ANT_OPTS}</echo>
 				<local name="bundle.zip.url" />
 
 				<if>
-					<matches pattern="https?://" string="${test.build.bundle.zip.url}" />
+					<or>
+						<matches pattern="https?://" string="${test.build.bundle.zip.url}" />
+						<matches pattern="gs://" string="${test.build.bundle.zip.url}" />
+					</or>
 					<then>
 						<property name="bundle.zip.url" value="${test.build.bundle.zip.url}" />
 					</then>
@@ -14320,6 +14357,18 @@ ANT_OPTS=${env.ANT_OPTS}</echo>
 							<antelope:stringutil property="bundle.zip.url" string="${bundle.base.url}${bundle.zip.name}">
 								<antelope:replace regex="-slim" replacement="" />
 							</antelope:stringutil>
+						</then>
+					</elseif>
+					<elseif>
+						<matches pattern="gs://" string="${test.build.portal.osgi.zip.url}" />
+						<then>
+							<propertyregex
+								input="${test.build.portal.osgi.zip.url}"
+								override="true"
+								property="bundle.zip.url"
+								regexp="osgi"
+								replace="tomcat"
+							/>
 						</then>
 					</elseif>
 				</if>
