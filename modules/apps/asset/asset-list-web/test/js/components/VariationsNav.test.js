@@ -4,7 +4,7 @@
  */
 
 import {cleanup, fireEvent, render} from '@testing-library/react';
-import {openConfirmModal, openToast} from 'frontend-js-web';
+import {openConfirmModal, openToast} from 'frontend-js-components-web';
 import React from 'react';
 
 import '@testing-library/jest-dom/extend-expect';

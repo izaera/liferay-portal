@@ -8,7 +8,8 @@ import userEvent from '@testing-library/user-event';
 import React from 'react';
 
 import '@testing-library/jest-dom/extend-expect';
-import {fetch, openToast} from 'frontend-js-web';
+import {openToast} from 'frontend-js-components-web';
+import {fetch} from 'frontend-js-web';
 
 import Sidebar from '../../../../src/main/resources/META-INF/resources/js/components/Sidebar';
 import SidebarPanelInfoView from '../../../../src/main/resources/META-INF/resources/js/components/SidebarPanelInfoView/SidebarPanelInfoView';

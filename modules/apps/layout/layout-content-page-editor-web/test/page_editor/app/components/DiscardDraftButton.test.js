@@ -6,7 +6,7 @@
 import '@testing-library/jest-dom/extend-expect';
 import {render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import {openConfirmModal} from 'frontend-js-web';
+import {openConfirmModal} from 'frontend-js-components-web';
 import React from 'react';
 
 import DiscardDraftButton from '../../../../src/main/resources/META-INF/resources/page_editor/app/components/DiscardDraftButton';

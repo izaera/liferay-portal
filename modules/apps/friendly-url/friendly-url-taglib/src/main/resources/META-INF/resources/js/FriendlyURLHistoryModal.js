@@ -7,7 +7,7 @@ import ClayList from '@clayui/list';
 import ClayLoadingIndicator from '@clayui/loading-indicator';
 import ClayModal from '@clayui/modal';
 import {useIsMounted} from '@liferay/frontend-js-react-web';
-import {fetch, openToast} from 'frontend-js-web';
+import {openToast} from 'frontend-js-components-web';
 import PropTypes from 'prop-types';
 import React, {useCallback, useEffect, useState} from 'react';
 

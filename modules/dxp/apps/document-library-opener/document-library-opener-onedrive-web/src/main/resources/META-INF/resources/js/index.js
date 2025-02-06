@@ -5,13 +5,11 @@
 
 import {getSpritemap} from '@liferay/frontend-icons-web';
 import {
-	fetch,
-	getWindow,
-	navigate,
 	openSimpleInputModal,
 	openToast,
 	openWindow,
-} from 'frontend-js-web';
+} from 'frontend-js-components-web';
+import {fetch, getWindow, navigate} from 'frontend-js-web';
 
 const TIME_POLLING = 500;
 const TIME_SHOW_MSG = 2000;

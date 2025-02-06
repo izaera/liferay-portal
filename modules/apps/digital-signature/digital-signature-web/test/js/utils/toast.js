@@ -4,7 +4,7 @@
  */
 
 import {cleanup} from '@testing-library/react';
-import {openToast} from 'frontend-js-web';
+import {openToast} from 'frontend-js-components-web';
 
 import {
 	errorToast,

@@ -5,8 +5,11 @@
 
 import {API} from '@liferay/object-js-components-web';
 import classNames from 'classnames';
-import {LearnMessage, LearnResourcesContext} from 'frontend-js-components-web';
-import {openToast} from 'frontend-js-web';
+import {
+	LearnMessage,
+	LearnResourcesContext,
+	openToast,
+} from 'frontend-js-components-web';
 import React, {useCallback, useState} from 'react';
 import ReactFlow, {
 	Background,

@@ -4,7 +4,7 @@
  */
 
 import {IInternalRenderer} from '@liferay/frontend-data-set-web';
-import {openModal} from 'frontend-js-web';
+import {openModal} from 'frontend-js-components-web';
 
 import CustomAuthorTableCell from './CustomAuthorTableCell';
 

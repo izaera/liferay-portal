@@ -15,7 +15,8 @@ import {
 	FieldChangeEventHandler,
 	ReactFieldBase as FieldBase,
 } from 'dynamic-data-mapping-form-field-type';
-import {openSelectionModal, sub} from 'frontend-js-web';
+import {openSelectionModal} from 'frontend-js-components-web';
+import {sub} from 'frontend-js-web';
 import React, {ChangeEventHandler, useRef, useState} from 'react';
 
 import './Attachment.scss';

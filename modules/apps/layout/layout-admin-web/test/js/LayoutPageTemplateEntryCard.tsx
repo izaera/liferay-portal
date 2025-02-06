@@ -6,7 +6,8 @@
 import '@testing-library/jest-dom/extend-expect';
 import {act, render, screen} from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
-import {fetch, openModal} from 'frontend-js-web';
+import {openModal} from 'frontend-js-components-web';
+import {fetch} from 'frontend-js-web';
 import * as React from 'react';
 
 import LayoutPageTemplateEntryCard from '../../src/main/resources/META-INF/resources/js/LayoutPageTemplateEntryCard';
