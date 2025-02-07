@@ -42,6 +42,8 @@ const FriendlyURLHistoryModal = ({
 	const isMounted = useIsMounted();
 
 	const getFriendlyUrlLocalizations = useCallback(() => {
+
+		// eslint-disable-next-line @liferay/portal/no-global-fetch
 		fetch(friendlyURLEntryURL)
 			.then((response) => response.json())
 			.then((response) => {
@@ -115,6 +117,8 @@ const FriendlyURLHistoryModal = ({
 
 	const sendRequest = useCallback(
 		(url, friendlyURLEntryId, method = 'GET') => {
+
+			// eslint-disable-next-line @liferay/portal/no-global-fetch
 			return fetch(`${url}/${friendlyURLEntryId}/${languageId}`, {
 				method,
 			})
