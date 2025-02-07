@@ -11,7 +11,7 @@ type Props = {
 	onCancel?: () => void;
 	onConfirm?: () => void;
 	status: 'info' | 'warning';
-	text: string;
+	text?: string;
 	title: string;
 };
 

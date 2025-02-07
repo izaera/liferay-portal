@@ -127,21 +127,23 @@ function DiagramBuilder() {
 			if (unsupportedObjectRelationship?.errorMessage) {
 				openToast({
 					message: unsupportedObjectRelationship?.errorMessage,
-					toastProps: unsupportedObjectRelationship.learnMessage && {
-						actions: (
-							<LearnResourcesContext.Provider
-								value={learnResourceContext}
-							>
-								<LearnMessage
-									className="alert-link"
-									resource="object-web"
-									resourceKey={
-										unsupportedObjectRelationship.learnMessage
-									}
-								/>
-							</LearnResourcesContext.Provider>
-						),
-					},
+					toastProps: unsupportedObjectRelationship.learnMessage
+						? {
+								actions: (
+									<LearnResourcesContext.Provider
+										value={learnResourceContext}
+									>
+										<LearnMessage
+											className="alert-link"
+											resource="object-web"
+											resourceKey={
+												unsupportedObjectRelationship.learnMessage
+											}
+										/>
+									</LearnResourcesContext.Provider>
+								),
+							}
+						: undefined,
 					type: 'warning',
 				});
 			}

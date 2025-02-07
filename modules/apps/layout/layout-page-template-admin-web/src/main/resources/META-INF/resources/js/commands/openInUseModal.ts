@@ -3,13 +3,13 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import {openModal} from 'frontend-js-components-web';
+import {ModalStatus, openModal} from 'frontend-js-components-web';
 import {navigate, sub} from 'frontend-js-web';
 
 type Props = {
 	assetType: string;
 	onCancel?: () => void;
-	status: string;
+	status: ModalStatus;
 	viewUsagesURL: string;
 };
 

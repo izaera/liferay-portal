@@ -63,8 +63,8 @@ export default function propsTransformer({
 					buttons: [
 						{
 							label: 'OK',
-							onClick: ({closeModal}: {closeModal: Function}) => {
-								closeModal();
+							onClick: ({processClose}) => {
+								processClose();
 
 								loadData();
 							},
