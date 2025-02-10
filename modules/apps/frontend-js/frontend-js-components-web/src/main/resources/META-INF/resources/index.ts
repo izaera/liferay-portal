@@ -58,27 +58,3 @@ export {
 	selectedLanguageIdAtom,
 } from './translation_manager/state';
 export {default as Treeview} from './treeview/Treeview';
-
-export function populateLiferayGlobalObject() {
-	const getStub =
-		(symbol: string) =>
-		(...args: any[]) => {
-
-			// @ts-ignore
-
-			import(
-				Liferay.ThemeDisplay.getPathContext() +
-					'/o/frontend-js-components-web/__liferay__/index.js'
-			).then((exports) => exports[symbol](...args));
-		};
-
-	Liferay.Portlet.openModal = getStub('openPortletModal');
-	Liferay.Portlet.openWindow = getStub('openPortletWindow');
-
-	Liferay.Util.openAlertModal = getStub('openAlertModal');
-	Liferay.Util.openConfirmModal = getStub('openConfirmModal');
-	Liferay.Util.openModal = getStub('openModal');
-	Liferay.Util.openSelectionModal = getStub('openSelectionModal');
-	Liferay.Util.openSimpleInputModal = getStub('openSimpleInputModal');
-	Liferay.Util.openToast = getStub('openToast');
-}

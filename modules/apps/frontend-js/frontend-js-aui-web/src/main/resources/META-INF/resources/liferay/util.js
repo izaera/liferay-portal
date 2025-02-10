@@ -1245,7 +1245,10 @@
 
 	Util.Window = Window;
 
-	Liferay.Util = Util;
+	Liferay.Util = {
+		...(Liferay.Util ?? {}),
+		...Util,
+	};
 
 	// 0-200: Theme Developer
 	// 200-400: Portlet Developer
