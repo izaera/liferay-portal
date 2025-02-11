@@ -1,0 +1,153 @@
+name: Performance Report
+
+on:
+  push:
+    branches: [ PERFORMANCE_REPORT ]
+
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+env:
+  ANT_OPTS: -Xmx2561m
+  CREATE_BUNDLE_REPORTS: yes
+  NODE_ENV: production
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+
+      - name: Set up node 20.12.2
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20.12.2'
+
+      - name: Setup workflow
+        run: |
+          # Setup workflow
+          set -x
+
+          git config --global user.email "github-actions@liferay.com"
+          git config --global user.name "GitHub Actions"
+
+          git fetch origin gh-pages
+
+          mkdir ../reports
+
+      - name: Build portal
+        run: |
+          # Build portal
+          set -x
+
+          ant all
+
+      - name: Generate reports
+        run: |
+          # Generate reports
+          set -x
+
+          cd modules
+
+          yarn node-scripts report:bundle:sizes
+          yarn node-scripts report:bundle:sizes --with-internals
+          yarn node-scripts report:bundle:imports
+          yarn node-scripts report:source:imports
+          yarn node-scripts report:java:imports
+
+          mv -v *.csv ../../reports
+
+      - name: Publish reports
+        run: |
+          # Publish reports
+          set -x
+
+          DATE=$(date --iso-8601)
+
+          # Fetch additional commit so that HEAD~1 means something
+          git fetch origin PERFORMANCE_REPORT --depth=5
+
+          COMMIT=$(git rev-parse HEAD~1)
+
+          git checkout gh-pages
+          git clean -dfqx
+
+          echo "
+            <html>
+            <head>
+                <title>Reports for ${DATE} [${COMMIT}]</title>
+                <style>
+                  a {
+                    display: block;
+                  }
+                  body {
+                    font-family: sans-serif;
+                  }
+                  h2 {
+                    border-top: 2px solid #222;
+                    font-size: 1.2em;
+                    padding-top: 0.2em;
+                  }
+                  pre {
+                    font-size: 1.1em;
+                  }
+                </style>
+            </head>
+            <body>
+
+                <h2>Details of report:</h2>
+
+                <div>
+                  <b>Date:</b>
+                  ${DATE}
+                </div>
+                <div>
+                  <b>Commit SHA:</b>
+                  ${COMMIT}
+                </div>
+                <a href="https://github.com/liferay/liferay-portal/tree/${COMMIT}">
+                  Browse liferay-portal repository when this report was generated
+                </a>
+
+
+                <h2>Diff with previous build:</h2>
+
+                <pre>$(node difftool/difftool.mjs . ../reports)</pre>
+
+
+                <h2>Resources:</h2>
+
+                <a href="https://github.com/izaera/liferay-portal/commits/gh-pages/">
+                  List of previous report commits in gh-pages branch
+                </a>
+                <br>
+                <a href="./bundle-sizes.csv">bundle-sizes.csv</a>
+                <a href="./bundle-sizes-with-internals.csv">
+                  bundle-sizes-with-internals.csv
+                </a>
+                <a href="./bundle-imports.csv">bundle-imports.csv</a>
+                <a href="./source-imports.csv">source-imports.csv</a>
+                <a href="./java-imports.csv">java-imports.csv</a>
+
+
+            </body>
+            </html>
+          " > index.html
+
+          cp -v ../reports/*.csv .
+          git add .
+          git commit -m "Reports for ${DATE} [${COMMIT}]"
+          git push
