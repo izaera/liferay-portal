@@ -7,7 +7,7 @@ import {openSelectionModal} from 'frontend-js-components-web';
 
 import {openItemSelector} from '../../../src/main/resources/META-INF/resources/page_editor/common/openItemSelector';
 
-jest.mock('frontend-js-web');
+jest.mock('frontend-js-components-web');
 
 const openModal = ({
 	callback = () => {},

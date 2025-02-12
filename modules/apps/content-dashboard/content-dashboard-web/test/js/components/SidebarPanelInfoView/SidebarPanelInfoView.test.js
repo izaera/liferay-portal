@@ -34,12 +34,14 @@ import {
 	mockedVideoShortcutDocumentProps,
 } from '../../mocks/props';
 
+jest.mock('frontend-js-components-web', () => ({
+	openToast: jest.fn(),
+}));
+
 jest.mock('frontend-js-web', () => ({
 	fetch: jest.fn().mockReturnValue({
 		ok: true,
 	}),
-
-	openToast: jest.fn(),
 	sub: jest.fn((str) => str),
 }));
 

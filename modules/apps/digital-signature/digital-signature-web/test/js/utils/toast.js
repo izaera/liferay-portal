@@ -11,7 +11,7 @@ import {
 	successToast,
 } from '../../../src/main/resources/META-INF/resources/js/utils/toast';
 
-jest.mock('frontend-js-web', () => {
+jest.mock('frontend-js-components-web', () => {
 	return {
 		openToast: jest.fn(),
 	};

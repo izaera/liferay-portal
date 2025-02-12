@@ -9,10 +9,14 @@ import {DocumentLibraryOpener} from '../../src/main/resources/META-INF/resources
 
 const realSetTimeout = setTimeout;
 
+jest.mock('frontend-js-components-web', () => ({
+	openToast: jest.fn(),
+	openWindow: jest.fn().mockImplementation((_, callback) => callback()),
+}));
+
 jest.mock('frontend-js-web', () => ({
 	...jest.requireActual('frontend-js-web'),
 	getWindow: jest.fn(() => ({hide: jest.fn()})),
-	openWindow: jest.fn().mockImplementation((_, callback) => callback()),
 }));
 
 function replyAndWait({body = {}, ms}) {

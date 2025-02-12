@@ -16,7 +16,7 @@ import * as React from 'react';
 
 import GlobalJSCETsConfiguration from '../../../../src/main/resources/META-INF/resources/js/layout/look_and_feel/GlobalJSCETsConfiguration';
 
-jest.mock('frontend-js-web', () => ({
+jest.mock('frontend-js-components-web', () => ({
 	openSelectionModal: jest.fn(),
 	openToast: () => {},
 }));

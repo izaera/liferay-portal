@@ -29,8 +29,8 @@ const INITIAL_STATE = {
 	undoHistory: [{}],
 };
 
-jest.mock('frontend-js-web', () => ({
-	...jest.requireActual('frontend-js-web'),
+jest.mock('frontend-js-components-web', () => ({
+	...jest.requireActual('frontend-js-components-web'),
 	openConfirmModal: jest.fn(({onConfirm}) => onConfirm(false)),
 }));
 

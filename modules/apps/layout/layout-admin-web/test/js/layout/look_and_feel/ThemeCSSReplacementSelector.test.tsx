@@ -11,7 +11,7 @@ import * as React from 'react';
 
 import ThemeCSSReplacementSelector from '../../../../src/main/resources/META-INF/resources/js/ThemeCSSReplacementSelector';
 
-jest.mock('frontend-js-web', () => ({
+jest.mock('frontend-js-components-web', () => ({
 	openSelectionModal: jest.fn(),
 }));
 

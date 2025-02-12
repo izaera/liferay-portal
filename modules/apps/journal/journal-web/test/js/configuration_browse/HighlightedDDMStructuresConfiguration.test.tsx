@@ -14,8 +14,11 @@ import HighlightedDDMStructuresConfiguration, {
 	removeDuplicates,
 } from '../../../src/main/resources/META-INF/resources/js/configuration_browse/HighlightedDDMStructuresConfiguration';
 
-jest.mock('frontend-js-web', () => ({
+jest.mock('frontend-js-components-web', () => ({
 	openSelectionModal: jest.fn(),
+}));
+
+jest.mock('frontend-js-web', () => ({
 	sub: jest.fn((langKey, arg) => langKey.replace('x', arg)),
 }));
 
