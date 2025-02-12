@@ -618,9 +618,9 @@ public class SearchBarPortletDisplayContextFactoryTest {
 		);
 
 		Mockito.when(
-			_themeDisplay.getUser()
+			_group.getClassPK()
 		).thenReturn(
-			_user
+			_CLASS_PK
 		);
 
 		Mockito.when(
@@ -630,9 +630,9 @@ public class SearchBarPortletDisplayContextFactoryTest {
 		);
 
 		Mockito.when(
-			_group.getClassPK()
+			_themeDisplay.getUser()
 		).thenReturn(
-			_CLASS_PK
+			_user
 		);
 
 		Mockito.when(
@@ -732,14 +732,6 @@ public class SearchBarPortletDisplayContextFactoryTest {
 
 	private void _whenUserLocalServiceFetchUserById() throws Exception {
 		Mockito.doReturn(
-			_user
-		).when(
-			_userLocalService
-		).fetchUserById(
-			_CLASS_PK
-		);
-
-		Mockito.doReturn(
 			Collections.singletonList(_userGroup)
 		).when(
 			_user
@@ -750,6 +742,14 @@ public class SearchBarPortletDisplayContextFactoryTest {
 		).when(
 			_userGroup
 		).getGroupId();
+
+		Mockito.doReturn(
+			_user
+		).when(
+			_userLocalService
+		).fetchUserById(
+			_CLASS_PK
+		);
 	}
 
 	private static final long _CLASS_PK = RandomTestUtil.randomLong();
