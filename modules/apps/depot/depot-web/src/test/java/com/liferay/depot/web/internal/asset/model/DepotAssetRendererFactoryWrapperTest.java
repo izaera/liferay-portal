@@ -35,9 +35,7 @@ public class DepotAssetRendererFactoryWrapperTest {
 		LiferayUnitTestRule.INSTANCE;
 
 	@Test
-	public void testAssetRendererReturnsFallbackGroupWhenNoContext()
-		throws Exception {
-
+	public void testAssetRendererReturnsFallbackGroup() throws Exception {
 		AssetRenderer<Object> assetRenderer = Mockito.mock(AssetRenderer.class);
 
 		Mockito.when(
