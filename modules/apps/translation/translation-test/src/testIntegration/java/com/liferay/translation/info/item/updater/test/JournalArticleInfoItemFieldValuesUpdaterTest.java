@@ -106,51 +106,6 @@ public class JournalArticleInfoItemFieldValuesUpdaterTest {
 	}
 
 	@Test
-	public void testUpdateJournalArticleWithDeletedUser() throws Exception {
-		User user = UserTestUtil.addCompanyAdminUser(_company);
-
-		ServiceContext serviceContext =
-			ServiceContextTestUtil.getServiceContext(
-				_group.getGroupId(), user.getUserId());
-
-		ServiceContextThreadLocal.pushServiceContext(serviceContext);
-
-		JournalArticle journalArticle = JournalTestUtil.addArticle(
-			_group.getGroupId(), 0,
-			PortalUtil.getClassNameId(JournalArticle.class),
-			HashMapBuilder.put(
-				LocaleUtil.US, RandomTestUtil.randomString()
-			).build(),
-			HashMapBuilder.put(
-				LocaleUtil.US, RandomTestUtil.randomString()
-			).build(),
-			HashMapBuilder.put(
-				LocaleUtil.US, "<p>This is the content</p>"
-			).build(),
-			LocaleUtil.getSiteDefault(), false, true, serviceContext);
-
-		InfoItemFieldValues infoItemFieldValues =
-			_xliffTranslationInfoItemFieldValuesImporter.
-				importInfoItemFieldValues(
-					_group.getGroupId(),
-					new InfoItemReference(JournalArticle.class.getName(), 122),
-					TranslationTestUtil.readFileToInputStream(
-						"test-journal-article-122.xlf"));
-
-		_userLocalService.deleteUser(user);
-
-		journalArticle =
-			_journalArticleInfoItemFieldValuesUpdater.
-				updateFromInfoItemFieldValues(
-					journalArticle, infoItemFieldValues);
-
-		Assert.assertEquals(
-			TestPropsValues.getUserId(), journalArticle.getStatusByUserId());
-		Assert.assertEquals(
-			"Este es el titulo", journalArticle.getTitle(LocaleUtil.SPAIN));
-	}
-
-	@Test
 	public void testUpdateJournalArticleFromInfoItemFieldValuesAddsTranslatedContent()
 		throws Exception {
 
@@ -414,6 +369,51 @@ public class JournalArticleInfoItemFieldValuesUpdaterTest {
 			"<p>XLIFF 文書を編集、または処理 するアプリケーションです。</p>",
 			_getContent(
 				journalArticle, "name", LocaleUtil.US, LocaleUtil.JAPAN));
+	}
+
+	@Test
+	public void testUpdateJournalArticleWithDeletedUser() throws Exception {
+		User user = UserTestUtil.addCompanyAdminUser(_company);
+
+		ServiceContext serviceContext =
+			ServiceContextTestUtil.getServiceContext(
+				_group.getGroupId(), user.getUserId());
+
+		ServiceContextThreadLocal.pushServiceContext(serviceContext);
+
+		JournalArticle journalArticle = JournalTestUtil.addArticle(
+			_group.getGroupId(), 0,
+			PortalUtil.getClassNameId(JournalArticle.class),
+			HashMapBuilder.put(
+				LocaleUtil.US, RandomTestUtil.randomString()
+			).build(),
+			HashMapBuilder.put(
+				LocaleUtil.US, RandomTestUtil.randomString()
+			).build(),
+			HashMapBuilder.put(
+				LocaleUtil.US, "<p>This is the content</p>"
+			).build(),
+			LocaleUtil.getSiteDefault(), false, true, serviceContext);
+
+		InfoItemFieldValues infoItemFieldValues =
+			_xliffTranslationInfoItemFieldValuesImporter.
+				importInfoItemFieldValues(
+					_group.getGroupId(),
+					new InfoItemReference(JournalArticle.class.getName(), 122),
+					TranslationTestUtil.readFileToInputStream(
+						"test-journal-article-122.xlf"));
+
+		_userLocalService.deleteUser(user);
+
+		journalArticle =
+			_journalArticleInfoItemFieldValuesUpdater.
+				updateFromInfoItemFieldValues(
+					journalArticle, infoItemFieldValues);
+
+		Assert.assertEquals(
+			TestPropsValues.getUserId(), journalArticle.getStatusByUserId());
+		Assert.assertEquals(
+			"Este es el titulo", journalArticle.getTitle(LocaleUtil.SPAIN));
 	}
 
 	private String _getContent(
