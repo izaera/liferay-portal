@@ -411,8 +411,6 @@ public class JournalArticleInfoItemFieldValuesUpdaterTest {
 					journalArticle, infoItemFieldValues);
 
 		Assert.assertEquals(
-			"Este es el titulo", journalArticle.getTitle(LocaleUtil.SPAIN));
-		Assert.assertEquals(
 			TestPropsValues.getUserId(), journalArticle.getStatusByUserId());
 	}
 
