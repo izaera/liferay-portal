@@ -111,8 +111,8 @@ public class SearchBarPortletDisplayContextFactoryTest {
 
 		Layout layout = Mockito.mock(Layout.class);
 
-		_whenLayoutLocalServiceFetchLayoutByFriendlyURLWithGroupId(
-			destination, layout);
+		_whenLayoutLocalServiceFetchLayoutByFriendlyURL(
+			destination, _USER_GROUP_ID, layout);
 
 		String layoutFriendlyURL = RandomTestUtil.randomString();
 
@@ -626,7 +626,7 @@ public class SearchBarPortletDisplayContextFactoryTest {
 		Mockito.when(
 			_themeDisplay.getScopeGroupId()
 		).thenReturn(
-			0L
+			_SCOPE_GROUP_ID
 		);
 
 		Mockito.when(
@@ -688,21 +688,12 @@ public class SearchBarPortletDisplayContextFactoryTest {
 	private void _whenLayoutLocalServiceFetchLayoutByFriendlyURL(
 		String friendlyURL, Layout layout) {
 
-		if (!StringUtil.startsWith(friendlyURL, CharPool.SLASH)) {
-			friendlyURL = StringPool.SLASH.concat(friendlyURL);
-		}
-
-		Mockito.doReturn(
-			layout
-		).when(
-			_layoutLocalService
-		).fetchLayoutByFriendlyURL(
-			Mockito.anyLong(), Mockito.anyBoolean(), Mockito.eq(friendlyURL)
-		);
+		_whenLayoutLocalServiceFetchLayoutByFriendlyURL(
+			friendlyURL, _SCOPE_GROUP_ID, layout);
 	}
 
-	private void _whenLayoutLocalServiceFetchLayoutByFriendlyURLWithGroupId(
-		String friendlyURL, Layout layout) {
+	private void _whenLayoutLocalServiceFetchLayoutByFriendlyURL(
+		String friendlyURL, long groupId, Layout layout) {
 
 		if (!StringUtil.startsWith(friendlyURL, CharPool.SLASH)) {
 			friendlyURL = StringPool.SLASH.concat(friendlyURL);
@@ -713,7 +704,7 @@ public class SearchBarPortletDisplayContextFactoryTest {
 		).when(
 			_layoutLocalService
 		).fetchLayoutByFriendlyURL(
-			_GROUP_ID, false, friendlyURL
+			groupId, false, friendlyURL
 		);
 	}
 
@@ -738,7 +729,7 @@ public class SearchBarPortletDisplayContextFactoryTest {
 		).getUserGroups();
 
 		Mockito.doReturn(
-			_GROUP_ID
+			_USER_GROUP_ID
 		).when(
 			_userGroup
 		).getGroupId();
@@ -756,7 +747,9 @@ public class SearchBarPortletDisplayContextFactoryTest {
 
 	private static final String _DEFAULT_SCOPE_PARAMETER_NAME = "scope";
 
-	private static final long _GROUP_ID = RandomTestUtil.randomLong();
+	private static final long _SCOPE_GROUP_ID = 0L;
+
+	private static final long _USER_GROUP_ID = RandomTestUtil.randomLong();
 
 	private static MockedStatic<ConfigurationProviderUtil>
 		_configurationProviderUtilMockedStatic;
