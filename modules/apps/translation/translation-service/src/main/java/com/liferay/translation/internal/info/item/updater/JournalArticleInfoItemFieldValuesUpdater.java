@@ -72,6 +72,17 @@ public class JournalArticleInfoItemFieldValuesUpdater
 			InfoItemFieldValues infoItemFieldValues)
 		throws Exception {
 
+		JournalArticle latestArticle =
+			_journalArticleLocalService.getLatestArticle(
+				journalArticle.getGroupId(), journalArticle.getArticleId(),
+				WorkflowConstants.STATUS_ANY);
+
+		User user = _userLocalService.fetchUser(latestArticle.getUserId());
+
+		if (user == null) {
+			user = _userLocalService.getUser(GuestOrUserUtil.getUserId());
+		}
+
 		Map<Locale, String> importedLocaleTitleMap = new HashMap<>();
 		Map<Locale, String> importedLocaleDescriptionMap = new HashMap<>();
 		Map<Locale, Map<String, List<String>>> importedLocaleContentMap =
@@ -130,11 +141,6 @@ public class JournalArticleInfoItemFieldValuesUpdater
 			}
 		}
 
-		JournalArticle latestArticle =
-			_journalArticleLocalService.getLatestArticle(
-				journalArticle.getGroupId(), journalArticle.getArticleId(),
-				WorkflowConstants.STATUS_ANY);
-
 		Map<Locale, String> titleMap = latestArticle.getTitleMap();
 		Map<Locale, String> descriptionMap = latestArticle.getDescriptionMap();
 
@@ -158,12 +164,6 @@ public class JournalArticleInfoItemFieldValuesUpdater
 					importedLocaleDescriptionMap.get(targetLocale)));
 			fields = _getTranslatedFields(
 				fields, ddmStructure, importedLocaleContentMap, targetLocale);
-		}
-
-		User user = _userLocalService.fetchUser(latestArticle.getUserId());
-
-		if (user == null) {
-			user = _userLocalService.getUser(GuestOrUserUtil.getUserId());
 		}
 
 		int[] displayDateArray = _getDateArray(
