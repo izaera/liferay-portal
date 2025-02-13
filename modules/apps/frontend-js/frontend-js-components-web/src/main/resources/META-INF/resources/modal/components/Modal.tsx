@@ -47,7 +47,7 @@ export interface ModalProps {
 			| null;
 		formId?: string;
 		id?: string;
-		label: string;
+		label?: string;
 		onClick?: ModalButtonOnClick;
 		type?: 'cancel' | 'submit';
 	}[];
