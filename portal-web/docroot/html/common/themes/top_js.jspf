@@ -179,11 +179,12 @@
 			}), {}
 		);
 
-		Liferay.Portlet = {
-			...(Liferay.Portlet ?? {}),
-			openModal: buildESMStub('frontend-js-components-web', 'openPortletModal'),
-			openWindow: buildESMStub('frontend-js-components-web', 'openPortletWindow'),
-		};
+		if (!Liferay.Portlet) {
+			Liferay.Portlet = {};
+		}
+
+		Liferay.Portlet.openModal = buildESMStub('frontend-js-components-web', 'openPortletModal');
+		Liferay.Portlet.openWindow = buildESMStub('frontend-js-components-web', 'openPortletWindow');
 
 		Liferay.PortletKeys = {
 			DOCUMENT_LIBRARY: '<%= PortletKeys.DOCUMENT_LIBRARY %>',
@@ -378,15 +379,16 @@
 			}
 		};
 
-		Liferay.Util = {
-			...(Liferay.Util ?? {}),
-			openAlertModal: buildESMStub('frontend-js-components-web', 'openAlertModal'),
-			openConfirmModal: buildESMStub('frontend-js-components-web', 'openConfirmModal'),
-			openModal: buildESMStub('frontend-js-components-web', 'openModal'),
-			openSelectionModal: buildESMStub('frontend-js-components-web', 'openSelectionModal'),
-			openSimpleInputModal: buildESMStub('frontend-js-components-web', 'openSimpleInputModal'),
-			openToast: buildESMStub('frontend-js-components-web', 'openToast'),
-		};
+		if (!Liferay.Util) {
+			Liferay.Util = {};
+		}
+
+		Liferay.Util.openAlertModal = buildESMStub('frontend-js-components-web', 'openAlertModal');
+		Liferay.Util.openConfirmModal = buildESMStub('frontend-js-components-web', 'openConfirmModal');
+		Liferay.Util.openModal = buildESMStub('frontend-js-components-web', 'openModal');
+		Liferay.Util.openSelectionModal = buildESMStub('frontend-js-components-web', 'openSelectionModal');
+		Liferay.Util.openSimpleInputModal = buildESMStub('frontend-js-components-web', 'openSimpleInputModal');
+		Liferay.Util.openToast = buildESMStub('frontend-js-components-web', 'openToast');
 
 		var themeDisplay = Liferay.ThemeDisplay;
 

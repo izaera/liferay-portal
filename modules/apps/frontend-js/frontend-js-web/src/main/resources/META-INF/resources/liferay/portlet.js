@@ -747,8 +747,5 @@
 		});
 	};
 
-	Liferay.Portlet = {
-		...(Liferay.Portlet ?? {}),
-		...Portlet,
-	};
+	Liferay.Portlet = Portlet;
 })(AUI());
