@@ -14,6 +14,9 @@ export function openFormConversionModal({onContinue}: Props) {
 		buttonLabel: Liferay.Language.get('continue'),
 		onConfirm: onContinue,
 		status: 'info',
+		text: Liferay.Language.get(
+			'adding-a-stepper-fragment-inside-a-simple-form-will-turn-it-into-a-multistep-form'
+		),
 		title: Liferay.Language.get('convert-to-multistep-form'),
 	});
 }
