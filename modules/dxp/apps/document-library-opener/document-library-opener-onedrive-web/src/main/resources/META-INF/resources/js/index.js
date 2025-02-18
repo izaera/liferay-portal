@@ -4,12 +4,8 @@
  */
 
 import {getSpritemap} from '@liferay/frontend-icons-web';
-import {
-	openSimpleInputModal,
-	openToast,
-	openWindow,
-} from 'frontend-js-components-web';
-import {fetch, getWindow, navigate} from 'frontend-js-web';
+import {openSimpleInputModal, openToast} from 'frontend-js-components-web';
+import {fetch, getWindow, navigate, openWindow} from 'frontend-js-web';
 
 const TIME_POLLING = 500;
 const TIME_SHOW_MSG = 2000;
