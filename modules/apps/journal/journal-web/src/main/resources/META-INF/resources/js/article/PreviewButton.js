@@ -67,7 +67,7 @@ export default function PreviewButton({
 				updateJournalInput({
 					name: 'formDate',
 					namespace,
-					value: Date.now().toString(),
+					value: futureDate.getTime(),
 				});
 
 				const form = document.getElementById(`${namespace}fm1`);
