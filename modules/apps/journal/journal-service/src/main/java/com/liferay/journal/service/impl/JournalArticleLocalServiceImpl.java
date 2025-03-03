@@ -6062,6 +6062,10 @@ public class JournalArticleLocalServiceImpl
 					article = journalArticleLocalService.updateJournalArticle(
 						article);
 
+					sendEmail(
+						article, _getArticleURL(article), "expired",
+						new ServiceContext());
+
 					notifySubscribers(
 						0, article, "expired", new ServiceContext());
 
@@ -6927,6 +6931,10 @@ public class JournalArticleLocalServiceImpl
 		if (emailType.equals("denied") &&
 			journalGroupServiceConfiguration.
 				emailArticleApprovalDeniedEnabled()) {
+		}
+		else if (emailType.equals("expired") &&
+				 journalGroupServiceConfiguration.
+					 emailArticleExpiredEnabled()) {
 		}
 		else if (emailType.equals("granted") &&
 				 journalGroupServiceConfiguration.
