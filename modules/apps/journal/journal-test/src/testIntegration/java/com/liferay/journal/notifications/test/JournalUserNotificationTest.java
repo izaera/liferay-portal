@@ -117,7 +117,7 @@ public class JournalUserNotificationTest extends BaseUserNotificationTestCase {
 		_journalArticleLocalService.checkArticles(group.getCompanyId());
 
 		_assertJournalArticleNotifications(
-			expiredArticle, 1,
+			expiredArticle, 2,
 			UserNotificationDefinition.NOTIFICATION_TYPE_EXPIRED_ENTRY, user,
 			1);
 	}
@@ -160,8 +160,8 @@ public class JournalUserNotificationTest extends BaseUserNotificationTestCase {
 		_journalArticleLocalService.checkArticles(group.getCompanyId());
 
 		_assertJournalArticleNotifications(
-			journalArticle, 1,
-			UserNotificationDefinition.NOTIFICATION_TYPE_REVIEW_ENTRY, user, 1);
+			journalArticle, 2,
+			UserNotificationDefinition.NOTIFICATION_TYPE_REVIEW_ENTRY, user, 2);
 	}
 
 	@Override
