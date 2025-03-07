@@ -172,35 +172,34 @@ public class PortalLog4jTest {
 
 	@Test
 	public void testLogOutputWithLogContextAndExternalContext() {
-		String key = "test.key";
-		String keyExternal = "test.key.external";
-		String value = "test.value";
-		String valueExternal = "test.value.external";
+		String key1 = "test.key.1";
+		String key2 = "test.key.2";
+		String value1 = "test.value.1";
+		String value2 = "test.value.2";
 
 		String logContextName = "TestLogContext";
 
 		try {
-			ThreadContext.put(keyExternal, valueExternal);
+			ThreadContext.put(key2, value2);
 
 			_testLogOutputWithLogContext(
 				HashMapBuilder.put(
-					key, value
+					key1, value1
 				).build(),
 				StringBundler.concat(
 					StringPool.OPEN_CURLY_BRACE, logContextName,
-					StringPool.PERIOD, key, StringPool.EQUAL, value, ", ",
-					keyExternal, StringPool.EQUAL, valueExternal,
+					StringPool.PERIOD, key1, StringPool.EQUAL, value1, ", ",
+					key2, StringPool.EQUAL, value2,
 					StringPool.CLOSE_CURLY_BRACE),
 				logContextName);
 
 			Map<String, String> context = ThreadContext.getContext();
 
-			Assert.assertEquals(
-				"External thread context count", 1, context.size());
-			Assert.assertEquals(valueExternal, context.get(keyExternal));
+			Assert.assertEquals(context.toString(), 1, context.size());
+			Assert.assertEquals(value2, context.get(key2));
 		}
 		finally {
-			ThreadContext.remove(keyExternal);
+			ThreadContext.remove(key2);
 		}
 	}
 
