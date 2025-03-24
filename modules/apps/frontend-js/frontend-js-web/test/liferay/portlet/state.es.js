@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import RenderState from '../../../src/main/resources/META-INF/resources/liferay/portlet/RenderState.es';
-import PortletConstants from '../../../src/main/resources/META-INF/resources/liferay/portlet/portlet_constants.es';
-import register from '../../../src/main/resources/META-INF/resources/liferay/portlet/register.es';
+import RenderState from '../../../src/main/resources/META-INF/resources/main/liferay/portlet/RenderState.es';
+import PortletConstants from '../../../src/main/resources/META-INF/resources/main/liferay/portlet/portlet_constants.es';
+import register from '../../../src/main/resources/META-INF/resources/main/liferay/portlet/register.es';
 
 describe('PortletHub', () => {
 	describe('newState', () => {

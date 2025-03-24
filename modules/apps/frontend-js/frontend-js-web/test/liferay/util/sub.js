@@ -6,7 +6,7 @@
 import {render} from '@testing-library/react';
 import React from 'react';
 
-import sub from '../../../src/main/resources/META-INF/resources/liferay/util/sub';
+import sub from '../../../src/main/resources/META-INF/resources/main/liferay/util/sub';
 
 describe('sub', () => {
 	it('replaces the matching regex with just one argument', () => {

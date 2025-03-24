@@ -6,7 +6,7 @@
 import {
 	cancelDebounce,
 	debounce,
-} from '../../../src/main/resources/META-INF/resources/liferay/debounce/debounce.es';
+} from '../../../src/main/resources/META-INF/resources/main/liferay/debounce/debounce.es';
 
 describe('debounce', () => {
 	it('only calls received function with the last called args after a delay', () => {

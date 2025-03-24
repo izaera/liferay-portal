@@ -6,7 +6,7 @@
 import {
 	getSessionValue,
 	setSessionValue,
-} from '../../../src/main/resources/META-INF/resources/liferay/util/session.es';
+} from '../../../src/main/resources/META-INF/resources/main/liferay/util/session.es';
 
 describe('Session API', () => {
 	const sessionClickURL =

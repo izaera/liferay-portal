@@ -6,8 +6,8 @@
 import {
 	applyTabSelectionDOMChanges,
 	showTab,
-} from '../../../src/main/resources/META-INF/resources/liferay/portal/tabs.es';
-import toCharCode from '../../../src/main/resources/META-INF/resources/liferay/util/to_char_code.es';
+} from '../../../src/main/resources/META-INF/resources/main/liferay/portal/tabs.es';
+import toCharCode from '../../../src/main/resources/META-INF/resources/main/liferay/util/to_char_code.es';
 
 describe('Liferay.Portal.Tabs.show', () => {
 	it('fires the showTab custom event and executes callback', () => {

@@ -9,7 +9,7 @@ import {
 	destroyComponent,
 	destroyComponents,
 	destroyUnfulfilledPromises,
-} from '../../src/main/resources/META-INF/resources/liferay/component.es';
+} from '../../src/main/resources/META-INF/resources/main/liferay/component.es';
 
 describe('Liferay', () => {
 	afterEach(() => {

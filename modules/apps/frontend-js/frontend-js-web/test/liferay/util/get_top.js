@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import getTop from '../../../src/main/resources/META-INF/resources/liferay/util/get_top';
+import getTop from '../../../src/main/resources/META-INF/resources/main/liferay/util/get_top';
 
 describe('Liferay.Util.getTop', () => {
 	it('returns the window object if there is no parent window', () => {

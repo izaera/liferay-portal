@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import getCountries from '../../../../src/main/resources/META-INF/resources/liferay/util/address/get_countries.es';
+import getCountries from '../../../../src/main/resources/META-INF/resources/main/liferay/util/address/get_countries.es';
 
 describe('Liferay.Address.getCountries', () => {
 	it('throws an error if the callback parameter is not a function', () => {

@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import getLexiconIconTpl from '../../../src/main/resources/META-INF/resources/liferay/util/get_lexicon_icon_template';
+import getLexiconIconTpl from '../../../src/main/resources/META-INF/resources/main/liferay/util/get_lexicon_icon_template';
 
 describe('Liferay.Util.getLexiconIconTpl', () => {
 	it('to return a string representing an svg icon', () => {

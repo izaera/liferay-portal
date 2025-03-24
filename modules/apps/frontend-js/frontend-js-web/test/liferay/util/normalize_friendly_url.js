@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import normalizeFriendlyURL from '../../../src/main/resources/META-INF/resources/liferay/util/normalize_friendly_url';
+import normalizeFriendlyURL from '../../../src/main/resources/META-INF/resources/main/liferay/util/normalize_friendly_url';
 
 describe('Liferay.Util.normalizeFriendlyURL', () => {
 	it('throws error if text parameter is not a string', () => {

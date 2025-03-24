@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import fetchWrapper from '../../../src/main/resources/META-INF/resources/liferay/util/fetch.es';
+import fetchWrapper from '../../../src/main/resources/META-INF/resources/main/liferay/util/fetch.es';
 
 describe('Liferay.Util.fetch', () => {
 	const externalOriginUrl = 'http://externalOriginUrl.com';

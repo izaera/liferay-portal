@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import formatXML from '../../../src/main/resources/META-INF/resources/liferay/util/format_xml.es';
+import formatXML from '../../../src/main/resources/META-INF/resources/main/liferay/util/format_xml.es';
 
 describe('Liferay.Util.formatXML', () => {
 	it('throws error if content parameter is not a string', () => {

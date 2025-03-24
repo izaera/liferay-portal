@@ -6,7 +6,7 @@
 import {
 	escapeHTML,
 	unescapeHTML,
-} from '../../../src/main/resources/META-INF/resources/liferay/util/html_util';
+} from '../../../src/main/resources/META-INF/resources/main/liferay/util/html_util';
 
 describe('Liferay.Util.escapeHTML and Liferay.Util.unescapeHTML', () => {
 	describe('Liferay.Util.escapeHTML', () => {

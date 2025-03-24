@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import createRenderURL from '../../../../src/main/resources/META-INF/resources/liferay/util/portlet_url/create_render_url.es';
+import createRenderURL from '../../../../src/main/resources/META-INF/resources/main/liferay/util/portlet_url/create_render_url.es';
 
 describe('Liferay.Util.PortletURL.createRenderURL', () => {
 	it('returns a URL object with a href parameter containing the p_p_lifecycle parameter set to 0', () => {

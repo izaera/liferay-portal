@@ -5,7 +5,7 @@
 
 import {findByTestId} from '@testing-library/dom';
 
-import delegate from '../../../src/main/resources/META-INF/resources/liferay/delegate/delegate.es';
+import delegate from '../../../src/main/resources/META-INF/resources/main/liferay/delegate/delegate.es';
 
 describe('delegate', () => {
 	const container = document.createElement('div');
