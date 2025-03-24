@@ -4,8 +4,8 @@
  */
 
 export {default as DefaultEventHandler} from './liferay/DefaultEventHandler.es';
-
 export {default as DynamicInlineScroll} from './liferay/DynamicInlineScroll.es';
+export {default as DynamicSelect} from './liferay/DynamicSelect';
 export {default as PortletBase} from './liferay/PortletBase.es';
 export {
 	ALIGN_POSITIONS,
@@ -17,11 +17,35 @@ export {
 export {default as AOP} from './liferay/aop/AOP.es';
 export {default as autoSize} from './liferay/autosize/autosize.es';
 export {default as BREAKPOINTS} from './liferay/breakpoints';
+export {
+	component,
+	componentReady,
+	destroyComponent,
+	destroyComponents,
+	destroyUnfulfilledPromises,
+	getComponentCache,
+	initComponentCache,
+} from './liferay/component.es';
 export {cancelDebounce, debounce} from './liferay/debounce/debounce.es';
 export {default as delegate} from './liferay/delegate/delegate.es';
 export {default as Disposable} from './liferay/events/Disposable';
 export {default as EventEmitter} from './liferay/events/EventEmitter';
 export {default as EventHandler} from './liferay/events/EventHandler';
+export {
+	getLayoutIcons,
+	hideLayoutPane,
+	proposeLayout,
+	publishToLive,
+	showLayoutPane,
+	toggleLayoutDetails,
+} from './liferay/layout_exporter.es';
+export {showTab} from './liferay/portal/tabs.es';
+export {showTooltip} from './liferay/portal/tooltip.es';
+export {
+	minimizePortlet,
+	default as portlet,
+} from './liferay/portlet/portlet.es';
+export {default as SideNavigation} from './liferay/side_navigation.es';
 export {default as STATUS_CODE} from './liferay/status_code';
 export {default as throttle} from './liferay/throttle.es';
 export {default as addParams} from './liferay/util/add_params';
@@ -30,7 +54,12 @@ export {default as getRegions} from './liferay/util/address/get_regions.es';
 export {default as buildFragment} from './liferay/util/build_fragment';
 export {CONSENT_TYPES as COOKIE_TYPES} from './liferay/util/consent';
 export {checkConsent} from './liferay/util/consent';
-export {getCookie, setCookie, removeCookie} from './liferay/util/cookie/cookie';
+export {
+	getCookie,
+	setCookie,
+	removeCookie,
+	default as Cookie,
+} from './liferay/util/cookie/cookie';
 export {default as fetch} from './liferay/util/fetch.es';
 export {default as focusFormField} from './liferay/util/focus_form_field';
 export {default as getFormElement} from './liferay/util/form/get_form_element.es';
@@ -38,11 +67,14 @@ export {default as objectToFormData} from './liferay/util/form/object_to_form_da
 export {default as postForm} from './liferay/util/form/post_form.es';
 export {default as setFormValues} from './liferay/util/form/set_form_values.es';
 export {default as formatStorage} from './liferay/util/format_storage.es';
+export {default as formatXML} from './liferay/util/format_xml.es';
 export {
 	getCheckedCheckboxes,
 	getUncheckedCheckboxes,
 } from './liferay/util/get_checkboxes';
 export {default as getCropRegion} from './liferay/util/get_crop_region.es';
+export {default as getDOM} from './liferay/util/get_dom';
+export {default as getElement} from './liferay/util/get_element';
 export {default as getGeolocation} from './liferay/util/get_geolocation';
 export {default as getLexiconIcon} from './liferay/util/get_lexicon_icon';
 export {default as getLexiconIconTpl} from './liferay/util/get_lexicon_icon_template';
@@ -51,8 +83,13 @@ export {default as getPortletId} from './liferay/util/get_portlet_id';
 export {default as getPortletNamespace} from './liferay/util/get_portlet_namespace.es';
 export {default as getSelectedOptionValues} from './liferay/util/get_selected_option_values';
 export {default as getTop} from './liferay/util/get_top';
+export {default as getURLWithSessionId} from './liferay/util/get_url_with_session_id';
 export {default as getWindow} from './liferay/util/get_window';
-export {escapeHTML, unescapeHTML} from './liferay/util/html_util';
+export {
+	escapeHTML,
+	unescapeHTML,
+	MAP_HTML_CHARS_ESCAPED,
+} from './liferay/util/html_util';
 export {default as inBrowserView} from './liferay/util/in_browser_view';
 export {default as isObject} from './liferay/util/is_object';
 export {default as isPhone} from './liferay/util/is_phone';
@@ -61,7 +98,13 @@ export {default as localStorage} from './liferay/util/local_storage';
 export {default as memoize} from './liferay/util/memoize';
 export {default as navigate} from './liferay/util/navigate.es';
 export {default as normalizeFriendlyURL} from './liferay/util/normalize_friendly_url';
+export {default as ns} from './liferay/util/ns.es';
+export {default as objectToURLSearchParams} from './liferay/util/object_to_url_search_params.es';
 export {default as openWindow} from './liferay/util/open_window';
+export {
+	getPortletConfigurationIconAction,
+	setPortletConfigurationIconAction,
+} from './liferay/util/portlet_configuration_icon_action';
 export {default as createActionURL} from './liferay/util/portlet_url/create_action_url.es';
 export {default as createPortletURL} from './liferay/util/portlet_url/create_portlet_url.es';
 export {default as createRenderURL} from './liferay/util/portlet_url/create_render_url.es';
@@ -75,6 +118,7 @@ export {getSessionValue, setSessionValue} from './liferay/util/session.es';
 export {default as sessionStorage} from './liferay/util/session_storage';
 export {default as showCapsLock} from './liferay/util/show_caps_lock';
 export {default as sub} from './liferay/util/sub';
+export {default as toCharCode} from './liferay/util/to_char_code.es';
 export {default as toggleBoxes} from './liferay/util/toggle_boxes';
 export {default as toggleControls} from './liferay/util/toggle_controls';
 export {default as toggleDisabled} from './liferay/util/toggle_disabled';

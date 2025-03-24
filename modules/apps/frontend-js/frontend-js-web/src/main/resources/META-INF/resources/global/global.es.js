@@ -3,103 +3,95 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import loadClientExtensions from '../utils/client_extensions/loadClientExtensions';
-import loadEditorClientExtensions from '../utils/client_extensions/loadEditorClientExtensions';
-import DynamicInlineScroll from './DynamicInlineScroll.es';
-import DynamicSelect from './DynamicSelect';
-import AutoSize from './autosize/autosize.es';
-import BREAKPOINTS from './breakpoints';
 import {
+	BREAKPOINTS,
+	Cookie,
+	DynamicInlineScroll,
+	DynamicSelect,
+	MAP_HTML_CHARS_ESCAPED,
+	STATUS_CODE,
+	SideNavigation,
+	addParams,
+	autoSize,
 	component,
 	componentReady,
+	createActionURL,
+	createPortletURL,
+	createRenderURL,
+	createResourceURL,
+	debounce,
+	delegate,
 	destroyComponent,
 	destroyComponents,
 	destroyUnfulfilledPromises,
+	escapeHTML,
+	fetch,
+	focusFormField,
+	formatStorage,
+	formatXML,
+	getCheckedCheckboxes,
 	getComponentCache,
-	initComponentCache,
-} from './component.es';
-import debounce from './debounce/debounce.es';
-import delegate from './delegate/delegate.es';
-import {
+	getCountries,
+	getCropRegion,
+	getDOM,
+	getElement,
+	getFormElement,
+	getGeolocation,
 	getLayoutIcons,
+	getLexiconIcon,
+	getLexiconIconTpl,
+	getOpener,
+	getPortletConfigurationIconAction,
+	getPortletId,
+	getPortletNamespace,
+	getRegions,
+	getSelectedOptionValues,
+	getSessionValue,
+	getTop,
+	getURLWithSessionId,
+	getUncheckedCheckboxes,
+	getWindow,
 	hideLayoutPane,
+	inBrowserView,
+	initComponentCache,
+	isPhone,
+	isTablet,
+	loadClientExtensions,
+	loadEditorClientExtensions,
+	localStorage,
+	minimizePortlet,
+	navigate,
+	normalizeFriendlyURL,
+	ns,
+	objectToFormData,
+	objectToURLSearchParams,
+	openWindow,
+	portlet,
+	postForm,
 	proposeLayout,
 	publishToLive,
-	showLayoutPane,
-	toggleLayoutDetails,
-} from './layout_exporter.es';
-import {showTab} from './portal/tabs.es';
-import {showTooltip} from './portal/tooltip.es';
-import portlet, {minimizePortlet} from './portlet/portlet.es';
-import SideNavigation from './side_navigation.es';
-import statusCode from './status_code';
-import addParams from './util/add_params';
-import getCountries from './util/address/get_countries.es';
-import getRegions from './util/address/get_regions.es';
-import Cookie from './util/cookie/cookie';
-import fetch from './util/fetch.es';
-import focusFormField from './util/focus_form_field';
-import getFormElement from './util/form/get_form_element.es';
-import objectToFormData from './util/form/object_to_form_data.es';
-import postForm from './util/form/post_form.es';
-import setFormValues from './util/form/set_form_values.es';
-import formatStorage from './util/format_storage.es';
-import formatXML from './util/format_xml.es';
-import {
-	getCheckedCheckboxes,
-	getUncheckedCheckboxes,
-} from './util/get_checkboxes';
-import getCropRegion from './util/get_crop_region.es';
-import getDOM from './util/get_dom';
-import getElement from './util/get_element';
-import getGeolocation from './util/get_geolocation';
-import getLexiconIcon from './util/get_lexicon_icon';
-import getLexiconIconTpl from './util/get_lexicon_icon_template';
-import getOpener from './util/get_opener';
-import getPortletId from './util/get_portlet_id';
-import getPortletNamespace from './util/get_portlet_namespace.es';
-import getSelectedOptionValues from './util/get_selected_option_values';
-import getTop from './util/get_top';
-import getURLWithSessionId from './util/get_url_with_session_id';
-import getWindow from './util/get_window';
-import {
-	MAP_HTML_CHARS_ESCAPED,
-	escapeHTML,
-	unescapeHTML,
-} from './util/html_util';
-import inBrowserView from './util/in_browser_view';
-import isPhone from './util/is_phone';
-import isTablet from './util/is_tablet';
-import localStorage from './util/local_storage';
-import navigate from './util/navigate.es';
-import normalizeFriendlyURL from './util/normalize_friendly_url';
-import ns from './util/ns.es';
-import objectToURLSearchParams from './util/object_to_url_search_params.es';
-import openWindow from './util/open_window';
-import {
-	getPortletConfigurationIconAction,
+	removeEntitySelection,
+	runScriptsInElement,
+	selectFolder,
+	sessionStorage,
+	setFormValues,
 	setPortletConfigurationIconAction,
-} from './util/portlet_configuration_icon_action';
-import createActionURL from './util/portlet_url/create_action_url.es';
-import createPortletURL from './util/portlet_url/create_portlet_url.es';
-import createRenderURL from './util/portlet_url/create_render_url.es';
-import createResourceURL from './util/portlet_url/create_resource_url.es';
-import removeEntitySelection from './util/remove_entity_selection';
-import runScriptsInElement from './util/run_scripts_in_element.es';
-import selectFolder from './util/select_folder';
-import {getSessionValue, setSessionValue} from './util/session.es';
-import sessionStorage from './util/session_storage';
-import showCapsLock from './util/show_caps_lock';
-import sub from './util/sub';
-import toCharCode from './util/to_char_code.es';
-import toggleBoxes from './util/toggle_boxes';
-import toggleControls from './util/toggle_controls';
-import toggleDisabled from './util/toggle_disabled';
-import toggleRadio from './util/toggle_radio';
-import toggleSelectBox from './util/toggle_select_box';
-import zIndex from './zIndex';
-
-Liferay = window.Liferay || {};
+	setSessionValue,
+	showCapsLock,
+	showLayoutPane,
+	showTab,
+	showTooltip,
+	sub,
+	toCharCode,
+	toggleBoxes,
+	toggleControls,
+	toggleDisabled,
+	toggleLayoutDetails,
+	toggleRadio,
+	toggleSelectBox,
+	unescapeHTML,
+	zIndex,
+} from '../main/index.es';
 
 /**
  * @deprecated As of Athanasius (7.3.x), replaced by `import {BREAKPOINTS} from 'frontend-js-web'`
@@ -109,7 +101,7 @@ Liferay.BREAKPOINTS = BREAKPOINTS;
 /**
  * @deprecated As of Cavanaugh (7.4.x), replaced by `import {STATUS_CODE} from 'frontend-js-web'`
  */
-Liferay.STATUS_CODE = statusCode;
+Liferay.STATUS_CODE = STATUS_CODE;
 
 /**
  * @deprecated As of Cavanaugh (7.4.x), replaced by `import {zIndex} from 'frontend-js-web'`
@@ -170,7 +162,7 @@ Liferay.Util.addParams = addParams;
 /**
  * Utils added to global namespace to be consumed by portal-web
  */
-Liferay.Util.AutoSize = AutoSize;
+Liferay.Util.AutoSize = autoSize;
 Liferay.Util.debounce = debounce;
 Liferay.Util.delegate = delegate;
 Liferay.Util.DynamicInlineScroll = DynamicInlineScroll;
