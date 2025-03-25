@@ -10,7 +10,7 @@
  */
 
 module.exports = {
-	hash: '8a90a8b4c1e1fa8013be7c2110e8d1a5604be286b174e9156184f90e8085eec7',
+	hash: 'f5939c81710f8e5383d2b8d01461caeb167c38f277b0f1c88382ce03efba732e',
 	imports: {
 		'@liferay/accessibility-menu-web': [],
 		'@liferay/accessibility-settings-state-web': [],
@@ -275,7 +275,7 @@ module.exports = {
 		'frontend-js-spa-web': [],
 		'frontend-js-svg4everybody-web': [],
 		'frontend-js-tooltip-support-web': [],
-		'frontend-js-web': [],
+		'frontend-js-web': ['./global'],
 		'frontend-taglib-clay': [
 			'@clayui/alert',
 			'@clayui/autocomplete',
