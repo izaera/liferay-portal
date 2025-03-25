@@ -144,23 +144,6 @@ const PropsValues = {
 };
 
 /**
- * https://github.com/liferay/liferay-portal/blob/a4866af62eb89c69ee00d0e69dbe7ff092b50048/modules/apps/frontend-js/frontend-js-web/src/main/resources/META-INF/resources/liferay/global.es.js#L101-L104
- */
-const Session = {
-	extend: jest.fn(() => {}),
-
-	/**
-	 * https://github.com/liferay/liferay-portal/blob/a4866af62eb89c69ee00d0e69dbe7ff092b50048/modules/apps/frontend-js/frontend-js-web/src/main/resources/META-INF/resources/liferay/global.es.js#L102
-	 */
-	get: jest.fn(() => Promise.resolve({})),
-
-	/**
-	 * https://github.com/liferay/liferay-portal/blob/a4866af62eb89c69ee00d0e69dbe7ff092b50048/modules/apps/frontend-js/frontend-js-web/src/main/resources/META-INF/resources/liferay/global.es.js#L103
-	 */
-	set: jest.fn(() => Promise.resolve({})),
-};
-
-/**
  * Contains APIs that provide information about the running context of
  * the portal. The JS ThemeDisplay object is a representation of its
  * Java counterpart simplified for JS access.
@@ -232,7 +215,23 @@ const Util = {
 		createResourceURL: jest.fn(() => 'http://0.0.0.0/liferay/o'),
 	},
 
+	Session: {
+		extend: jest.fn(() => {}),
+
+		/**
+		 * https://github.com/liferay/liferay-portal/blob/a4866af62eb89c69ee00d0e69dbe7ff092b50048/modules/apps/frontend-js/frontend-js-web/src/main/resources/META-INF/resources/liferay/global.es.js#L102
+		 */
+		get: jest.fn(() => Promise.resolve({})),
+
+		/**
+		 * https://github.com/liferay/liferay-portal/blob/a4866af62eb89c69ee00d0e69dbe7ff092b50048/modules/apps/frontend-js/frontend-js-web/src/main/resources/META-INF/resources/liferay/global.es.js#L103
+		 */
+		set: jest.fn(() => Promise.resolve({})),
+	},
+
 	escape: jest.fn((data) => data),
+
+	fetch: jest.fn(() => Promise.resolve()),
 
 	/**
 	 * https://github.com/liferay/liferay-portal/blob/31073fb75fb0d3b309f9e0f921cb7a469aa2703d/modules/apps/frontend-js/frontend-js-aui-web/src/main/resources/META-INF/resources/liferay/util.js#L442
@@ -281,15 +280,17 @@ const CSP = {
 	nonce: '',
 };
 
+const __SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED = {};
+
 module.exports = {
 	...events,
+	__SECRET_INTERNALS_DO_NOT_USE_OR_YOU_WILL_BE_FIRED,
 	CSP,
 	FeatureFlags,
 	Icons,
 	Language,
 	PortletKeys,
 	PropsValues,
-	Session,
 	ThemeDisplay,
 	Util,
 	after,
