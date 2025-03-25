@@ -9,7 +9,7 @@ module.exports = {
 	customBuild: {
 		esbuild: {
 			bundle: true,
-			entryNames: 'global.bundle',
+			entryNames: 'global.preload',
 			entryPoints: [
 				path.resolve(
 					'src',
@@ -17,8 +17,8 @@ module.exports = {
 					'resources',
 					'META-INF',
 					'resources',
-					'liferay',
-					'global.es.js'
+					'global',
+					'preload.js'
 				),
 			],
 			loader: {
@@ -28,15 +28,17 @@ module.exports = {
 				'build',
 				'node',
 				'packageRunBuild',
-				'resources',
-				'liferay'
+				'resources'
 			),
 			sourcemap: true,
 			target: ['es2020'],
 		},
 	},
-	main: './src/main/resources/META-INF/resources/index.es.js',
+	main: './src/main/resources/META-INF/resources/main/index.es.js',
+	submodules: {
+		global: './src/main/resources/META-INF/resources/global/index.js',
+	},
 	typescript: {
-		main: './src/main/resources/META-INF/resources/index.d.ts',
+		main: './src/main/resources/META-INF/resources/main/index.d.ts',
 	},
 };
