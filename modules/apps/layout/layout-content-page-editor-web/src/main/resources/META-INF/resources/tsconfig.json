@@ -1,5 +1,5 @@
 {
-	"@generated": "e103ac73840b4e2e19ceb5f425d4711e27455c27",
+	"@generated": "c58cc89dd24d3d128df14425621b8f5b20426429",
 	"@readonly": "** AUTO-GENERATED: DO NOT EDIT **",
 	"compilerOptions": {
 		"allowSyntheticDefaultImports": true,
@@ -42,7 +42,10 @@
 				"../../../../../../../frontend-js/frontend-js-components-web/src/main/resources/META-INF/resources/index.ts"
 			],
 			"frontend-js-web": [
-				"../../../../../../../frontend-js/frontend-js-web/src/main/resources/META-INF/resources/index.d.ts"
+				"../../../../../../../frontend-js/frontend-js-web/src/main/resources/META-INF/resources/main/index.d.ts"
+			],
+			"frontend-js-web/global": [
+				"../../../../../../../frontend-js/frontend-js-web/src/main/resources/META-INF/resources/global/index.js"
 			],
 			"item-selector-taglib": [
 				"../../../../../../../item-selector/item-selector-taglib/src/main/resources/META-INF/resources/js/index.js"
