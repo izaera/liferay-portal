@@ -3,9 +3,10 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import fetch from '../util/fetch.es';
+/* eslint-disable @liferay/portal/no-global-fetch */
+
+import {fetch, getPortletId} from '../../index.es';
 import objectToFormData from '../util/form/object_to_form_data.es';
-import getPortletId from '../util/get_portlet_id';
 import createPortletURL from '../util/portlet_url/create_portlet_url.es';
 import register from './register.es';
 

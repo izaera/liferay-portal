@@ -4,33 +4,23 @@
  */
 
 import {
-	BREAKPOINTS,
 	Cookie,
 	DynamicInlineScroll,
 	DynamicSelect,
 	MAP_HTML_CHARS_ESCAPED,
 	STATUS_CODE,
-	SideNavigation,
 	addParams,
 	autoSize,
-	component,
-	componentReady,
 	createActionURL,
 	createPortletURL,
 	createRenderURL,
 	createResourceURL,
 	debounce,
-	delegate,
-	destroyComponent,
-	destroyComponents,
-	destroyUnfulfilledPromises,
 	escapeHTML,
-	fetch,
 	focusFormField,
 	formatStorage,
 	formatXML,
 	getCheckedCheckboxes,
-	getComponentCache,
 	getCountries,
 	getCropRegion,
 	getDOM,
@@ -38,23 +28,17 @@ import {
 	getFormElement,
 	getGeolocation,
 	getLayoutIcons,
-	getLexiconIcon,
 	getLexiconIconTpl,
 	getOpener,
-	getPortletConfigurationIconAction,
-	getPortletId,
 	getPortletNamespace,
 	getRegions,
 	getSelectedOptionValues,
-	getSessionValue,
 	getTop,
 	getURLWithSessionId,
 	getUncheckedCheckboxes,
 	getWindow,
 	hideLayoutPane,
 	inBrowserView,
-	initComponentCache,
-	isPhone,
 	isTablet,
 	loadClientExtensions,
 	loadEditorClientExtensions,
@@ -75,8 +59,6 @@ import {
 	selectFolder,
 	sessionStorage,
 	setFormValues,
-	setPortletConfigurationIconAction,
-	setSessionValue,
 	showCapsLock,
 	showLayoutPane,
 	showTab,
@@ -84,7 +66,6 @@ import {
 	sub,
 	toCharCode,
 	toggleBoxes,
-	toggleControls,
 	toggleDisabled,
 	toggleLayoutDetails,
 	toggleRadio,
@@ -92,11 +73,6 @@ import {
 	unescapeHTML,
 	zIndex,
 } from '../main/index.es';
-
-/**
- * @deprecated As of Athanasius (7.3.x), replaced by `import {BREAKPOINTS} from 'frontend-js-web'`
- */
-Liferay.BREAKPOINTS = BREAKPOINTS;
 
 /**
  * @deprecated As of Cavanaugh (7.4.x), replaced by `import {STATUS_CODE} from 'frontend-js-web'`
@@ -107,14 +83,6 @@ Liferay.STATUS_CODE = STATUS_CODE;
  * @deprecated As of Cavanaugh (7.4.x), replaced by `import {zIndex} from 'frontend-js-web'`
  */
 Liferay.zIndex = zIndex;
-
-Liferay.component = component;
-Liferay.componentReady = componentReady;
-Liferay.destroyComponent = destroyComponent;
-Liferay.destroyComponents = destroyComponents;
-Liferay.destroyUnfulfilledPromises = destroyUnfulfilledPromises;
-Liferay.getComponentCache = getComponentCache;
-Liferay.initComponentCache = initComponentCache;
 
 Liferay.Address = {
 	getCountries,
@@ -148,8 +116,6 @@ Liferay.Portlet = Liferay.Portlet || {};
 
 Liferay.Portlet.minimize = minimizePortlet;
 
-Liferay.SideNavigation = SideNavigation;
-
 Liferay.Util = Liferay.Util || {};
 
 Liferay.Util.MAP_HTML_CHARS_ESCAPED = MAP_HTML_CHARS_ESCAPED;
@@ -164,7 +130,6 @@ Liferay.Util.addParams = addParams;
  */
 Liferay.Util.AutoSize = autoSize;
 Liferay.Util.debounce = debounce;
-Liferay.Util.delegate = delegate;
 Liferay.Util.DynamicInlineScroll = DynamicInlineScroll;
 Liferay.Util.runScriptsInElement = runScriptsInElement;
 
@@ -194,7 +159,6 @@ Liferay.Util.escape = (string) => {
 		: string || '';
 };
 Liferay.Util.escapeHTML = escapeHTML;
-Liferay.Util.fetch = fetch;
 
 /**
  * @deprecated As of Athanasius (7.3.x), replaced by `import {focusFormField} from 'frontend-js-web'`
@@ -219,17 +183,8 @@ Liferay.Util.getElement = getElement;
 
 Liferay.Util.getGeolocation = getGeolocation;
 Liferay.Util.getFormElement = getFormElement;
-Liferay.Util.getLexiconIcon = getLexiconIcon;
 Liferay.Util.getLexiconIconTpl = getLexiconIconTpl;
 Liferay.Util.getOpener = getOpener;
-Liferay.Util.getPortletConfigurationIconAction =
-	getPortletConfigurationIconAction;
-
-/**
- * @deprecated As of Athanasius (7.3.x), replaced by `import {getPortletId} from 'frontend-js-web'`
- */
-Liferay.Util.getPortletId = getPortletId;
-
 Liferay.Util.getPortletNamespace = getPortletNamespace;
 Liferay.Util.getSelectedOptionValues = getSelectedOptionValues;
 Liferay.Util.getTop = getTop;
@@ -240,11 +195,6 @@ Liferay.Util.getWindow = getWindow;
  * @deprecated As of Athanasius (7.3.x), replaced by `import {inBrowserView} from 'frontend-js-web'`
  */
 Liferay.Util.inBrowserView = inBrowserView;
-
-/**
- * @deprecated As of Athanasius (7.3.x), replaced by `import {isPhone} from 'frontend-js-web'`
- */
-Liferay.Util.isPhone = isPhone;
 
 /**
  * @deprecated As of Athanasius (7.3.x), replaced by `import {isTablet} from 'frontend-js-web'`
@@ -282,18 +232,9 @@ Liferay.Util.toggleDisabled = toggleDisabled;
 Liferay.Util.openWindow = openWindow;
 Liferay.Util.removeEntitySelection = removeEntitySelection;
 Liferay.Util.selectFolder = selectFolder;
-Liferay.Util.setPortletConfigurationIconAction =
-	setPortletConfigurationIconAction;
 Liferay.Util.showCapsLock = showCapsLock;
 Liferay.Util.sub = sub;
-
-Liferay.Util.Session = {
-	get: getSessionValue,
-	set: setSessionValue,
-};
-
 Liferay.Util.toggleBoxes = toggleBoxes;
-Liferay.Util.toggleControls = toggleControls;
 Liferay.Util.toggleRadio = toggleRadio;
 Liferay.Util.toggleSelectBox = toggleSelectBox;
 
