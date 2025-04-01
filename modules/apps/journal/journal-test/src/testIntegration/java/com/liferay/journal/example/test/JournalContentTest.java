@@ -249,23 +249,23 @@ public class JournalContentTest {
 		String englishLanguageId = LocaleUtil.toLanguageId(
 			LocaleUtil.getSiteDefault());
 
-		JournalArticleDisplay englishArticleDisplay1 =
+		JournalArticleDisplay englishArticleDisplay =
 			_journalContent.getDisplay(
 				_journalArticle.getGroupId(), _journalArticle.getArticleId(),
 				Constants.VIEW, englishLanguageId, _portletRequestModel);
 
 		Assert.assertEquals(
-			englishContent, englishArticleDisplay1.getContent());
+			englishContent, englishArticleDisplay.getContent());
 
 		String spanishLanguageId = LocaleUtil.toLanguageId(LocaleUtil.SPAIN);
 
-		JournalArticleDisplay spanishArticleDisplay1 =
+		JournalArticleDisplay spanishArticleDisplay =
 			_journalContent.getDisplay(
 				_journalArticle.getGroupId(), _journalArticle.getArticleId(),
 				Constants.VIEW, spanishLanguageId, _portletRequestModel);
 
 		Assert.assertEquals(
-			spanishContent, spanishArticleDisplay1.getContent());
+			spanishContent, spanishArticleDisplay.getContent());
 
 		_journalArticleLocalService.removeArticleLocale(
 			_journalArticle.getGroupId(), _journalArticle.getArticleId(),
@@ -275,21 +275,21 @@ public class JournalContentTest {
 			_journalArticle.getGroupId(), _journalArticle.getArticleId(),
 			_journalArticle.getDDMTemplateKey());
 
-		JournalArticleDisplay englishArticleDisplay2 =
+		englishArticleDisplay =
 			_journalContent.getDisplay(
 				_journalArticle.getGroupId(), _journalArticle.getArticleId(),
 				Constants.VIEW, englishLanguageId, _portletRequestModel);
 
 		Assert.assertEquals(
-			englishContent, englishArticleDisplay2.getContent());
+			englishContent, englishArticleDisplay.getContent());
 
-		JournalArticleDisplay spanishArticleDisplay2 =
+		spanishArticleDisplay =
 			_journalContent.getDisplay(
 				_journalArticle.getGroupId(), _journalArticle.getArticleId(),
 				Constants.VIEW, spanishLanguageId, _portletRequestModel);
 
 		Assert.assertNotEquals(
-			spanishContent, spanishArticleDisplay2.getContent());
+			spanishContent, spanishArticleDisplay.getContent());
 	}
 
 	@Inject
