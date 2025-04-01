@@ -94,8 +94,8 @@ public class JournalContentTest {
 
 	@Test
 	public void testClearCache() throws Exception {
-		_testClearCache(new Locale[] {LocaleUtil.US});
 		_testClearCache(new Locale[] {LocaleUtil.SPAIN, LocaleUtil.US});
+		_testClearCache(new Locale[] {LocaleUtil.US});
 	}
 
 	@Test
