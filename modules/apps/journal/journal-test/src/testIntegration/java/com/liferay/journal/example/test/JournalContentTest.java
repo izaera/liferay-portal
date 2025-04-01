@@ -78,10 +78,10 @@ public class JournalContentTest {
 
 	@Before
 	public void setUp() throws Exception {
+		_group = GroupTestUtil.addGroup();
+
 		MockHttpServletRequest mockHttpServletRequest =
 			new MockHttpServletRequest();
-
-		_group = GroupTestUtil.addGroup();
 
 		setUpPortletRequestModel(mockHttpServletRequest);
 		setUpServiceContext(mockHttpServletRequest);
