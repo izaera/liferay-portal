@@ -63,7 +63,7 @@ public class JournalFolderLocalServiceTest {
 		JournalFolder journalFolder = _addJournalFolder(
 			user.getUserId(), JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID);
 
-		_assertFolderStatusByUser(journalFolder, user);
+		_assertJournalFolder(journalFolder, user);
 	}
 
 	@Test
@@ -128,7 +128,7 @@ public class JournalFolderLocalServiceTest {
 			ServiceContextTestUtil.getServiceContext(
 				_group.getGroupId(), user.getUserId()));
 
-		_assertFolderStatusByUser(journalFolder, user);
+		_assertJournalFolder(journalFolder, user);
 	}
 
 	private JournalArticle _addApprovedJournalArticle(
@@ -194,7 +194,7 @@ public class JournalFolderLocalServiceTest {
 				groupId, folderIds, status));
 	}
 
-	private void _assertFolderStatusByUser(
+	private void _assertJournalFolder(
 		JournalFolder journalFolder, User user) {
 
 		Assert.assertEquals(
