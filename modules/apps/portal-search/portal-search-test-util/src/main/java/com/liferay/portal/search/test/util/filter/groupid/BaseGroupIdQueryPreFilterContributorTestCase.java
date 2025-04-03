@@ -13,6 +13,7 @@ import com.liferay.portal.kernel.search.filter.BooleanFilter;
 import com.liferay.portal.kernel.search.filter.Filter;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.test.ReflectionTestUtil;
+import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.search.internal.spi.model.query.contributor.GroupIdQueryPreFilterContributor;
 import com.liferay.portal.search.test.util.DocumentsAssert;
 import com.liferay.portal.search.test.util.indexing.BaseIndexingTestCase;
@@ -51,7 +52,7 @@ public abstract class BaseGroupIdQueryPreFilterContributorTestCase
 	public void testClausesWithMoreThanOneInactiveGroup() throws Exception {
 		Group group = Mockito.mock(Group.class);
 
-		long groupId = 11111;
+		long groupId = RandomTestUtil.randomLong();
 
 		Mockito.doReturn(
 			group
@@ -72,7 +73,8 @@ public abstract class BaseGroupIdQueryPreFilterContributorTestCase
 		assertSearch(
 			indexingTestHelper -> indexingTestHelper.define(
 				searchContext -> {
-					searchContext.setGroupIds(new long[] {groupId, 22222});
+					searchContext.setGroupIds(
+						new long[] {groupId, RandomTestUtil.randomLong()});
 
 					BooleanFilter booleanFilter = (BooleanFilter)_createFilter(
 						searchContext);
@@ -89,7 +91,7 @@ public abstract class BaseGroupIdQueryPreFilterContributorTestCase
 	public void testClausesWithOneInactiveGroup() throws Exception {
 		Group group = Mockito.mock(Group.class);
 
-		long groupId = 11111;
+		long groupId = RandomTestUtil.randomLong();
 
 		Mockito.doReturn(
 			group
