@@ -10,5 +10,9 @@ export default function openWindow(config, callback) {
 
 	config.openingWindow = window;
 
+	if (config.uri && !config.url) {
+		config.url = config.uri;
+	}
+
 	topUtil.Liferay.Util._openWindowProvider(config, callback);
 }
