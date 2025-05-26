@@ -65,6 +65,7 @@ import {config as frontendJsSpaWebConfig} from './tests/frontend-js-spa-web/main
 import {config as frontendJsWebConfig} from './tests/frontend-js-web/main/config';
 import {config as frontendTaglibClayConfig} from './tests/frontend-taglib-clay/main/config';
 import {config as frontendTaglibConfig} from './tests/frontend-taglib/main/config';
+import {config as frontendTaglibSpaOffConfig} from './tests/frontend-taglib/spa-off/config';
 import {config as frontendTheme} from './tests/frontend-theme/main/config';
 import {config as headlessBuilderImplConfig} from './tests/headless-builder-impl/main/config';
 import {config as headlessBuilderWebConfig} from './tests/headless-builder-web/main/config';
@@ -214,6 +215,7 @@ export default defineConfig({
 		frontendJsWebConfig,
 		frontendTaglibClayConfig,
 		frontendTaglibConfig,
+		frontendTaglibSpaOffConfig,
 		frontendTheme,
 		headlessBuilderImplConfig,
 		headlessBuilderWebConfig,

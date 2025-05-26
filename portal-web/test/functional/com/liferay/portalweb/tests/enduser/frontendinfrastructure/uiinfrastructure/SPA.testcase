@@ -19,68 +19,6 @@ definition {
 		}
 	}
 
-	@description = "LPS-172764 Confirm that filtering the WCs does not deselect them"
-	@priority = 4
-	test CanAssertTheWCAreNotDeselected {
-		property portal.upstream = "quarantine";
-
-		task ("And there are 6 web content articles") {
-			for (var i : list "1,2,3,4,5,6") {
-				JSONWebcontent.addWebContent(
-					content = "WebContent${i}",
-					description = "Description${i}",
-					groupName = "Guest",
-					title = "WebContentTitle${i}");
-			}
-		}
-
-		task ("And pagination is set to 4") {
-			ProductMenu.gotoPortlet(
-				category = "Content & Data",
-				portlet = "Web Content");
-
-			Pagination.changePagination(itemsPerPage = 4);
-		}
-
-		task ("When I filter using the management bar") {
-			Click(
-				key_text = "Filter",
-				locator1 = "Button#ANY_WITH_SPAN");
-
-			Click(
-				key_value = "Recent",
-				locator1 = "ProcessBuilderListView#DROPDOWN_ITEM");
-		}
-
-		task ("And two articles are selected, one from each page") {
-			Click(
-				key_title = "WebContentTitle6",
-				locator1 = "WCEditWebContent#SELECT_CHECKBOX_WC");
-
-			Click(locator1 = "Pagination#NEXT_LINK");
-
-			Click(
-				key_title = "WebContentTitle2",
-				locator1 = "WCEditWebContent#SELECT_CHECKBOX_WC");
-		}
-
-		task ("And clear the filters") {
-			Click(locator1 = "ManagementBar#CLEAR_FILTER");
-		}
-
-		task ("Then the selections should still be kept") {
-			AssertElementPresent(
-				key_title = "WebContentTitle2",
-				locator1 = "WCEditWebContent#SELECT_CHECKBOX_WC");
-
-			Click(locator1 = "Pagination#FIRST_LINK");
-
-			AssertElementPresent(
-				key_title = "WebContentTitle6",
-				locator1 = "WCEditWebContent#SELECT_CHECKBOX_WC");
-		}
-	}
-
 	@description = "LPS-172764 Confirm that WC is deselected when you go to another tab and come back to WC"
 	@priority = 4
 	test CanAssertWCDoesNotStaySelected {
