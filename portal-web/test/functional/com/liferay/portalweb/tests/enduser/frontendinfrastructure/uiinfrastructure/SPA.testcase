@@ -19,52 +19,6 @@ definition {
 		}
 	}
 
-	@description = "LPS-172764 Confirm that the first selection is displayed at the top of the second Web Content page"
-	@priority = 4
-	test TheItemsListIsCorrectInSecondPage {
-		task ("And there are 6 web content articles") {
-			for (var i : list "1,2,3,4,5,6") {
-				JSONWebcontent.addWebContent(
-					content = "WebContent${i}",
-					description = "Description${i}",
-					groupName = "Guest",
-					title = "WebContentTitle${i}");
-			}
-		}
-
-		task ("And pagination is set to 4") {
-			ProductMenu.gotoPortlet(
-				category = "Content & Data",
-				portlet = "Web Content");
-
-			Pagination.changePagination(itemsPerPage = 4);
-		}
-
-		task ("When I select an item on the first page") {
-			Click(
-				key_title = "WebContentTitle6",
-				locator1 = "WCEditWebContent#SELECT_CHECKBOX_WC");
-
-			AssertTextEquals.assertPartialText(
-				locator1 = "ManagementBar#NAVBAR_TEXT",
-				value1 = "1 of 6 Items Selected");
-		}
-
-		task ("And navigate to the second page") {
-			Click(locator1 = "Pagination#NEXT_LINK");
-
-			Click(
-				key_title = "WebContentTitle2",
-				locator1 = "WCEditWebContent#SELECT_CHECKBOX_WC");
-		}
-
-		task ("Then the first selection should be displayed at the top of the second page.") {
-			AssertTextEquals.assertPartialText(
-				locator1 = "ManagementBar#NAVBAR_TEXT",
-				value1 = "2 of 6 Items Selected");
-		}
-	}
-
 	@description = "LPS-172764 Confirm that WC is deselected when exiting and entering the Web Content tab"
 	@priority = 4
 	test WCDoesNotStaySelectedIfLeavingTheWCTab {

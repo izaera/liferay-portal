@@ -132,18 +132,23 @@ test(
 );
 
 test(
-	'Confirm that selection is displayed at the top of the page after pagination is used',
+	'Confirm that selection is displayed at the top of all pages',
 	{tag: '@LPS-172764'},
 	async ({apiHelpers, journalPage, page, site}) => {
 		await createWebContents(apiHelpers, 6, site.id);
 		await journalPage.goto(site.friendlyUrlPath);
 
-		await test.step('Select one article in second page then go back to first', async () => {
+		await test.step('Select one article per page', async () => {
+			await journalPage.selectItem(0);
 			await journalPage.selectPage(1);
 			await journalPage.selectItem(0);
-			await journalPage.selectPage(0);
+			await expect(page.getByText('2 of 6 Items Selected')).toBeVisible();
 		});
 
-		await expect(page.getByText('1 of 6 Items Selected')).toBeVisible();
+		await journalPage.selectPage(0);
+		await expect(page.getByText('2 of 6 Items Selected')).toBeVisible();
+
+		await journalPage.selectPage(1);
+		await expect(page.getByText('2 of 6 Items Selected')).toBeVisible();
 	}
 );
