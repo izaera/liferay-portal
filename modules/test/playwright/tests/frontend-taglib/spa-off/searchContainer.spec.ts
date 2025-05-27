@@ -130,3 +130,20 @@ test(
 		);
 	}
 );
+
+test(
+	'Confirm that selection is displayed at the top of the page after pagination is used',
+	{tag: '@LPS-172764'},
+	async ({apiHelpers, journalPage, page, site}) => {
+		await createWebContents(apiHelpers, 6, site.id);
+		await journalPage.goto(site.friendlyUrlPath);
+
+		await test.step('Select one article in second page then go back to first', async () => {
+			await journalPage.selectPage(1);
+			await journalPage.selectItem(0);
+			await journalPage.selectPage(0);
+		});
+
+		await expect(page.getByText('1 of 6 Items Selected')).toBeVisible();
+	}
+);
