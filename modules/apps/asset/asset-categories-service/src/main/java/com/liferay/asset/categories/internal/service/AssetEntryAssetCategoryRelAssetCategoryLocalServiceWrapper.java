@@ -16,10 +16,14 @@ import com.liferay.asset.kernel.service.AssetEntryLocalService;
 import com.liferay.petra.function.transform.TransformUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.messaging.DestinationNames;
+import com.liferay.portal.kernel.messaging.Message;
+import com.liferay.portal.kernel.messaging.MessageBus;
 import com.liferay.portal.kernel.model.ModelHintsUtil;
 import com.liferay.portal.kernel.service.ClassNameLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceWrapper;
+import com.liferay.portal.kernel.transaction.TransactionCommitCallbackUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 
 import java.util.Collections;
@@ -110,10 +114,18 @@ public class AssetEntryAssetCategoryRelAssetCategoryLocalServiceWrapper
 			categoryId);
 
 		if (!Objects.equals(category.getName(), name)) {
-			List<AssetEntry> entries = _getAssetEntriesByAssetCategoryId(
-				category.getCategoryId());
+			TransactionCommitCallbackUtil.registerCallback(
+				() -> {
+					Message message = new Message();
 
-			_assetEntryLocalService.reindex(entries);
+					message.put("categoryId", category.getCategoryId());
+
+					_messageBus.sendMessage(
+						DestinationNames.ASSET_CATEGORY_ASSET_ENTRIES_REINDEX,
+						message);
+
+					return null;
+				});
 		}
 
 		return super.updateCategory(
@@ -179,5 +191,8 @@ public class AssetEntryAssetCategoryRelAssetCategoryLocalServiceWrapper
 
 	@Reference
 	private ClassNameLocalService _classNameLocalService;
+
+	@Reference
+	private MessageBus _messageBus;
 
 }
