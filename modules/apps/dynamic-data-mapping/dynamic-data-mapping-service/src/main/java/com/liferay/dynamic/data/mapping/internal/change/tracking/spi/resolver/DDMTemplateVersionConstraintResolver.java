@@ -110,7 +110,6 @@ public class DDMTemplateVersionConstraintResolver
 		for (DDMTemplateVersion templateVersion : ddmTemplateVersions) {
 			int[] productionVersionParts = StringUtil.split(
 				latestVersion, StringPool.PERIOD, 0);
-
 			int[] publicationVersionParts = StringUtil.split(
 				templateVersion.getVersion(), StringPool.PERIOD, 0);
 

@@ -74,9 +74,7 @@ public class DDMTemplateVersionConstraintResolverTest {
 		DDMTemplateVersion ddmTemplateVersion1 =
 			ddmTemplate.getTemplateVersion();
 
-		String ddmTemplateCurrentVersion = "1.10";
-
-		ddmTemplateVersion1.setVersion(ddmTemplateCurrentVersion);
+		ddmTemplateVersion1.setVersion("1.10");
 
 		ddmTemplateVersion1 =
 			_ddmTemplateVersionLocalService.updateDDMTemplateVersion(
@@ -143,7 +141,7 @@ public class DDMTemplateVersionConstraintResolverTest {
 		_ctCollectionService.publishCTCollection(
 			TestPropsValues.getUserId(), ctCollection.getCtCollectionId());
 
-		ddmTemplateCurrentVersion = "1.14";
+		String version = "1.14";
 
 		List<DDMTemplateVersion> ddmTemplateVersions = ListUtil.sort(
 			_ddmTemplateVersionLocalService.getTemplateVersions(
@@ -154,11 +152,9 @@ public class DDMTemplateVersionConstraintResolverTest {
 			int[] versionParts = StringUtil.split(
 				ddmTemplateVersion2.getVersion(), StringPool.PERIOD, 0);
 
-			Assert.assertEquals(
-				ddmTemplateCurrentVersion, ddmTemplateVersion2.getVersion());
+			Assert.assertEquals(version, ddmTemplateVersion2.getVersion());
 
-			ddmTemplateCurrentVersion =
-				versionParts[0] + StringPool.PERIOD + --versionParts[1];
+			version = versionParts[0] + StringPool.PERIOD + --versionParts[1];
 		}
 	}
 
