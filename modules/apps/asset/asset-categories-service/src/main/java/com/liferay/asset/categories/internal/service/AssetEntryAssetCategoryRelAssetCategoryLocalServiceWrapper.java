@@ -51,10 +51,7 @@ public class AssetEntryAssetCategoryRelAssetCategoryLocalServiceWrapper
 			deleteAssetEntryAssetCategoryRelByAssetCategoryId(
 				category.getCategoryId());
 
-		List<AssetEntry> entries = _getAssetEntriesByAssetCategoryId(
-			category.getCategoryId());
-
-		_assetEntryLocalService.reindex(entries);
+		_reindexCategoryAssetEntries(category.getCategoryId());
 
 		return super.deleteCategory(category, skipRebuildTree);
 	}
@@ -114,18 +111,7 @@ public class AssetEntryAssetCategoryRelAssetCategoryLocalServiceWrapper
 			categoryId);
 
 		if (!Objects.equals(category.getName(), name)) {
-			TransactionCommitCallbackUtil.registerCallback(
-				() -> {
-					Message message = new Message();
-
-					message.put("categoryId", category.getCategoryId());
-
-					_messageBus.sendMessage(
-						DestinationNames.ASSET_CATEGORY_ASSET_ENTRIES_REINDEX,
-						message);
-
-					return null;
-				});
+			_reindexCategoryAssetEntries(category.getCategoryId());
 		}
 
 		return super.updateCategory(
@@ -174,6 +160,21 @@ public class AssetEntryAssetCategoryRelAssetCategoryLocalServiceWrapper
 				if (entry != null) {
 					return entry;
 				}
+
+				return null;
+			});
+	}
+
+	private void _reindexCategoryAssetEntries(Long categoryId) {
+		TransactionCommitCallbackUtil.registerCallback(
+			() -> {
+				Message message = new Message();
+
+				message.put("categoryId", categoryId);
+
+				_messageBus.sendMessage(
+					DestinationNames.ASSET_CATEGORY_ASSET_ENTRIES_REINDEX,
+					message);
 
 				return null;
 			});
