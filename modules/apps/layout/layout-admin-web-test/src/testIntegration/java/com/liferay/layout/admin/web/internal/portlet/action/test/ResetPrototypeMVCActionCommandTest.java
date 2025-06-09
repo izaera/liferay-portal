@@ -301,15 +301,10 @@ public class ResetPrototypeMVCActionCommandTest {
 			deletedItemIds.add(layoutStructureItem.getItemId());
 		}
 
-		draftLayout = _layoutLocalService.getLayout(draftLayout.getPlid());
-
-		ContentLayoutTestUtil.publishLayout(
-			_layoutLocalService.getLayout(draftLayout.getPlid()), layout);
-
-		layout = _layoutLocalService.getLayout(layout.getPlid());
-
 		layoutStructure = _getLayoutStructure(
-			layout.getGroupId(), layout, segmentsExperienceId);
+			draftLayout.getGroupId(), draftLayout,
+			_segmentsExperienceLocalService.fetchDefaultSegmentsExperienceId(
+				draftLayout.getPlid()));
 
 		Assert.assertArrayEquals(
 			deletedItemIds.toArray(new String[0]),
@@ -329,7 +324,33 @@ public class ResetPrototypeMVCActionCommandTest {
 				layoutStructureItem -> layoutStructureItem.getItemId(),
 				String.class));
 
-		return layout;
+		ContentLayoutTestUtil.publishLayout(draftLayout, layout);
+
+		layoutStructure = _getLayoutStructure(
+			draftLayout.getGroupId(), draftLayout,
+			_segmentsExperienceLocalService.fetchDefaultSegmentsExperienceId(
+				draftLayout.getPlid()));
+
+		deletedLayoutStructureItems =
+			layoutStructure.getDeletedLayoutStructureItems();
+
+		Assert.assertEquals(
+			deletedLayoutStructureItems.toString(), 0,
+			deletedLayoutStructureItems.size());
+
+		layoutStructure = _getLayoutStructure(
+			layout.getGroupId(), layout,
+			_segmentsExperienceLocalService.fetchDefaultSegmentsExperienceId(
+				layout.getPlid()));
+
+		deletedLayoutStructureItems =
+			layoutStructure.getDeletedLayoutStructureItems();
+
+		Assert.assertEquals(
+			deletedLayoutStructureItems.toString(), 0,
+			deletedLayoutStructureItems.size());
+
+		return _layoutLocalService.getLayout(layout.getPlid());
 	}
 
 	@Inject
