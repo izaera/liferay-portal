@@ -148,6 +148,7 @@ public class ResetPrototypeMVCActionCommandTest {
 				_getThemeDisplay(groupPublishedLayout)),
 			new MockActionResponse());
 
+		MergeLayoutPrototypesThreadLocal.clearMergeComplete();
 		MergeLayoutPrototypesThreadLocal.setSkipMerge(false);
 
 		groupPublishedLayout = _layoutLocalService.getLayout(
