@@ -6,6 +6,7 @@
 package com.liferay.frontend.js.web.internal.js.importmaps.extender;
 
 import com.liferay.frontend.js.importmaps.extender.DynamicJSImportMapsContributor;
+import com.liferay.frontend.js.web.internal.resource.handler.LanguageFrontendResourceRequestHandler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.frontend.hashed.files.HashedFilesRegistry;
 import com.liferay.portal.kernel.util.Portal;
@@ -30,7 +31,13 @@ public class FrontendJsWebDynamicJSImportMapsContributor
 			HttpServletRequest httpServletRequest, Writer writer)
 		throws IOException {
 
-		writer.write("\"@liferay/language/\": \"/o/js/language/\"");
+		writer.write(StringPool.QUOTE);
+		writer.write(
+			LanguageFrontendResourceRequestHandler.LANGUAGE_MODULE_PREFIX);
+		writer.write("\": \"");
+		writer.write(
+			LanguageFrontendResourceRequestHandler.LANGUAGE_URI_PREFIX);
+		writer.write(StringPool.QUOTE);
 
 		_hashedFilesRegistry.forEach(
 			(unhashedFileURI, hashedFileURI) -> {
