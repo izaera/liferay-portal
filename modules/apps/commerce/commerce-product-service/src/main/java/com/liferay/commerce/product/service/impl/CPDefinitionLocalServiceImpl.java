@@ -1320,6 +1320,16 @@ public class CPDefinitionLocalServiceImpl
 			cpDefinition.getCProductId());
 
 		if (cpDefinitionsCount == 1) {
+
+			// Commerce product friendly URL entries
+
+			Group companyGroup = _groupLocalService.getCompanyGroup(
+				cpDefinition.getCompanyId());
+
+			_friendlyURLEntryLocalService.deleteFriendlyURLEntry(
+				companyGroup.getGroupId(), CProduct.class,
+				cpDefinition.getCProductId());
+
 			_cProductLocalService.deleteCProduct(cpDefinition.getCProductId());
 		}
 
@@ -1398,15 +1408,6 @@ public class CPDefinitionLocalServiceImpl
 		if (cpType != null) {
 			cpType.deleteCPDefinition(cpDefinition.getCPDefinitionId());
 		}
-
-		// Commerce product friendly URL entries
-
-		Group companyGroup = _groupLocalService.getCompanyGroup(
-			cpDefinition.getCompanyId());
-
-		_friendlyURLEntryLocalService.deleteFriendlyURLEntry(
-			companyGroup.getGroupId(), CProduct.class,
-			cpDefinition.getCProductId());
 
 		// Commerce product configuration entries
 
