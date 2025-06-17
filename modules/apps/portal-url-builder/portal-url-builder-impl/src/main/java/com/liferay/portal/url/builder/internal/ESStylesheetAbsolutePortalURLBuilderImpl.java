@@ -41,8 +41,7 @@ public class ESStylesheetAbsolutePortalURLBuilderImpl
 
 		URLUtil.appendURL(
 			sb, _cdnHost, _ignoreCDNHost, _ignorePathProxy,
-			_pathModule + _webContextPath + "/__liferay__/internal/css",
-			_pathProxy, _esStylesheetPath);
+			_pathModule + _webContextPath, _pathProxy, _esStylesheetPath);
 
 		return sb.toString();
 	}

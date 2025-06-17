@@ -95,8 +95,7 @@ public class HashedFilesRegistry {
 					else {
 						Set<String> completeHashedResourcePaths =
 							_getHashedResourcePaths(
-								servletContext,
-								"/META-INF/resources/__liferay__/");
+								servletContext, "/META-INF/resources/");
 
 						hashedResourcePaths = new HashSet<>();
 

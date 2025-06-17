@@ -10,8 +10,8 @@ import resolve from 'resolve';
 import rtlcss from 'rtlcss';
 
 import {
-	BUILD_INTERNAL_CSS_PATH,
 	BUILD_RESOURCES_PATH,
+	BUILD_SASS_CACHE_PATH,
 	SRC_PATH,
 } from '../../util/constants.mjs';
 import projectScopeRequire from '../../util/projectScopeRequire.mjs';
@@ -193,24 +193,21 @@ async function processScssFile(filePath, includePaths, timestamp) {
 	const relFilePath = path.relative(SRC_PATH, filePath);
 
 	const outFilePath = path.join(
-		BUILD_INTERNAL_CSS_PATH,
+		BUILD_SASS_CACHE_PATH,
 		relFilePath.replace(/\.scss$/, '.css')
 	);
+
+	const {dir, ext, name} = path.parse(outFilePath);
+
+	const outRtlFilePath = path.join(dir, `${name}_rtl${ext}`);
 
 	// Compute CSS
 
 	const {css, map} = await runSass(filePath, includePaths, outFilePath);
 
-	await fs.unlink(outFilePath);
-	await fs.unlink(`${outFilePath}.map`);
-
 	// Apply timestamps to CSS
 
 	const timestampedCss = appendTimestamps(css, timestamp);
-
-	// Calculate hash
-
-	const hash = await calculateFileHash(timestampedCss);
 
 	// Apply RTL translation to CSS
 
@@ -220,25 +217,24 @@ async function processScssFile(filePath, includePaths, timestamp) {
 
 	await fs.mkdir(path.dirname(outFilePath), {recursive: true});
 
-	const {dir, ext, name} = path.parse(outFilePath);
+	await Promise.all([
+		fs.writeFile(outFilePath, timestampedCss, 'utf-8'),
+		fs.writeFile(`${outFilePath}.map`, map, 'utf-8'),
+		fs.writeFile(outRtlFilePath, rtlTimestampedCss, 'utf-8'),
+	]);
 
-	const rtlOutFilePath = path.join(dir, `${name}_rtl${ext}`);
+	// Copy hashed files
+
+	const hash = await calculateFileHash(timestampedCss);
 
 	await Promise.all([
-		fs.writeFile(
-			outFilePath.replace(/css$/, `(${hash}).css`),
-			timestampedCss,
-			'utf-8'
+		fs.copyFile(
+			outFilePath,
+			outFilePath.replace(/\.css$/, `.(${hash}).css`)
 		),
-		fs.writeFile(
-			outFilePath.replace(/css$/, `(${hash}).css.map`),
-			map,
-			'utf-8'
-		),
-		fs.writeFile(
-			rtlOutFilePath.replace(/css$/, `(${hash}).css`),
-			rtlTimestampedCss,
-			'utf-8'
+		fs.copyFile(
+			outRtlFilePath,
+			outRtlFilePath.replace(/\.css$/, `.(${hash}).css`)
 		),
 	]);
 }

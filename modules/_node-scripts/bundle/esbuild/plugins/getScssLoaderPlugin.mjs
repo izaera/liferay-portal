@@ -6,7 +6,10 @@
 import fs from 'fs/promises';
 import path from 'path';
 
-import {BUILD_INTERNAL_CSS_PATH, SRC_PATH} from '../../../util/constants.mjs';
+import {
+	BUILD_SASS_CACHE_PATH,
+	SRC_PATH
+} from '../../../util/constants.mjs';
 import extractFileHash from '../../util/extractFileHash.mjs';
 
 /**
@@ -30,7 +33,7 @@ export default function getScssLoaderPlugin(projectWebContextPath) {
 
 					const cssFiles = await fs.readdir(
 						path.join(
-							BUILD_INTERNAL_CSS_PATH,
+							BUILD_SASS_CACHE_PATH,
 							path.dirname(projectPath)
 						)
 					);
@@ -50,8 +53,6 @@ export default function getScssLoaderPlugin(projectWebContextPath) {
 						.join(path.posix.sep)
 						.replace(/\.scss$/, '');
 
-					console.log('==========', cssBaseURI);
-
 					const contents = `
 const link = document.createElement('link');
 link.setAttribute('rel', 'stylesheet');
@@ -59,7 +60,7 @@ link.setAttribute('type', 'text/css');
 link.setAttribute(
 	'href', 
 	Liferay.ThemeDisplay.getPathContext() + 
-		'/o${projectWebContextPath}/__liferay__/internal/css/${cssBaseURI}' + 
+		'/o${projectWebContextPath}/${cssBaseURI}' + 
 		(document.dir === 'rtl' ? '_rtl' : '') +
 		'.(${hash}).css'
 );
@@ -68,8 +69,6 @@ if (Liferay.CSP) {
 }
 document.querySelector('head').appendChild(link);
 `;
-
-					console.log(contents);
 
 					return {
 						contents,

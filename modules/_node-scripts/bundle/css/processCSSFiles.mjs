@@ -8,7 +8,7 @@ import fs from 'fs/promises';
 import path from 'path';
 import rtlcss from 'rtlcss';
 
-import {BUILD_INTERNAL_CSS_PATH, SRC_PATH} from '../../util/constants.mjs';
+import {BUILD_RESOURCES_PATH, SRC_PATH} from '../../util/constants.mjs';
 import calculateFileHash from '../util/calculateFileHash.mjs';
 
 export default async function processCSSFiles() {
@@ -39,38 +39,39 @@ async function processCssFile(filePath) {
 
 	const relFilePath = path.relative(SRC_PATH, filePath);
 
-	const outFilePath = path.join(BUILD_INTERNAL_CSS_PATH, relFilePath);
+	const outFilePath = path.join(BUILD_RESOURCES_PATH, relFilePath);
 
-	// Read CSS
+	const {dir, ext, name} = path.parse(outFilePath);
+
+	const outRtlFilePath = path.join(dir, `${name}_rtl${ext}`);
+
+	// Read CSS and apply RTL conversion
 
 	const css = await fs.readFile(filePath, 'utf-8');
 
-	// Calculate hash
-
-	const hash = await calculateFileHash(css);
-
-	// Apply RTL translation to CSS
-
-	const rtlCss = rtlcss.process(css);
+	const rtlCssContent = rtlcss.process(css);
 
 	// Write stuff
 
 	await fs.mkdir(path.dirname(outFilePath), {recursive: true});
 
-	const {dir, ext, name} = path.parse(outFilePath);
+	await Promise.all([
+		fs.writeFile(outFilePath, css, 'utf-8'),
+		fs.writeFile(outRtlFilePath, rtlCssContent, 'utf-8'),
+	]);
 
-	const rtlOutFilePath = path.join(dir, `${name}_rtl${ext}`);
+	// Copy hashed files
+
+	const hash = await calculateFileHash(css);
 
 	await Promise.all([
-		fs.writeFile(
-			outFilePath.replace(/css$/, `(${hash}).css`),
-			css,
-			'utf-8'
+		fs.copyFile(
+			outFilePath,
+			outFilePath.replace(/\.css$/, `.(${hash}).css`)
 		),
-		fs.writeFile(
-			rtlOutFilePath.replace(/css$/, `(${hash}).css`),
-			rtlCss,
-			'utf-8'
+		fs.copyFile(
+			outRtlFilePath,
+			outRtlFilePath.replace(/\.css$/, `.(${hash}).css`)
 		),
 	]);
 }

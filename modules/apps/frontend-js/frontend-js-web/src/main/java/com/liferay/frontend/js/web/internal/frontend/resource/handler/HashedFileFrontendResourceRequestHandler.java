@@ -56,7 +56,27 @@ public class HashedFileFrontendResourceRequestHandler
 
 	@Override
 	public boolean canHandleRequest(HttpServletRequest httpServletRequest) {
-		return false;
+		String requestURI = httpServletRequest.getRequestURI();
+
+		if (!requestURI.endsWith(_fileExtension)) {
+			return false;
+		}
+
+		String hashedFileURI;
+
+		if (HashedFilesUtil.containsHash(requestURI)) {
+			hashedFileURI = _hashedFilesRegistry.get(
+				HashedFilesUtil.removeHash(requestURI));
+		}
+		else {
+			hashedFileURI = _hashedFilesRegistry.get(requestURI);
+		}
+
+		if (hashedFileURI == null) {
+			return false;
+		}
+
+		return true;
 	}
 
 	@Override

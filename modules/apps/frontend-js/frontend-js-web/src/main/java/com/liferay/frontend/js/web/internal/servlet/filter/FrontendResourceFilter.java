@@ -8,7 +8,6 @@ package com.liferay.frontend.js.web.internal.servlet.filter;
 import com.liferay.frontend.js.web.internal.frontend.resource.FrontendResource;
 import com.liferay.frontend.js.web.internal.frontend.resource.handler.FrontendResourceRequestHandler;
 import com.liferay.frontend.js.web.internal.frontend.resource.handler.HashedFileFrontendResourceRequestHandler;
-import com.liferay.frontend.js.web.internal.frontend.resource.handler.ThemeFrontendResourceRequestHandler;
 import com.liferay.frontend.js.web.internal.hashed.files.HashedFilesRegistry;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMapFactory;
@@ -103,9 +102,6 @@ public class FrontendResourceFilter extends BasePortalFilter {
 				ContentTypes.TEXT_JAVASCRIPT, ".js", _hashedFilesRegistry,
 				86400, "esModulesMaxAge", _portal, false,
 				"sendNoCacheForESModules", _serviceTrackerMap));
-		_frontendResourceRequestHandlers.add(
-			new ThemeFrontendResourceRequestHandler(
-				_hashedFilesRegistry, _serviceTrackerMap));
 	}
 
 	@Deactivate

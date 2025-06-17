@@ -28,14 +28,6 @@ export const BUILD_MAIN_EXPORTS_PATH = path.join(
 	'__liferay__'
 );
 export const BUILD_CSS_EXPORTS_PATH = path.join(BUILD_MAIN_EXPORTS_PATH, 'css');
-export const BUILD_INTERNAL_MAIN_PATH = path.join(
-	BUILD_MAIN_EXPORTS_PATH,
-	'internal'
-);
-export const BUILD_INTERNAL_CSS_PATH = path.join(
-	BUILD_INTERNAL_MAIN_PATH,
-	'css'
-);
 export const BUILD_LANGUAGE_JSON_PATH = path.join(
 	BUILD_RESOURCES_PATH,
 	'language.json'
