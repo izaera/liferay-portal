@@ -10,11 +10,12 @@ import resolve from 'resolve';
 import rtlcss from 'rtlcss';
 
 import {
+	BUILD_INTERNAL_CSS_PATH,
 	BUILD_RESOURCES_PATH,
-	BUILD_SASS_CACHE_PATH,
 	SRC_PATH,
 } from '../../util/constants.mjs';
 import projectScopeRequire from '../../util/projectScopeRequire.mjs';
+import calculateFileHash from '../util/calculateFileHash.mjs';
 import runSass from './runSass.mjs';
 
 const CSS_IMPORT_REGEX = /@import\s+url\s*\(\s*['"]?(.+?\.css)/g;
@@ -31,8 +32,8 @@ const SASS_EXCLUDE = [
 	'**/tmp/**',
 ];
 
-export default async function processSassFiles() {
-	const {entryFiles, partials} = await collectSassFiles();
+export default async function processScssFiles() {
+	const {entryFiles, partials} = await collectScssFiles();
 
 	if (!entryFiles.length) {
 		return;
@@ -53,8 +54,8 @@ export default async function processSassFiles() {
 	}
 
 	await Promise.all([
-		...entryFiles.map(copySassFile),
-		...partials.map(copySassFile),
+		...entryFiles.map(copyScssFile),
+		...partials.map(copyScssFile),
 	]);
 
 	const includePaths = getIncludePaths();
@@ -65,7 +66,7 @@ export default async function processSassFiles() {
 		entryFiles.map(async (entryFile) => {
 			const start = performance.now();
 
-			await processSassFile(entryFile, includePaths, timestamp);
+			await processScssFile(entryFile, includePaths, timestamp);
 
 			const lapse = performance.now() - start;
 
@@ -92,7 +93,7 @@ function appendTimestamps(css, timestamp) {
 	return css;
 }
 
-async function collectSassFiles() {
+async function collectScssFiles() {
 	const files = await fg(['**/*.scss'], {
 		absolute: true,
 		cwd: SRC_PATH,
@@ -114,7 +115,7 @@ async function collectSassFiles() {
 	);
 }
 
-async function copySassFile(filePath) {
+async function copyScssFile(filePath) {
 	const destFilePath = path.join(
 		BUILD_RESOURCES_PATH,
 		path.relative(SRC_PATH, filePath)
@@ -185,28 +186,31 @@ async function isAnyFileModified(files, baseDir, outDir) {
 	return modifieds.some((modified) => modified);
 }
 
-async function processSassFile(filePath, includePaths, timestamp) {
+async function processScssFile(filePath, includePaths, timestamp) {
 
 	// Compute paths
 
 	const relFilePath = path.relative(SRC_PATH, filePath);
 
 	const outFilePath = path.join(
-		BUILD_SASS_CACHE_PATH,
+		BUILD_INTERNAL_CSS_PATH,
 		relFilePath.replace(/\.scss$/, '.css')
 	);
-
-	const {dir, ext, name} = path.parse(outFilePath);
-
-	const outRtlFilePath = path.join(dir, `${name}_rtl${ext}`);
 
 	// Compute CSS
 
 	const {css, map} = await runSass(filePath, includePaths, outFilePath);
 
+	await fs.unlink(outFilePath);
+	await fs.unlink(`${outFilePath}.map`);
+
 	// Apply timestamps to CSS
 
 	const timestampedCss = appendTimestamps(css, timestamp);
+
+	// Calculate hash
+
+	const hash = await calculateFileHash(timestampedCss);
 
 	// Apply RTL translation to CSS
 
@@ -216,9 +220,25 @@ async function processSassFile(filePath, includePaths, timestamp) {
 
 	await fs.mkdir(path.dirname(outFilePath), {recursive: true});
 
+	const {dir, ext, name} = path.parse(outFilePath);
+
+	const rtlOutFilePath = path.join(dir, `${name}_rtl${ext}`);
+
 	await Promise.all([
-		fs.writeFile(outFilePath, timestampedCss, 'utf-8'),
-		fs.writeFile(`${outFilePath}.map`, map, 'utf-8'),
-		fs.writeFile(outRtlFilePath, rtlTimestampedCss, 'utf-8'),
+		fs.writeFile(
+			outFilePath.replace(/css$/, `(${hash}).css`),
+			timestampedCss,
+			'utf-8'
+		),
+		fs.writeFile(
+			outFilePath.replace(/css$/, `(${hash}).css.map`),
+			map,
+			'utf-8'
+		),
+		fs.writeFile(
+			rtlOutFilePath.replace(/css$/, `(${hash}).css`),
+			rtlTimestampedCss,
+			'utf-8'
+		),
 	]);
 }

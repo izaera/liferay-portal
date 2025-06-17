@@ -190,6 +190,10 @@ public class ThemeDisplay
 			return _clayCSSURL;
 		}
 
+		if (Validator.isNotNull(_defaultClayCSSURL)) {
+			return _defaultClayCSSURL;
+		}
+
 		return PortalUtil.getStaticResourceURL(
 			getRequest(), getPathThemeCss() + "/clay.css");
 	}
@@ -555,6 +559,10 @@ public class ThemeDisplay
 	public String getMainCSSURL() {
 		if (Validator.isNotNull(_mainCSSURL)) {
 			return _mainCSSURL;
+		}
+
+		if (Validator.isNotNull(_defaultMainCSSURL)) {
+			return _defaultMainCSSURL;
 		}
 
 		return PortalUtil.getStaticResourceURL(
@@ -1364,6 +1372,14 @@ public class ThemeDisplay
 		_contact = contact;
 	}
 
+	public void setDefaultClayCSSURL(String defaultClayCSSURL) {
+		_defaultClayCSSURL = defaultClayCSSURL;
+	}
+
+	public void setDefaultMainCSSURL(String defaultMainCSSURL) {
+		_defaultMainCSSURL = defaultMainCSSURL;
+	}
+
 	public void setDevice(Device device) {
 		_device = device;
 	}
@@ -1996,6 +2012,8 @@ public class ThemeDisplay
 	private Contact _contact;
 	private Group _controlPanelGroup;
 	private Layout _controlPanelLayout;
+	private String _defaultClayCSSURL;
+	private String _defaultMainCSSURL;
 	private Device _device;
 	private long _doAsGroupId;
 	private String _doAsUserId = StringPool.BLANK;

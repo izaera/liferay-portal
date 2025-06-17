@@ -19,7 +19,7 @@ import writeCSSExportsLoaderModules from './cssLoad/writeCSSExportsLoaderModules
 import bundleCSSExports from './esbuild/bundleCSSExports.mjs';
 import bundleJavaScriptExports from './esbuild/bundleJavaScriptExports.mjs';
 import bundleJavaScriptMain from './esbuild/bundleJavaScriptMain.mjs';
-import processSassFiles from './sass/processSassFiles.mjs';
+import processScssFiles from './sass/processScssFiles.mjs';
 import writeTimings from './writeTimings.mjs';
 
 export default async function main() {
@@ -44,6 +44,8 @@ export default async function main() {
 	]);
 
 	const endConfig = Date.now();
+
+	await Promise.all([processCSSFiles(), processScssFiles()]);
 
 	await Promise.all([
 
@@ -91,14 +93,6 @@ export default async function main() {
 			projectEntryPoints,
 			projectExports
 		),
-
-		// CSS processing
-
-		processCSSFiles(),
-		processSassFiles(),
-
-		// Rest of legacy build
-
 	]);
 
 	await writeTimings(start, endConfig);

@@ -18,6 +18,7 @@ import com.liferay.portal.url.builder.BundleScriptAbsolutePortalURLBuilder;
 import com.liferay.portal.url.builder.BundleStylesheetAbsolutePortalURLBuilder;
 import com.liferay.portal.url.builder.ComboRequestAbsolutePortalURLBuilder;
 import com.liferay.portal.url.builder.ESModuleAbsolutePortalURLBuilder;
+import com.liferay.portal.url.builder.ESStylesheetAbsolutePortalURLBuilder;
 import com.liferay.portal.url.builder.PortalImageAbsolutePortalURLBuilder;
 import com.liferay.portal.url.builder.PortalMainResourceAbsolutePortalURLBuilder;
 import com.liferay.portal.url.builder.PortletDependencyAbsolutePortalURLBuilder;
@@ -94,6 +95,15 @@ public class AbsolutePortalURLBuilderImpl implements AbsolutePortalURLBuilder {
 		return new ESModuleAbsolutePortalURLBuilderImpl(
 			esModulePath, _getCDNHost(_httpServletRequest), _httpServletRequest,
 			_pathModule, _pathProxy, webContextPath);
+	}
+
+	@Override
+	public ESStylesheetAbsolutePortalURLBuilder forESStylesheet(
+		String webContextPath, String esStylesheetPath) {
+
+		return new ESStylesheetAbsolutePortalURLBuilderImpl(
+			esStylesheetPath, _getCDNHost(_httpServletRequest), _pathModule,
+			_pathProxy, webContextPath);
 	}
 
 	@Override

@@ -7,9 +7,65 @@
 
 'use strict';
 
+const crypto = require('crypto');
+const fs = require('fs');
 const gulp = require('gulp');
 const liferayThemeTasks = require('liferay-theme-tasks');
 
 liferayThemeTasks.registerTasks({
 	gulp,
+	hookFn (gulp) {
+		gulp.hook('before:build:war', function (done) {
+			hashify('clay.css');
+			hashify('clay_rtl.css');
+			hashify('main.css');
+			hashify('main_rtl.css');
+
+			done();
+		});
+	},
 });
+
+function hashify(cssFile) {
+	const css = fs.readFileSync(`./build/css/${cssFile}`, 'utf-8');
+
+	const hash = calculateFileHash(css);
+
+	const cssHashedFile = cssFile.replace(/\.css$/, `.(${hash}).css`);
+
+	fs.mkdirSync('./build/META-INF/resources/__liferay__/internal/css', {
+		recursive: true,
+	});
+
+	fs.writeFileSync(
+		`./build/META-INF/resources/__liferay__/internal/css/${cssHashedFile}`,
+		css,
+		'utf-8'
+	);
+}
+
+function calculateFileHash(content) {
+
+	// Calculate hash (MD5 is enough because we don't need to be crypto-safe)
+
+	let blob = crypto.createHash('md5').update(content).digest();
+
+	// Truncate hash to make URL shorter
+
+	blob = blob.slice(0, 8);
+
+	// Convert bytes to base64 and replace non alphabetic base64 chars
+	// (+, /) by URL friendly chars
+
+	let hash = blob.toString('base64');
+
+	hash = hash.replaceAll('+', '$');
+	hash = hash.replaceAll('/', '@');
+
+	// Remove the trailing = signs. Since they are base64 padding markers they
+	// can be discarded for the purposes of creating a collision resistant hash
+
+	hash = hash.replaceAll('=', '');
+
+	return hash;
+}
