@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-package com.liferay.asset.categories.internal.service.messaging;
+package com.liferay.asset.categories.internal.messaging;
 
 import com.liferay.asset.categories.internal.constants.AssetCategoriesDestinationNames;
 import com.liferay.asset.entry.rel.service.AssetEntryAssetCategoryRelLocalService;
