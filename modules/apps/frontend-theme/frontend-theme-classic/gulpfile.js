@@ -14,7 +14,7 @@ const liferayThemeTasks = require('liferay-theme-tasks');
 
 liferayThemeTasks.registerTasks({
 	gulp,
-	hookFn (gulp) {
+	hookFn(gulp) {
 		gulp.hook('before:build:war', function (done) {
 			hashify('clay.css');
 			hashify('clay_rtl.css');
@@ -33,15 +33,7 @@ function hashify(cssFile) {
 
 	const cssHashedFile = cssFile.replace(/\.css$/, `.(${hash}).css`);
 
-	fs.mkdirSync('./build/META-INF/resources/__liferay__/internal/css', {
-		recursive: true,
-	});
-
-	fs.writeFileSync(
-		`./build/META-INF/resources/__liferay__/internal/css/${cssHashedFile}`,
-		css,
-		'utf-8'
-	);
+	fs.copyFileSync(`./build/css/${cssFile}`, `./build/css/${cssHashedFile}`);
 }
 
 function calculateFileHash(content) {

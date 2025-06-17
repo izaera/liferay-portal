@@ -10,7 +10,6 @@ import com.liferay.frontend.js.web.internal.frontend.resource.ThemeFrontendResou
 import com.liferay.frontend.js.web.internal.hashed.files.HashedFilesRegistry;
 import com.liferay.frontend.js.web.internal.hashed.files.HashedFilesUtil;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
-import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.util.StringUtil;
 
@@ -43,26 +42,11 @@ public class ThemeFrontendResourceRequestHandler
 	public boolean canHandleRequest(HttpServletRequest httpServletRequest) {
 		String requestURI = httpServletRequest.getRequestURI();
 
-		if (!requestURI.endsWith(".css") ||
-			!HashedFilesUtil.containsHash(requestURI)) {
+		if (requestURI.endsWith(".css") &&
+			HashedFilesUtil.containsHash(requestURI) &&
+			(_hashedFilesRegistry.get(HashedFilesUtil.removeHash(requestURI)) !=
+				null)) {
 
-			return false;
-		}
-
-		String unhashedFileURI = HashedFilesUtil.removeHash(requestURI);
-
-		List<String> unhashedFileURIParts = Arrays.asList(
-			unhashedFileURI.split(StringPool.SLASH));
-
-		String start = StringUtil.merge(
-			unhashedFileURIParts.subList(0, 3), StringPool.SLASH);
-
-		String hashedFileURI = _hashedFilesRegistry.get(
-			StringBundler.concat(
-				start, "/__liferay__/internal/css/",
-				unhashedFileURIParts.get(unhashedFileURIParts.size() - 1)));
-
-		if (hashedFileURI != null) {
 			return true;
 		}
 
@@ -88,9 +72,6 @@ public class ThemeFrontendResourceRequestHandler
 		String resourcePath = StringUtil.merge(
 			requestURIParts.subList(3, requestURIParts.size()),
 			StringPool.SLASH);
-
-		resourcePath =
-			"/META-INF/resources/__liferay__/internal/" + resourcePath;
 
 		URL url = servletContext.getResource(resourcePath);
 

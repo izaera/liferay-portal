@@ -38,11 +38,11 @@ public class HashedFilesUtil {
 	}
 
 	public static boolean containsHash(String uri) {
-		if (getHash(uri) != null) {
-			return true;
+		if ((uri.lastIndexOf(".(") == -1) || (uri.lastIndexOf(").") == -1)) {
+			return false;
 		}
 
-		return false;
+		return true;
 	}
 
 	public static String getHash(String uri) {
