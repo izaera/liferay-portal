@@ -8,11 +8,14 @@ package com.liferay.frontend.js.web.internal.servlet.filter;
 import com.liferay.frontend.js.web.internal.frontend.resource.FrontendResource;
 import com.liferay.frontend.js.web.internal.frontend.resource.handler.FrontendResourceRequestHandler;
 import com.liferay.frontend.js.web.internal.frontend.resource.handler.HashedFileFrontendResourceRequestHandler;
+import com.liferay.frontend.js.web.internal.frontend.resource.handler.TokenizedCSSFrontendResourceRequestHandler;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMapFactory;
 import com.liferay.petra.io.StreamUtil;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.configuration.module.configuration.ConfigurationProvider;
 import com.liferay.portal.kernel.hashed.files.HashedFilesRegistry;
+import com.liferay.portal.kernel.service.ThemeLocalService;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.Portal;
@@ -90,14 +93,13 @@ public class FrontendResourceFilter extends BasePortalFilter {
 				"sendNoCacheForESModules", _serviceTrackerMap));
 		_frontendResourceRequestHandlers.add(
 			new HashedFileFrontendResourceRequestHandler(
-				ContentTypes.TEXT_CSS, ".css", _hashedFilesRegistry, 86400,
-				"cssStyleSheetsMaxAge", _portal, false,
-				"sendNoCacheForCSSStyleSheets", _serviceTrackerMap));
-		_frontendResourceRequestHandlers.add(
-			new HashedFileFrontendResourceRequestHandler(
 				ContentTypes.TEXT_JAVASCRIPT, ".js", _hashedFilesRegistry,
 				86400, "esModulesMaxAge", _portal, false,
 				"sendNoCacheForESModules", _serviceTrackerMap));
+		_frontendResourceRequestHandlers.add(
+			new TokenizedCSSFrontendResourceRequestHandler(
+				_configurationProvider, _hashedFilesRegistry, _portal,
+				_serviceTrackerMap, _themeLocalService));
 	}
 
 	@Deactivate
@@ -196,6 +198,9 @@ public class FrontendResourceFilter extends BasePortalFilter {
 		}
 	}
 
+	@Reference
+	private ConfigurationProvider _configurationProvider;
+
 	private final List<FrontendResourceRequestHandler>
 		_frontendResourceRequestHandlers = new ArrayList<>();
 
@@ -206,5 +211,8 @@ public class FrontendResourceFilter extends BasePortalFilter {
 	private Portal _portal;
 
 	private ServiceTrackerMap<String, ServletContext> _serviceTrackerMap;
+
+	@Reference
+	private ThemeLocalService _themeLocalService;
 
 }

@@ -9,6 +9,7 @@ import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.content.security.policy.ContentSecurityPolicyNonceProviderUtil;
 import com.liferay.portal.kernel.frontend.esm.FrontendESMUtil;
+import com.liferay.portal.kernel.hashed.files.HashedFilesRegistryUtil;
 import com.liferay.portal.kernel.model.LayoutTypePortlet;
 import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.model.Theme;
@@ -339,7 +340,8 @@ public class PortletRenderUtil {
 	private static List<String> _getStaticURLs(
 		HttpServletRequest httpServletRequest,
 		Collection<PortletResourceAccessor> portletResourceAccessors,
-		Collection<Portlet> portlets, Set<String> visitedURLs) {
+		Collection<Portlet> portlets, boolean useHashedFilesRegistry,
+		Set<String> visitedURLs) {
 
 		List<String> urls = new ArrayList<>();
 
@@ -381,9 +383,26 @@ public class PortletRenderUtil {
 					}
 
 					if (!HttpComponentsUtil.hasProtocol(portletResource)) {
-						portletResource = PortalUtil.getStaticResourceURL(
-							httpServletRequest, contextPath + portletResource,
-							rootPortlet.getTimestamp());
+						if (useHashedFilesRegistry) {
+							String unhashedFileURI =
+								contextPath + portletResource;
+
+							String hashedFileURI = HashedFilesRegistryUtil.get(
+								unhashedFileURI);
+
+							portletResource =
+								(hashedFileURI == null) ? unhashedFileURI :
+									hashedFileURI;
+
+							portletResource +=
+								"?themeId=" + themeDisplay.getThemeId();
+						}
+						else {
+							portletResource = PortalUtil.getStaticResourceURL(
+								httpServletRequest,
+								contextPath + portletResource,
+								rootPortlet.getTimestamp());
+						}
 					}
 
 					if (!portletResource.contains(Http.PROTOCOL_DELIMITER)) {
@@ -447,7 +466,12 @@ public class PortletRenderUtil {
 
 		List<String> urls = null;
 
-		if (fastLoad) {
+		if (urlType == URLType.CSS) {
+			urls = _getStaticURLs(
+				httpServletRequest, portletResourceAccessors, portlets, true,
+				visitedURLs);
+		}
+		else if (fastLoad) {
 			Theme theme = themeDisplay.getTheme();
 
 			urls = _getComboServletURLs(
@@ -465,7 +489,7 @@ public class PortletRenderUtil {
 		}
 		else {
 			urls = _getStaticURLs(
-				httpServletRequest, portletResourceAccessors, portlets,
+				httpServletRequest, portletResourceAccessors, portlets, false,
 				visitedURLs);
 		}
 
