@@ -7,6 +7,7 @@ package com.liferay.portal.url.builder.internal;
 
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.hashed.files.HashedFilesRegistry;
 import com.liferay.portal.url.builder.ESStylesheetAbsolutePortalURLBuilder;
 import com.liferay.portal.url.builder.internal.util.URLUtil;
 
@@ -17,7 +18,8 @@ public class ESStylesheetAbsolutePortalURLBuilderImpl
 	implements ESStylesheetAbsolutePortalURLBuilder {
 
 	public ESStylesheetAbsolutePortalURLBuilderImpl(
-		String esStylesheetPath, String cdnHost, String pathModule,
+		String cdnHost, String esStylesheetPath,
+		HashedFilesRegistry hashedFilesRegistry, String pathModule,
 		String pathProxy, String webContextPath) {
 
 		if (!esStylesheetPath.startsWith(StringPool.SLASH)) {
@@ -28,8 +30,17 @@ public class ESStylesheetAbsolutePortalURLBuilderImpl
 			webContextPath = StringPool.SLASH + webContextPath;
 		}
 
-		_esStylesheetPath = esStylesheetPath;
+		String prefix = pathModule + webContextPath;
+
+		String hashedFileURI = hashedFilesRegistry.get(
+			prefix + esStylesheetPath);
+
+		if (hashedFileURI != null) {
+			esStylesheetPath = hashedFileURI.substring(prefix.length());
+		}
+
 		_cdnHost = cdnHost;
+		_esStylesheetPath = esStylesheetPath;
 		_pathModule = pathModule;
 		_pathProxy = pathProxy;
 		_webContextPath = webContextPath;

@@ -8,6 +8,7 @@ package com.liferay.portal.url.builder.internal;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.hashed.files.HashedFilesRegistry;
 import com.liferay.portal.kernel.model.Theme;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.HashMapDictionaryBuilder;
@@ -67,6 +68,10 @@ public abstract class BaseAbsolutePortalURLBuilderTestCase {
 		);
 
 		return cacheHelper;
+	}
+
+	protected HashedFilesRegistry mockHashedFilesRegistry() {
+		return Mockito.mock(HashedFilesRegistry.class);
 	}
 
 	protected HttpServletRequest mockHttpServletRequest() {

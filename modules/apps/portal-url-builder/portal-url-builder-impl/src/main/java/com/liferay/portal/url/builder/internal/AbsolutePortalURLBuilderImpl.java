@@ -7,6 +7,7 @@ package com.liferay.portal.url.builder.internal;
 
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.hashed.files.HashedFilesRegistry;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.portlet.PortletDependency;
@@ -35,10 +36,11 @@ import org.osgi.framework.Bundle;
 public class AbsolutePortalURLBuilderImpl implements AbsolutePortalURLBuilder {
 
 	public AbsolutePortalURLBuilderImpl(
-		CacheHelper cacheHelper, Portal portal,
-		HttpServletRequest httpServletRequest) {
+		CacheHelper cacheHelper, HashedFilesRegistry hashedFilesRegistry,
+		Portal portal, HttpServletRequest httpServletRequest) {
 
 		_cacheHelper = cacheHelper;
+		_hashedFilesRegistry = hashedFilesRegistry;
 		_portal = portal;
 		_httpServletRequest = httpServletRequest;
 
@@ -102,8 +104,8 @@ public class AbsolutePortalURLBuilderImpl implements AbsolutePortalURLBuilder {
 		String webContextPath, String esStylesheetPath) {
 
 		return new ESStylesheetAbsolutePortalURLBuilderImpl(
-			esStylesheetPath, _getCDNHost(_httpServletRequest), _pathModule,
-			_pathProxy, webContextPath);
+			_getCDNHost(_httpServletRequest), esStylesheetPath,
+			_hashedFilesRegistry, _pathModule, _pathProxy, webContextPath);
 	}
 
 	@Override
@@ -182,6 +184,7 @@ public class AbsolutePortalURLBuilderImpl implements AbsolutePortalURLBuilder {
 		AbsolutePortalURLBuilderImpl.class);
 
 	private final CacheHelper _cacheHelper;
+	private final HashedFilesRegistry _hashedFilesRegistry;
 	private final HttpServletRequest _httpServletRequest;
 
 	/**
