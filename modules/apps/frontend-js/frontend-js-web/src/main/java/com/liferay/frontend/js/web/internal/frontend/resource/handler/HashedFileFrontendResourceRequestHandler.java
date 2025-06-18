@@ -7,10 +7,10 @@ package com.liferay.frontend.js.web.internal.frontend.resource.handler;
 
 import com.liferay.frontend.js.web.internal.frontend.resource.FrontendResource;
 import com.liferay.frontend.js.web.internal.frontend.resource.HashedFileFrontendResource;
-import com.liferay.frontend.js.web.internal.hashed.files.HashedFilesRegistry;
 import com.liferay.frontend.js.web.internal.hashed.files.HashedFilesUtil;
 import com.liferay.osgi.service.tracker.collections.map.ServiceTrackerMap;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.hashed.files.HashedFilesRegistry;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.settings.CompanyServiceSettingsLocator;

@@ -6,6 +6,7 @@
 package com.liferay.frontend.js.web.internal.hashed.files;
 
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.hashed.files.HashedFilesRegistry;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 
@@ -24,37 +25,17 @@ import java.util.function.BiConsumer;
 
 import org.osgi.framework.BundleContext;
 import org.osgi.framework.ServiceReference;
+import org.osgi.service.component.annotations.Activate;
+import org.osgi.service.component.annotations.Component;
+import org.osgi.service.component.annotations.Deactivate;
 import org.osgi.util.tracker.ServiceTracker;
 import org.osgi.util.tracker.ServiceTrackerCustomizer;
 
 /**
  * @author Iván Zaera Avellón
  */
-public class HashedFilesRegistry {
-
-	public static HashedFilesRegistry getHashedFilesRegistry() {
-		return _hashedFilesRegistry;
-	}
-
-	public static void setHashedFilesRegistry(
-		HashedFilesRegistry hashedFilesRegistry) {
-
-		_hashedFilesRegistry = hashedFilesRegistry;
-	}
-
-	public HashedFilesRegistry(BundleContext bundleContext) {
-		_bundleContext = bundleContext;
-	}
-
-	public void close() {
-		_map.clear();
-
-		if (_serviceTracker != null) {
-			_serviceTracker.close();
-
-			_serviceTracker = null;
-		}
-	}
+@Component(service = HashedFilesRegistry.class)
+public class HashedFilesRegistryImpl implements HashedFilesRegistry {
 
 	public void forEach(BiConsumer<String, String> biConsumer) {
 		_openServiceTracker();
@@ -68,6 +49,22 @@ public class HashedFilesRegistry {
 		_openServiceTracker();
 
 		return _map.get(unhashedFileURI);
+	}
+
+	@Activate
+	protected void activate(BundleContext bundleContext) {
+		_bundleContext = bundleContext;
+	}
+
+	@Deactivate
+	protected void deactivate() {
+		_map.clear();
+
+		if (_serviceTracker != null) {
+			_serviceTracker.close();
+
+			_serviceTracker = null;
+		}
 	}
 
 	private ServiceTrackerCustomizer<ServletContext, Map<String, String>>
@@ -198,11 +195,9 @@ public class HashedFilesRegistry {
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
-		HashedFilesRegistry.class);
+		HashedFilesRegistryImpl.class);
 
-	private static volatile HashedFilesRegistry _hashedFilesRegistry;
-
-	private final BundleContext _bundleContext;
+	private BundleContext _bundleContext;
 	private final Map<String, String> _map = new ConcurrentHashMap<>();
 	private volatile ServiceTracker<ServletContext, Map<String, String>>
 		_serviceTracker;

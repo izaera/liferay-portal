@@ -5,10 +5,10 @@
 
 package com.liferay.frontend.js.web.internal.events;
 
-import com.liferay.frontend.js.web.internal.hashed.files.HashedFilesRegistry;
 import com.liferay.portal.kernel.events.Action;
 import com.liferay.portal.kernel.events.ActionException;
 import com.liferay.portal.kernel.events.LifecycleAction;
+import com.liferay.portal.kernel.hashed.files.HashedFilesRegistry;
 import com.liferay.portal.kernel.model.Theme;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.Portal;
@@ -34,13 +34,6 @@ public class FrontendResourcePreAction extends Action {
 			HttpServletResponse httpServletResponse)
 		throws ActionException {
 
-		HashedFilesRegistry hashedFilesRegistry =
-			HashedFilesRegistry.getHashedFilesRegistry();
-
-		if (hashedFilesRegistry == null) {
-			return;
-		}
-
 		ThemeDisplay themeDisplay =
 			(ThemeDisplay)httpServletRequest.getAttribute(
 				WebKeys.THEME_DISPLAY);
@@ -55,20 +48,23 @@ public class FrontendResourcePreAction extends Action {
 
 		boolean rtl = _portal.isRightToLeft(httpServletRequest);
 
-		String clayCSSHashedURI = hashedFilesRegistry.get(
+		String clayCSSHashedURI = _hashedFilesRegistry.get(
 			contextPath + (rtl ? "/css/clay_rtl.css" : "/css/clay.css"));
 
 		if (clayCSSHashedURI != null) {
 			themeDisplay.setDefaultClayCSSURL(clayCSSHashedURI);
 		}
 
-		String mainCSSHashedURI = hashedFilesRegistry.get(
+		String mainCSSHashedURI = _hashedFilesRegistry.get(
 			contextPath + (rtl ? "/css/main_rtl.css" : "/css/main.css"));
 
 		if (mainCSSHashedURI != null) {
 			themeDisplay.setDefaultMainCSSURL(mainCSSHashedURI);
 		}
 	}
+
+	@Reference
+	private HashedFilesRegistry _hashedFilesRegistry;
 
 	@Reference
 	private Portal _portal;
