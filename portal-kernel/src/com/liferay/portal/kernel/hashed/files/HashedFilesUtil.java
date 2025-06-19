@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-package com.liferay.frontend.js.web.internal.hashed.files;
+package com.liferay.portal.kernel.hashed.files;
 
 import com.liferay.petra.string.StringPool;
 import com.liferay.petra.string.StringUtil;
@@ -35,6 +35,17 @@ public class HashedFilesUtil {
 		sb.append(uri.substring(i));
 
 		return sb.toString();
+	}
+
+	public static String addNameSuffix(String uri, String suffix) {
+		int i = uri.lastIndexOf(".(");
+
+		if (i == -1) {
+			throw new IllegalArgumentException(
+				"URI does not contain hash: " + uri);
+		}
+
+		return uri.substring(0, i) + suffix + uri.substring(i);
 	}
 
 	public static boolean containsHash(String uri) {

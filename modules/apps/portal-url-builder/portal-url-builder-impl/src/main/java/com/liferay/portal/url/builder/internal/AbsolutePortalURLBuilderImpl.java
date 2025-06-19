@@ -95,13 +95,26 @@ public class AbsolutePortalURLBuilderImpl implements AbsolutePortalURLBuilder {
 		String webContextPath, String esModulePath) {
 
 		return new ESModuleAbsolutePortalURLBuilderImpl(
-			esModulePath, _getCDNHost(_httpServletRequest), _httpServletRequest,
-			_pathModule, _pathProxy, webContextPath);
+			esModulePath, _getCDNHost(_httpServletRequest), _pathModule,
+			_pathProxy, webContextPath);
 	}
 
 	@Override
 	public ESStylesheetAbsolutePortalURLBuilder forESStylesheet(
 		String webContextPath, String esStylesheetPath) {
+
+		if (_portal.isRightToLeft(_httpServletRequest)) {
+			int i = esStylesheetPath.lastIndexOf(StringPool.PERIOD);
+
+			if (i == -1) {
+				esStylesheetPath += "_rtl";
+			}
+			else {
+				esStylesheetPath =
+					esStylesheetPath.substring(0, i) + "_rtl" +
+						esStylesheetPath.substring(i);
+			}
+		}
 
 		return new ESStylesheetAbsolutePortalURLBuilderImpl(
 			_getCDNHost(_httpServletRequest), esStylesheetPath,

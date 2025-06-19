@@ -10,6 +10,7 @@ import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.content.security.policy.ContentSecurityPolicyNonceProviderUtil;
 import com.liferay.portal.kernel.frontend.esm.FrontendESMUtil;
 import com.liferay.portal.kernel.hashed.files.HashedFilesRegistryUtil;
+import com.liferay.portal.kernel.hashed.files.HashedFilesUtil;
 import com.liferay.portal.kernel.model.LayoutTypePortlet;
 import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.model.Theme;
@@ -337,6 +338,40 @@ public class PortletRenderUtil {
 		return rootPortlet.getPortletId();
 	}
 
+	private static String _getStaticResourceURL(
+		HttpServletRequest httpServletRequest, ThemeDisplay themeDisplay,
+		String unhashedFileURI) {
+
+		String staticResourceURL = unhashedFileURI;
+
+		String hashedFileURI = HashedFilesRegistryUtil.get(unhashedFileURI);
+
+		if (hashedFileURI == null) {
+			if (PortalUtil.isRightToLeft(httpServletRequest)) {
+				int i = unhashedFileURI.lastIndexOf(StringPool.PERIOD);
+
+				if (i != -1) {
+					staticResourceURL =
+						unhashedFileURI.substring(0, i) + "_rtl" +
+							unhashedFileURI.substring(i);
+				}
+			}
+		}
+		else {
+			if (PortalUtil.isRightToLeft(httpServletRequest)) {
+				staticResourceURL = HashedFilesUtil.addNameSuffix(
+					hashedFileURI, "_rtl");
+			}
+			else {
+				staticResourceURL = hashedFileURI;
+			}
+		}
+
+		staticResourceURL += "?themeId=" + themeDisplay.getThemeId();
+
+		return staticResourceURL;
+	}
+
 	private static List<String> _getStaticURLs(
 		HttpServletRequest httpServletRequest,
 		Collection<PortletResourceAccessor> portletResourceAccessors,
@@ -384,18 +419,9 @@ public class PortletRenderUtil {
 
 					if (!HttpComponentsUtil.hasProtocol(portletResource)) {
 						if (useHashedFilesRegistry) {
-							String unhashedFileURI =
-								contextPath + portletResource;
-
-							String hashedFileURI = HashedFilesRegistryUtil.get(
-								unhashedFileURI);
-
-							portletResource =
-								(hashedFileURI == null) ? unhashedFileURI :
-									hashedFileURI;
-
-							portletResource +=
-								"?themeId=" + themeDisplay.getThemeId();
+							portletResource = _getStaticResourceURL(
+								httpServletRequest, themeDisplay,
+								contextPath + portletResource);
 						}
 						else {
 							portletResource = PortalUtil.getStaticResourceURL(
