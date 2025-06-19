@@ -960,31 +960,6 @@ public class CPDefinitionLocalServiceImpl
 			targetCPDefinition.setVersion(
 				_cProductLocalService.increment(
 					sourceCPDefinition.getCProductId()));
-
-			if (status == WorkflowConstants.STATUS_APPROVED) {
-				CPDefinition publishedCPDefinition =
-					cpDefinitionLocalService.getCPDefinition(
-						sourceCProduct.getPublishedCPDefinitionId());
-
-				publishedCPDefinition.setPublished(false);
-
-				publishedCPDefinition = cpDefinitionPersistence.update(
-					publishedCPDefinition);
-
-				_cProductLocalService.updatePublishedCPDefinitionId(
-					publishedCPDefinition.getCProductId(),
-					targetCPDefinition.getCPDefinitionId());
-
-				long cProductId = publishedCPDefinition.getCProductId();
-
-				TransactionCommitCallbackUtil.registerCallback(
-					() -> {
-						cpDefinitionLocalService.maintainVersionThreshold(
-							cProductId);
-
-						return null;
-					});
-			}
 		}
 
 		targetCPDefinition.setStatus(status);
@@ -2494,8 +2469,9 @@ public class CPDefinitionLocalServiceImpl
 			if (_isVersioningEnabled()) {
 				CProduct cProduct = cpDefinition.getCProduct();
 
-				if (cpDefinition.getCPDefinitionId() !=
-						cProduct.getPublishedCPDefinitionId()) {
+				if ((status == WorkflowConstants.STATUS_APPROVED) &&
+					(cpDefinition.getCPDefinitionId() !=
+						cProduct.getPublishedCPDefinitionId())) {
 
 					CPDefinition publishedCPDefinition =
 						cpDefinitionLocalService.fetchCPDefinition(
@@ -2506,6 +2482,18 @@ public class CPDefinitionLocalServiceImpl
 
 						cpDefinitionPersistence.update(publishedCPDefinition);
 					}
+
+					_cProductLocalService.updatePublishedCPDefinitionId(
+						cProduct.getCProductId(),
+						cpDefinition.getCPDefinitionId());
+
+					TransactionCommitCallbackUtil.registerCallback(
+						() -> {
+							cpDefinitionLocalService.maintainVersionThreshold(
+								cProduct.getCProductId());
+
+							return null;
+						});
 				}
 			}
 
