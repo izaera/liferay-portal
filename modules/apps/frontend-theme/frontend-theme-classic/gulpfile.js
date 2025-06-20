@@ -16,24 +16,28 @@ liferayThemeTasks.registerTasks({
 	gulp,
 	hookFn(gulp) {
 		gulp.hook('before:build:war', function (done) {
-			hashify('clay.css');
-			hashify('clay_rtl.css');
-			hashify('main.css');
-			hashify('main_rtl.css');
+			hashify('./build/css', 'clay.css');
+			hashify('./build/css', 'clay_rtl.css');
+			hashify('./build/css', 'main.css');
+			hashify('./build/css', 'main_rtl.css');
+			hashify('./build/js', 'main.js');
 
 			done();
 		});
 	},
 });
 
-function hashify(cssFile) {
-	const css = fs.readFileSync(`./build/css/${cssFile}`, 'utf-8');
+function hashify(dir, fileName) {
+	const content = fs.readFileSync(`${dir}/${fileName}`, 'utf-8');
 
-	const hash = calculateFileHash(css);
+	const hash = calculateFileHash(content);
 
-	const cssHashedFile = cssFile.replace(/\.css$/, `.(${hash}).css`);
+	const i = fileName.lastIndexOf('.');
 
-	fs.copyFileSync(`./build/css/${cssFile}`, `./build/css/${cssHashedFile}`);
+	const hashedFileName =
+		fileName.substring(0, i) + `.(${hash})` + fileName.substring(i);
+
+	fs.copyFileSync(`${dir}/${fileName}`, `${dir}/${hashedFileName}`);
 }
 
 function calculateFileHash(content) {

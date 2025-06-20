@@ -574,6 +574,10 @@ public class ThemeDisplay
 			return _mainJSURL;
 		}
 
+		if (Validator.isNotNull(_defaultMainJSURL)) {
+			return _defaultMainJSURL;
+		}
+
 		return PortalUtil.getStaticResourceURL(
 			getRequest(), getPathThemeJavaScript() + "/main.js");
 	}
@@ -1380,6 +1384,10 @@ public class ThemeDisplay
 		_defaultMainCSSURL = defaultMainCSSURL;
 	}
 
+	public void setDefaultMainJSURL(String defaultMainJSURL) {
+		_defaultMainJSURL = defaultMainJSURL;
+	}
+
 	public void setDevice(Device device) {
 		_device = device;
 	}
@@ -2014,6 +2022,7 @@ public class ThemeDisplay
 	private Layout _controlPanelLayout;
 	private String _defaultClayCSSURL;
 	private String _defaultMainCSSURL;
+	private String _defaultMainJSURL;
 	private Device _device;
 	private long _doAsGroupId;
 	private String _doAsUserId = StringPool.BLANK;

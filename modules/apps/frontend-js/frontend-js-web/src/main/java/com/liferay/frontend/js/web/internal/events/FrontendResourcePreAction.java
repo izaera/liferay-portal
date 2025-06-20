@@ -61,6 +61,13 @@ public class FrontendResourcePreAction extends Action {
 		if (mainCSSHashedURI != null) {
 			themeDisplay.setDefaultMainCSSURL(mainCSSHashedURI);
 		}
+
+		String mainJSHashedURI = _hashedFilesRegistry.get(
+			contextPath + "/js/main.js");
+
+		if (mainJSHashedURI != null) {
+			themeDisplay.setDefaultMainJSURL(mainJSHashedURI);
+		}
 	}
 
 	@Reference

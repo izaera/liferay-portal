@@ -89,6 +89,9 @@ public class HashedFilesRegistryImpl implements HashedFilesRegistry {
 					if (url != null) {
 						hashedResourcePaths = _getHashedResourcePaths(
 							servletContext, "/css/");
+
+						hashedResourcePaths.addAll(
+							_getHashedResourcePaths(servletContext, "/js/"));
 					}
 					else {
 						Set<String> completeHashedResourcePaths =
