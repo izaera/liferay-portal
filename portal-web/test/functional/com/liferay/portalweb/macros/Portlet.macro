@@ -548,6 +548,8 @@ definition {
 
 	@summary = "Default summary"
 	macro gotoPortletOptions(siteTemplate = null, portletName = null, portletIndex = null, portletOption = null) {
+		Pause(value1=50000);
+
 		if (isSet(portletName)) {
 			var key_portletName = ${portletName};
 			var browserType = PropsUtil.get("browser.type");

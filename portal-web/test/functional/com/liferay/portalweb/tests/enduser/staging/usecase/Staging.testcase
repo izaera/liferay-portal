@@ -2648,6 +2648,8 @@ definition {
 			webContentContent = "Web Content Content",
 			webContentTitle = "Web Content Title");
 
+		Pause(value1=50000);
+
 		Staging.submitForWorkflowPageRevision();
 
 		UserBar.gotoDropdownItem(dropdownItem = "My Workflow Tasks");
@@ -3353,6 +3355,8 @@ definition {
 			pageName = "Staging Test Page",
 			siteName = "Site Name");
 
+		Pause(value1=50000);
+
 		Staging.changePageVariationInHistory(
 			pageVariationName = "Main Variation",
 			pageVariationNameMenulistName = "Test Page Variation Name");
@@ -3541,6 +3545,8 @@ definition {
 			siteName = "Site Name Staging");
 
 		Portlet.addPG(portletName = "Blogs");
+
+		Pause(value1=50000);
 
 		Page.viewWithWorkflowPG(workflowStatus = "Draft");
 
