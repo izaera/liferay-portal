@@ -107,6 +107,8 @@ definition {
 	macro gotoEntryEditViaPGTable(wikiPageTitle = null) {
 		var key_wikiPageTitle = ${wikiPageTitle};
 
+		Pause(value1=50000);
+
 		Click(locator1 = "WikiTable#ALL_PAGES_VERTICAL_ELLIPSIS");
 
 		MenuItem.click(menuItem = "Edit");

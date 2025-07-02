@@ -138,6 +138,8 @@ export class ProductMenuPage {
 			.evaluate((element) => element.getAttribute('href'));
 
 		await this.page.goto(pagesLink);
+
+		await this.page.waitForTimeout(2000);
 	}
 
 	async goToPublishingExport() {

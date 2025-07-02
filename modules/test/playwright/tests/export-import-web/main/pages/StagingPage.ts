@@ -111,6 +111,8 @@ export class StagingPage {
 			`/group/${siteKey}/~/control_panel/manage?p_p_id=com_liferay_staging_processes_web_portlet_StagingProcessesPortlet`,
 			{waitUntil: 'domcontentloaded'}
 		);
+
+		await this.page.waitForTimeout(3000);
 	}
 
 	async gotoTemplatePage() {

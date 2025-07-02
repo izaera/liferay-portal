@@ -471,6 +471,8 @@ definition {
 
 		WikiEntry.addPageTitle(title = ${wikiPageTitle});
 
+		Pause(value1=50000);
+
 		if (${viewFormat} == "true") {
 			AssertSelectedLabel(
 				locator1 = "Wiki#ADD_PAGE_FORMAT_DROPDOWN",

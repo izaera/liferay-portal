@@ -135,6 +135,8 @@ definition {
 
 	@summary = "Default summary"
 	macro gotoEntryMenuItem(rowEntry = null, menuItem = null) {
+		Pause(value1=50000);
+
 		LexiconEntry.openEntryMenu(rowEntry = ${rowEntry});
 
 		MenuItem.click(menuItem = ${menuItem});
