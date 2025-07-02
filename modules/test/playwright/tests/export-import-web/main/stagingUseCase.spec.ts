@@ -172,6 +172,7 @@ test('staging publish template with smoke', async ({
 	await stagingPage.gotoTemplatePage();
 	await stagingPage.addTemplate(templateName);
 	await page.reload({waitUntil: 'domcontentloaded'});
+	await page.waitForTimeout(3000);
 	await stagingPage.publishTemplate(templateName);
 
 	await widgetPagePage.goto(layout, site.friendlyUrlPath);
