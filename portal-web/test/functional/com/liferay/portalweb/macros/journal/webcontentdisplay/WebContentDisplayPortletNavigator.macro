@@ -38,6 +38,8 @@ definition {
 				locator1 = "WCD#WEB_CONTENT_CONTENT");
 		}
 
+		Pause(value1=10000);
+
 		if (isSet(contentPage)) {
 			MouseOver.mouseOverNotVisible(
 				key_webContentTitle = ${webContentTitle},
