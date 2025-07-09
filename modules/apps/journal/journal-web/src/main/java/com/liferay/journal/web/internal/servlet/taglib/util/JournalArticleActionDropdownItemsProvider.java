@@ -1110,8 +1110,6 @@ public class JournalArticleActionDropdownItemsProvider {
 			return false;
 		}
 
-		// Asset
-
 		AssetEntry assetEntry = AssetEntryLocalServiceUtil.fetchEntry(
 			JournalArticle.class.getName(), _article.getResourcePrimKey());
 
@@ -1132,8 +1130,6 @@ public class JournalArticleActionDropdownItemsProvider {
 
 			return false;
 		}
-
-		// Dynamic data mapping
 
 		try {
 			DDMFormValuesValidator ddmFormValuesValidator =
