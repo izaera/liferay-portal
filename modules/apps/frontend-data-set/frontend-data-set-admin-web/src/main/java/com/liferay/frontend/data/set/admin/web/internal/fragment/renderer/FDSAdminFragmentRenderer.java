@@ -47,6 +47,7 @@ import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.template.react.renderer.ComponentDescriptor;
@@ -127,11 +128,8 @@ public class FDSAdminFragmentRenderer implements FragmentRenderer {
 
 	@Override
 	public boolean isSelectable(HttpServletRequest httpServletRequest) {
-		if (!FeatureFlagManagerUtil.isEnabled("LPS-164563")) {
-			return false;
-		}
-
-		return true;
+		return FeatureFlagManagerUtil.isEnabled(
+			_portal.getCompanyId(httpServletRequest), "LPS-164563");
 	}
 
 	@Override
@@ -1172,6 +1170,9 @@ public class FDSAdminFragmentRenderer implements FragmentRenderer {
 
 	@Reference
 	private ListTypeEntryLocalService _listTypeEntryLocalService;
+
+	@Reference
+	private Portal _portal;
 
 	@Reference
 	private ReactRenderer _reactRenderer;
