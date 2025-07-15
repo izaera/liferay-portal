@@ -465,38 +465,15 @@ public class CTCollectionLocalServiceImpl
 
 					String primaryKeyName = iterator.next();
 
-					StringBundler sb = new StringBundler();
+					StringBundler sb = new StringBundler(7);
 
 					sb.append("delete from ");
 					sb.append(ctPersistence.getTableName());
 					sb.append(" where ctCollectionId = ");
 					sb.append(ctCollection.getCtCollectionId());
-					sb.append(" and (");
+					sb.append(" and ");
 					sb.append(primaryKeyName);
-					sb.append(" in (");
-
-					int i = 0;
-
-					for (long modelClassPK : entry.getValue()) {
-						if (i == _BATCH_SIZE) {
-							sb.setStringAt(")", sb.index() - 1);
-
-							sb.append(" or ");
-							sb.append(primaryKeyName);
-							sb.append(" in (");
-
-							i = 0;
-						}
-
-						sb.append(modelClassPK);
-						sb.append(", ");
-
-						i++;
-					}
-
-					sb.setStringAt(")", sb.index() - 1);
-
-					sb.append(")");
+					sb.append(" = ?");
 
 					Connection connection = _currentConnection.getConnection(
 						ctPersistence.getDataSource());
@@ -504,7 +481,13 @@ public class CTCollectionLocalServiceImpl
 					try (PreparedStatement preparedStatement =
 							connection.prepareStatement(sb.toString())) {
 
-						return preparedStatement.executeUpdate();
+						for (long modelClassPK : entry.getValue()) {
+							preparedStatement.setLong(1, modelClassPK);
+
+							preparedStatement.addBatch();
+						}
+
+						return preparedStatement.executeBatch();
 					}
 					catch (Exception exception) {
 						throw new SystemException(exception);
@@ -1464,38 +1447,15 @@ public class CTCollectionLocalServiceImpl
 		long ctCollectionId, List<CTEntry> ctEntries,
 		CTPersistence<?> ctPersistence, String primaryKeyName) {
 
-		StringBundler sb = new StringBundler();
+		StringBundler sb = new StringBundler(7);
 
 		sb.append("delete from ");
 		sb.append(ctPersistence.getTableName());
 		sb.append(" where ctCollectionId = ");
 		sb.append(ctCollectionId);
-		sb.append(" and (");
+		sb.append(" and ");
 		sb.append(primaryKeyName);
-		sb.append(" in (");
-
-		int i = 0;
-
-		for (CTEntry ctEntry : ctEntries) {
-			if (i == _BATCH_SIZE) {
-				sb.setStringAt(")", sb.index() - 1);
-
-				sb.append(" or ");
-				sb.append(primaryKeyName);
-				sb.append(" in (");
-
-				i = 0;
-			}
-
-			sb.append(ctEntry.getModelClassPK());
-			sb.append(", ");
-
-			i++;
-		}
-
-		sb.setStringAt(")", sb.index() - 1);
-
-		sb.append(")");
+		sb.append(" = ?");
 
 		Connection connection = _currentConnection.getConnection(
 			ctPersistence.getDataSource());
@@ -1503,7 +1463,13 @@ public class CTCollectionLocalServiceImpl
 		try (PreparedStatement preparedStatement = connection.prepareStatement(
 				sb.toString())) {
 
-			preparedStatement.executeUpdate();
+			for (CTEntry ctEntry : ctEntries) {
+				preparedStatement.setLong(1, ctEntry.getModelClassPK());
+
+				preparedStatement.addBatch();
+			}
+
+			preparedStatement.executeBatch();
 		}
 		catch (Exception exception) {
 			throw new SystemException(exception);
@@ -1515,7 +1481,13 @@ public class CTCollectionLocalServiceImpl
 			try (PreparedStatement preparedStatement =
 					connection.prepareStatement(sb.toString())) {
 
-				preparedStatement.executeUpdate();
+				for (CTEntry ctEntry : ctEntries) {
+					preparedStatement.setLong(1, ctEntry.getModelClassPK());
+
+					preparedStatement.addBatch();
+				}
+
+				preparedStatement.executeBatch();
 			}
 			catch (Exception exception) {
 				throw new SystemException(exception);
@@ -1527,7 +1499,7 @@ public class CTCollectionLocalServiceImpl
 		long fromCTCollectionId, long toCTCollectionId, List<CTEntry> ctEntries,
 		CTPersistence<?> ctPersistence, String primaryKeyName) {
 
-		StringBundler sb = new StringBundler();
+		StringBundler sb = new StringBundler(9);
 
 		sb.append("update ");
 		sb.append(ctPersistence.getTableName());
@@ -1535,32 +1507,9 @@ public class CTCollectionLocalServiceImpl
 		sb.append(toCTCollectionId);
 		sb.append(" where ctCollectionId = ");
 		sb.append(fromCTCollectionId);
-		sb.append(" and (");
+		sb.append(" and ");
 		sb.append(primaryKeyName);
-		sb.append(" in (");
-
-		int i = 0;
-
-		for (CTEntry ctEntry : ctEntries) {
-			if (i == _BATCH_SIZE) {
-				sb.setStringAt(")", sb.index() - 1);
-
-				sb.append(" or ");
-				sb.append(primaryKeyName);
-				sb.append(" in (");
-
-				i = 0;
-			}
-
-			sb.append(ctEntry.getModelClassPK());
-			sb.append(", ");
-
-			i++;
-		}
-
-		sb.setStringAt(")", sb.index() - 1);
-
-		sb.append(")");
+		sb.append(" = ?");
 
 		Connection connection = _currentConnection.getConnection(
 			ctPersistence.getDataSource());
@@ -1568,7 +1517,13 @@ public class CTCollectionLocalServiceImpl
 		try (PreparedStatement preparedStatement = connection.prepareStatement(
 				sb.toString())) {
 
-			preparedStatement.executeUpdate();
+			for (CTEntry ctEntry : ctEntries) {
+				preparedStatement.setLong(1, ctEntry.getModelClassPK());
+
+				preparedStatement.addBatch();
+			}
+
+			preparedStatement.executeBatch();
 		}
 		catch (Exception exception) {
 			throw new SystemException(exception);
@@ -1580,7 +1535,13 @@ public class CTCollectionLocalServiceImpl
 			try (PreparedStatement preparedStatement =
 					connection.prepareStatement(sb.toString())) {
 
-				preparedStatement.executeUpdate();
+				for (CTEntry ctEntry : ctEntries) {
+					preparedStatement.setLong(1, ctEntry.getModelClassPK());
+
+					preparedStatement.addBatch();
+				}
+
+				preparedStatement.executeBatch();
 			}
 			catch (Exception exception) {
 				throw new SystemException(exception);
