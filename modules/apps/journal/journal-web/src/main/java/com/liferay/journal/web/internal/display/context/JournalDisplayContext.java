@@ -1225,10 +1225,6 @@ public class JournalDisplayContext {
 		return false;
 	}
 
-	public boolean isCommentsTabSelected() throws PortalException {
-		return Objects.equals(getTab(), "comments");
-	}
-
 	public boolean isFilterApplied() {
 		if ((getStatus() != WorkflowConstants.STATUS_ANY) ||
 			isNavigationMine() || isNavigationRecent() || isTypeVersions()) {
