@@ -211,20 +211,20 @@ public class JournalDisplayContextTest {
 		mockLiferayPortletRenderRequest.setAttribute(
 			WebKeys.THEME_DISPLAY, _getThemeDisplay());
 
-		Function<String, ServiceContext> function = new ServiceContextFunction(
-			mockLiferayPortletRenderRequest);
+		Function<String, ServiceContext> serviceContextFunction =
+			new ServiceContextFunction(mockLiferayPortletRenderRequest);
 
 		_commentManager.addComment(
 			_user.getUserId(), _group.getGroupId(),
 			JournalArticle.class.getName(), journalArticle.getResourcePrimKey(),
-			"test", function);
+			"test", serviceContextFunction);
 
 		Assert.assertFalse(_isShowComments(journalFolder, StringPool.BLANK));
 		Assert.assertTrue(_isShowComments(journalFolder, "test"));
 	}
 
-	private JournalArticle _addJournalArticle(String title) throws Exception {
-		return JournalTestUtil.addArticle(
+	private void _addJournalArticle(String title) throws Exception {
+		JournalTestUtil.addArticle(
 			_group.getGroupId(),
 			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
 			JournalArticleConstants.CLASS_NAME_ID_DEFAULT, StringPool.BLANK,
