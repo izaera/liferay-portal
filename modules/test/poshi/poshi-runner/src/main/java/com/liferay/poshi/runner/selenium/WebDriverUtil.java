@@ -22,8 +22,10 @@ import java.net.URL;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.logging.Level;
 
 import org.openqa.selenium.Capabilities;
+import org.openqa.selenium.ImmutableCapabilities;
 import org.openqa.selenium.MutableCapabilities;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -36,6 +38,10 @@ import org.openqa.selenium.firefox.FirefoxDriver;
 import org.openqa.selenium.firefox.FirefoxOptions;
 import org.openqa.selenium.ie.InternetExplorerDriver;
 import org.openqa.selenium.ie.InternetExplorerOptions;
+import org.openqa.selenium.logging.LogEntries;
+import org.openqa.selenium.logging.LogEntry;
+import org.openqa.selenium.logging.LogType;
+import org.openqa.selenium.logging.LoggingPreferences;
 import org.openqa.selenium.remote.CapabilityType;
 import org.openqa.selenium.remote.LocalFileDetector;
 import org.openqa.selenium.remote.RemoteWebDriver;
@@ -130,6 +136,12 @@ public class WebDriverUtil {
 		WebDriver webDriver = _webDrivers.get(testName);
 
 		if (webDriver != null) {
+			LogEntries logEntries = webDriver.manage().logs().get(LogType.BROWSER);
+
+			for (LogEntry logEntry : logEntries) {
+				System.err.println(">>>>> " + logEntry.getMessage());
+			}
+
 			webDriver.quit();
 		}
 
@@ -174,6 +186,13 @@ public class WebDriverUtil {
 		ChromeOptions chromeOptions = new ChromeOptions();
 
 		_setGenericCapabilities(chromeOptions);
+
+		LoggingPreferences loggingPreferences = new LoggingPreferences();
+
+		loggingPreferences.enable(LogType.BROWSER, Level.ALL);
+
+		chromeOptions.setCapability(
+			ChromeOptions.LOGGING_PREFS, loggingPreferences);
 
 		Map<String, Object> preferences = new HashMap<>();
 

@@ -158,6 +158,8 @@ public class PoshiRunner {
 
 	@Before
 	public void setUp() throws Exception {
+		System.err.println(">>>>>>>>>>>>>>>>>>>>>>>>>>> VAMOOOOOOOOOOOOOOOOOOOOOOOOOOOO");
+
 		System.out.println();
 		System.out.println("###");
 		System.out.println("### " + _testNamespacedClassCommandName);
