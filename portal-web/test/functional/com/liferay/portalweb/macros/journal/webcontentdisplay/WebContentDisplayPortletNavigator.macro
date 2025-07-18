@@ -48,6 +48,10 @@ definition {
 				locator1 = "WCD#ARTICLE_BAREBONE_ELLIPSIS_ICON");
 		}
 		else {
+			ExecuteJavaScript(value1 = "console.log(document.documentElement.innerHTML)");
+			Pause(value1 = 50000);
+			ExecuteJavaScript(value1 = "console.log(document.documentElement.innerHTML)");
+
 			MouseOver.mouseOverNotVisible(
 				key_webContentTitle = ${webContentTitle},
 				locator1 = "WCD#ARTICLE_ELLIPSIS_ICON");
