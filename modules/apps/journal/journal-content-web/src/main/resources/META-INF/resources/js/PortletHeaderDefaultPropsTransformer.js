@@ -15,6 +15,8 @@ const ACTIONS = {
 };
 
 export default function propsTransformer({actions, items, ...props}) {
+	console.log('>>>>> HELLO FROM PortletHeaderDefaultPropsTransformer INVOCATION');
+
 	const updateItem = (item) => {
 		const newItem = {
 			...item,
