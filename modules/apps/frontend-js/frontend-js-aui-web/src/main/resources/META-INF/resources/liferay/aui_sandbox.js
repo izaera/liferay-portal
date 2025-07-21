@@ -15,15 +15,25 @@
 
 	const originalUse = ALLOY.use;
 
+	let NEXT_CALL_ID = 1;
+
 	ALLOY.use = function () {
+		const callId = NEXT_CALL_ID++;
+
 		const args = Array.prototype.slice.call(arguments, 0);
 
 		const currentURL = Liferay.currentURL;
 
 		const originalCallback = args[args.length - 1];
 
+		console.log(`>>>>> AUI.use(${callId}):`, ...args, currentURL);
+
 		if (typeof originalCallback === 'function') {
+			console.log(`>>>>> AUI.use(${callId}):`, 'changing callback');
+
 			args[args.length - 1] = function () {
+				console.log(`>>>>> AUI.use(${callId}):`, 'invoking callback', Liferay.currentURL, currentURL);
+
 				if (Liferay.currentURL === currentURL) {
 					originalCallback.apply(this, arguments);
 				}
