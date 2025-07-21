@@ -471,6 +471,10 @@ definition {
 
 		WikiEntry.addPageTitle(title = ${wikiPageTitle});
 
+		ExecuteJavaScript(value1 = "console.log(document.documentElement.innerHTML)");
+		Pause(value1 = 50000);
+		ExecuteJavaScript(value1 = "console.log(document.documentElement.innerHTML)");
+
 		if (${viewFormat} == "true") {
 			AssertSelectedLabel(
 				locator1 = "Wiki#ADD_PAGE_FORMAT_DROPDOWN",
