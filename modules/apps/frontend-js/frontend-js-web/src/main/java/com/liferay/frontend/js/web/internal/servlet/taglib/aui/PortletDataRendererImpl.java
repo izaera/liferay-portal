@@ -7,14 +7,18 @@ package com.liferay.frontend.js.web.internal.servlet.taglib.aui;
 
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.audit.AuditRequestThreadLocal;
 import com.liferay.portal.kernel.content.security.policy.ContentSecurityPolicyNonceProviderUtil;
 import com.liferay.portal.kernel.frontend.esm.FrontendESMUtil;
+import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.servlet.taglib.aui.AMDRequire;
 import com.liferay.portal.kernel.servlet.taglib.aui.ESImport;
 import com.liferay.portal.kernel.servlet.taglib.aui.JSFragment;
 import com.liferay.portal.kernel.servlet.taglib.aui.PortletData;
 import com.liferay.portal.kernel.servlet.taglib.aui.PortletDataRenderer;
 import com.liferay.portal.kernel.util.IntegerWrapper;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import java.io.IOException;
@@ -28,6 +32,7 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.osgi.service.component.annotations.Component;
 
 /**
@@ -35,6 +40,8 @@ import org.osgi.service.component.annotations.Component;
  */
 @Component(service = PortletDataRenderer.class)
 public class PortletDataRendererImpl implements PortletDataRenderer {
+
+	private static volatile long NEXT_ID = 1;
 
 	@Override
 	public void write(Collection<PortletData> portletDatas, Writer writer)
@@ -71,10 +78,30 @@ public class PortletDataRendererImpl implements PortletDataRenderer {
 			writer.write("\">\n");
 		}
 
+long callId = NEXT_ID++;
+
+ServiceContext serviceContext =	ServiceContextThreadLocal.getServiceContext();
+if (serviceContext != null) {
+	HttpServletRequest request = serviceContext.getRequest();
+
+	if (request != null) {
+		writer.write("console.log('["+callId+"] " + request.getRequestURL() + "?" + request.getQueryString() + "');\n");
+	}
+}
+
 		// Write ES prologue
 
 		if (!esImportsMap.isEmpty()) {
 			for (ESImport esImport : esImportsMap.values()) {
+writer.write("console.log('["+callId+"] import");
+writer.write(", symbol=");
+writer.write(esImport.getSymbol());
+writer.write(", alias=");
+writer.write(esImport.getAlias());
+writer.write(", module=");
+writer.write(esImport.getModule());
+writer.write("');\n");
+
 				writer.write("import ");
 
 				String symbol = esImport.getSymbol();
@@ -138,6 +165,11 @@ public class PortletDataRendererImpl implements PortletDataRenderer {
 		Set<String> auiUses = _computeAUIUseSet(portletDatas);
 
 		if (!auiUses.isEmpty()) {
+writer.write("console.log('["+callId+"] AUI.use");
+writer.write(", uses=");
+writer.write(StringUtil.merge(auiUses));
+writer.write("');\n");
+
 			writer.write("AUI().use(\n");
 
 			for (String auiUse : auiUses) {
@@ -152,7 +184,7 @@ public class PortletDataRendererImpl implements PortletDataRenderer {
 		// Write actual JS code
 
 		writer.write(
-			_computeNonrawCode(amdRequiresMap, esImportsMap, portletDatas));
+			_computeNonrawCode(callId, amdRequiresMap, esImportsMap, portletDatas));
 
 		// Write AUI epilogue
 
@@ -277,6 +309,7 @@ public class PortletDataRendererImpl implements PortletDataRenderer {
 	}
 
 	private String _computeNonrawCode(
+		long callId,
 		Map<AMDRequire, AMDRequire> amdRequiresMap,
 		Map<ESImport, ESImport> esImportsMap,
 		Collection<PortletData> portletDatas) {
@@ -345,6 +378,10 @@ public class PortletDataRendererImpl implements PortletDataRenderer {
 						sb.append(";\n");
 					}
 				}
+
+sb.append("console.log('["+callId+"] execute:', `");
+sb.append(code.replaceAll("`", "|"));
+sb.append("`);");
 
 				sb.append(code);
 
