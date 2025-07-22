@@ -271,7 +271,7 @@ function Body({
 
 						<div className="form-group-item">
 							<label htmlFor={toFormElementId}>
-								{Liferay.Language.get('to')}
+								{Liferay.Language.get('to[datetime]')}
 							</label>
 
 							<ClayDatePicker
