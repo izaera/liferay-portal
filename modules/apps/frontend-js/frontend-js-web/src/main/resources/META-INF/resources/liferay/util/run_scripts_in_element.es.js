@@ -14,6 +14,12 @@ function runJSFromText(sourceScriptElement, next, appendFn) {
 	scriptElement.text = text;
 	scriptElement.type = type;
 
+	const callback = function (event) {
+		console.log('SPA: script error', event, scriptElement.text);
+	};
+
+	scriptElement.addEventListener('error', callback, {once: true});
+
 	console.log('SPA: about to execute', scriptElement.text);
 
 	if (appendFn) {
