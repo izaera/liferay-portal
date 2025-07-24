@@ -14,6 +14,8 @@ function runJSFromText(sourceScriptElement, next, appendFn) {
 	scriptElement.text = text;
 	scriptElement.type = type;
 
+	console.log('SPA: about to execute', scriptElement.text);
+
 	if (appendFn) {
 		appendFn(scriptElement);
 	}
@@ -21,7 +23,11 @@ function runJSFromText(sourceScriptElement, next, appendFn) {
 		document.head.appendChild(scriptElement);
 	}
 
+	console.log('SPA: about to remove', scriptElement.text);
+
 	scriptElement.remove();
+
+	console.log('SPA: after removing', scriptElement.text);
 
 	next();
 }
