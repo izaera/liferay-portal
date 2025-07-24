@@ -190,10 +190,9 @@ definition {
 	macro openEntryMenu(rowEntry = null) {
 		var browserType = PropsUtil.get("browser.type");
 
-		//ExecuteJavaScript(value1 = "console.log(document.documentElement.innerHTML)");
 		ExecuteJavaScript(value1 = "console.log('PAUSING FOR 50 SECONDS')");
 		Pause(value1 = 50000);
-		//ExecuteJavaScript(value1 = "console.log(document.documentElement.innerHTML)");
+		ExecuteJavaScript(value1 = "console.log(document.documentElement.innerHTML)");
 		ExecuteJavaScript(value1 = "console.log('>>>>> infoItemActionComponent registered', !!Liferay.component('infoItemActionComponent'))");
 
 		if (${browserType} == "safari") {
