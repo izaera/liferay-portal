@@ -57,11 +57,11 @@ public class HashedFileFrontendResourceRequestHandler
 	public boolean canHandleRequest(HttpServletRequest httpServletRequest) {
 		String requestURI = httpServletRequest.getRequestURI();
 
-//		if (requestURI.contains("/__liferay__/") &&
-//			requestURI.endsWith(_fileExtension)) {
-//
-//			return true;
-//		}
+		if (requestURI.contains("/__liferay__/") &&
+			requestURI.endsWith(_fileExtension)) {
+
+			return true;
+		}
 
 		return false;
 	}
