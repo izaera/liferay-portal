@@ -57,14 +57,6 @@ public class HashedFileFrontendResourceRequestHandler
 	public boolean canHandleRequest(HttpServletRequest httpServletRequest) {
 		String requestURI = httpServletRequest.getRequestURI();
 
-		if (
-			requestURI.contains(
-				"/o/frontend-taglib-clay/__liferay__/index.js") &&
-			requestURI.endsWith(_fileExtension)) {
-
-			return true;
-		}
-
 //		if (requestURI.contains("/__liferay__/") &&
 //			requestURI.endsWith(_fileExtension)) {
 //
