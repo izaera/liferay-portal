@@ -96,13 +96,13 @@ public class BucketDisplayContextComparatorFactoryUtilTest {
 
 	private void _assertOrder(
 		List<BucketDisplayContext> bucketDisplayContexts,
-		List<String> expected) {
+		List<String> expectedBucketTextsAndFrequencies) {
 
-		for (int i = 0; i < expected.size(); i++) {
+		for (int i = 0; i < expectedBucketTextsAndFrequencies.size(); i++) {
 			BucketDisplayContext bucketDisplayContext =
 				bucketDisplayContexts.get(i);
 			String[] parts = StringUtil.split(
-				expected.get(i), StringPool.COLON);
+				expectedBucketTextsAndFrequencies.get(i), StringPool.COLON);
 
 			Assert.assertEquals(parts[0], bucketDisplayContext.getBucketText());
 			Assert.assertEquals(
