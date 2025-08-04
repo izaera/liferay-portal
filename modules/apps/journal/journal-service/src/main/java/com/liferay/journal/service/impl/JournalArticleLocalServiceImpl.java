@@ -585,8 +585,6 @@ public class JournalArticleLocalServiceImpl
 			serviceContext.getAssetLinkEntryIds(),
 			serviceContext.getAssetPriority());
 
-		// Asset display page
-
 		_assetDisplayPageEntryFormProcessor.process(
 			JournalArticle.class.getName(), article.getResourcePrimKey(),
 			serviceContext);
@@ -4920,8 +4918,6 @@ public class JournalArticleLocalServiceImpl
 				serviceContext.getAssetTagNames(),
 				serviceContext.getAssetLinkEntryIds(),
 				serviceContext.getAssetPriority());
-
-			// Asset display page
 
 			_assetDisplayPageEntryFormProcessor.process(
 				JournalArticle.class.getName(), article.getResourcePrimKey(),
