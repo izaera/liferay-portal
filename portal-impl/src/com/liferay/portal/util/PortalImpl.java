@@ -1098,10 +1098,10 @@ public class PortalImpl implements Portal {
 
 		Layout layout = null;
 
-		HttpServletRequest httpServletRequest =
-			(HttpServletRequest)requestContext.get("request");
-
 		if (Validator.isNull(friendlyURL)) {
+			HttpServletRequest httpServletRequest =
+				(HttpServletRequest)requestContext.get("request");
+
 			if (AuthLoginGroupSettingsUtil.isPromptEnabled(groupId) &&
 				!_isSignedIn(httpServletRequest) &&
 				!GetterUtil.getBoolean(
