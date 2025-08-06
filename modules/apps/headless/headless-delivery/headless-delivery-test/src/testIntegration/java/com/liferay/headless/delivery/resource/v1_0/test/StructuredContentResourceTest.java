@@ -2725,6 +2725,7 @@ public class StructuredContentResourceTest
 
 		ContentDocument contentDocument = contentFieldValue.getImage();
 
+		Assert.assertNotNull(contentDocument);
 		Assert.assertEquals(
 			_dlFileEntry.getFileEntryId(), (long)contentDocument.getId());
 
