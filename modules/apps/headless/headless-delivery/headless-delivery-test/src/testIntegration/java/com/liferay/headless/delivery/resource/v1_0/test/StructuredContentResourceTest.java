@@ -648,8 +648,8 @@ public class StructuredContentResourceTest
 
 		super.testPostStructuredContentFolderStructuredContent();
 
-		_testPostStructuredContentFolderStructuredContentWithDisplayPage();
-		_testPostStructuredContentFolderStructuredContentWithMandatoryImageField();
+		_testPostStructuredContentFolderStructuredContentWithDisplayPageTemplate();
+		_testPostStructuredContentFolderStructuredContentWithImageContentField();
 	}
 
 	@Override
