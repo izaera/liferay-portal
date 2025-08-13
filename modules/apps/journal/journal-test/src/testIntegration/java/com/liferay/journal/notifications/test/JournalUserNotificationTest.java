@@ -258,18 +258,18 @@ public class JournalUserNotificationTest extends BaseUserNotificationTestCase {
 	}
 
 	private void _assertJournalArticleNotifications(
-			JournalArticle article, int emailNotificationCount,
+			JournalArticle article, int emailNotificationsCount,
 			int notificationType, User subscribedUser,
-			int userNotificationCount)
+			int userNotificationsCount)
 		throws Exception {
 
 		_assertJournalArticleNotificationsCount(
-			emailNotificationCount, subscribedUser, userNotificationCount);
+			emailNotificationsCount, subscribedUser, userNotificationsCount);
 
 		List<JSONObject> userNotificationEventsJSONObjects =
 			getUserNotificationEventsJSONObjects(subscribedUser.getUserId());
 
-		for (int i = 0; i < userNotificationCount; i++) {
+		for (int i = 0; i < userNotificationsCount; i++) {
 			JSONObject jsonObject = userNotificationEventsJSONObjects.get(i);
 
 			Assert.assertEquals(article.getId(), jsonObject.getLong("classPK"));
@@ -279,18 +279,18 @@ public class JournalUserNotificationTest extends BaseUserNotificationTestCase {
 	}
 
 	private void _assertJournalArticleNotificationsCount(
-			int emailNotificationCount, User subscribedUser,
-			int userNotificationCount)
+			int emailNotificationsCount, User subscribedUser,
+			int userNotificationsCount)
 		throws Exception {
 
 		Assert.assertEquals(
-			emailNotificationCount, MailServiceTestUtil.getInboxSize());
+			emailNotificationsCount, MailServiceTestUtil.getInboxSize());
 
 		List<JSONObject> userNotificationEventsJSONObjects =
 			getUserNotificationEventsJSONObjects(subscribedUser.getUserId());
 
 		Assert.assertEquals(
-			userNotificationEventsJSONObjects.toString(), userNotificationCount,
+			userNotificationEventsJSONObjects.toString(), userNotificationsCount,
 			userNotificationEventsJSONObjects.size());
 	}
 
