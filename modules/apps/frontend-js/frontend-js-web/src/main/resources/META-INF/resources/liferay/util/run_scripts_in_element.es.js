@@ -3,6 +3,8 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
+import {v4 as uuidv4} from 'uuid';
+
 function runJSFromText(sourceScriptElement, next, appendFn) {
 	const {text, type} = sourceScriptElement;
 	const scriptElement = document.createElement('script');
@@ -11,16 +13,28 @@ function runJSFromText(sourceScriptElement, next, appendFn) {
 		scriptElement.setAttribute('nonce', Liferay.CSP.nonce);
 	}
 
-	scriptElement.text = text;
+	const id = uuidv4();
+
+	scriptElement.id = id;
+	scriptElement.text =
+`
+${text}
+
+console.log('SPA: about to remove', '${id}');
+
+document.getElementById('${id}').remove();
+
+console.log('SPA: after removing', '${id}');
+`;
 	scriptElement.type = type;
 
 	const callback = function (event) {
-		console.log('SPA: script error', event, scriptElement.text);
+		console.log('SPA: script error', event, text);
 	};
 
 	scriptElement.addEventListener('error', callback, {once: true});
 
-	console.log('SPA: about to execute', scriptElement.text);
+	console.log('SPA: about to execute', id, text);
 
 	if (appendFn) {
 		appendFn(scriptElement);
@@ -28,12 +42,6 @@ function runJSFromText(sourceScriptElement, next, appendFn) {
 	else {
 		document.head.appendChild(scriptElement);
 	}
-
-	console.log('SPA: about to remove', scriptElement.text);
-
-	scriptElement.remove();
-
-	console.log('SPA: after removing', scriptElement.text);
 
 	next();
 }
