@@ -81,6 +81,7 @@ public class WebDriverUtil {
 			portalURL = "http://localhost:8180/console";
 		}
 
+		/*
 		if (poshiProperties.browserType.equals("chrome")) {
 			_webDrivers.put(
 				testName,
@@ -120,6 +121,11 @@ public class WebDriverUtil {
 				testName,
 				new SafariWebDriverImpl(portalURL, _getSafariDriver()));
 		}
+		*/
+
+		_webDrivers.put(
+			testName,
+			new FirefoxWebDriverImpl(portalURL, _getFirefoxDriver()));
 
 		if (!_webDrivers.containsKey(testName)) {
 			throw new RuntimeException(
