@@ -192,8 +192,8 @@ public class JournalArticleAssetRendererTest {
 	}
 
 	private void _assertURL(
-			JournalArticle article, ThemeDisplay themeDisplay,
-			boolean hasVersion)
+			JournalArticle article, boolean hasVersion,
+			ThemeDisplay themeDisplay)
 		throws Exception {
 
 		LayoutDisplayPageProvider<?> layoutDisplayPageProvider =
@@ -297,11 +297,11 @@ public class JournalArticleAssetRendererTest {
 			_company, _group,
 			_layoutLocalService.getLayout(layoutPageTemplateEntry.getPlid()));
 
-		_assertURL(article, themeDisplay, true);
+		_assertURL(article, true, themeDisplay);
 
 		article = JournalTestUtil.updateArticleWithWorkflow(article, true);
 
-		_assertURL(article, themeDisplay, false);
+		_assertURL(article, false, themeDisplay);
 	}
 
 	private void _testGetURLViewInContextWhenArticleIsPending()
@@ -328,14 +328,14 @@ public class JournalArticleAssetRendererTest {
 			_company, _group,
 			_layoutLocalService.getLayout(layoutPageTemplateEntry.getPlid()));
 
-		_assertURL(article, themeDisplay, true);
+		_assertURL(article, true, themeDisplay);
 
 		article = JournalArticleLocalServiceUtil.updateStatus(
 			TestPropsValues.getUserId(), article,
 			WorkflowConstants.STATUS_APPROVED, null,
 			ServiceContextTestUtil.getServiceContext(), new HashMap<>());
 
-		_assertURL(article, themeDisplay, false);
+		_assertURL(article, false, themeDisplay);
 
 		_workflowDefinitionLinkLocalService.updateWorkflowDefinitionLink(
 			TestPropsValues.getUserId(), _group.getCompanyId(),
