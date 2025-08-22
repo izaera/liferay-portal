@@ -582,8 +582,7 @@ public class JournalArticleLocalServiceImpl
 
 		// Dynamic data mapping
 
-		updateDDMFields(
-			article, _formatContent(article, content, groupId, user));
+		updateDDMFields(article, content, groupId, user);
 
 		if (_classNameLocalService.getClassNameId(DDMStructure.class) !=
 				classNameId) {
@@ -829,10 +828,8 @@ public class JournalArticleLocalServiceImpl
 
 		// Dynamic data mapping
 
-		DDMFormValues ddmFormValues = _formatContent(
+		DDMFormValues ddmFormValues = updateDDMFields(
 			article, content, groupId, user);
-
-		updateDDMFields(article, ddmFormValues);
 
 		_updateDDMStructurePredefinedValues(
 			userId, article.getDDMStructureId(), ddmFormValues, serviceContext);
@@ -4916,8 +4913,7 @@ public class JournalArticleLocalServiceImpl
 
 		// Dynamic data mapping
 
-		updateDDMFields(
-			article, _formatContent(article, content, groupId, user));
+		updateDDMFields(article, content, groupId, user);
 
 		if (_classNameLocalService.getClassNameId(DDMStructure.class) !=
 				article.getClassNameId()) {
@@ -5298,10 +5294,8 @@ public class JournalArticleLocalServiceImpl
 
 		// Dynamic data mapping
 
-		DDMFormValues ddmFormValues = _formatContent(
+		DDMFormValues ddmFormValues = updateDDMFields(
 			article, content, groupId, user);
-
-		updateDDMFields(article, ddmFormValues);
 
 		_updateDDMStructurePredefinedValues(
 			userId, article.getDDMStructureId(), ddmFormValues, serviceContext);
@@ -5454,8 +5448,7 @@ public class JournalArticleLocalServiceImpl
 
 		// Dynamic data mapping
 
-		updateDDMFields(
-			article, _formatContent(article, content, groupId, user));
+		updateDDMFields(article, content, groupId, user);
 
 		if (incrementVersion) {
 			updateDDMLinks(
@@ -7038,7 +7031,7 @@ public class JournalArticleLocalServiceImpl
 	}
 
 	protected void updateDDMFields(
-			JournalArticle article, DDMFormValues ddmFormValues)
+			JournalArticle article, String content, DDMFormValues ddmFormValues)
 		throws PortalException {
 
 		DDMStructure ddmStructure = _ddmStructureLocalService.getStructure(
@@ -7050,11 +7043,13 @@ public class JournalArticleLocalServiceImpl
 		// Document Cache
 
 		try {
-			Fields fields = _ddmFormValuesToFieldsConverter.convert(
-				ddmStructure, ddmFormValues);
+			if (Validator.isNull(content)) {
+				Fields fields = _ddmFormValuesToFieldsConverter.convert(
+					ddmStructure, ddmFormValues);
 
-			String content = _journalConverter.getContent(
-				ddmStructure, fields, article.getGroupId());
+				content = _journalConverter.getContent(
+					ddmStructure, fields, article.getGroupId());
+			}
 
 			article.setDocument(SAXReaderUtil.read(content));
 
@@ -7065,6 +7060,27 @@ public class JournalArticleLocalServiceImpl
 				_log.warn(exception);
 			}
 		}
+	}
+
+	protected DDMFormValues updateDDMFields(
+			JournalArticle article, String content, long groupId, User user)
+		throws PortalException {
+
+		content = _journalContentCompatibilityConverter.convert(content);
+
+		content = _replaceTempImages(article, content);
+
+		DDMStructure ddmStructure = article.getDDMStructure();
+
+		DDMFormValues ddmFormValues = _fieldsToDDMFormValuesConverter.convert(
+			ddmStructure,
+			_journalConverter.getDDMFields(ddmStructure, content));
+
+		format(user, groupId, article, ddmFormValues.getDDMFormFieldValues());
+
+		updateDDMFields(article, content, ddmFormValues);
+
+		return ddmFormValues;
 	}
 
 	protected void updateDDMLinks(
@@ -7663,10 +7679,12 @@ public class JournalArticleLocalServiceImpl
 
 		if (newArticle) {
 			updateDDMFields(
-				targetArticle, copyArticleImages(sourceArticle, targetArticle));
+				targetArticle, null,
+				copyArticleImages(sourceArticle, targetArticle));
 		}
 		else {
-			updateDDMFields(targetArticle, sourceArticle.getDDMFormValues());
+			updateDDMFields(
+				targetArticle, null, sourceArticle.getDDMFormValues());
 		}
 
 		updateDDMLinks(
@@ -7838,25 +7856,6 @@ public class JournalArticleLocalServiceImpl
 		}
 
 		return false;
-	}
-
-	private DDMFormValues _formatContent(
-			JournalArticle article, String content, long groupId, User user)
-		throws PortalException {
-
-		content = _journalContentCompatibilityConverter.convert(content);
-
-		content = _replaceTempImages(article, content);
-
-		DDMStructure ddmStructure = article.getDDMStructure();
-
-		DDMFormValues ddmFormValues = _fieldsToDDMFormValuesConverter.convert(
-			ddmStructure,
-			_journalConverter.getDDMFields(ddmStructure, content));
-
-		format(user, groupId, article, ddmFormValues.getDDMFormFieldValues());
-
-		return ddmFormValues;
 	}
 
 	private String _getArticleContent(JournalArticle article, Locale locale) {
