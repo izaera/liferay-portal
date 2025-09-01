@@ -14,11 +14,7 @@ import com.liferay.info.field.type.TextInfoFieldType;
 import com.liferay.info.localized.InfoLocalizedValue;
 import com.liferay.layout.util.InfoFieldUtil;
 import com.liferay.portal.kernel.exception.ModelListenerException;
-import com.liferay.portal.kernel.json.JSONException;
-import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.json.JSONObject;
-import com.liferay.portal.kernel.log.Log;
-import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.BaseModelListener;
 import com.liferay.portal.kernel.model.ModelListener;
 import com.liferay.portal.kernel.util.HtmlUtil;
@@ -43,19 +39,7 @@ public class FragmentEntryLinkModelListener
 	public void onBeforeCreate(FragmentEntryLink fragmentEntryLink)
 		throws ModelListenerException {
 
-		List<InfoField<?>> infoFields = _getInfoFields(fragmentEntryLink);
-
-		try {
-			JSONObject editableValuesJSONObject = _jsonFactory.createJSONObject(
-				fragmentEntryLink.getEditableValues());
-
-			fragmentEntryLink.setEditableValues(
-				_escapeTextEditableValues(
-					editableValuesJSONObject, infoFields));
-		}
-		catch (JSONException jsonException) {
-			_log.error(jsonException);
-		}
+		_processInfoFields(fragmentEntryLink);
 	}
 
 	@Override
@@ -71,19 +55,7 @@ public class FragmentEntryLinkModelListener
 			return;
 		}
 
-		List<InfoField<?>> infoFields = _getInfoFields(fragmentEntryLink);
-
-		try {
-			JSONObject editableValuesJSONObject = _jsonFactory.createJSONObject(
-				fragmentEntryLink.getEditableValues());
-
-			fragmentEntryLink.setEditableValues(
-				_escapeTextEditableValues(
-					editableValuesJSONObject, infoFields));
-		}
-		catch (JSONException jsonException) {
-			_log.error(jsonException);
-		}
+		_processInfoFields(fragmentEntryLink);
 	}
 
 	private String _escapeTextEditableValues(
@@ -163,32 +135,31 @@ public class FragmentEntryLinkModelListener
 		return editableValuesJSONObject.toString();
 	}
 
-	private List<InfoField<?>> _getInfoFields(
-		FragmentEntryLink fragmentEntryLink) {
-
+	private void _processInfoFields(FragmentEntryLink fragmentEntryLink) {
 		List<InfoField<?>> infoFields = new ArrayList<>();
 
 		InfoFieldUtil.forEachInfoField(
 			fragmentEntryLink, _fragmentRendererController,
-			(name, infoField, unsafeSupplier) -> infoFields.add(infoField));
+			(fieldObjectValuePair, infoField, unsafeSupplier) ->
+						infoFields.add(infoField));
 
-		return infoFields;
+		if (infoFields.isEmpty()) {
+			return;
+		}
+
+		fragmentEntryLink.setEditableValues(
+			_escapeTextEditableValues(
+				fragmentEntryLink.getEditableValuesJSONObject(), infoFields));
 	}
 
 	private static final String[] _FRAGMENT_ENTRY_PROCESSOR_KEYS = {
 		FragmentEntryProcessorConstants.KEY_EDITABLE_FRAGMENT_ENTRY_PROCESSOR
 	};
 
-	private static final Log _log = LogFactoryUtil.getLog(
-		FragmentEntryLinkModelListener.class);
-
 	@Reference
 	private FragmentEntryProcessorHelper _fragmentEntryProcessorHelper;
 
 	@Reference
 	private FragmentRendererController _fragmentRendererController;
-
-	@Reference
-	private JSONFactory _jsonFactory;
 
 }
