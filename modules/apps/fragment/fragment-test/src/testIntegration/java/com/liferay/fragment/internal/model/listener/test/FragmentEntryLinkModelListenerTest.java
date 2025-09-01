@@ -155,8 +155,7 @@ public class FragmentEntryLinkModelListenerTest {
 			_serviceContext);
 
 		Assert.assertEquals(
-			_createEditableValues(
-				"element-text", "Example"),
+			_createEditableValues("element-text", "Example"),
 			fragmentEntryLink.getEditableValues());
 	}
 
@@ -181,19 +180,12 @@ public class FragmentEntryLinkModelListenerTest {
 	public void testUpdateFragmentEntryLinkWithEscapedTextField()
 		throws Exception {
 
-		FragmentEntryLink fragmentEntryLink = _addFragmentEntryLink(
-			_fragmentCollectionContributorRegistry.getFragmentEntry(
-				"BASIC_COMPONENT-heading"),
-			StringPool.BLANK, _serviceContext);
-
 		String editableValues = _createEditableValues(
 			"element-text",
 			HtmlUtil.escape("<script>alert('xss');</script>Heading Example"));
 
-		fragmentEntryLink =
-			_fragmentEntryLinkLocalService.updateFragmentEntryLink(
-				TestPropsValues.getUserId(),
-				fragmentEntryLink.getFragmentEntryLinkId(), editableValues);
+		FragmentEntryLink fragmentEntryLink = _getUpdatedFragmentEntryLink(
+			"BASIC_COMPONENT-heading", editableValues);
 
 		Assert.assertEquals(
 			editableValues, fragmentEntryLink.getEditableValues());
@@ -201,18 +193,11 @@ public class FragmentEntryLinkModelListenerTest {
 
 	@Test
 	public void testUpdateFragmentEntryLinkWithHTMLField() throws Exception {
-		FragmentEntryLink fragmentEntryLink = _addFragmentEntryLink(
-			_fragmentCollectionContributorRegistry.getFragmentEntry(
-				"BASIC_COMPONENT-html"),
-			StringPool.BLANK, _serviceContext);
-
 		String editableValues = _createEditableValues(
 			"element-html", "<script>alert('xss');</script>HTML Example");
 
-		fragmentEntryLink =
-			_fragmentEntryLinkLocalService.updateFragmentEntryLink(
-				TestPropsValues.getUserId(),
-				fragmentEntryLink.getFragmentEntryLinkId(), editableValues);
+		FragmentEntryLink fragmentEntryLink = _getUpdatedFragmentEntryLink(
+			"BASIC_COMPONENT-html", editableValues);
 
 		Assert.assertEquals(
 			editableValues, fragmentEntryLink.getEditableValues());
@@ -221,11 +206,6 @@ public class FragmentEntryLinkModelListenerTest {
 	@Test
 	public void testUpdateFragmentEntryLinkWithMappedTextField()
 		throws Exception {
-
-		FragmentEntryLink fragmentEntryLink = _addFragmentEntryLink(
-			_fragmentCollectionContributorRegistry.getFragmentEntry(
-				"BASIC_COMPONENT-heading"),
-			StringPool.BLANK, _serviceContext);
 
 		long classPK = RandomTestUtil.randomLong();
 
@@ -276,10 +256,8 @@ public class FragmentEntryLinkModelListenerTest {
 				))
 		).toString();
 
-		fragmentEntryLink =
-			_fragmentEntryLinkLocalService.updateFragmentEntryLink(
-				TestPropsValues.getUserId(),
-				fragmentEntryLink.getFragmentEntryLinkId(), editableValues);
+		FragmentEntryLink fragmentEntryLink = _getUpdatedFragmentEntryLink(
+			"BASIC_COMPONENT-heading", editableValues);
 
 		Assert.assertEquals(
 			expectedEditableValues, fragmentEntryLink.getEditableValues());
@@ -289,44 +267,27 @@ public class FragmentEntryLinkModelListenerTest {
 	public void testUpdateFragmentEntryLinkWithRichTextField()
 		throws Exception {
 
-		FragmentEntryLink fragmentEntryLink = _addFragmentEntryLink(
-			_fragmentCollectionContributorRegistry.getFragmentEntry(
-				"BASIC_COMPONENT-paragraph"),
-			StringPool.BLANK, _serviceContext);
-
-		String editableFieldValue = "<script>alert('xss');</script>Example";
-
-		fragmentEntryLink =
-			_fragmentEntryLinkLocalService.updateFragmentEntryLink(
-				TestPropsValues.getUserId(),
-				fragmentEntryLink.getFragmentEntryLinkId(),
-				_createEditableValues("element-text", editableFieldValue));
+		FragmentEntryLink fragmentEntryLink = _getUpdatedFragmentEntryLink(
+			"BASIC_COMPONENT-paragraph",
+			_createEditableValues(
+				"element-text", "<script>alert('xss');</script>Example"));
 
 		Assert.assertEquals(
-			_createEditableValues(
-				"element-text", "Example"),
+			_createEditableValues("element-text", "Example"),
 			fragmentEntryLink.getEditableValues());
 	}
 
 	@Test
 	public void testUpdateFragmentEntryLinkWithTextField() throws Exception {
-		FragmentEntryLink fragmentEntryLink = _addFragmentEntryLink(
-			_fragmentCollectionContributorRegistry.getFragmentEntry(
-				"BASIC_COMPONENT-heading"),
-			StringPool.BLANK, _serviceContext);
+		String editableValue = "<script>alert('xss');</script>Example";
 
-		String editableFieldValue =
-			"<script>alert('xss');</script>Heading Example";
-
-		fragmentEntryLink =
-			_fragmentEntryLinkLocalService.updateFragmentEntryLink(
-				TestPropsValues.getUserId(),
-				fragmentEntryLink.getFragmentEntryLinkId(),
-				_createEditableValues("element-text", editableFieldValue));
+		FragmentEntryLink fragmentEntryLink = _getUpdatedFragmentEntryLink(
+			"BASIC_COMPONENT-heading",
+			_createEditableValues("element-text", editableValue));
 
 		Assert.assertEquals(
 			_createEditableValues(
-				"element-text", HtmlUtil.escape(editableFieldValue)),
+				"element-text", HtmlUtil.escape(editableValue)),
 			fragmentEntryLink.getEditableValues());
 	}
 
@@ -366,6 +327,63 @@ public class FragmentEntryLinkModelListenerTest {
 				))
 		).toString();
 	}
+
+	private FragmentEntryLink _getUpdatedFragmentEntryLink(
+			String fragmentEntryKey, String editableValues)
+		throws Exception {
+
+		FragmentEntryLink fragmentEntryLink = _addFragmentEntryLink(
+			_fragmentCollectionContributorRegistry.getFragmentEntry(
+				fragmentEntryKey),
+			StringPool.BLANK, _serviceContext);
+
+		return _fragmentEntryLinkLocalService.updateFragmentEntryLink(
+			TestPropsValues.getUserId(),
+			fragmentEntryLink.getFragmentEntryLinkId(), editableValues);
+	}
+
+	private void _pushServiceContext(
+			FragmentEntryLink fragmentEntryLink, Layout layout)
+		throws Exception {
+
+		ThemeDisplay themeDisplay = new ThemeDisplay();
+
+		themeDisplay.setCompany(
+			_companyLocalService.getCompany(TestPropsValues.getCompanyId()));
+		themeDisplay.setLayout(layout);
+		themeDisplay.setLookAndFeel(layout.getTheme(), layout.getColorScheme());
+		themeDisplay.setMainCSSURL("http://test.com");
+		themeDisplay.setMainJSURL("http://test.com");
+		themeDisplay.setPermissionChecker(
+			PermissionCheckerFactoryUtil.create(TestPropsValues.getUser()));
+		themeDisplay.setPlid(layout.getPlid());
+		themeDisplay.setRealUser(TestPropsValues.getUser());
+		themeDisplay.setUser(TestPropsValues.getUser());
+
+		MockLiferayPortletActionRequest mockLiferayPortletActionRequest =
+			new MockLiferayPortletActionRequest();
+
+		mockLiferayPortletActionRequest.setAttribute(
+			JavaConstants.JAKARTA_PORTLET_RESPONSE,
+			new MockLiferayPortletActionResponse());
+		mockLiferayPortletActionRequest.setAttribute(
+			WebKeys.THEME_DISPLAY, themeDisplay);
+
+		ServiceContext serviceContext = new ServiceContext();
+
+		serviceContext.setCompanyId(fragmentEntryLink.getCompanyId());
+		serviceContext.setRequest(
+			PortalUtil.getHttpServletRequest(mockLiferayPortletActionRequest));
+		serviceContext.setScopeGroupId(TestPropsValues.getGroupId());
+		serviceContext.setUserId(TestPropsValues.getUserId());
+
+		ServiceContextThreadLocal.pushServiceContext(serviceContext);
+	}
+
+	@Inject
+	private CompanyLocalService _companyLocalService;
+
+	private Layout _draftLayout;
 
 	@Inject
 	private FragmentCollectionContributorRegistry
