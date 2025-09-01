@@ -21,7 +21,6 @@ import com.liferay.layout.test.util.ContentLayoutTestUtil;
 import com.liferay.layout.test.util.LayoutTestUtil;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.portlet.PortletPreferencesFactory;
@@ -131,9 +130,9 @@ public class FragmentEntryLinkModelListenerTest {
 			_segmentsExperienceLocalService.fetchDefaultSegmentsExperienceId(
 				_draftLayout.getPlid()));
 
-		try {
-			_pushServiceContext(fragmentEntryLink, _draftLayout);
+		_pushServiceContext(fragmentEntryLink, _draftLayout);
 
+		try {
 			publishLayout(_draftLayout, _layout);
 		}
 		finally {
