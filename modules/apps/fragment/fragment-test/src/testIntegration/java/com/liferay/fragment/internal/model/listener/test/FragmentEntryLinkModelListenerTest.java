@@ -104,7 +104,7 @@ public class FragmentEntryLinkModelListenerTest {
 	}
 
 	@Test
-	public void testAddFragmentEntryLinkWithEmbeddedWidget() throws Exception {
+	public void testAddFragmentEntryLinkWithEmbeddedPortlet() throws Exception {
 		FragmentCollection fragmentCollection =
 			FragmentTestUtil.addFragmentCollection(
 				TestPropsValues.getGroupId());
@@ -116,7 +116,7 @@ public class FragmentEntryLinkModelListenerTest {
 				RandomTestUtil.randomString(), RandomTestUtil.randomString(),
 				StringPool.BLANK,
 				"<lfr-widget-web-content></lfr-widget-web-content>",
-				StringPool.BLANK, false, null, null, 0, false, false,
+				StringPool.BLANK, false, null, null, 0, false,
 				FragmentConstants.TYPE_COMPONENT, null,
 				WorkflowConstants.STATUS_APPROVED, _serviceContext);
 
@@ -446,7 +446,7 @@ public class FragmentEntryLinkModelListenerTest {
 			new MockLiferayPortletActionRequest();
 
 		mockLiferayPortletActionRequest.setAttribute(
-			JavaConstants.JAKARTA_PORTLET_RESPONSE,
+			JavaConstants.JAVAX_PORTLET_RESPONSE,
 			new MockLiferayPortletActionResponse());
 		mockLiferayPortletActionRequest.setAttribute(
 			WebKeys.THEME_DISPLAY, themeDisplay);
