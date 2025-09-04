@@ -12,6 +12,8 @@ import {accountSettingsPagesTest} from '../../fixtures/accountSettingsPagesTest'
 import {apiHelpersTest} from '../../fixtures/apiHelpersTest';
 import {changeTrackingPagesTest} from '../../fixtures/changeTrackingPagesTest';
 import {dataApiHelpersTest} from '../../fixtures/dataApiHelpersTest';
+import {pageEditorPagesTest} from '../../fixtures/pageEditorPagesTest';
+import {workflowPagesTest} from '../../fixtures/workflowPagesTest';
 import {featureFlagsTest} from '../../fixtures/featureFlagsTest';
 import getRandomString from '../../utils/getRandomString';
 import {PORTLET_URLS} from '../../utils/portletUrls';
@@ -21,6 +23,8 @@ export const test = mergeTests(
 	apiHelpersTest,
 	changeTrackingPagesTest,
 	dataApiHelpersTest,
+	pageEditorPagesTest,
+	workflowPagesTest,
 	featureFlagsTest({
 		'LPD-20131': {enabled: true},
 	})
@@ -257,4 +261,65 @@ test('User time zone from theme display is applied to publication FDS', async ({
 
 		await accountSettingsPage.setTimeZone('UTC');
 	});
+});
+
+test('LPD-62112 Cannot Preview Pending Version of Page in a Publication', async ({
+	changeTrackingPage,
+	ctCollection,
+	page,
+	pageEditorPage,
+	workflowPage,
+}) => {
+	// Enable Single Approver workflow for Content Pages
+	await changeTrackingPage.workOnProduction();
+
+	await workflowPage.goto();
+
+	await workflowPage.changeWorkflow('Content Page', 'Single Approver');
+
+	await changeTrackingPage.workOnPublication(ctCollection);
+
+	await test.step('Go to home edit page', async () => {
+		await page.goto(`/web/guest/home?p_l_mode=edit`);
+	});
+
+	const headingId = await pageEditorPage.getFragmentId('Paragraph');
+
+	await pageEditorPage.editTextEditable(headingId, 'element-text', 'Edited');
+
+	await pageEditorPage.publishPage();
+
+	await changeTrackingPage.goToReviewChanges(ctCollection.body.name);
+
+	const filtersDropdown = page
+		.locator('.filters-dropdown-button');
+
+	await filtersDropdown.waitFor();
+	await filtersDropdown.click();
+
+	await page.getByRole('menuitem', {name: 'Status'}).click();
+
+	const pendingCheckbox = page.getByLabel('Pending');
+
+	await pendingCheckbox.check();
+
+	await page
+		.getByRole('button', {exact: true, name: 'Add Filter'})
+		.click();
+
+	await changeTrackingPage.reviewChange('Home');
+
+	await page
+		.locator('.btn-outline-secondary')
+		.click();
+
+	await page.getByRole('menuitem', {name: ctCollection.body.name}).click();
+
+	const publicationIFrame = page.frameLocator(
+		'iframe[src*="preview"]'
+	);
+
+	const newHeading = publicationIFrame.getByText('Edited');
+
+	await expect(newHeading).toBeVisible();
 });
