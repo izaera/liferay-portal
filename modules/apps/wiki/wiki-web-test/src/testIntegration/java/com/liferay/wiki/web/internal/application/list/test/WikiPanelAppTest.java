@@ -42,18 +42,6 @@ public class WikiPanelAppTest {
 	@FeatureFlag("LPD-35013")
 	@Test
 	public void testIsShow() throws Exception {
-		PermissionChecker permissionChecker =
-			PermissionCheckerFactoryUtil.create(TestPropsValues.getUser());
-
-		Assert.assertTrue(
-			_wikiPanelApp.isShow(
-				permissionChecker,
-				_groupLocalService.getGroup(TestPropsValues.getGroupId())));
-	}
-
-	@FeatureFlag("LPD-35013")
-	@Test
-	public void testIsShowWithNoAdminUser() throws Exception {
 		User user = UserTestUtil.addUser();
 
 		try {
@@ -68,6 +56,14 @@ public class WikiPanelAppTest {
 		finally {
 			_userLocalService.deleteUser(user);
 		}
+
+		PermissionChecker permissionChecker =
+			PermissionCheckerFactoryUtil.create(TestPropsValues.getUser());
+
+		Assert.assertTrue(
+			_wikiPanelApp.isShow(
+				permissionChecker,
+				_groupLocalService.getGroup(TestPropsValues.getGroupId())));
 	}
 
 	@Inject
