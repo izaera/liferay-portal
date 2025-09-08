@@ -45,6 +45,8 @@ public interface FragmentEntryProcessorContext {
 
 	public long[] getSegmentsEntryIds();
 
+	public boolean isDisablePortletRender();
+
 	public boolean isEditMode();
 
 	public boolean isIndexMode();

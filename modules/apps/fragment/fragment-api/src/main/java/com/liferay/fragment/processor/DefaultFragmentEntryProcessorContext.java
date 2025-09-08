@@ -97,6 +97,11 @@ public class DefaultFragmentEntryProcessorContext
 	}
 
 	@Override
+	public boolean isDisablePortletRender() {
+		return _disablePortletRender;
+	}
+
+	@Override
 	public boolean isEditMode() {
 		return Objects.equals(getMode(), FragmentEntryLinkConstants.EDIT);
 	}
@@ -120,6 +125,10 @@ public class DefaultFragmentEntryProcessorContext
 		InfoItemReference infoItemReference) {
 
 		_infoItemReference = infoItemReference;
+	}
+
+	public void setDisablePortletRender(boolean disablePortletRender) {
+		_disablePortletRender = disablePortletRender;
 	}
 
 	public void setFragmentElementId(String fragmentElementId) {
@@ -150,6 +159,7 @@ public class DefaultFragmentEntryProcessorContext
 		_segmentsEntryIds = segmentsEntryIds;
 	}
 
+	private boolean _disablePortletRender;
 	private String _fragmentElementId;
 	private final HttpServletRequest _httpServletRequest;
 	private final HttpServletResponse _httpServletResponse;

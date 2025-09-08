@@ -251,7 +251,7 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 		FragmentRendererContext fragmentRendererContext, String html,
 		HttpServletRequest httpServletRequest, String nonce) {
 
-		StringBundler sb = new StringBundler(33);
+		StringBundler sb = new StringBundler(34);
 
 		sb.append("<div id=\"");
 
@@ -349,10 +349,11 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 							fragmentEntryLink, httpServletRequest,
 							fragmentRendererContext.getInfoForm(),
 							fragmentRendererContext.getLocale())));
-				sb.append("; input.value = Liferay.Util.unescapeHTML(input.value");
-				sb.append("); Object.keys(input.valueI18n).forEach(function(key)");
-				sb.append("{ input.valueI18n[key] = Liferay.Util.unescapeHTML(");
-				sb.append("input.valueI18n[key]);})");
+				sb.append("; input.value = ");
+				sb.append("Liferay.Util.unescapeHTML(input.value");
+				sb.append("); Object.keys(input.valueI18n).");
+				sb.append("forEach(function(key) { input.valueI18n[key] = ");
+				sb.append("Liferay.Util.unescapeHTML(input.valueI18n[key]);})");
 			}
 
 			sb.append("; const layoutMode = '");
@@ -415,6 +416,8 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 
 		defaultFragmentEntryProcessorContext.setContextInfoItemReference(
 			fragmentRendererContext.getContextInfoItemReference());
+		defaultFragmentEntryProcessorContext.setDisablePortletRender(
+			fragmentRendererContext.isDisablePortletRender());
 		defaultFragmentEntryProcessorContext.setFragmentElementId(
 			fragmentRendererContext.getFragmentElementId());
 		defaultFragmentEntryProcessorContext.setInfoForm(

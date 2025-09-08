@@ -82,6 +82,11 @@ public class DefaultFragmentRendererContext implements FragmentRendererContext {
 	}
 
 	@Override
+	public boolean isDisablePortletRender() {
+		return _disablePortletRender;
+	}
+
+	@Override
 	public boolean isEditMode() {
 		return Objects.equals(getMode(), FragmentEntryLinkConstants.EDIT);
 	}
@@ -110,6 +115,10 @@ public class DefaultFragmentRendererContext implements FragmentRendererContext {
 		InfoItemReference infoItemReference) {
 
 		_infoItemReference = infoItemReference;
+	}
+
+	public void setDisablePortletRender(boolean disablePortletRender) {
+		_disablePortletRender = disablePortletRender;
 	}
 
 	public void setInfoForm(InfoForm infoForm) {
@@ -148,6 +157,7 @@ public class DefaultFragmentRendererContext implements FragmentRendererContext {
 		_useCachedContent = useCachedContent;
 	}
 
+	private boolean _disablePortletRender;
 	private final String _fragmentEntryElementId;
 	private final FragmentEntryLink _fragmentEntryLink;
 	private InfoForm _infoForm;
