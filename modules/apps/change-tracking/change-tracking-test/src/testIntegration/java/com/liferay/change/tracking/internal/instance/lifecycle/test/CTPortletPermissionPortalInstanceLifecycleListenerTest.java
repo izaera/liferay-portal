@@ -82,12 +82,6 @@ public class CTPortletPermissionPortalInstanceLifecycleListenerTest {
 				ResourceConstants.SCOPE_COMPANY, String.valueOf(companyId),
 				role.getRoleId());
 
-		ResourcePermission portletResourcePermission =
-			_resourcePermissionLocalService.fetchResourcePermission(
-				companyId, CTPortletKeys.PUBLICATIONS,
-				ResourceConstants.SCOPE_COMPANY, String.valueOf(companyId),
-				role.getRoleId());
-
 		rootModelResourcePermission.removeResourceAction(
 			CTActionKeys.ADD_PUBLICATION);
 
@@ -98,6 +92,12 @@ public class CTPortletPermissionPortalInstanceLifecycleListenerTest {
 		Assert.assertFalse(
 			rootModelResourcePermission.hasActionId(
 				CTActionKeys.ADD_PUBLICATION));
+
+		ResourcePermission portletResourcePermission =
+			_resourcePermissionLocalService.fetchResourcePermission(
+				companyId, CTPortletKeys.PUBLICATIONS,
+				ResourceConstants.SCOPE_COMPANY, String.valueOf(companyId),
+				role.getRoleId());
 
 		portletResourcePermission.removeResourceAction(
 			ActionKeys.ACCESS_IN_CONTROL_PANEL);
