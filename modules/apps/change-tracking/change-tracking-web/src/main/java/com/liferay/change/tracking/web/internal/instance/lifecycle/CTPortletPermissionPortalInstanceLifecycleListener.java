@@ -54,14 +54,13 @@ public class CTPortletPermissionPortalInstanceLifecycleListener
 		_checkPublicationsUserRole(company.getCompanyId());
 	}
 
-	private void _addPortletResourcePermission(
-			long companyId, Role role, String actionId)
+	private void _addPortletResourcePermission(Role role, String actionId)
 		throws PortalException {
 
 		_resourcePermissionLocalService.addResourcePermission(
-			companyId, CTPortletKeys.PUBLICATIONS,
-			ResourceConstants.SCOPE_COMPANY, String.valueOf(companyId),
-			role.getRoleId(), actionId);
+			role.getCompanyId(), CTPortletKeys.PUBLICATIONS,
+			ResourceConstants.SCOPE_COMPANY,
+			String.valueOf(role.getCompanyId()), role.getRoleId(), actionId);
 	}
 
 	private void _checkPublicationsReviewerRole(Company company)
@@ -92,10 +91,8 @@ public class CTPortletPermissionPortalInstanceLifecycleListener
 
 		if (portletResourcePermission == null) {
 			_addPortletResourcePermission(
-				company.getCompanyId(), role,
-				ActionKeys.ACCESS_IN_CONTROL_PANEL);
-			_addPortletResourcePermission(
-				company.getCompanyId(), role, ActionKeys.VIEW);
+				role, ActionKeys.ACCESS_IN_CONTROL_PANEL);
+			_addPortletResourcePermission(role, ActionKeys.VIEW);
 		}
 
 		ResourcePermission modelResourcePermission =
@@ -146,8 +143,8 @@ public class CTPortletPermissionPortalInstanceLifecycleListener
 
 		if (portletResourcePermission == null) {
 			_addPortletResourcePermission(
-				companyId, role, ActionKeys.ACCESS_IN_CONTROL_PANEL);
-			_addPortletResourcePermission(companyId, role, ActionKeys.VIEW);
+				role, ActionKeys.ACCESS_IN_CONTROL_PANEL);
+			_addPortletResourcePermission(role, ActionKeys.VIEW);
 		}
 	}
 
