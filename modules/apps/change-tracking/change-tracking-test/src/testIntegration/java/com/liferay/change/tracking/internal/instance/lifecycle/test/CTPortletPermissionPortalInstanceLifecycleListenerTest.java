@@ -46,7 +46,7 @@ public class CTPortletPermissionPortalInstanceLifecycleListenerTest {
 			PermissionCheckerMethodTestRule.INSTANCE);
 
 	@Test
-	public void testPortalInstanceRegistered() throws Exception {
+	public void testCheckPublicationsReviewerRole() throws Exception {
 		Company company = _companyLocalService.getCompany(
 			TestPropsValues.getCompanyId());
 
