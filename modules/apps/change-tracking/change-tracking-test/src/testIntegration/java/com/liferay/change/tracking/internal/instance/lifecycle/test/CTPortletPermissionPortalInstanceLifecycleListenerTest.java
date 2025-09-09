@@ -52,10 +52,8 @@ public class CTPortletPermissionPortalInstanceLifecycleListenerTest {
 
 		long companyId = company.getCompanyId();
 
-		Role role = _roleLocalService.fetchRole(
+		Role role = _roleLocalService.getRole(
 			companyId, RoleConstants.PUBLICATIONS_USER);
-
-		Assert.assertNotNull(role);
 
 		Assert.assertTrue(
 			_resourcePermissionLocalService.hasResourcePermission(
