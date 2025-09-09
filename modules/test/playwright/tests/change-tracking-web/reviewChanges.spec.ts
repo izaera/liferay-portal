@@ -270,7 +270,9 @@ test('LPD-62112 Cannot Preview Pending Version of Page in a Publication', async 
 	pageEditorPage,
 	workflowPage,
 }) => {
+
 	// Enable Single Approver workflow for Content Pages
+
 	await changeTrackingPage.workOnProduction();
 
 	await workflowPage.goto();
@@ -291,8 +293,7 @@ test('LPD-62112 Cannot Preview Pending Version of Page in a Publication', async 
 
 	await changeTrackingPage.goToReviewChanges(ctCollection.body.name);
 
-	const filtersDropdown = page
-		.locator('.filters-dropdown-button');
+	const filtersDropdown = page.locator('.filters-dropdown-button');
 
 	await filtersDropdown.waitFor();
 	await filtersDropdown.click();
@@ -303,21 +304,15 @@ test('LPD-62112 Cannot Preview Pending Version of Page in a Publication', async 
 
 	await pendingCheckbox.check();
 
-	await page
-		.getByRole('button', {exact: true, name: 'Add Filter'})
-		.click();
+	await page.getByRole('button', {exact: true, name: 'Add Filter'}).click();
 
 	await changeTrackingPage.reviewChange('Home');
 
-	await page
-		.locator('.btn-outline-secondary')
-		.click();
+	await page.locator('.btn-outline-secondary').click();
 
 	await page.getByRole('menuitem', {name: ctCollection.body.name}).click();
 
-	const publicationIFrame = page.frameLocator(
-		'iframe[src*="preview"]'
-	);
+	const publicationIFrame = page.frameLocator('iframe[src*="preview"]');
 
 	const newHeading = publicationIFrame.getByText('Edited');
 
