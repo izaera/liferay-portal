@@ -2488,13 +2488,13 @@ public class StructuredContentResourceTest
 	}
 
 	private void _testPatchStructuredContentWithDateExpired() throws Exception {
-		_testPatchStructuredContentWithDateExpiredExpire();
+		_testPatchStructuredContentWithDateExpiredExpire1();
 		_testPatchStructuredContentWithDateExpiredExpire2();
 		_testPatchStructuredContentWithDateExpiredExpireBadRequest();
 		_testPatchStructuredContentWithDateExpiredNeverExpire();
 	}
 
-	private void _testPatchStructuredContentWithDateExpiredExpire()
+	private void _testPatchStructuredContentWithDateExpiredExpire1()
 		throws Exception {
 
 		StructuredContent structuredContent = randomStructuredContent();
