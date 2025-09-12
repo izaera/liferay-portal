@@ -6,6 +6,7 @@
 import path from 'path';
 
 import {SRC_PATH} from '../../../util/constants.mjs';
+import getCSSLoadJavaScript from '../../util/getCSSLoadJavaScript.mjs';
 
 /**
  * This plugin transforms `import from` statements for .scss files into JavaScript code that inserts
@@ -31,22 +32,11 @@ export default function getScssLoaderPlugin(projectWebContextPath) {
 						.join(path.posix.sep)
 						.replace(/scss$/, 'css');
 
-					const contents = `
-const link = document.createElement('link');
-link.setAttribute('rel', 'stylesheet');
-link.setAttribute('type', 'text/css');
-link.setAttribute(
-	'href', 
-	Liferay.ThemeDisplay.getPathContext() + '/o${projectWebContextPath}/${cssPath}'
-);
-if (Liferay.CSP) {
-	link.setAttribute('nonce', Liferay.CSP.nonce);
-}
-document.querySelector('head').appendChild(link);
-`;
-
 					return {
-						contents,
+						contents: getCSSLoadJavaScript(
+							projectWebContextPath,
+							cssPath
+						),
 						loader: 'js',
 					};
 				}
