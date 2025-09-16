@@ -179,7 +179,7 @@ describe('SaveButtons', () => {
 		).toBeInTheDocument();
 	});
 
-	it('show alert and input feedback when trying to schedule without a date introduced', () => {
+	it('show alert and input feedback when trying to schedule without a date introduced', async () => {
 		renderComponent({
 			...DEFAULT_PROPS,
 			articleId: null,
@@ -189,7 +189,7 @@ describe('SaveButtons', () => {
 			userEvent.click(screen.getByText('schedule-publication'));
 		});
 
-		userEvent.click(screen.getByText('schedule'));
+		userEvent.click(await screen.findByText('schedule[verb]'));
 
 		const alerts = screen.getAllByText('please-enter-a-valid-date');
 
