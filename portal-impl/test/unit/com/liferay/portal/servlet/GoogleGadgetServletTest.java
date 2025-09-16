@@ -44,7 +44,7 @@ public class GoogleGadgetServletTest {
 	}
 
 	@Test
-	public void testEscape() throws Exception {
+	public void testGetContent() throws Exception {
 		String injection =
 			"x\"/><x:script xmlns:x=\"http:&#x2f;&#x2f;www.w3.org/1999" +
 				"/xhtml\">alert(document.domain)</x:script>";
