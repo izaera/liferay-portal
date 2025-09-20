@@ -21,6 +21,7 @@ import {toArray} from './selectOperations';
 import type {Locale} from '../types';
 
 function Select({
+	displayErrors,
 	errorMessage,
 	id,
 	label,
@@ -35,6 +36,7 @@ function Select({
 	selectedKey,
 	showEmptyOption,
 	tip,
+	valid,
 	viewMode,
 }: SelectProps) {
 	const {activeTabTitle} = useFormState();
@@ -83,6 +85,7 @@ function Select({
 		...(errorMessage && {
 			'aria-errormessage': `${id ?? name}_fieldError`,
 		}),
+		'aria-invalid': displayErrors && !valid,
 		'aria-required': required,
 	};
 
@@ -177,6 +180,7 @@ function Select({
 }
 
 const Main = ({
+	displayErrors,
 	fixedOptions = [],
 	label,
 	localizedValue = {},
@@ -192,6 +196,7 @@ const Main = ({
 	readOnly = false,
 	showEmptyOption = true,
 	value,
+	valid,
 	selectedKey,
 	...otherProps
 }: MainProps) => {
@@ -258,6 +263,7 @@ const Main = ({
 
 	return (
 		<FieldBase
+			displayErrors={displayErrors}
 			label={label}
 			localizedValue={localizedValue}
 			name={name}
@@ -266,6 +272,7 @@ const Main = ({
 		>
 			{multiple ? (
 				<MultipleSelection
+					displayErrors={displayErrors}
 					fixedOptions={[]}
 					label={label}
 					name={name}
@@ -274,6 +281,7 @@ const Main = ({
 					predefinedValue={predefinedValueArray}
 					readOnly={readOnly}
 					required={otherProps.required}
+					valid={valid}
 					value={
 						viewMode || !!multipleSelectValues.length
 							? multipleSelectValues

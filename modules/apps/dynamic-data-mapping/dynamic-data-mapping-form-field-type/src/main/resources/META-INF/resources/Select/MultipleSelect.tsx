@@ -11,6 +11,7 @@ import React, {useCallback, useEffect, useState} from 'react';
 import {MultiSelectItem, MultiSelectProps} from './select.d';
 
 const MultipleSelection = ({
+	displayErrors,
 	errorMessage,
 	id,
 	label,
@@ -20,6 +21,7 @@ const MultipleSelection = ({
 	readOnly,
 	required,
 	tip,
+	valid,
 	value: values,
 }: MultiSelectProps) => {
 	const [items, setItems] = useState<MultiSelectItem[]>([]);
@@ -33,6 +35,7 @@ const MultipleSelection = ({
 		...((errorMessage || tip) && {
 			'aria-describedby': `${id ?? name}_fieldFeedback`,
 		}),
+		'aria-invalid': displayErrors && !valid,
 		'aria-required': required,
 	};
 

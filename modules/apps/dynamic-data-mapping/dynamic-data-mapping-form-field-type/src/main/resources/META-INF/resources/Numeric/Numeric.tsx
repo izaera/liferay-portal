@@ -166,6 +166,7 @@ const Numeric: React.FC<{children?: React.ReactNode | undefined} & IProps> = ({
 	dataType = 'integer',
 	decimalPlaces,
 	defaultLanguageId,
+	displayErrors,
 	focused,
 	htmlAutocompleteAttribute,
 	id,
@@ -308,7 +309,7 @@ const Numeric: React.FC<{children?: React.ReactNode | undefined} & IProps> = ({
 		...((otherProps.errorMessage || otherProps.tip) && {
 			'aria-describedby': `${id ?? name}_fieldFeedback`,
 		}),
-		'aria-invalid': !otherProps.valid,
+		'aria-invalid': displayErrors && !otherProps.valid,
 		'aria-required': otherProps.required,
 	};
 
@@ -407,6 +408,7 @@ interface IProps {
 	dataType: NumericDataType;
 	decimalPlaces: number;
 	defaultLanguageId: Locale;
+	displayErrors?: boolean;
 	errorMessage?: string;
 	focused: boolean;
 	htmlAutocompleteAttribute: string;

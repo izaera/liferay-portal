@@ -47,6 +47,7 @@ const skipsChangeValidation = (fieldName) => {
 
 const RichText = ({
 	defaultLocale = INITIAL_DEFAULT_LOCALE,
+	displayErrors,
 	editable,
 	editingLanguageId,
 	editingLocale = INITIAL_EDITING_LOCALE,
@@ -64,6 +65,7 @@ const RichText = ({
 	predefinedValue = '',
 	readOnly,
 	tip = '',
+	valid,
 	value,
 	visible,
 	...otherProps
@@ -255,17 +257,20 @@ const RichText = ({
 	return (
 		<FieldBase
 			{...otherProps}
+			displayErrors={displayErrors}
 			fieldName={fieldName}
 			id={id}
 			label={label}
 			name={name}
 			readOnly={readOnly}
 			tip={tip}
+			valid={valid}
 			visible={visible}
 		>
 			<ClayInput.Group>
 				<ClayInput.GroupItem>
 					<ClassicEditor
+						ariaInvalid={displayErrors && !valid}
 						ariaLabel={label}
 						ariaRequired={otherProps.required}
 						className="w-100"
