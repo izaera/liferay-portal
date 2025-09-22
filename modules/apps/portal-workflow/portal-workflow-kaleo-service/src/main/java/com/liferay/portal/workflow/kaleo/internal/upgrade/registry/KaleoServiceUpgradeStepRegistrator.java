@@ -5,6 +5,7 @@
 
 package com.liferay.portal.workflow.kaleo.internal.upgrade.registry;
 
+import com.liferay.petra.string.StringBundler;
 import com.liferay.portal.kernel.upgrade.BaseExternalReferenceCodeUpgradeProcess;
 import com.liferay.portal.kernel.upgrade.BaseSQLServerDatetimeUpgradeProcess;
 import com.liferay.portal.kernel.upgrade.BaseUuidUpgradeProcess;
@@ -222,6 +223,15 @@ public class KaleoServiceUpgradeStepRegistrator
 			"4.2.0", "4.2.1",
 			new com.liferay.portal.workflow.kaleo.internal.upgrade.v4_2_1.
 				WorkflowContextUpgradeProcess());
+
+		registry.register(
+			"4.2.1", "4.2.2",
+			UpgradeProcessFactory.runSQL(
+				StringBundler.concat(
+					"delete from WorkflowInstanceLink where not exists ",
+					"(select 1 from KaleoInstance where ",
+					"KaleoInstance.kaleoInstanceId = ",
+					"WorkflowInstanceLink.workflowInstanceId)")));
 	}
 
 }
