@@ -312,7 +312,7 @@ public class JournalArticleActionDropdownItemsProvider {
 			dropdownGroupItem -> {
 				dropdownGroupItem.setDropdownItems(
 					DropdownItemListBuilder.add(
-						this::_isDeleteActionAvailable,
+						this::_hasDeleteArticleAction,
 						_getDeleteArticleAction(
 							articleId, _themeDisplay.getURLCurrent())
 					).build());
@@ -1062,7 +1062,7 @@ public class JournalArticleActionDropdownItemsProvider {
 		return false;
 	}
 
-	private boolean _isDeleteActionAvailable() throws PortalException {
+	private boolean _hasDeleteArticleAction() throws PortalException {
 		if (!JournalArticlePermission.contains(
 				_themeDisplay.getPermissionChecker(), _article,
 				ActionKeys.DELETE)) {
