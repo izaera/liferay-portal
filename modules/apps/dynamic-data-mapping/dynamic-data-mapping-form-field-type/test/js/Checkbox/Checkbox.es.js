@@ -195,6 +195,28 @@ describe('Field Checkbox', () => {
 			expect(requiredIcon).not.toBeInTheDocument();
 		});
 
+		it('does not have aria-invalid attribute on first render when it is required', () => {
+			const {container} = render(<Checkbox required={true} />);
+
+			const input = container.querySelector(
+				'input[aria-required="true"]'
+			);
+
+			expect(input.hasAttribute('aria-invalid')).toBe(false);
+		});
+
+		it('does not have aria-invalid attribute when it is required and has a value', () => {
+			const {container} = render(
+				<Checkbox required={true} value={true} />
+			);
+
+			const input = container.querySelector(
+				'input[aria-required="true"]'
+			);
+
+			expect(input.hasAttribute('aria-invalid')).toBe(false);
+		});
+
 		it('verify if the switcher do not appears when he is disabled in boolean field', () => {
 			render(<Checkbox showAsSwitcher={false} />);
 

@@ -61,6 +61,30 @@ describe('Field Text', () => {
 		fetch.mockResponseOnce(JSON.stringify({}));
 	});
 
+	it('does not have aria-invalid attribute on first render when it is required', () => {
+		const {container} = render(
+			<TextWithProvider {...defaultTextConfig} required={true} />
+		);
+
+		const textInputTag = container.querySelector('.ddm-field-text');
+
+		expect(textInputTag.hasAttribute('aria-invalid')).toBe(false);
+	});
+
+	it('does not have aria-invalid attribute when it is required and has a value', () => {
+		const {container} = render(
+			<TextWithProvider
+				{...defaultTextConfig}
+				required={true}
+				value="test"
+			/>
+		);
+
+		const textInputTag = container.querySelector('.ddm-field-text');
+
+		expect(textInputTag.hasAttribute('aria-invalid')).toBe(false);
+	});
+
 	it('is not readOnly', () => {
 		const {container} = render(
 			<TextWithProvider {...defaultTextConfig} readOnly={false} />

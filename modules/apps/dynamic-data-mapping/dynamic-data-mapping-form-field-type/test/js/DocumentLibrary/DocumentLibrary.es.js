@@ -59,6 +59,33 @@ describe('Field DocumentLibrary', () => {
 		fetch.mockResponseOnce(JSON.stringify({}));
 	});
 
+	it('does not have aria-invalid attribute on first render when it is required', () => {
+		const {container} = render(
+			<DocumentLibraryWithProvider
+				{...defaultDocumentLibraryConfig}
+				required={true}
+			/>
+		);
+
+		const button = container.querySelector('button[aria-required="true"]');
+
+		expect(button.hasAttribute('aria-invalid')).toBe(false);
+	});
+
+	it('does not have aria-invalid attribute when it is required and has a value', () => {
+		const {container} = render(
+			<DocumentLibraryWithProvider
+				{...defaultDocumentLibraryConfig}
+				required={true}
+				value='{"id":"123"}'
+			/>
+		);
+
+		const button = container.querySelector('button[aria-required="true"]');
+
+		expect(button.hasAttribute('aria-invalid')).toBe(false);
+	});
+
 	it('is not readOnly', () => {
 		const {container} = render(
 			<DocumentLibraryWithProvider
