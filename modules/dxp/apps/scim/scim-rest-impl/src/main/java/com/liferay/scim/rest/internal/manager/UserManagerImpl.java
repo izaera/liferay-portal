@@ -257,6 +257,12 @@ public class UserManagerImpl implements UserManager {
 			Map<String, Boolean> requiredAttributes)
 		throws BadRequestException {
 
+		if ((count != null) && (count < 0)) {
+			count = 0;
+		}
+
+		startIndex--;
+
 		_validate(node, "displayName");
 
 		if (startIndex != null) {
@@ -326,6 +332,12 @@ public class UserManagerImpl implements UserManager {
 			String sortOrder, String domainName,
 			Map<String, Boolean> requiredAttributes)
 		throws BadRequestException {
+
+		if ((count != null) && (count < 0)) {
+			count = 0;
+		}
+
+		startIndex--;
 
 		_validate(node, "externalId", "userName");
 
