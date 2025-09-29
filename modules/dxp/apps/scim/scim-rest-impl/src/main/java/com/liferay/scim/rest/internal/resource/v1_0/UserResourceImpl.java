@@ -16,9 +16,6 @@ import com.liferay.portal.kernel.service.UserGroupService;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.service.UserService;
 import com.liferay.portal.kernel.util.ParamUtil;
-import com.liferay.portal.search.query.Queries;
-import com.liferay.portal.search.searcher.SearchRequestBuilderFactory;
-import com.liferay.portal.search.searcher.Searcher;
 import com.liferay.scim.rest.dto.v1_0.PatchOp;
 import com.liferay.scim.rest.dto.v1_0.User;
 import com.liferay.scim.rest.internal.manager.UserManagerImpl;
@@ -95,8 +92,7 @@ public class UserResourceImpl extends BaseUserResourceImpl {
 		_userManager = new UserManagerImpl(
 			_classNameLocalService, _companyLocalService, _configurationAdmin,
 			_expandoColumnLocalService, _expandoTableLocalService,
-			_expandoValueLocalService, _queries, _searcher,
-			_searchRequestBuilderFactory, _userGroupLocalService,
+			_expandoValueLocalService, _userGroupLocalService,
 			_userGroupService, _userLocalService, _userService);
 	}
 
@@ -120,15 +116,6 @@ public class UserResourceImpl extends BaseUserResourceImpl {
 
 	@Reference
 	private ExpandoValueLocalService _expandoValueLocalService;
-
-	@Reference
-	private Queries _queries;
-
-	@Reference
-	private Searcher _searcher;
-
-	@Reference
-	private SearchRequestBuilderFactory _searchRequestBuilderFactory;
 
 	@Reference
 	private UserGroupLocalService _userGroupLocalService;
