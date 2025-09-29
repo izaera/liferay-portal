@@ -3,6 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
+import {ClayInput} from '@clayui/form';
 import React from 'react';
 
 import FieldBase from '../FieldBase/ReactFieldBase.es';
@@ -21,7 +22,13 @@ const Checkbox: React.FC<IProps> = (props) => {
 			: predefinedValue)
 	);
 
-	return <CheckboxBase {...props} checked={checked} />;
+	return (
+		<ClayInput.Group>
+			<ClayInput.GroupItem>
+				<CheckboxBase {...props} checked={checked} />
+			</ClayInput.GroupItem>
+		</ClayInput.Group>
+	);
 };
 
 export default function Main({

@@ -117,6 +117,7 @@ const Toggle: React.FC<ISwitcherProps> = ({
 export default function CheckboxBase({
 	checked,
 	displayErrors,
+	editOnlyInDefaultLanguage,
 	name,
 	readOnly,
 	showAsSwitcher = true,
@@ -145,6 +146,19 @@ export default function CheckboxBase({
 			/>
 
 			<ClayInput name={name} type="hidden" value={`${checked}`} />
+
+			{editOnlyInDefaultLanguage && showLabel && readOnly && (
+				<span
+					className="c-ml-2 text-4 text-secondary"
+					data-testid="tooltip"
+					tabIndex={0}
+					title={Liferay.Language.get(
+						'this-field-cannot-be-localized'
+					)}
+				>
+					<ClayIcon symbol="question-circle-full" />
+				</span>
+			)}
 		</>
 	);
 }
@@ -174,6 +188,7 @@ interface ISwitcherProps extends ICheckboxBaseProps {
 
 interface IProps extends ICheckboxBaseProps {
 	displayErrors?: boolean;
+	editOnlyInDefaultLanguage?: boolean;
 	errorMessage: string;
 	id?: string;
 	predefinedValue?: boolean | String[];
