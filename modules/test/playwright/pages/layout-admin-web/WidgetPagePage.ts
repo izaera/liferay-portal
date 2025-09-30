@@ -183,7 +183,7 @@ export class WidgetPagePage {
 
 		await this.page
 			.locator('.modal-header')
-			.getByLabel('close', {exact: true})
+			.getByLabel('Close', {exact: true})
 			.click();
 	}
 
