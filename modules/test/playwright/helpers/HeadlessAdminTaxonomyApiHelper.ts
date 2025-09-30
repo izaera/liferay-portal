@@ -7,15 +7,23 @@ import {ApiHelpers} from './ApiHelpers';
 
 interface postSiteTaxonomyVocabularyProps {
 	assetTypes?: AssetType[];
-	multiValued?: boolean;
 	name: string;
 	siteId: string;
+	visibilityType?: string;
 }
 
 export interface postTaxonomyCategoryTaxonomyCategory {
 	name: string;
 	name_i18n?: {['ES-es']: string};
 	parentTaxonomyCategoryId: number;
+}
+
+export interface postTaxonomyVocabularyProps {
+	assetLibraries?: AssetLibrary[];
+	assetTypes?: AssetType[];
+	name: string;
+	name_i18n?: {['ES-es']: string};
+	visibilityType?: string;
 }
 
 export interface postTaxonomyVocabularyTaxonomyCategoryProps {
@@ -95,21 +103,13 @@ export class HeadlessAdminTaxonomyApiHelper {
 
 	async postSiteTaxonomyVocabulary({
 		assetTypes,
-		multiValued = true,
 		name,
 		siteId,
+		visibilityType,
 	}: postSiteTaxonomyVocabularyProps): Promise<{id: number}> {
 		return this.apiHelpers.post(
 			`${this.apiHelpers.baseUrl}${this.basePath}/sites/${siteId}/taxonomy-vocabularies`,
-			{
-				data: {
-					assetLibraries,
-					assetTypes,
-					multiValued,
-					name,
-					visibilityType,
-				},
-			}
+			{data: {assetTypes, name, visibilityType}}
 		);
 	}
 
@@ -128,6 +128,25 @@ export class HeadlessAdminTaxonomyApiHelper {
 		return this.apiHelpers.post(
 			`${this.apiHelpers.baseUrl}${this.basePath}/taxonomy-categories/${parentTaxonomyCategoryId}/taxonomy-categories`,
 			{data: {name, name_i18n}}
+		);
+	}
+
+	/**
+	 * It allows creating a vocabulary.
+	 *
+	 * @param name the name of the vocabulary
+	 * @param assetLibraries the asset libraries where the vocabulary will be available
+	 */
+
+	async postTaxonomyVocabulary({
+		assetLibraries,
+		name,
+		name_i18n,
+		visibilityType,
+	}: postTaxonomyVocabularyProps): Promise<{id: number}> {
+		return this.apiHelpers.post(
+			`${this.apiHelpers.baseUrl}${this.basePath}/taxonomy-vocabularies`,
+			{data: {assetLibraries, name, name_i18n, visibilityType}}
 		);
 	}
 
