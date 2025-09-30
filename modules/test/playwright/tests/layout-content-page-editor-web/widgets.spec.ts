@@ -85,7 +85,7 @@ test(
 
 		await waitForAlert(permissionsIFrame);
 
-		await page.getByLabel('close', {exact: true}).click();
+		await page.getByLabel('Close', {exact: true}).click();
 
 		// Publish
 
@@ -421,7 +421,7 @@ test(
 
 		await waitForAlert(permissionsIFrame);
 
-		await page.getByLabel('close', {exact: true}).click();
+		await page.getByLabel('Close', {exact: true}).click();
 
 		// Publish
 

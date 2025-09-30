@@ -54,7 +54,7 @@ export async function createAssetPublisherAndConfigure({
 	});
 
 	await assetPublisherPage.saveConfiguration();
-	await page.getByLabel('close', {exact: true}).click();
+	await page.getByLabel('Close', {exact: true}).click();
 
 	await pageEditorPage.publishPage();
 }

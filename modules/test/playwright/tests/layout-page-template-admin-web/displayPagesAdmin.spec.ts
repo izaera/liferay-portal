@@ -514,7 +514,7 @@ test.describe('UI', () => {
 
 			await page
 				.locator('.modal-header')
-				.getByLabel('close', {exact: true})
+				.getByLabel('Close', {exact: true})
 				.click();
 
 			// Assert warning message

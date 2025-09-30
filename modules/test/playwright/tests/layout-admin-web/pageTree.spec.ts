@@ -167,7 +167,7 @@ test(
 
 		await expect(guestActionViewCheckBox).not.toBeChecked();
 
-		await page.getByLabel('close', {exact: true}).click();
+		await page.getByLabel('Close', {exact: true}).click();
 
 		// Copy page
 

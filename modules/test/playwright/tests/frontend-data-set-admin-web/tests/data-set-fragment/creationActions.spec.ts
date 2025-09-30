@@ -211,7 +211,7 @@ test.describe('Creation Actions in Data Set fragment', () => {
 
 			await expect(dialog).toBeInViewport();
 
-			await dialog.getByRole('button', {name: 'close'}).click();
+			await dialog.getByRole('button', {name: 'Close'}).click();
 
 			await expect(dialog).not.toBeInViewport();
 		});

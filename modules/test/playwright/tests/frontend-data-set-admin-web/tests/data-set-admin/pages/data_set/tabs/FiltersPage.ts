@@ -80,7 +80,7 @@ export class FiltersPage {
 			cancelButton: page.getByRole('button', {name: 'Cancel'}),
 			closeButton: page.getByRole('button', {
 				exact: true,
-				name: 'close',
+				name: 'Close',
 			}),
 			filterByDropdown: page.locator('.fds-field-name-dropdown-menu'),
 			filterBySelect: page.getByLabel('Filter By'),
