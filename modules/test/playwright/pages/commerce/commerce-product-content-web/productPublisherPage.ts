@@ -23,7 +23,9 @@ export class ProductPublisherPage {
 	readonly tagsInput: Locator;
 
 	constructor(page: Page) {
-		this.closeButton = page.getByLabel('Close', {exact: true});
+		this.closeButton = page
+			.locator('.modal')
+			.getByLabel('Close', {exact: true});
 		this.configurationFilterButton = page
 			.frameLocator(
 				'iframe[title*="Product Publisher"][title*="Configuration"]'
