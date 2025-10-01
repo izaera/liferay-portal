@@ -124,6 +124,10 @@ export default function _JournalPortlet({
 			`${namespace}titleMapAsXML`
 		);
 
+		if (!titleInputComponent) {
+			return;
+		}
+
 		if (!titleInputComponent?.getValue(defaultLanguageId)) {
 			showAlert(
 				sub(
@@ -147,6 +151,10 @@ export default function _JournalPortlet({
 		const titleInputComponent = Liferay.component(
 			`${namespace}titleMapAsXML`
 		);
+
+		if (!titleInputComponent) {
+			return;
+		}
 
 		if (
 			titleInputComponent?.getValue(defaultLanguageId) ||
