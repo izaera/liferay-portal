@@ -184,7 +184,6 @@ public class FragmentEntryLocalServiceImpl
 		}
 
 		String name = UniqueUtil.getCopyValue(
-			sourceFragmentEntry.getName(),
 			copyValue -> {
 				FragmentEntry existingFragmentEntry =
 					fragmentEntryPersistence.fetchByG_FCI_LikeN_First(
@@ -197,7 +196,8 @@ public class FragmentEntryLocalServiceImpl
 				}
 
 				return false;
-			});
+			},
+			sourceFragmentEntry.getName());
 
 		FragmentEntry copyPublishedFragmentEntry = null;
 

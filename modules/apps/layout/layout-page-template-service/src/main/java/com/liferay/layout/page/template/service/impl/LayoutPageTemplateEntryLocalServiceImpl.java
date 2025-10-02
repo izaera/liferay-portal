@@ -269,7 +269,6 @@ public class LayoutPageTemplateEntryLocalServiceImpl
 				sourceLayoutPageTemplateEntryId);
 
 		String name = UniqueUtil.getCopyValue(
-			sourceLayoutPageTemplateEntry.getName(),
 			copyValue -> {
 				LayoutPageTemplateEntry layoutPageTemplateEntry =
 					layoutPageTemplateEntryPersistence.fetchByG_L_N_T(
@@ -281,7 +280,8 @@ public class LayoutPageTemplateEntryLocalServiceImpl
 				}
 
 				return false;
-			});
+			},
+			sourceLayoutPageTemplateEntry.getName());
 
 		long masterLayoutPlid = 0;
 

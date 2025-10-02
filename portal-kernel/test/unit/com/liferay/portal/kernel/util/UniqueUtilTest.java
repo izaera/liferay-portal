@@ -42,14 +42,14 @@ public class UniqueUtilTest {
 
 		Assert.assertEquals(
 			value + " (Copy)",
-			UniqueUtil.getCopyValue(value, copyValue -> true));
+			UniqueUtil.getCopyValue(copyValue -> true, value));
 
 		value = RandomTestUtil.randomString();
 
 		Assert.assertEquals(
 			value + " (Copy 3)",
 			UniqueUtil.getCopyValue(
-				value, copyValue -> copyValue.endsWith("3)")));
+				copyValue -> copyValue.endsWith("3)"), value));
 	}
 
 }

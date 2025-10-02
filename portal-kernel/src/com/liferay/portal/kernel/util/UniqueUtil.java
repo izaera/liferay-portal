@@ -16,8 +16,8 @@ import com.liferay.portal.kernel.language.LanguageUtil;
 public class UniqueUtil {
 
 	public static String getCopyValue(
-			String value,
-			UnsafeFunction<String, Boolean, PortalException> unsafeFunction)
+			UnsafeFunction<String, Boolean, PortalException> unsafeFunction,
+			String value)
 		throws PortalException {
 
 		String copy = LanguageUtil.get(LocaleUtil.getSiteDefault(), "copy");

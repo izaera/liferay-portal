@@ -351,7 +351,6 @@ public class LayoutPageTemplateCollectionLocalServiceImpl
 		throws PortalException {
 
 		return UniqueUtil.getCopyValue(
-			sourceName,
 			copyValue -> {
 				LayoutPageTemplateCollection layoutPageTemplateCollection =
 					layoutPageTemplateCollectionPersistence.fetchByG_P_N_T(
@@ -363,7 +362,8 @@ public class LayoutPageTemplateCollectionLocalServiceImpl
 				}
 
 				return false;
-			});
+			},
+			sourceName);
 	}
 
 	@Override
