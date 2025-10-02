@@ -25,8 +25,8 @@ import org.mockito.Mockito;
  */
 public class UniqueUtilTest {
 
-	@BeforeClass
-	public static void setUpClass() {
+	@Test
+	public void testGetCopyName() throws PortalException {
 		Language mockLanguage = Mockito.mock(Language.class);
 
 		Mockito.when(
@@ -37,23 +37,13 @@ public class UniqueUtilTest {
 
 		ReflectionTestUtil.setFieldValue(
 			LanguageUtil.class, "_language", mockLanguage);
-	}
 
-	@Test
-	public void testGetCopyName() throws PortalException {
-		_testGetCopyName();
-		_testGetCopyNameWithMultipleAttempts();
-	}
-
-	private void _testGetCopyName() throws PortalException {
 		String name1 = RandomTestUtil.randomString();
 
 		Assert.assertEquals(
 			name1 + " (Copy)", UniqueUtil.getCopyName(name1, name2 -> true));
-	}
 
-	private void _testGetCopyNameWithMultipleAttempts() throws PortalException {
-		String name1 = RandomTestUtil.randomString();
+		name1 = RandomTestUtil.randomString();
 
 		Assert.assertEquals(
 			name1 + " (Copy 3)",
