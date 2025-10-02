@@ -11,7 +11,7 @@ import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 
 /**
- * @author Akhash R
+ * @author Akhash Ramprakash
  */
 public class UniqueUtil {
 

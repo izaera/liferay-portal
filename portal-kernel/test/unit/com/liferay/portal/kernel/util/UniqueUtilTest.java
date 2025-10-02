@@ -21,7 +21,7 @@ import org.junit.Test;
 import org.mockito.Mockito;
 
 /**
- * @author Akhash R
+ * @author Akhash Ramprakash
  */
 public class UniqueUtilTest {
 
