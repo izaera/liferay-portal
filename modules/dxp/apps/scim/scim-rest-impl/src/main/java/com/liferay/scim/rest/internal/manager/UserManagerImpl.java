@@ -12,9 +12,7 @@ import com.liferay.expando.kernel.model.ExpandoTableConstants;
 import com.liferay.expando.kernel.model.ExpandoValue;
 import com.liferay.expando.kernel.model.ExpandoValueTable;
 import com.liferay.expando.kernel.service.ExpandoColumnLocalService;
-import com.liferay.expando.kernel.service.ExpandoColumnLocalServiceUtil;
 import com.liferay.expando.kernel.service.ExpandoTableLocalService;
-import com.liferay.expando.kernel.service.ExpandoTableLocalServiceUtil;
 import com.liferay.expando.kernel.service.ExpandoValueLocalService;
 import com.liferay.petra.function.UnsafeFunction;
 import com.liferay.petra.function.transform.TransformUtil;
@@ -661,7 +659,7 @@ public class UserManagerImpl implements UserManager {
 
 		try {
 			expandoColumn = _getOrAddExpandoColumn(
-				ClassNameLocalServiceUtil.getClassNameId(className),
+				_classNameLocalService.getClassNameId(className),
 				serviceContext.getCompanyId(), "scimClientId", false, true);
 		}
 		catch (Exception exception) {
@@ -773,23 +771,23 @@ public class UserManagerImpl implements UserManager {
 			boolean hidden)
 		throws Exception {
 
-		ExpandoTable expandoTable = ExpandoTableLocalServiceUtil.fetchTable(
+		ExpandoTable expandoTable = _expandoTableLocalService.fetchTable(
 			companyId, classNameId, ExpandoTableConstants.DEFAULT_TABLE_NAME);
 
 		if (expandoTable == null) {
-			expandoTable = ExpandoTableLocalServiceUtil.addTable(
+			expandoTable = _expandoTableLocalService.addTable(
 				companyId, classNameId,
 				ExpandoTableConstants.DEFAULT_TABLE_NAME);
 		}
 
-		ExpandoColumn expandoColumn = ExpandoColumnLocalServiceUtil.fetchColumn(
+		ExpandoColumn expandoColumn = _expandoColumnLocalService.fetchColumn(
 			expandoTable.getTableId(), name);
 
 		if (expandoColumn != null) {
 			return expandoColumn;
 		}
 
-		expandoColumn = ExpandoColumnLocalServiceUtil.addColumn(
+		expandoColumn = _expandoColumnLocalService.addColumn(
 			expandoTable.getTableId(), name, ExpandoColumnConstants.STRING);
 
 		UnicodeProperties unicodeProperties =
@@ -823,7 +821,7 @@ public class UserManagerImpl implements UserManager {
 
 		expandoColumn.setTypeSettingsProperties(unicodeProperties);
 
-		return ExpandoColumnLocalServiceUtil.updateExpandoColumn(expandoColumn);
+		return _expandoColumnLocalService.updateExpandoColumn(expandoColumn);
 	}
 
 	private String _getScimClientId(
