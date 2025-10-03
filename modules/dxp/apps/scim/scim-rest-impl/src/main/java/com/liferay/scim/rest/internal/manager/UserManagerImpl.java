@@ -70,6 +70,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.function.BiConsumer;
 
 import org.osgi.service.cm.ConfigurationAdmin;
 
@@ -262,14 +263,22 @@ public class UserManagerImpl implements UserManager {
 			Map<String, Boolean> requiredAttributes)
 		throws BadRequestException {
 
+		GroupsGetResponse groupsGetResponse = new GroupsGetResponse(
+			0, Collections.emptyList());
+
 		PermissionChecker permissionChecker =
 			PermissionCheckerFactoryUtil.create(
 				_userLocalService.fetchUser(PrincipalThreadLocal.getUserId()));
 
-		ScimUtil.GetResponseWrapper<Group> scimGetResponse = _listModel(
-			UserGroupTable.INSTANCE, UserGroup.class, count,
-			UserGroupTable.INSTANCE.userGroupId, new String[] {"displayName"},
-			node, _userGroupLocalService, startIndex,
+		_buildGetResponse(
+			UserGroupTable.INSTANCE,
+			(totalGroups, groups) -> {
+				groupsGetResponse.setGroups(groups);
+				groupsGetResponse.setTotalGroups(totalGroups);
+			},
+			UserGroup.class, count, UserGroupTable.INSTANCE.userGroupId,
+			new String[] {"displayName"}, node, _userGroupLocalService,
+			startIndex,
 			userGroup -> {
 				if (!UserGroupPermissionUtil.contains(
 						permissionChecker, userGroup.getUserGroupId(),
@@ -284,8 +293,7 @@ public class UserManagerImpl implements UserManager {
 					userGroup);
 			});
 
-		return new GroupsGetResponse(
-			scimGetResponse.getTotal(), scimGetResponse.getModels());
+		return groupsGetResponse;
 	}
 
 	@Override
@@ -304,17 +312,24 @@ public class UserManagerImpl implements UserManager {
 			Map<String, Boolean> requiredAttributes)
 		throws BadRequestException {
 
-		com.liferay.portal.kernel.model.User contextUser =
+		UsersGetResponse usersGetResponse = new UsersGetResponse(
+			0, Collections.emptyList());
+
+		com.liferay.portal.kernel.model.User portalUser =
 			_userLocalService.fetchUser(PrincipalThreadLocal.getUserId());
 
 		PermissionChecker permissionChecker =
-			PermissionCheckerFactoryUtil.create(contextUser);
+			PermissionCheckerFactoryUtil.create(portalUser);
 
-		ScimUtil.GetResponseWrapper<User> scimGetResponse = _listModel(
-			UserTable.INSTANCE, com.liferay.portal.kernel.model.User.class,
-			count, UserTable.INSTANCE.userId,
-			new String[] {"externalId", "userName"}, node, _userLocalService,
-			startIndex,
+		_buildGetResponse(
+			UserTable.INSTANCE,
+			(totalUsers, users) -> {
+				usersGetResponse.setTotalUsers(totalUsers);
+				usersGetResponse.setUsers(users);
+			},
+			com.liferay.portal.kernel.model.User.class, count,
+			UserTable.INSTANCE.userId, new String[] {"externalId", "userName"},
+			node, _userLocalService, startIndex,
 			user -> {
 				if (!UserPermissionUtil.contains(
 						permissionChecker, user.getUserId(), ActionKeys.VIEW)) {
@@ -323,13 +338,12 @@ public class UserManagerImpl implements UserManager {
 				}
 
 				return ScimUtil.toUser(
-					_getGroups(contextUser.getCompanyId(), user.getUserId()),
+					_getGroups(user.getCompanyId(), user.getUserId()),
 					ScimUtil.toScimUser(
 						_userService.getUserById(user.getUserId())));
 			});
 
-		return new UsersGetResponse(
-			scimGetResponse.getTotal(), scimGetResponse.getModels());
+		return usersGetResponse;
 	}
 
 	@Override
@@ -585,6 +599,62 @@ public class UserManagerImpl implements UserManager {
 		return portalUser;
 	}
 
+	private <T extends BaseTable<T>, U, E extends Throwable, R> void
+			_buildGetResponse(
+				BaseTable<T> baseTable, BiConsumer<Integer, List<R>> biConsumer,
+				Class<U> clazz, Integer count, Expression<Long> expression,
+				String[] fieldNames, Node node,
+				PersistedModelLocalService persistedModelLocalService,
+				Integer startIndex, UnsafeFunction<U, R, E> unsafeFunction)
+		throws BadRequestException {
+
+		if ((count != null) && (count < 0)) {
+			count = 0;
+		}
+
+		startIndex--;
+
+		_validate(node, fieldNames);
+
+		Predicate wherePredicate = _buildWherePredicate(
+			baseTable, node, clazz.getName(),
+			ServiceContextThreadLocal.getServiceContext());
+
+		int total = persistedModelLocalService.dslQueryCount(
+			DSLQueryFactoryUtil.count(
+			).from(
+				baseTable
+			).innerJoinON(
+				ExpandoValueTable.INSTANCE,
+				ExpandoValueTable.INSTANCE.classPK.eq(expression)
+			).where(
+				wherePredicate
+			));
+
+		if (count == null) {
+			count = total;
+		}
+
+		List<U> models = persistedModelLocalService.dslQuery(
+			DSLQueryFactoryUtil.select(
+				baseTable
+			).from(
+				baseTable
+			).innerJoinON(
+				ExpandoValueTable.INSTANCE,
+				ExpandoValueTable.INSTANCE.classPK.eq(expression)
+			).where(
+				wherePredicate
+			).limit(
+				startIndex, startIndex + count
+			));
+
+		biConsumer.accept(
+			total,
+			TransformUtil.transform(
+				models, model -> unsafeFunction.apply(model)));
+	}
+
 	private <T extends BaseTable<T>> Predicate _buildWherePredicate(
 		BaseTable<T> baseTable, Node node, String className,
 		ServiceContext serviceContext) {
@@ -619,11 +689,7 @@ public class UserManagerImpl implements UserManager {
 			return basePredicate;
 		}
 
-		Map<String, String> filterMapping = Map.of(
-			"displayName", "name", "externalId", "externalReferenceCode",
-			"userName", "screenName");
-
-		for (Map.Entry<String, String> entry : filterMapping.entrySet()) {
+		for (Map.Entry<String, String> entry : _filterMapping.entrySet()) {
 			if (StringUtil.contains(
 					expressionNode.getAttributeValue(), entry.getKey(),
 					StringPool.COLON)) {
@@ -896,61 +962,6 @@ public class UserManagerImpl implements UserManager {
 		return userGroup;
 	}
 
-	private <T extends BaseTable<T>, U, E extends Throwable, R>
-		ScimUtil.GetResponseWrapper<R> _listModel(
-				BaseTable<T> baseTable, Class<U> clazz, Integer count,
-				Expression<Long> expression, String[] fieldNames, Node node,
-				PersistedModelLocalService persistedModelLocalService,
-				Integer startIndex, UnsafeFunction<U, R, E> unsafeFunction)
-			throws BadRequestException {
-
-		if ((count != null) && (count < 0)) {
-			count = 0;
-		}
-
-		startIndex--;
-
-		_validate(node, fieldNames);
-
-		Predicate wherePredicate = _buildWherePredicate(
-			baseTable, node, clazz.getName(),
-			ServiceContextThreadLocal.getServiceContext());
-
-		int total = persistedModelLocalService.dslQueryCount(
-			DSLQueryFactoryUtil.count(
-			).from(
-				baseTable
-			).innerJoinON(
-				ExpandoValueTable.INSTANCE,
-				ExpandoValueTable.INSTANCE.classPK.eq(expression)
-			).where(
-				wherePredicate
-			));
-
-		if (count == null) {
-			count = total;
-		}
-
-		List<U> models = persistedModelLocalService.dslQuery(
-			DSLQueryFactoryUtil.select(
-				baseTable
-			).from(
-				baseTable
-			).innerJoinON(
-				ExpandoValueTable.INSTANCE,
-				ExpandoValueTable.INSTANCE.classPK.eq(expression)
-			).where(
-				wherePredicate
-			).limit(
-				startIndex, startIndex + count
-			));
-
-		return new ScimUtil.GetResponseWrapper(
-			total,
-			TransformUtil.transform(
-				models, model -> unsafeFunction.apply(model)));
-	}
-
 	private void _saveScimClientId(
 			String className, long classPK, long companyId, String scimClientId)
 		throws Exception {
@@ -1081,6 +1092,9 @@ public class UserManagerImpl implements UserManager {
 	private static final Log _log = LogFactoryUtil.getLog(
 		UserManagerImpl.class);
 
+	private static final Map<String, String> _filterMapping = Map.of(
+		"displayName", "name", "externalId", "externalReferenceCode",
+		"userName", "screenName");
 	private static final TransactionConfig _transactionConfig =
 		TransactionConfig.Factory.create(
 			Propagation.REQUIRED, new Class<?>[] {Exception.class});
