@@ -617,7 +617,7 @@ public class UserManagerImpl implements UserManager {
 		_validate(node, fieldNames);
 
 		Predicate predicate = _buildWherePredicate(
-			baseTable, node, clazz.getName(),
+			baseTable, clazz.getName(), node,
 			ServiceContextThreadLocal.getServiceContext());
 
 		int count = persistedModelLocalService.dslQueryCount(
@@ -654,7 +654,7 @@ public class UserManagerImpl implements UserManager {
 	}
 
 	private <T extends BaseTable<T>> Predicate _buildWherePredicate(
-		BaseTable<T> baseTable, Node node, String className,
+		BaseTable<T> baseTable, String className, Node node,
 		ServiceContext serviceContext) {
 
 		ExpandoColumn expandoColumn = null;
