@@ -8,13 +8,14 @@ package com.liferay.journal.web.internal.display.test;
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.journal.constants.JournalArticleConstants;
 import com.liferay.journal.constants.JournalFolderConstants;
+import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.model.JournalFolder;
 import com.liferay.journal.service.JournalFolderLocalService;
 import com.liferay.journal.test.util.JournalFolderFixture;
 import com.liferay.journal.test.util.JournalTestUtil;
-import com.liferay.petra.function.UnsafeFunction;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.comment.CommentManager;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.model.Group;
@@ -25,6 +26,7 @@ import com.liferay.portal.kernel.search.Field;
 import com.liferay.portal.kernel.security.permission.PermissionCheckerFactoryUtil;
 import com.liferay.portal.kernel.service.CompanyLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.service.ServiceContextFunction;
 import com.liferay.portal.kernel.test.ReflectionTestUtil;
 import com.liferay.portal.kernel.test.portlet.MockLiferayPortletRenderRequest;
 import com.liferay.portal.kernel.test.portlet.MockLiferayPortletRenderResponse;
@@ -47,12 +49,13 @@ import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 import com.liferay.portlet.test.MockLiferayPortletContext;
 
+import jakarta.portlet.Portlet;
+import jakarta.portlet.PortletURL;
+
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
-
-import javax.portlet.Portlet;
-import javax.portlet.PortletURL;
+import java.util.function.Function;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -85,6 +88,8 @@ public class JournalDisplayContextTest {
 			_group.getGroupId());
 
 		_user = UserTestUtil.addUser();
+
+		_serviceContext.setUserId(_user.getUserId());
 	}
 
 	@Test
@@ -145,25 +150,31 @@ public class JournalDisplayContextTest {
 		}
 
 		SearchContainer<Object> searchContainer = _getSearchContainer(
-			"Example", 1, 4);
+			0, "Example", null, null, 1, 4);
 
 		Assert.assertEquals(count, searchContainer.getTotal());
 	}
 
 	@Test
-	public void testGetSearchProps() throws Exception {
-		JournalFolderFixture journalFolderFixture = new JournalFolderFixture(
-			_journalFolderLocalService);
+	public void testGetSearchContainerWithParameters() throws Exception {
+		new JournalFolderFixture(
+			_journalFolderLocalService
+		).addFolder(
+			_group.getGroupId(), "Journal Folder Example"
+		);
 
-		JournalFolder journalFolder = journalFolderFixture.addFolder(
-			_group.getGroupId(), RandomTestUtil.randomString());
+		_addJournalArticle("Journal Article Example 1");
 
-		_testGetSearchProps(
-			journalFolder, "all-fields",
-			searchProps -> searchProps.containsKey("searchLocationOptions"));
-		_testGetSearchProps(
-			journalFolder, "comments",
-			searchProps -> !searchProps.containsKey("searchLocationOptions"));
+		JournalArticle journalArticle = _addJournalArticle(
+			"Journal Article Example 2");
+
+		_assertSearchContainer(
+			1, "all", true, journalArticle.getDDMStructureId());
+		_assertSearchContainer(
+			1, "structure", true, journalArticle.getDDMStructureId());
+
+		_assertSearchContainer(2, "all", true, 0);
+		_assertSearchContainer(3, "all", false, 0);
 	}
 
 	@Test
@@ -185,14 +196,56 @@ public class JournalDisplayContextTest {
 					_group.getGroupId(), RandomTestUtil.randomString())));
 	}
 
-	private void _addJournalArticle(String title) throws Exception {
-		JournalTestUtil.addArticle(
+	@Test
+	public void testIsShowComments() throws Exception {
+		JournalArticle journalArticle = JournalTestUtil.addArticle(
+			_group.getGroupId(),
+			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID);
+
+		JournalFolder journalFolder = JournalTestUtil.addFolder(
+			_group.getGroupId(), RandomTestUtil.randomString());
+
+		MockLiferayPortletRenderRequest mockLiferayPortletRenderRequest =
+			new MockLiferayPortletRenderRequest();
+
+		mockLiferayPortletRenderRequest.setAttribute(
+			WebKeys.THEME_DISPLAY, _getThemeDisplay());
+
+		Function<String, ServiceContext> function = new ServiceContextFunction(
+			mockLiferayPortletRenderRequest);
+
+		_commentManager.addComment(
+			_user.getUserId(), _group.getGroupId(),
+			JournalArticle.class.getName(), journalArticle.getResourcePrimKey(),
+			"test", function);
+
+		Assert.assertFalse(_isShowComments(journalFolder, StringPool.BLANK));
+		Assert.assertTrue(_isShowComments(journalFolder, "test"));
+	}
+
+	private JournalArticle _addJournalArticle(String title) throws Exception {
+		return JournalTestUtil.addArticle(
 			_group.getGroupId(),
 			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
 			JournalArticleConstants.CLASS_NAME_ID_DEFAULT, StringPool.BLANK,
 			true, _getLocaleStringMap(title),
 			_getLocaleStringMap("description"), _getLocaleStringMap("content"),
 			null, LocaleUtil.getDefault(), null, false, false, _serviceContext);
+	}
+
+	private void _assertSearchContainer(
+			int expectedSize, String navigation, Boolean navigationRecent,
+			long highlightedDDMStructureId)
+		throws Exception {
+
+		SearchContainer<Object> searchContainer = _getSearchContainer(
+			highlightedDDMStructureId, StringPool.BLANK, navigation,
+			navigationRecent, SearchContainer.DEFAULT_CUR,
+			SearchContainer.DEFAULT_DELTA);
+
+		List<Object> results = searchContainer.getResults();
+
+		Assert.assertEquals(results.toString(), expectedSize, results.size());
 	}
 
 	private Map<Locale, String> _getLocaleStringMap(String value) {
@@ -248,12 +301,13 @@ public class JournalDisplayContextTest {
 
 	private SearchContainer<Object> _getSearchContainer() throws Exception {
 		return _getSearchContainer(
-			StringPool.BLANK, SearchContainer.DEFAULT_CUR,
+			0, StringPool.BLANK, null, null, SearchContainer.DEFAULT_CUR,
 			SearchContainer.DEFAULT_DELTA);
 	}
 
 	private SearchContainer<Object> _getSearchContainer(
-			String keywords, int cur, int delta)
+			long highlightedDDMStructureId, String keywords, String navigation,
+			Boolean navigationRecent, int cur, int delta)
 		throws Exception {
 
 		MockLiferayPortletRenderRequest mockLiferayPortletRenderRequest =
@@ -263,7 +317,6 @@ public class JournalDisplayContextTest {
 			SearchContainer.DEFAULT_CUR_PARAM, String.valueOf(cur));
 		mockLiferayPortletRenderRequest.setParameter(
 			SearchContainer.DEFAULT_DELTA_PARAM, String.valueOf(delta));
-
 		mockLiferayPortletRenderRequest.setParameter(
 			Field.STATUS, String.valueOf(WorkflowConstants.STATUS_APPROVED));
 
@@ -271,22 +324,25 @@ public class JournalDisplayContextTest {
 			mockLiferayPortletRenderRequest.setParameter("keywords", keywords);
 		}
 
+		mockLiferayPortletRenderRequest.setParameter(
+			"highlightedDDMStructureId",
+			String.valueOf(highlightedDDMStructureId));
+
+		if (Validator.isNotNull(navigation)) {
+			mockLiferayPortletRenderRequest.setParameter(
+				"navigation", navigation);
+		}
+
+		if (navigationRecent != null) {
+			mockLiferayPortletRenderRequest.setParameter(
+				"navigationRecent", String.valueOf(navigationRecent));
+		}
+
 		return ReflectionTestUtil.invoke(
 			mockLiferayPortletRenderRequest.getAttribute(
 				"com.liferay.journal.web.internal.display.context." +
 					"JournalDisplayContext"),
 			"getSearchContainer", new Class<?>[0]);
-	}
-
-	private Map<String, Object> _getSearchProps(
-			MockLiferayPortletRenderRequest mockLiferayPortletRenderRequest)
-		throws Exception {
-
-		return ReflectionTestUtil.invoke(
-			mockLiferayPortletRenderRequest.getAttribute(
-				"com.liferay.journal.web.internal.display.context." +
-					"JournalDisplayContext"),
-			"getSearchProps", new Class<?>[0]);
 	}
 
 	private ThemeDisplay _getThemeDisplay() throws Exception {
@@ -320,6 +376,24 @@ public class JournalDisplayContextTest {
 			journalFolder);
 	}
 
+	private boolean _isShowComments(
+			JournalFolder journalFolder, String keywords)
+		throws Exception {
+
+		MockLiferayPortletRenderRequest mockLiferayPortletRenderRequest =
+			_renderPortlet();
+
+		mockLiferayPortletRenderRequest.setParameter(
+			"folderId", String.valueOf(journalFolder.getFolderId()));
+		mockLiferayPortletRenderRequest.setParameter("keywords", keywords);
+
+		return ReflectionTestUtil.invoke(
+			mockLiferayPortletRenderRequest.getAttribute(
+				"com.liferay.journal.web.internal.display.context." +
+					"JournalDisplayContext"),
+			"isShowComments", new Class<?>[0]);
+	}
+
 	private MockLiferayPortletRenderRequest _renderPortlet() throws Exception {
 		MockLiferayPortletRenderRequest mockLiferayPortletRenderRequest =
 			_getMockLiferayPortletRenderRequest();
@@ -333,25 +407,8 @@ public class JournalDisplayContextTest {
 		return mockLiferayPortletRenderRequest;
 	}
 
-	private void _testGetSearchProps(
-			JournalFolder journalFolder, String searchIn,
-			UnsafeFunction<Map<String, Object>, Boolean, Exception>
-				unsafeFunction)
-		throws Exception {
-
-		MockLiferayPortletRenderRequest mockLiferayPortletRenderRequest =
-			_renderPortlet();
-
-		mockLiferayPortletRenderRequest.setAttribute(
-			WebKeys.JOURNAL_FOLDER, journalFolder);
-		mockLiferayPortletRenderRequest.setParameter(
-			"keywords", RandomTestUtil.randomString());
-		mockLiferayPortletRenderRequest.setParameter("searchIn", searchIn);
-
-		Assert.assertTrue(
-			unsafeFunction.apply(
-				_getSearchProps(mockLiferayPortletRenderRequest)));
-	}
+	@Inject
+	private CommentManager _commentManager;
 
 	private Company _company;
 
