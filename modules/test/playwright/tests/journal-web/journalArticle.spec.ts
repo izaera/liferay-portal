@@ -1147,6 +1147,7 @@ bulkTest(
 		});
 
 		await journalPage.goto(site.friendlyUrlPath);
+		await journalPage.changeView('list');
 
 		const article1 = page
 			.locator(
