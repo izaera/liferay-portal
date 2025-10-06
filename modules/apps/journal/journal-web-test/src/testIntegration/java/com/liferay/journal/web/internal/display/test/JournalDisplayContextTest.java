@@ -320,13 +320,13 @@ public class JournalDisplayContextTest {
 		mockLiferayPortletRenderRequest.setParameter(
 			Field.STATUS, String.valueOf(WorkflowConstants.STATUS_APPROVED));
 
-		if (Validator.isNotNull(keywords)) {
-			mockLiferayPortletRenderRequest.setParameter("keywords", keywords);
-		}
-
 		mockLiferayPortletRenderRequest.setParameter(
 			"highlightedDDMStructureId",
 			String.valueOf(highlightedDDMStructureId));
+
+		if (Validator.isNotNull(keywords)) {
+			mockLiferayPortletRenderRequest.setParameter("keywords", keywords);
+		}
 
 		if (Validator.isNotNull(navigation)) {
 			mockLiferayPortletRenderRequest.setParameter(
