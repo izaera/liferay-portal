@@ -40,6 +40,7 @@ import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.odata.entity.EntityModel;
 import com.liferay.portal.vulcan.aggregation.Aggregation;
 import com.liferay.portal.vulcan.dto.converter.DTOConverter;
@@ -353,8 +354,10 @@ public class TaxonomyCategoryResourceImpl
 		return _addTaxonomyCategory(
 			taxonomyCategory.getExternalReferenceCode(),
 			assetVocabulary.getGroupId(),
-			assetVocabulary.getDefaultLanguageId(), taxonomyCategory, 0,
-			assetVocabulary.getVocabularyId());
+			assetVocabulary.getDefaultLanguageId(), taxonomyCategory,
+			_getParentTaxonomyCategoryId(
+				taxonomyCategory),
+			 assetVocabulary.getVocabularyId());
 	}
 
 	@Override
@@ -516,6 +519,29 @@ public class TaxonomyCategoryResourceImpl
 		}
 
 		return AssetCategoryConstants.DEFAULT_PARENT_CATEGORY_ID;
+	}
+
+	private long _getParentTaxonomyCategoryId(
+		TaxonomyCategory taxonomyCategory)
+		throws Exception {
+
+		ParentTaxonomyCategory parentTaxonomyCategory =
+			taxonomyCategory.getParentTaxonomyCategory();
+		Long parentTaxonomyCategoryId = null;
+
+		if (parentTaxonomyCategory != null) {
+			parentTaxonomyCategoryId =
+				parentTaxonomyCategory.getId();
+		}
+
+		if (Validator.isNull(parentTaxonomyCategoryId)) {
+			return AssetCategoryConstants.DEFAULT_PARENT_CATEGORY_ID;
+		}
+
+		AssetCategory parentAssetCategory =
+			_assetCategoryService.getCategory(parentTaxonomyCategoryId);
+
+		return parentAssetCategory.getCategoryId();
 	}
 
 	private ProjectionList _getProjectionList() {
