@@ -105,14 +105,7 @@ public class SiteParamConverterProvider
 			return null;
 		}
 
-		Long groupId = GroupUtil.getGroupId(
-			companyId, siteKey, _groupLocalService);
-
-		if (groupId == null) {
-			return null;
-		}
-
-		return groupId;
+		return GroupUtil.getGroupId(companyId, siteKey, _groupLocalService);
 	}
 
 	@Override
