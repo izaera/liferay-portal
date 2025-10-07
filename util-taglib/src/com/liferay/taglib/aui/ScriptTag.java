@@ -8,10 +8,13 @@ package com.liferay.taglib.aui;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.content.security.policy.ContentSecurityPolicyNonceProviderUtil;
+import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.frontend.hashed.files.HashedFilesRegistryUtil;
 import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.servlet.FileAvailabilityUtil;
 import com.liferay.portal.kernel.servlet.taglib.BodyContentWrapper;
 import com.liferay.portal.kernel.servlet.taglib.aui.ScriptData;
+import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.taglib.aui.base.BaseScriptTag;
@@ -265,7 +268,34 @@ public class ScriptTag extends BaseScriptTag {
 		_write(jspWriter, "id", getId());
 		_write(jspWriter, "integrity", getIntegrity());
 		_write(jspWriter, "referrerpolicy", getReferrerPolicy());
-		_write(jspWriter, "src", getSrc());
+
+		String src = getSrc();
+
+		if (getHashedFile()) {
+			StringBundler sb = new StringBundler(3);
+
+			try {
+				sb.append(PortalUtil.getCDNHost(getRequest()));
+			}
+			catch (PortalException portalException) {
+				throw new RuntimeException(portalException);
+			}
+
+			sb.append(PortalUtil.getPathProxy());
+
+			String unhashedFileURI =
+				PortalUtil.getPathModule() + StringPool.SLASH + getSrc();
+
+			String hashedFileURI = HashedFilesRegistryUtil.getHashedFileURI(
+				unhashedFileURI);
+
+			sb.append(
+				(hashedFileURI == null) ? unhashedFileURI : hashedFileURI);
+
+			src = sb.toString();
+		}
+
+		_write(jspWriter, "src", src);
 		_write(jspWriter, "type", getType());
 
 		String senna = getSenna();
