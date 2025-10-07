@@ -606,7 +606,7 @@ public class PortletRenderUtil {
 
 		if (javaScriptPath.startsWith("module:")) {
 			javaScriptPath = javaScriptPath.substring(7);
-			type = FrontendESMUtil.getScriptType();
+			type = "module";
 		}
 
 		printWriter.print("<script");
