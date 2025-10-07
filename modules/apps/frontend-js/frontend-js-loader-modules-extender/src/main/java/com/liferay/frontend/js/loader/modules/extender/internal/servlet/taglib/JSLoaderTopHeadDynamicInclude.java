@@ -103,8 +103,8 @@ public class JSLoaderTopHeadDynamicInclude extends BaseDynamicInclude {
 				httpServletRequest);
 
 		printWriter.write(
-			absolutePortalURLBuilder.forBundleScript(
-				_bundle, "/loader.js"
+			absolutePortalURLBuilder.forWebContextScript(
+				"frontend-js-loader-modules-extender", "/loader.js"
 			).build());
 
 		printWriter.write("\" type=\"");
