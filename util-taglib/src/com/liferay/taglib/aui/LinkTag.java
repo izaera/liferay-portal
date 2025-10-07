@@ -63,10 +63,17 @@ public class LinkTag extends BaseLinkTag {
 					}
 
 					sb.append(PortalUtil.getPathProxy());
-					sb.append(
+
+					String unhashedFileURI =
+						PortalUtil.getPathModule() + StringPool.SLASH + href;
+
+					String hashedFileURI =
 						HashedFilesRegistryUtil.getHashedFileURI(
-							PortalUtil.getPathModule() + StringPool.SLASH +
-								href));
+							unhashedFileURI);
+
+					sb.append(
+						(hashedFileURI == null) ? unhashedFileURI :
+							hashedFileURI);
 
 					href = sb.toString();
 				}
