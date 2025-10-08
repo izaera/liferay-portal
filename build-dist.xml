@@ -925,10 +925,8 @@ this task.
 		<replace
 			file="${app.server.jboss.dir}/standalone/configuration/standalone.xml"
 		>
-			<replacetoken><![CDATA[<jsp-config />]]></replacetoken>
-			<replacevalue>
-				<![CDATA[<jsp-config development="true" source-vm="1.8" target-vm="1.8" />]]>
-			</replacevalue>
+			<replacetoken><![CDATA[<jsp-config/>]]></replacetoken>
+			<replacevalue><![CDATA[<!--<jsp-config/>-->]]></replacevalue>
 		</replace>
 
 		<echo append="true" file="${app.server.jboss.bin.dir}/standalone.conf">
@@ -2496,10 +2494,10 @@ this task.
 		</replace-multilines>
 
 		<replace
-			file="${app.server.wildfly.bin.dir}/standalone.conf"
+			file="${app.server.wildfly.dir}/standalone/configuration/standalone.xml"
 		>
-			<replacetoken><![CDATA[JAVA_OPTS="-Xms64m -Xmx512m -XX:MetaspaceSize=96M -XX:MaxMetaspaceSize=256m ]]></replacetoken>
-			<replacevalue><![CDATA[JAVA_OPTS="]]></replacevalue>
+			<replacetoken><![CDATA[<jsp-config/>]]></replacetoken>
+			<replacevalue><![CDATA[<!--<jsp-config/>-->]]></replacevalue>
 		</replace>
 
 		<echo append="true" file="${app.server.wildfly.bin.dir}/standalone.conf">
