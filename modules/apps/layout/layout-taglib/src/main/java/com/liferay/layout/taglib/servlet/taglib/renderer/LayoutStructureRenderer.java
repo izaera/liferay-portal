@@ -181,6 +181,22 @@ public class LayoutStructureRenderer {
 		return layoutTypePortlet;
 	}
 
+	private String _getRowCssClass(
+		CollectionStyledLayoutStructureItem
+			collectionStyledLayoutStructureItem) {
+
+		StringBundler sb = new StringBundler(3);
+
+		sb.append("align-items-");
+		sb.append(collectionStyledLayoutStructureItem.getVerticalAlignment());
+
+		if (!collectionStyledLayoutStructureItem.isGutters()) {
+			sb.append(" no-gutters");
+		}
+
+		return sb.toString();
+	}
+
 	private boolean _hasAddPermission(String className) {
 		InfoItemServiceRegistry infoItemServiceRegistry =
 			ServletContextUtil.getInfoItemServiceRegistry();
@@ -224,6 +240,31 @@ public class LayoutStructureRenderer {
 		}
 
 		return false;
+	}
+
+	private void _renderCol(
+			CollectionStyledLayoutStructureItem
+				collectionStyledLayoutStructureItem,
+			int index, InfoForm infoForm, InfoItemDetails infoItemDetails)
+		throws Exception {
+
+		_httpServletRequest.setAttribute(
+			InfoDisplayWebKeys.INFO_ITEM_REFERENCE,
+			infoItemDetails.getInfoItemReference());
+
+		ColTag colTag = new ColTag();
+
+		colTag.setCssClass(
+			ResponsiveLayoutStructureUtil.getColumnCssClass(
+				collectionStyledLayoutStructureItem, index));
+		colTag.setPageContext(_pageContext);
+
+		colTag.doStartTag();
+
+		_renderLayoutStructure(
+			collectionStyledLayoutStructureItem.getChildrenItemIds(), infoForm);
+
+		colTag.doEndTag();
 	}
 
 	private void _renderCollectionStyledLayoutStructureItem(
@@ -396,65 +437,70 @@ public class LayoutStructureRenderer {
 							renderCollectionLayoutStructureItemDisplayContext.
 								getCollectionItemType()));
 
-				RowTag rowTag = new RowTag();
-
-				StringBundler rowCSSClassSB = new StringBundler(3);
-
-				rowCSSClassSB.append("align-items-");
-				rowCSSClassSB.append(
-					collectionStyledLayoutStructureItem.getVerticalAlignment());
-
-				if (!collectionStyledLayoutStructureItem.isGutters()) {
-					rowCSSClassSB.append(" no-gutters");
-				}
-
-				rowTag.setCssClass(rowCSSClassSB.toString());
-
-				rowTag.setPageContext(_pageContext);
-
-				rowTag.doStartTag();
-
+				int numberOfColumns =
+					collectionStyledLayoutStructureItem.getNumberOfColumns();
 				int numberOfItemsToDisplay =
 					renderCollectionLayoutStructureItemDisplayContext.
 						getNumberOfItemsToDisplay();
 
-				for (int i = 0; i < numberOfItemsToDisplay; i++) {
-					if (i >= collection.size()) {
-						break;
+				if (Validator.isNull(
+						collectionStyledLayoutStructureItem.getListStyle())) {
+
+					RowTag rowTag = new RowTag();
+
+					rowTag.setCssClass(
+						_getRowCssClass(collectionStyledLayoutStructureItem));
+					rowTag.setPageContext(_pageContext);
+
+					rowTag.doStartTag();
+
+					for (int i = 0;
+						 (i < numberOfItemsToDisplay) &&
+						 (i < collection.size()); i++) {
+
+						_renderCol(
+							collectionStyledLayoutStructureItem,
+							i % numberOfColumns, infoForm,
+							infoItemDetailsProvider.getInfoItemDetails(
+								collection.get(i)));
 					}
 
-					InfoItemDetails infoItemDetails =
-						infoItemDetailsProvider.getInfoItemDetails(
-							collection.get(i));
-
-					_httpServletRequest.setAttribute(
-						InfoDisplayWebKeys.INFO_ITEM_REFERENCE,
-						infoItemDetails.getInfoItemReference());
-
-					ColTag colTag = new ColTag();
-
-					int numberOfColumns =
-						collectionStyledLayoutStructureItem.
-							getNumberOfColumns();
-
-					colTag.setCssClass(
-						ResponsiveLayoutStructureUtil.getColumnCssClass(
-							collectionStyledLayoutStructureItem,
-							i % numberOfColumns));
-
-					colTag.setPageContext(_pageContext);
-
-					colTag.doStartTag();
-
-					_renderLayoutStructure(
-						collectionStyledLayoutStructureItem.
-							getChildrenItemIds(),
-						infoForm);
-
-					colTag.doEndTag();
+					rowTag.doEndTag();
 				}
+				else {
+					int numberOfRows =
+						renderCollectionLayoutStructureItemDisplayContext.
+							getNumberOfRows();
 
-				rowTag.doEndTag();
+					for (int i = 0; i < numberOfRows; i++) {
+						RowTag rowTag = new RowTag();
+
+						rowTag.setCssClass(
+							_getRowCssClass(
+								collectionStyledLayoutStructureItem));
+						rowTag.setPageContext(_pageContext);
+
+						rowTag.doStartTag();
+
+						for (int j = 0; j < numberOfColumns; j++) {
+							int index = (i * numberOfColumns) + j;
+
+							if ((index >= numberOfItemsToDisplay) ||
+								(index >= collection.size())) {
+
+								break;
+							}
+
+							_renderCol(
+								collectionStyledLayoutStructureItem, j,
+								infoForm,
+								infoItemDetailsProvider.getInfoItemDetails(
+									collection.get(index)));
+						}
+
+						rowTag.doEndTag();
+					}
+				}
 
 				containerTag.doEndTag();
 			}
