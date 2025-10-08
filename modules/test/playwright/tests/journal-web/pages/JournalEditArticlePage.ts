@@ -161,6 +161,24 @@ export class JournalEditArticlePage {
 		await this.publishArticle();
 	}
 
+	async clearAllCategories(vocabulary: string) {
+		await this.openFieldSet('Categories', 'categorization');
+
+		await this.page
+			.getByRole('button', {name: `Select ${vocabulary}`})
+			.click();
+
+		const selectVocabularyIframe = this.page.frameLocator(
+			`iframe[title="Select ${vocabulary}"]`
+		);
+
+		await selectVocabularyIframe
+			.getByRole('button', {name: 'Clear All'})
+			.click();
+
+		await this.page.getByRole('button', {name: 'Done'}).click();
+	}
+
 	async createAndPublishBasicArticle(title?: string) {
 		const articleTitle = title || getRandomString();
 
@@ -327,6 +345,27 @@ export class JournalEditArticlePage {
 		await this.openFieldSet('Related Assets', 'relatedAssets');
 		await this.page.getByLabel('Select Items').click();
 		await this.page.getByRole('menuitem', {name: assetType}).click();
+	}
+
+	async selectCategories(vocabulary: string, categories: string[]) {
+		await this.openFieldSet('Categories', 'categorization');
+
+		await this.page
+			.getByRole('button', {name: `Select ${vocabulary}`})
+			.click();
+
+		const selectVocabularyIframe = this.page.frameLocator(
+			`iframe[title="Select ${vocabulary}"]`
+		);
+
+		categories.forEach((category) => {
+			selectVocabularyIframe
+				.locator('li')
+				.filter({hasText: category})
+				.click();
+		});
+
+		await this.page.getByRole('button', {name: 'Done'}).click();
 	}
 
 	async selectSpecificDisplayPage(displayPageName: string) {
