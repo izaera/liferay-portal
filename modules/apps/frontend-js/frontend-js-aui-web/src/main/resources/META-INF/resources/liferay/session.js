@@ -143,9 +143,9 @@ AUI.add(
 					const instance = this;
 
 					return (
-						Liferay.Util.Cookie.get(
-							instance._cookieKey,
-							Liferay.Util.Cookie.TYPES.NECESSARY
+						Liferay.Util.LocalStorage.getItem(
+							instance._timestampKey,
+							Liferay.Util.LocalStorage.TYPES.NECESSARY
 						) || instance._initTimestamp
 					);
 				},
@@ -217,14 +217,11 @@ AUI.add(
 
 					instance._initTimestamp = value;
 
-					if (navigator.cookieEnabled) {
-						Liferay.Util.Cookie.set(
-							instance._cookieKey,
-							value,
-							Liferay.Util.Cookie.TYPES.NECESSARY,
-							instance._cookieOptions
-						);
-					}
+					Liferay.Util.LocalStorage.setItem(
+						instance._timestampKey,
+						value,
+						Liferay.Util.LocalStorage.TYPES.PERFORMANCE
+					);
 				},
 
 				_setWarningLength(value) {
@@ -321,13 +318,8 @@ AUI.add(
 				initializer() {
 					const instance = this;
 
-					instance._cookieKey =
+					instance._timestampKey =
 						'LFR_SESSION_STATE_' + themeDisplay.getRealUserId();
-
-					instance._cookieOptions = {
-						path: themeDisplay.getPathContext() || '/',
-						secure: A.UA.secure,
-					};
 
 					instance._registered = {};
 
