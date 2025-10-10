@@ -9,7 +9,7 @@ dependencies {
 	compileInclude group: "com.nimbusds", name: "lang-tag", version: "1.7"
 	compileInclude group: "com.nimbusds", name: "nimbus-jose-jwt", version: "10.4"
 	compileInclude group: "com.nimbusds", name: "oauth2-oidc-sdk", version: "11.13"
-	compileInclude group: "com.sun.mail", name: "jakarta.mail", version: "1.6.6"
+	compileInclude group: "com.sun.mail", name: "jakarta.mail", version: "1.6.8"
 
 	compileOnly group: "com.liferay.portal", name: "com.liferay.portal.impl", version: "default"
 	compileOnly group: "com.liferay.portal", name: "com.liferay.portal.kernel", version: "default"
