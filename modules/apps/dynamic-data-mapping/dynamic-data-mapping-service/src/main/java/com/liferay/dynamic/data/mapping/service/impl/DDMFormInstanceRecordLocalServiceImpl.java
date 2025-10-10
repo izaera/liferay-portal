@@ -765,15 +765,6 @@ public class DDMFormInstanceRecordLocalServiceImpl
 		return ddmFormInstanceRecord;
 	}
 
-	private Indexer<DDMFormInstanceRecord> _getDDMFormInstanceRecordIndexer() {
-		return _indexerRegistry.nullSafeGetIndexer(DDMFormInstanceRecord.class);
-	}
-
-	private DDMStorageAdapter _getDDMStorageAdapter(String type) {
-		return _ddmStorageAdapterRegistry.getDDMStorageAdapter(
-			GetterUtil.getString(type, StorageType.DEFAULT.toString()));
-	}
-
 	private String _getContextURL(
 		DDMFormInstanceRecord ddmFormInstanceRecord,
 		ServiceContext serviceContext) {
@@ -800,6 +791,15 @@ public class DDMFormInstanceRecordLocalServiceImpl
 				DDMPortletKeys.DYNAMIC_DATA_MAPPING_FORM),
 			"formInstanceRecordId=",
 			ddmFormInstanceRecord.getFormInstanceRecordId());
+	}
+
+	private Indexer<DDMFormInstanceRecord> _getDDMFormInstanceRecordIndexer() {
+		return _indexerRegistry.nullSafeGetIndexer(DDMFormInstanceRecord.class);
+	}
+
+	private DDMStorageAdapter _getDDMStorageAdapter(String type) {
+		return _ddmStorageAdapterRegistry.getDDMStorageAdapter(
+			GetterUtil.getString(type, StorageType.DEFAULT.toString()));
 	}
 
 	private List<DDMFormInstanceRecord> _getFormInstanceRecords(Hits hits)
