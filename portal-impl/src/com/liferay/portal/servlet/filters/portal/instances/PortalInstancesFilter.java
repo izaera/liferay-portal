@@ -8,10 +8,10 @@ package com.liferay.portal.servlet.filters.portal.instances;
 import com.liferay.portal.kernel.exception.NoSuchVirtualHostException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.servlet.BaseFilter;
 import com.liferay.portal.kernel.servlet.TryFilter;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.servlet.filters.BasePortalFilter;
 import com.liferay.portal.util.PortalInstances;
 import com.liferay.portal.util.PropsValues;
 
@@ -28,8 +28,7 @@ import javax.servlet.http.HttpServletResponse;
  *
  * @author Jorge Díaz
  */
-public class PortalInstancesFilter
-	extends BasePortalFilter implements TryFilter {
+public class PortalInstancesFilter extends BaseFilter implements TryFilter {
 
 	@Override
 	public Object doFilterTry(
@@ -60,8 +59,8 @@ public class PortalInstancesFilter
 	}
 
 	@Override
-	public boolean isFilterEnabled() {
-		return _FILTER_ENABLED;
+	protected Log getLog() {
+		return _log;
 	}
 
 	private boolean _isVirtualHostsStrictAccess(
@@ -78,8 +77,6 @@ public class PortalInstancesFilter
 
 		return true;
 	}
-
-	private static final boolean _FILTER_ENABLED = true;
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		PortalInstancesFilter.class);
