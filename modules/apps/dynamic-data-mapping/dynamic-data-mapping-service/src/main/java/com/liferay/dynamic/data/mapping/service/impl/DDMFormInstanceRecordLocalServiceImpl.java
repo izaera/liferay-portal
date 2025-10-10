@@ -774,7 +774,7 @@ public class DDMFormInstanceRecordLocalServiceImpl
 			GetterUtil.getString(type, StorageType.DEFAULT.toString()));
 	}
 
-	private String _getEntryURL(
+	private String _getContextURL(
 		DDMFormInstanceRecord ddmFormInstanceRecord,
 		ServiceContext serviceContext) {
 
@@ -939,7 +939,7 @@ public class DDMFormInstanceRecordLocalServiceImpl
 			ddmFormInstanceRecordVersion, serviceContext,
 			HashMapBuilder.<String, Serializable>put(
 				WorkflowConstants.CONTEXT_URL,
-				_getEntryURL(ddmFormInstanceRecord, serviceContext)
+				_getContextURL(ddmFormInstanceRecord, serviceContext)
 			).put(
 				"entryTitle",
 				ddmFormInstance.getName(serviceContext.getLocale())
