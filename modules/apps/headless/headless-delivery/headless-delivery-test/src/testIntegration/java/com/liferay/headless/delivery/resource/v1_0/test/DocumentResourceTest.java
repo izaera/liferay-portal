@@ -522,7 +522,6 @@ public class DocumentResourceTest extends BaseDocumentResourceTestCase {
 					name = dlFileEntryType.getName(LocaleUtil.getDefault());
 				}
 			});
-
 		randomDocument.setSiteId(group.getGroupId());
 
 		return randomDocument;
@@ -629,10 +628,11 @@ public class DocumentResourceTest extends BaseDocumentResourceTestCase {
 		postDocument = _postDocumentFolderDocument(
 			document, childGroup, multipartFiles);
 
+		DocumentType documentType = postDocument.getDocumentType();
+
 		Assert.assertEquals(
 			dlFileEntryType.getName(LocaleUtil.getDefault()),
-			postDocument.getDocumentType(
-			).getName());
+			documentType.getName());
 
 		GroupTestUtil.deleteGroup(childGroup);
 	}
