@@ -69,7 +69,7 @@ public class StyleBookServiceUpgradeStepRegistrator
 				protected String[][] getTableAndPrimaryKeyColumnNames() {
 					return new String[][] {
 						{"StyleBookEntry", "styleBookEntryId"},
-						{"StyleBookEntryVersion", "styleBookEntryId"}
+						{"StyleBookEntryVersion", "styleBookEntryVersionId"}
 					};
 				}
 

@@ -227,7 +227,7 @@ public class FragmentServiceUpgradeStepRegistrator
 					return new String[][] {
 						{"FragmentComposition", "fragmentCompositionId"},
 						{"FragmentEntry", "fragmentEntryId"},
-						{"FragmentEntryVersion", "fragmentEntryId"}
+						{"FragmentEntryVersion", "fragmentEntryVersionId"}
 					};
 				}
 
