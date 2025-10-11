@@ -65,6 +65,10 @@ public class PermissionCheckFinderEntryTest {
 		_group2 = GroupTestUtil.addGroup();
 		_ownerRole = RoleLocalServiceUtil.getRole(
 			TestPropsValues.getCompanyId(), RoleConstants.OWNER);
+
+		_permissionCheckFinderEntryAdmin = _addPermissionCheckFinderEntry(
+			_adminGroupId, _adminUser.getUserId());
+
 		_permissionedUser = UserTestUtil.addUser(new long[0]);
 
 		_user = UserTestUtil.addUser(new long[0]);
@@ -73,9 +77,6 @@ public class PermissionCheckFinderEntryTest {
 			_group1.getGroupId(), _user.getUserId());
 		_permissionCheckFinderEntry2 = _addPermissionCheckFinderEntry(
 			_group2.getGroupId(), _user.getUserId());
-
-		_permissionCheckFinderEntryAdmin = _addPermissionCheckFinderEntry(
-			_adminGroupId, _adminUser.getUserId());
 	}
 
 	@Test
