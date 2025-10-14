@@ -36,8 +36,8 @@ public class ElasticsearchConfigurationModelListener
 		try {
 			if (!GetterUtil.getBoolean(properties.get("trackTotalHits"))) {
 				_log.error(
-					"The Track Total Hits configuration is deprecated, use " +
-						"Track Total Hits Limit instead");
+					"The track total hits configuration is deprecated, use " +
+						"the track total hits limit instead");
 			}
 
 			_validateTrackTotalHitsLimit(properties);
@@ -81,7 +81,7 @@ public class ElasticsearchConfigurationModelListener
 			return;
 		}
 
-		_log.error("Track Total Hits Limit is less than the Max Result Window");
+		_log.error("Track total hits limit is less than the max result window");
 
 		throw new Exception(
 			_getMessage(
