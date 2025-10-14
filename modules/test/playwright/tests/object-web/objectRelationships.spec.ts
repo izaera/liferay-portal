@@ -416,7 +416,7 @@ test.describe('Manage object relationships through Model Builder', () => {
 			objectDefinitionId1: objectDefinition1.id,
 			objectDefinitionId2: objectDefinition2.id,
 			objectDefinitionName2: objectDefinition2.name,
-			type: "oneToMany",
+			type: 'oneToMany',
 		};
 
 		const objectRelationshipApiClient = await apiHelpers.buildRestClient(
@@ -509,15 +509,15 @@ test.describe('Manage object relationships through Model Builder', () => {
 
 		const objectRelationshipDetails: {
 			label: string;
-			type: ObjectRelationship.TypeEnum;
+			type: 'oneToMany' | 'oneToOne' | 'manyToMany';
 		}[] = [
 			{
 				label: 'objectRelationshipLabel' + getRandomInt(),
-				type: "oneToMany",
+				type: 'oneToMany',
 			},
 			{
 				label: 'objectRelationshipLabel' + getRandomInt(),
-				type: "manyToMany",
+				type: 'manyToMany',
 			},
 		];
 
@@ -647,7 +647,7 @@ test.describe('Manage object relationships through Model Builder', () => {
 					objectDefinitionId1: objectDefinition1.id,
 					objectDefinitionId2: objectDefinition2.id,
 					objectDefinitionName2: objectDefinition2.name,
-					type: "oneToMany",
+					type: 'oneToMany',
 				}
 			);
 
@@ -758,7 +758,7 @@ test.describe('Manage object relationships through Model Builder', () => {
 			objectDefinitionId1: objectDefinition1.id,
 			objectDefinitionId2: objectDefinition2.id,
 			objectDefinitionName2: objectDefinition2.name,
-			type: "oneToMany",
+			type: 'oneToMany',
 		};
 
 		const objectRelationshipApiClient = await apiHelpers.buildRestClient(
@@ -925,7 +925,7 @@ test.describe('Manage object relationships through Model Builder', () => {
 					objectDefinitionId1: objectDefinition1.id,
 					objectDefinitionId2: objectDefinition2.id,
 					objectDefinitionName2: objectDefinition2.name,
-					type: "oneToMany",
+					type: 'oneToMany',
 				}
 			);
 
@@ -965,8 +965,7 @@ test.describe('Manage object relationships through Model Builder', () => {
 		const objectFieldObjectRelationship =
 			publishedObjectDefinition2.objectFields.find(
 				(objectField: ObjectField) =>
-					objectField.businessType ===
-					Relationship
+					objectField.businessType === 'Relationship'
 			);
 
 		await expect(
@@ -980,8 +979,8 @@ test.describe('Manage object relationships through Model Builder', () => {
 		await objectFieldApiClient.postObjectDefinitionByExternalReferenceCodeObjectField(
 			publishedObjectDefinition2.externalReferenceCode,
 			{
-				DBType: "String",
-				businessType: "Text",
+				DBType: 'String',
+				businessType: 'Text',
 				indexed: true,
 				indexedAsKeyword: false,
 				indexedLanguageId: '',
@@ -989,7 +988,7 @@ test.describe('Manage object relationships through Model Builder', () => {
 				listTypeDefinitionId: 0,
 				localized: false,
 				name: 'textField',
-				readOnly: "false",
+				readOnly: 'false',
 				required: false,
 				state: false,
 				system: false,

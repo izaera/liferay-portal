@@ -29,11 +29,11 @@ const test = mergeTests(
 test.afterEach(async ({formsPage, page, systemSettingsPage}) => {
 	await formsPage.goTo();
 
-	await deleteItems(formsPage, page);
+	await deleteItems(formsPage);
 
 	await formsPage.dataProvidersTab.click();
 
-	await deleteItems(formsPage, page);
+	await deleteItems(formsPage);
 
 	await systemSettingsPage.goToSystemSetting(
 		'Data Providers',

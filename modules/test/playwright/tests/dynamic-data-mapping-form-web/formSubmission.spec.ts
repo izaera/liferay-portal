@@ -28,14 +28,14 @@ let hasDataProvider: boolean = false;
 test.afterEach(async ({formsPage, page, virtualInstancesPage}) => {
 	await formsPage.goTo();
 
-	await deleteItems(formsPage, page);
+	await deleteItems(formsPage);
 
 	if (hasDataProvider) {
 		await page.waitForLoadState();
 
 		await formsPage.dataProvidersTab.click();
 
-		await deleteItems(formsPage, page);
+		await deleteItems(formsPage);
 
 		hasDataProvider = false;
 	}
