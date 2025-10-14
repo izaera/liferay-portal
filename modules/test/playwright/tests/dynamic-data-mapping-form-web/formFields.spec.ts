@@ -3,18 +3,18 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import { Page, expect, mergeTests } from '@playwright/test';
+import {expect, mergeTests} from '@playwright/test';
 import path from 'path';
 
-import { dataApiHelpersTest } from '../../fixtures/dataApiHelpersTest';
-import { formsPagesTest } from '../../fixtures/formsPagesTest';
-import { loginTest } from '../../fixtures/loginTest';
-import { getRandomInt } from '../../utils/getRandomInt';
-import { deleteItems } from './utils/deleteItems';
+import {dataApiHelpersTest} from '../../fixtures/dataApiHelpersTest';
+import {formsPagesTest} from '../../fixtures/formsPagesTest';
+import {loginTest} from '../../fixtures/loginTest';
+import {getRandomInt} from '../../utils/getRandomInt';
+import {deleteItems} from './utils/deleteItems';
 
 export const test = mergeTests(dataApiHelpersTest, loginTest(), formsPagesTest);
 
-test.afterEach(async ({ formsPage }) => {
+test.afterEach(async ({formsPage}) => {
 	await formsPage.goTo();
 
 	await deleteItems(formsPage);
@@ -113,7 +113,7 @@ test.describe('Manage fields through Form Preview page', () => {
 
 		const newTabPage = await formBuilderPage.openPreviewForm();
 
-		await newTabPage.getByLabel('Text Field', { exact: true }).click();
+		await newTabPage.getByLabel('Text Field', {exact: true}).click();
 
 		await newTabPage
 			.getByRole('button', {
@@ -126,7 +126,7 @@ test.describe('Manage fields through Form Preview page', () => {
 		).toBeVisible();
 
 		await expect(
-			newTabPage.getByLabel('Text Field', { exact: true })
+			newTabPage.getByLabel('Text Field', {exact: true})
 		).toHaveCount(2);
 	});
 
@@ -139,22 +139,22 @@ test.describe('Manage fields through Form Preview page', () => {
 			fieldTitle: FormFieldTypeTitle;
 			inputValue: string;
 		}[] = [
-				{
-					expectedValue: 'bday',
-					fieldTitle: 'Date',
-					inputValue: '+)(*&^%$#@ bday$__%  ',
-				},
-				{
-					expectedValue: 'one-time-code',
-					fieldTitle: 'Numeric',
-					inputValue: '****[][one-time-code&&#()',
-				},
-				{
-					expectedValue: 'transaction-currency',
-					fieldTitle: 'Text',
-					inputValue: 'transaction-currencyextracharacters',
-				},
-			];
+			{
+				expectedValue: 'bday',
+				fieldTitle: 'Date',
+				inputValue: '+)(*&^%$#@ bday$__%  ',
+			},
+			{
+				expectedValue: 'one-time-code',
+				fieldTitle: 'Numeric',
+				inputValue: '****[][one-time-code&&#()',
+			},
+			{
+				expectedValue: 'transaction-currency',
+				fieldTitle: 'Text',
+				inputValue: 'transaction-currencyextracharacters',
+			},
+		];
 
 		await formBuilderPage.goToNew();
 
@@ -303,7 +303,7 @@ test.describe('Manage fields through Form Builder page', () => {
 		await formsPage.openForm('Form with rich text field');
 
 		await expect(
-			page.getByRole('textbox', { name: 'Rich Text' })
+			page.getByRole('textbox', {name: 'Rich Text'})
 		).toBeVisible();
 
 		await formBuilderPage.openFieldSettings('Rich Text');
@@ -311,7 +311,7 @@ test.describe('Manage fields through Form Builder page', () => {
 		await formBuilderPage.settingsAdvancedTab.click();
 
 		const richTextPredefinedValueIframe = page
-			.getByRole('textbox', { name: 'Predefined Value' })
+			.getByRole('textbox', {name: 'Predefined Value'})
 			.frameLocator('iframe');
 
 		await richTextPredefinedValueIframe
