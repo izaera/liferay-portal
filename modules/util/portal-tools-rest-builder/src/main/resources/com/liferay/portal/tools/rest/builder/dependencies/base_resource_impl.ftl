@@ -1493,7 +1493,7 @@ public abstract class Base${schemaName}ResourceImpl
 						)
 						public String ${schemaName};
 					<#else>
-						public ${stringUtil.upperCaseFirstLetter(schemaName)} ${schemaName};
+						public ${freeMarkerTool.getPropertyType(configYAML, openAPIYAML, propertySchema, schemaName)} ${schemaName};
 					</#if>
 				</#list>
 
