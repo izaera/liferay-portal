@@ -90,6 +90,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -517,6 +518,27 @@ public class ObjectDefinitionResourceImpl
 					0);
 		}
 		else {
+			Map<Locale, String> labelMap =
+				LocalizedMapUtil.populateLocalizedMap(
+					objectDefinition.getDefaultLanguageId(),
+					objectDefinition.getLabel());
+			Map<Locale, String> pluralLabelMap =
+				LocalizedMapUtil.populateLocalizedMap(
+					objectDefinition.getDefaultLanguageId(),
+					objectDefinition.getPluralLabel());
+
+			if (serviceBuilderObjectDefinition.isModifiableAndSystem()) {
+				labelMap.putIfAbsent(
+					serviceBuilderObjectDefinition.getDefaultLocale(),
+					serviceBuilderObjectDefinition.getLabel(
+						serviceBuilderObjectDefinition.getDefaultLocale()));
+
+				pluralLabelMap.putIfAbsent(
+					serviceBuilderObjectDefinition.getDefaultLocale(),
+					serviceBuilderObjectDefinition.getPluralLabel(
+						serviceBuilderObjectDefinition.getDefaultLocale()));
+			}
+
 			serviceBuilderObjectDefinition =
 				_objectDefinitionService.updateCustomObjectDefinition(
 					objectDefinition.getExternalReferenceCode(),
@@ -545,17 +567,11 @@ public class ObjectDefinitionResourceImpl
 						objectDefinition.getEnableObjectEntryDraft()),
 					GetterUtil.getBoolean(
 						objectDefinition.getEnableObjectEntryHistory()),
-					LocalizedMapUtil.populateLocalizedMap(
-						objectDefinition.getDefaultLanguageId(),
-						objectDefinition.getLabel()),
-					objectDefinition.getName(),
+					labelMap, objectDefinition.getName(),
 					objectDefinition.getPanelAppOrder(),
 					objectDefinition.getPanelCategoryKey(),
 					GetterUtil.getBoolean(objectDefinition.getPortlet()),
-					LocalizedMapUtil.populateLocalizedMap(
-						objectDefinition.getDefaultLanguageId(),
-						objectDefinition.getPluralLabel()),
-					objectDefinition.getScope(), statusInt);
+					pluralLabelMap, objectDefinition.getScope(), statusInt);
 		}
 
 		List<ObjectAction> objectActions = ListUtil.fromArray(
