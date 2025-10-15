@@ -181,7 +181,7 @@ public abstract class BaseObjectEntryManagerImplTestCase {
 	protected ListTypeDefinitionLocalService listTypeDefinitionLocalService;
 
 	@Inject
-	protected ObjectDefinitionLocalService objectDefinitionLocalService;
+	protected static ObjectDefinitionLocalService objectDefinitionLocalService;
 
 	@Inject
 	protected ObjectFieldLocalService objectFieldLocalService;
