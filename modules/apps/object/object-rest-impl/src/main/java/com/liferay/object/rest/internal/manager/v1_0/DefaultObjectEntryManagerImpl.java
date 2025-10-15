@@ -428,21 +428,21 @@ public class DefaultObjectEntryManagerImpl
 					ActionKeys.DELETE, ObjectEntryResourceImpl.class, null,
 					"deleteObjectEntryBatch", null,
 					objectDefinition.getUserId(),
-					objectDefinition.getResourceName(), groupId,
+					objectDefinition.getClassName(), groupId,
 					dtoConverterContext.getUriInfo())
 			).put(
 				"get",
 				ActionUtil.addAction(
 					ActionKeys.VIEW, ObjectEntryResourceImpl.class, 0L,
 					"getObjectEntriesPage", null, objectDefinition.getUserId(),
-					objectDefinition.getResourceName(), groupId,
+					objectDefinition.getClassName(), groupId,
 					dtoConverterContext.getUriInfo())
 			).put(
 				"updateBatch",
 				ActionUtil.addAction(
 					ActionKeys.UPDATE, ObjectEntryResourceImpl.class, null,
 					"putObjectEntryBatch", null, objectDefinition.getUserId(),
-					objectDefinition.getResourceName(), groupId,
+					objectDefinition.getClassName(), groupId,
 					dtoConverterContext.getUriInfo())
 			).build(),
 			facets,
