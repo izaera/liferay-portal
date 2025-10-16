@@ -6,6 +6,7 @@
 import {expect, mergeTests} from '@playwright/test';
 import path from 'path';
 
+import {getRandomInt} from '../../utils/getRandomInt';
 import {formsPagesTest} from '../../fixtures/formsPagesTest';
 import {loginTest} from '../../fixtures/loginTest';
 import {virtualInstancesPagesTest} from '../../fixtures/virtualInstancesPagesTest';
@@ -156,5 +157,65 @@ test.describe('Manage forms through submission page', () => {
 		await formBuilderPage.entriesTab.click();
 
 		await expect(page.getByText('123456')).toBeVisible();
+	});
+
+	test('verify that a Form can require CAPTCHA before being accessed', async ({
+		formBuilderPage,
+		formBuilderSidePanelPage,
+		formsPage,
+		page,
+	}) => {
+		await formsPage.goTo();
+
+		await test.step('create a form containing a text field and CAPTCHA validation', async () => {
+			await formsPage.newFormButton.first().click();
+
+			await formBuilderPage.fillFormTitle('Form' + getRandomInt());
+
+			await formBuilderSidePanelPage.addFieldByDoubleClick('Text');
+
+			await formBuilderPage.formSettingsButton.click();
+
+			await formBuilderPage.requireCaptchaToggle.click();
+
+			await formBuilderPage.formSettingsDoneButton.click();
+
+			await formBuilderPage.clickPublishFormButton();
+		});
+
+		await test.step('navigate to the form page and assert that CAPTCHA is required', async () => {
+			const formSubmissionURL =
+				await formBuilderPage.getFormSubmissionURL();
+
+			await page.goto(formSubmissionURL, {waitUntil: 'networkidle'});
+
+			await page.getByLabel('Text').fill('Text field value');
+
+			const submitButton = page.getByRole('button', {name: 'Submit'});
+
+			await submitButton.click();
+
+			await expect(submitButton).toBeDisabled();
+
+			await expect(
+				page.getByText('The Text Verification field is required.')
+			).toBeVisible();
+
+			await expect(submitButton).toBeEnabled();
+
+			await page.getByRole('textbox').last().fill('1');
+
+			await page.getByRole('textbox').last().blur();
+
+			await expect(
+				page.getByText('The Text Verification field is required.')
+			).not.toBeVisible();
+
+			await submitButton.click();
+
+			await expect(
+				page.getByText('Close Error:Text verification')
+			).toBeVisible();
+		});
 	});
 });
