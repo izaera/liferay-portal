@@ -3419,7 +3419,7 @@
 			</library>
 			<library>
 				<file-name>com.liferay.portal.store.azure.jar!reactor-netty-core.jar</file-name>
-				<version>1.0.45</version>
+				<version>1.2.10</version>
 				<project-name>Core functionality for the Reactor Netty library</project-name>
 				<project-url>https://github.com/reactor/reactor-netty</project-url>
 				<licenses>
