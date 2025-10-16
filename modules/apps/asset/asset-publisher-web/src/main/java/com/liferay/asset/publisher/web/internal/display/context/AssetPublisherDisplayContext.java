@@ -1216,9 +1216,9 @@ public class AssetPublisherDisplayContext {
 		LiferayPortletResponse liferayPortletResponse =
 			_portal.getLiferayPortletResponse(_portletResponse);
 
-		AssetListEntry assetListEntry = fetchAssetListEntry();
-
 		long[] classTypeIds = getClassTypeIds();
+
+		AssetListEntry assetListEntry = fetchAssetListEntry();
 
 		if ((assetListEntry != null) &&
 			(GetterUtil.getLong(assetListEntry.getAssetEntrySubtype()) != 0)) {
