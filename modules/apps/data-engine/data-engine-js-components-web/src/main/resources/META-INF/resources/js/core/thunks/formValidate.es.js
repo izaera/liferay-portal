@@ -49,10 +49,6 @@ export default function formValidate({
 			);
 
 			if (!validForm) {
-				if (ddmFormSubmitButton) {
-					ddmFormSubmitButton.disabled = false;
-				}
-
 				dispatch({
 					payload: {
 						newPages: evaluatedPages,
@@ -62,7 +58,7 @@ export default function formValidate({
 				});
 			}
 
-			return Promise.resolve(validForm);
+			return Promise.resolve([ddmFormSubmitButton, validForm]);
 		});
 	};
 }
