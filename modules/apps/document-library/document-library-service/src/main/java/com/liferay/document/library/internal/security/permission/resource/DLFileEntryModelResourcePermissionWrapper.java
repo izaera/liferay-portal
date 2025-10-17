@@ -209,11 +209,11 @@ public class DLFileEntryModelResourcePermissionWrapper
 				DLFileEntry dlFileEntry, String actionId)
 			throws PortalException {
 
-			DLFileVersion fileVersion = dlFileEntry.getFileVersion();
-
 			if (actionId.equals(ActionKeys.DOWNLOAD)) {
 				actionId = ActionKeys.VIEW;
 			}
+
+			DLFileVersion fileVersion = dlFileEntry.getFileVersion();
 
 			if (fileVersion.isDraft() || fileVersion.isScheduled()) {
 				if (actionId.equals(ActionKeys.VIEW) &&
