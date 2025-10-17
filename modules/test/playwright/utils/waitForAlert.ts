@@ -38,7 +38,7 @@ export async function waitForAlert(
 	}
 
 	if (autoClose) {
-		await alert.getByLabel('Close').click();
+		await alert.getByLabel(closeText).click();
 
 		await alert.waitFor({state: 'hidden'});
 	}
