@@ -38,16 +38,16 @@ public class UniqueUtilTest {
 		ReflectionTestUtil.setFieldValue(
 			LanguageUtil.class, "_language", language);
 
-		String name1 = RandomTestUtil.randomString();
+		String name = RandomTestUtil.randomString();
 
 		Assert.assertEquals(
-			name1 + " (Copy)", UniqueUtil.getCopyName(name1, name2 -> true));
+			name + " (Copy)", UniqueUtil.getCopyName(name, copyName -> true));
 
-		name1 = RandomTestUtil.randomString();
+		name = RandomTestUtil.randomString();
 
 		Assert.assertEquals(
-			name1 + " (Copy 3)",
-			UniqueUtil.getCopyName(name1, name2 -> name2.endsWith("3)")));
+			name + " (Copy 3)",
+			UniqueUtil.getCopyName(name, copyName -> copyName.endsWith("3)")));
 	}
 
 }
