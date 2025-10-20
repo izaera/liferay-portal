@@ -268,10 +268,20 @@ public class LayoutPageTemplateEntryLocalServiceImpl
 			layoutPageTemplateEntryPersistence.findByPrimaryKey(
 				sourceLayoutPageTemplateEntryId);
 
-		String name = _getUniqueCopyName(
-			groupId, layoutPageTemplateCollectionId,
+		String name = UniqueUtil.getCopyName(
 			sourceLayoutPageTemplateEntry.getName(),
-			sourceLayoutPageTemplateEntry.getType());
+			copyName -> {
+				LayoutPageTemplateEntry layoutPageTemplateEntry =
+					layoutPageTemplateEntryPersistence.fetchByG_L_N_T(
+						groupId, layoutPageTemplateCollectionId, copyName,
+						sourceLayoutPageTemplateEntry.getType());
+
+				if (layoutPageTemplateEntry == null) {
+					return true;
+				}
+
+				return false;
+			});
 
 		long masterLayoutPlid = 0;
 
@@ -1042,27 +1052,6 @@ public class LayoutPageTemplateEntryLocalServiceImpl
 		}
 
 		return colorSchemeId;
-	}
-
-	private String _getUniqueCopyName(
-			long groupId, long layoutPageTemplateCollectionId,
-			String sourceName, int type)
-		throws Exception {
-
-		return UniqueUtil.getCopyName(
-			sourceName,
-			copyName -> {
-				LayoutPageTemplateEntry layoutPageTemplateEntry =
-					layoutPageTemplateEntryPersistence.fetchByG_L_N_T(
-						groupId, layoutPageTemplateCollectionId, copyName,
-						type);
-
-				if (layoutPageTemplateEntry == null) {
-					return true;
-				}
-
-				return false;
-			});
 	}
 
 	private void _validate(long groupId, long classNameId, long classTypeId)
