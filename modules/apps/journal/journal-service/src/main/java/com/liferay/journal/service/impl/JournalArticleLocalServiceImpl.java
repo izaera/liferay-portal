@@ -1068,7 +1068,7 @@ public class JournalArticleLocalServiceImpl
 		for (Map.Entry<Locale, String> entry : newTitleMap.entrySet()) {
 			Locale locale = entry.getKey();
 
-			String uniqueUrlTitle = _getUniqueUrlTitle(
+			String uniqueUrlTitle = _getUniqueCopyUrlTitle(
 				groupId, targetArticleId, entry.getValue());
 
 			newTitleMap.put(locale, uniqueUrlTitle);
@@ -8119,7 +8119,7 @@ public class JournalArticleLocalServiceImpl
 		return JournalArticleConstants.SMALL_IMAGE_SOURCE_USER_COMPUTER;
 	}
 
-	private String _getUniqueUrlTitle(
+	private String _getUniqueCopyUrlTitle(
 		long groupId, String articleId, String urlTitle) {
 
 		String copyText = _language.get(LocaleUtil.getSiteDefault(), "copy");
