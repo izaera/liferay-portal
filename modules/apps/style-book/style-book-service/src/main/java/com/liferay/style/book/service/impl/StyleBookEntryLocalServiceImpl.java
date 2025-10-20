@@ -20,9 +20,9 @@ import com.liferay.portal.kernel.portletfilerepository.PortletFileRepositoryUtil
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalService;
-import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.StringUtil;
+import com.liferay.portal.kernel.util.UniqueUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.style.book.constants.StyleBookPortletKeys;
 import com.liferay.style.book.exception.DuplicateStyleBookEntryKeyException;
@@ -492,26 +492,22 @@ public class StyleBookEntryLocalServiceImpl
 		return StringPool.BLANK;
 	}
 
-	private String _getUniqueCopyName(StyleBookEntry styleBookEntry) {
-		String copy = _language.get(LocaleUtil.getSiteDefault(), "copy");
+	private String _getUniqueCopyName(StyleBookEntry styleBookEntry)
+		throws PortalException {
 
-		String name = StringUtil.appendParentheticalSuffix(
-			styleBookEntry.getName(), copy);
+		return UniqueUtil.getCopyName(
+			styleBookEntry.getName(),
+			copyName -> {
+				StyleBookEntry existingStyleBookEntry =
+					styleBookEntryPersistence.fetchByG_LikeN_First(
+						styleBookEntry.getGroupId(), copyName, null);
 
-		for (int i = 1;; i++) {
-			StyleBookEntry existingStyleBookEntry =
-				styleBookEntryPersistence.fetchByG_LikeN_First(
-					styleBookEntry.getGroupId(), name, null);
+				if (existingStyleBookEntry == null) {
+					return true;
+				}
 
-			if (existingStyleBookEntry == null) {
-				break;
-			}
-
-			name = StringUtil.appendParentheticalSuffix(
-				styleBookEntry.getName(), copy + StringPool.SPACE + i);
-		}
-
-		return name;
+				return false;
+			});
 	}
 
 	private void _validate(String name) throws PortalException {
@@ -554,9 +550,6 @@ public class StyleBookEntryLocalServiceImpl
 
 	@Reference
 	private DLAppLocalService _dlAppLocalService;
-
-	@Reference
-	private Language _language;
 
 	@Reference
 	private UserLocalService _userLocalService;
