@@ -47,6 +47,7 @@ const notificationTemplateMock: NotificationTemplate = {
 const renderPrimaryRecipient = (recipient?: Partial<EmailRecipients>) => {
 	return render(
 		<PrimaryRecipient
+			emailNotificationRoles={[]}
 			errors={{}}
 			learnResources={{}}
 			recipientOptions={[]}
