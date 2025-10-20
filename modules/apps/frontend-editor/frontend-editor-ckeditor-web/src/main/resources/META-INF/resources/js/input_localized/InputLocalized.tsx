@@ -4,7 +4,7 @@
  */
 
 import {useLiferayState} from '@liferay/frontend-js-state-web/react';
-import {EventInfo} from 'ckeditor5';
+import {EventInfo} from '@ckeditor/ckeditor5-utils/dist/index.js';
 import {
 	TranslationAdminSelector,
 	Translations,
