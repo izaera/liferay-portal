@@ -24,7 +24,6 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -120,8 +119,7 @@ public class JournalHistoryManagementToolbarDisplayContext
 
 		if (JournalArticlePermission.contains(
 				themeDisplay.getPermissionChecker(), article,
-				ActionKeys.DELETE) &&
-			!Objects.equals(_article.getVersion(), article.getVersion())) {
+				ActionKeys.DELETE)) {
 
 			availableActions.add("deleteArticles");
 		}
