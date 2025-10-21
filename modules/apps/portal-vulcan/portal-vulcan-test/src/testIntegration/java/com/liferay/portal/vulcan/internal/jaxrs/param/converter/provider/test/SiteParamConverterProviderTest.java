@@ -153,6 +153,10 @@ public class SiteParamConverterProviderTest {
 	private static final String _CLASS_NAME_WEB_APPLICATION_EXCEPTION_MAPPER =
 		"com.liferay.portal.vulcan.internal.jaxrs.exception.mapper." +
 			"WebApplicationExceptionMapper";
+	
+
+	private static final String _TEST_BASE_URL =
+		"http://localhost:8080/o/test-vulcan/";
 
 	@Inject
 	private Portal _portal;
