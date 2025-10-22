@@ -2491,7 +2491,7 @@ public class CPDefinitionLocalServiceImpl
 				cpDefinition.getDisplayDate(), cpDefinition.getExpirationDate(),
 				true, true);
 
-			if (_isVersioningEnabled(cpDefinition.getCompanyId())) {
+			if (_isVersioningEnabled()) {
 				CProduct cProduct = cpDefinition.getCProduct();
 
 				if (cpDefinition.getCPDefinitionId() !=
