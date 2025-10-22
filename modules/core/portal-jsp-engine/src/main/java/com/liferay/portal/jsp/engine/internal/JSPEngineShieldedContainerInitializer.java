@@ -39,10 +39,7 @@ import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.ServletRegistration;
 import javax.servlet.ServletRequest;
-import javax.servlet.ServletRequestWrapper;
 import javax.servlet.ServletResponse;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
 
 import org.apache.jasper.servlet.JasperInitializer;
 import org.apache.jasper.servlet.JspServlet;
@@ -173,31 +170,8 @@ public class JSPEngineShieldedContainerInitializer
 							FilterChain filterChain)
 						throws IOException, ServletException {
 
-						if (servletRequest instanceof HttpServletRequest) {
-							portalJSPServlet.service(
-								new HttpServletRequestWrapper(
-									(HttpServletRequest)servletRequest) {
-
-									@Override
-									public ServletContext getServletContext() {
-										return servletContext;
-									}
-
-								},
-								servletResponse);
-						}
-						else {
-							portalJSPServlet.service(
-								new ServletRequestWrapper(servletRequest) {
-
-									@Override
-									public ServletContext getServletContext() {
-										return servletContext;
-									}
-
-								},
-								servletResponse);
-						}
+						portalJSPServlet.service(
+							servletRequest, servletResponse);
 					}
 
 					@Override
