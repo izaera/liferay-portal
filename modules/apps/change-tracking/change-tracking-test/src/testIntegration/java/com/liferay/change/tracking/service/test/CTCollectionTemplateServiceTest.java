@@ -77,11 +77,10 @@ public class CTCollectionTemplateServiceTest {
 				keywords, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 
 		Assert.assertEquals(
-			ctCollectionTemplates.toString(), 1,
-			ctCollectionTemplates.size());
+			ctCollectionTemplates.toString(), 1, ctCollectionTemplates.size());
 
-		CTCollectionTemplate ctCollectionTemplate =
-			ctCollectionTemplates.get(0);
+		CTCollectionTemplate ctCollectionTemplate = ctCollectionTemplates.get(
+			0);
 
 		Assert.assertEquals(_name, ctCollectionTemplate.getName());
 	}
