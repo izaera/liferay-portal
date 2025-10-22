@@ -12,6 +12,7 @@ import com.liferay.journal.model.JournalFolder;
 import com.liferay.journal.service.JournalFolderLocalService;
 import com.liferay.journal.test.util.JournalFolderFixture;
 import com.liferay.journal.test.util.JournalTestUtil;
+import com.liferay.petra.function.UnsafeFunction;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.search.SearchContainer;
@@ -150,6 +151,22 @@ public class JournalDisplayContextTest {
 	}
 
 	@Test
+	public void testGetSearchProps() throws Exception {
+		JournalFolderFixture journalFolderFixture = new JournalFolderFixture(
+			_journalFolderLocalService);
+
+		JournalFolder journalFolder = journalFolderFixture.addFolder(
+			_group.getGroupId(), RandomTestUtil.randomString());
+
+		_assertLocationOptions(
+			journalFolder, "all-fields",
+			searchProps -> searchProps.containsKey("searchLocationOptions"));
+		_assertLocationOptions(
+			journalFolder, "comments",
+			searchProps -> !searchProps.containsKey("searchLocationOptions"));
+	}
+
+	@Test
 	public void testIsShowBreadcrumb() throws Exception {
 		JournalFolderFixture journalFolderFixture = new JournalFolderFixture(
 			_journalFolderLocalService);
@@ -176,6 +193,27 @@ public class JournalDisplayContextTest {
 			true, _getLocaleStringMap(title),
 			_getLocaleStringMap("description"), _getLocaleStringMap("content"),
 			null, LocaleUtil.getDefault(), null, false, false, _serviceContext);
+	}
+
+	private void _assertLocationOptions(
+			JournalFolder journalFolder, String searchIn,
+			UnsafeFunction<Map<String, Object>, Boolean, Exception>
+				unsafeFunction)
+		throws Exception {
+
+		MockLiferayPortletRenderRequest mockLiferayPortletRenderRequest =
+			_renderPortlet();
+
+		mockLiferayPortletRenderRequest.setAttribute(
+			WebKeys.JOURNAL_FOLDER, journalFolder);
+
+		mockLiferayPortletRenderRequest.setParameter(
+			"keywords", RandomTestUtil.randomString());
+		mockLiferayPortletRenderRequest.setParameter("searchIn", searchIn);
+
+		Assert.assertTrue(
+			unsafeFunction.apply(
+				_getSearchProps(mockLiferayPortletRenderRequest)));
 	}
 
 	private Map<Locale, String> _getLocaleStringMap(String value) {
@@ -259,6 +297,17 @@ public class JournalDisplayContextTest {
 				"com.liferay.journal.web.internal.display.context." +
 					"JournalDisplayContext"),
 			"getSearchContainer", new Class<?>[0]);
+	}
+
+	private Map<String, Object> _getSearchProps(
+			MockLiferayPortletRenderRequest mockLiferayPortletRenderRequest)
+		throws Exception {
+
+		return ReflectionTestUtil.invoke(
+			mockLiferayPortletRenderRequest.getAttribute(
+				"com.liferay.journal.web.internal.display.context." +
+					"JournalDisplayContext"),
+			"getSearchProps", new Class<?>[0]);
 	}
 
 	private ThemeDisplay _getThemeDisplay() throws Exception {
