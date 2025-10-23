@@ -89,25 +89,15 @@ public class JournalHistoryManagementToolbarDisplayContextTest {
 					Mockito.mock(LiferayActionResponse.class), _journalArticle,
 					journalHistoryDisplayContext);
 
-		_assertGetAvailableActions(
-			1, "deleteArticles", journalHistoryManagementToolbarDisplayContext);
-	}
-
-	private void _assertGetAvailableActions(
-			int articlesCount, String expectedActions,
-			JournalHistoryManagementToolbarDisplayContext
-				journalHistoryManagementToolbarDisplayContext)
-		throws PortalException {
-
 		_journalArticleLocalServiceUtilMockedStatic.when(
 			() -> JournalArticleLocalServiceUtil.getArticlesCount(
 				_journalArticle.getGroupId(), _journalArticle.getArticleId())
 		).thenReturn(
-			articlesCount
+			1
 		);
 
 		Assert.assertEquals(
-			expectedActions,
+			"deleteArticles",
 			journalHistoryManagementToolbarDisplayContext.getAvailableActions(
 				_journalArticle));
 	}
