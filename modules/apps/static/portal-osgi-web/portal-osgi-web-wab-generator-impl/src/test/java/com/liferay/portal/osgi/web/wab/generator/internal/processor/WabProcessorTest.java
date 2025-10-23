@@ -384,7 +384,7 @@ public class WabProcessorTest {
 						"osgi.cdi.extension",
 						"com.liferay.bean.portlet.cdi.extension")));
 
-			// The http extension
+			// The HTTP extension
 
 			Assert.assertNull(
 				_findRequirement(
