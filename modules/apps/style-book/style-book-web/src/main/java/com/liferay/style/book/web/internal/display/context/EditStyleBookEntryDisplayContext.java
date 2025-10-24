@@ -299,12 +299,13 @@ public class EditStyleBookEntryDisplayContext {
 	private JSONObject _getFrontendTokenDefinitionJSONObject()
 		throws Exception {
 
-		Group group = _themeDisplay.getScopeGroup();
+		Group group = _themeDisplay.getLayoutSet(
+			).getGroup();
 
 		FrontendTokenDefinition frontendTokenDefinition =
 			_frontendTokenDefinitionRegistry.getFrontendTokenDefinition(
 				LayoutSetLocalServiceUtil.fetchLayoutSet(
-					_themeDisplay.getSiteGroupId(),
+          group.getGroupId(),
 					group.isLayoutSetPrototype()));
 
 		if (frontendTokenDefinition != null) {
