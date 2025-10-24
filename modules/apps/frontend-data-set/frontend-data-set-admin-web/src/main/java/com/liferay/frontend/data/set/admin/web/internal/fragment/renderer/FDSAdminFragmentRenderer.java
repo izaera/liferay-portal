@@ -244,8 +244,17 @@ public class FDSAdminFragmentRenderer implements FragmentRenderer {
 			componentDescriptor,
 			HashMapBuilder.<String, Object>put(
 				"additionalAPIURLParameters",
-				dataSetObjectEntry.getPropertyValue(
-					"additionalAPIURLParameters")
+				_resolveParameters(
+					_interpolateURL(
+						String.valueOf(
+							dataSetObjectEntry.getPropertyValue(
+								"additionalAPIURLParameters")),
+						httpServletRequest),
+					String.valueOf(
+						dataSetObjectEntryProperties.get("restApplication")),
+					String.valueOf(
+						dataSetObjectEntryProperties.get("restSchema")),
+					httpServletRequest)
 			).put(
 				"apiURL",
 				_getAPIURL(
