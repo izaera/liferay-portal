@@ -34,6 +34,7 @@ import com.liferay.portal.kernel.dao.orm.EntityCacheUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.dao.orm.WildcardMode;
+import com.liferay.portal.kernel.db.partition.DBPartition;
 import com.liferay.portal.kernel.encryptor.EncryptorException;
 import com.liferay.portal.kernel.encryptor.EncryptorUtil;
 import com.liferay.portal.kernel.exception.CompanyMaxUsersException;
@@ -7640,7 +7641,7 @@ public class UserLocalServiceImpl extends UserLocalServiceBaseImpl {
 	}
 
 	private void _updateLastLogin(List<User> users) throws SQLException {
-		if (PropsValues.DATABASE_PARTITION_ENABLED) {
+		if (DBPartition.isPartitionEnabled()) {
 			Map<Long, List<User>> companyUsersMap = new HashMap<>();
 
 			for (User user : users) {
