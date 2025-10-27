@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.service.CompanyLocalServiceUtil;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
+import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
@@ -386,6 +387,7 @@ public class CETConfigurationFactoryTest {
 	private ClientExtensionEntryRelLocalService
 		_clientExtensionEntryRelLocalService;
 
+	@DeleteAfterTestRun
 	private Group _group;
 
 	@Inject

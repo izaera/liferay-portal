@@ -40,6 +40,7 @@ import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.test.TestInfo;
 import com.liferay.portal.kernel.test.portlet.MockLiferayPortletRenderResponse;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
+import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
@@ -618,7 +619,10 @@ public class LayoutSEOLinkManagerTest {
 				RandomTestUtil.randomString(
 					LayoutFriendlyURLRandomizerBumper.INSTANCE))
 		).build();
+
+	@DeleteAfterTestRun
 	private Group _group;
+
 	private String _groupFriendlyURL;
 	private Layout _layout;
 
