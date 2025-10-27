@@ -81,7 +81,6 @@ public class DeleteArticlesMVCActionCommandTest {
 			"articleUrl", articleVersion1.getUrlTitle());
 		mockLiferayPortletActionRequest.setParameter(
 			"groupId", String.valueOf(articleVersion1.getGroupId()));
-
 		mockLiferayPortletActionRequest.setParameter(
 			"rowIds",
 			new String[] {
