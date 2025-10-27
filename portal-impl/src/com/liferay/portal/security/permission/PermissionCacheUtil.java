@@ -17,6 +17,7 @@ import com.liferay.portal.kernel.change.tracking.CTCollectionThreadLocal;
 import com.liferay.portal.kernel.cluster.ClusterExecutorUtil;
 import com.liferay.portal.kernel.cluster.ClusterInvokeThreadLocal;
 import com.liferay.portal.kernel.cluster.ClusterRequest;
+import com.liferay.portal.kernel.db.partition.DBPartition;
 import com.liferay.portal.kernel.model.ResourceConstants;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
@@ -72,7 +73,20 @@ public class PermissionCacheUtil {
 	}
 
 	public static void clearCache(long... userIds) {
-		_clearCache(CompanyThreadLocal.getCompanyId(), userIds);
+		if (ExportImportThreadLocal.isImportInProcess()) {
+			return;
+		}
+
+		_clearCache(userIds);
+
+		if (DBPartition.isPartitionEnabled()) {
+			_sendClearCacheClusterMessage(
+				_dbPartitionClearCacheMethodKey,
+				CompanyThreadLocal.getCompanyId(), userIds);
+		}
+		else {
+			_sendClearCacheClusterMessage(_clearCacheMethodKey, userIds);
+		}
 	}
 
 	public static void clearPrimaryKeyRoleCache() {
@@ -247,28 +261,30 @@ public class PermissionCacheUtil {
 			_userRolePortalCache, userRoleKey, value);
 	}
 
-	private static void _clearCache(long companyId, long... userIds) {
+	private static void _clearCache(long... userIds) {
 		if (ExportImportThreadLocal.isImportInProcess()) {
 			return;
 		}
 
+		_clearPermissionChecksMap();
+
+		for (long userId : userIds) {
+			_userBagPortalCache.remove(userId);
+
+			_userGroupRoleIdsPortalCacheIndexer.removeKeys(userId);
+			_userPrimaryKeyRolePortalCacheUserIdIndexer.removeKeys(userId);
+			_userRolePortalCacheIndexer.removeKeys(userId);
+		}
+
+		_permissionPortalCache.removeAll();
+	}
+
+	private static void _clearCache(long companyId, long... userIds) {
 		try (SafeCloseable safeCloseable =
 				CompanyThreadLocal.setCompanyIdWithSafeCloseable(companyId)) {
 
-			_clearPermissionChecksMap();
-
-			for (long userId : userIds) {
-				_userBagPortalCache.remove(userId);
-
-				_userGroupRoleIdsPortalCacheIndexer.removeKeys(userId);
-				_userPrimaryKeyRolePortalCacheUserIdIndexer.removeKeys(userId);
-				_userRolePortalCacheIndexer.removeKeys(userId);
-			}
-
-			_permissionPortalCache.removeAll();
+			_clearCache(userIds);
 		}
-
-		_sendClearCacheClusterMessage(_clearCacheMethodKey, userIds);
 	}
 
 	private static void _clearPermissionChecksMap() {
@@ -301,11 +317,14 @@ public class PermissionCacheUtil {
 	}
 
 	private static final MethodKey _clearCacheMethodKey = new MethodKey(
-		PermissionCacheUtil.class, "_clearCache", long.class, long[].class);
+		PermissionCacheUtil.class, "_clearCache", long[].class);
 	private static final MethodKey _clearResourcePermissionCacheMethodKey =
 		new MethodKey(
 			PermissionCacheUtil.class, "clearResourcePermissionCache",
 			int.class, String.class, String.class);
+	private static final MethodKey _dbPartitionClearCacheMethodKey =
+		new MethodKey(
+			PermissionCacheUtil.class, "_clearCache", long.class, long[].class);
 	private static final PortalCache<PermissionKey, Boolean>
 		_permissionPortalCache = PortalCacheHelperUtil.getPortalCache(
 			PortalCacheManagerNames.MULTI_VM, PERMISSION_CACHE_NAME);
