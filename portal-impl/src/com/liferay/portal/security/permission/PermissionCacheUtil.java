@@ -120,19 +120,9 @@ public class PermissionCacheUtil {
 
 		_clearResourcePermissionCache(scope, name, primKey);
 
-		if (scope == ResourceConstants.SCOPE_INDIVIDUAL) {
-			if (DBPartition.isPartitionEnabled()) {
-				_sendClearCacheClusterMessage(
-					_dbPartitionClearResourcePermissionCacheMethodKey, scope,
-					name, primKey);
-			}
-			else {
-				_sendClearCacheClusterMessage(
-					_clearResourcePermissionCacheMethodKey, scope, name,
-					primKey);
-			}
-		}
-		else if (scope == ResourceConstants.SCOPE_GROUP) {
+		if ((scope == ResourceConstants.SCOPE_INDIVIDUAL) ||
+			(scope == ResourceConstants.SCOPE_GROUP)) {
+
 			if (DBPartition.isPartitionEnabled()) {
 				_sendClearCacheClusterMessage(
 					_dbPartitionClearResourcePermissionCacheMethodKey, scope,
