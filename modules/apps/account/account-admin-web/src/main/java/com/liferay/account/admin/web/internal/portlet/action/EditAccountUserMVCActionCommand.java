@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.service.ListTypeLocalService;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 
 import javax.portlet.ActionRequest;
@@ -106,7 +107,7 @@ public class EditAccountUserMVCActionCommand
 		}
 
 		ListType listType = _listTypeLocalService.addListType(
-			companyId, parameterValue, type);
+			companyId, StringUtil.toLowerCase(parameterValue), type);
 
 		return listType.getListTypeId();
 	}

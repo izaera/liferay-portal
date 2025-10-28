@@ -609,7 +609,7 @@ public class EditUserMVCActionCommand
 		}
 
 		ListType listType = _listTypeLocalService.addListType(
-			companyId, parameterValue, type);
+			companyId, StringUtil.toLowerCase(parameterValue), type);
 
 		return listType.getListTypeId();
 	}
