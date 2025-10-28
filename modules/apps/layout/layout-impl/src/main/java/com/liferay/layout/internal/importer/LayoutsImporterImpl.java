@@ -99,6 +99,7 @@ import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.feature.flag.FeatureFlagManagerUtil;
+import com.liferay.portal.kernel.exception.PortletIdException;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -1650,6 +1651,22 @@ public class LayoutsImporterImpl implements LayoutsImporter {
 
 			return null;
 		}
+		catch (PortletIdException portletIdException) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(
+					"Unable to add uninstanceable portlet with ID " +
+						portletIdException.getMessage() + " more than once");
+			}
+
+			layoutsImporterResultEntries.add(
+				new LayoutsImporterResultEntry(
+					name, LayoutsImporterResultEntry.Status.INVALID,
+					new LayoutsImporterResultEntry.ErrorMessage(
+						new String[] {zipPath, portletIdException.getMessage()},
+						_MESSAGE_UNINSTANCEABLE_PORTLET_ID_EXCEPTION)));
+
+			return null;
+		}
 		catch (PortalException portalException) {
 			if (_log.isWarnEnabled()) {
 				_log.warn(portalException);
@@ -1852,6 +1869,20 @@ public class LayoutsImporterImpl implements LayoutsImporter {
 			}
 
 			throw new PortalException();
+		}
+		catch (PortletIdException portletIdException) {
+			if (_log.isWarnEnabled()) {
+				_log.warn(
+					"Unable to add uninstanceable portlet with ID " +
+						portletIdException.getMessage() + " more than once");
+			}
+
+			layoutsImporterResultEntries.add(
+				new LayoutsImporterResultEntry(
+					name, LayoutsImporterResultEntry.Status.INVALID,
+					new LayoutsImporterResultEntry.ErrorMessage(
+						new String[] {zipPath, portletIdException.getMessage()},
+						_MESSAGE_UNINSTANCEABLE_PORTLET_ID_EXCEPTION)));
 		}
 		catch (PortalException portalException) {
 			if (_log.isWarnEnabled()) {
@@ -2354,6 +2385,10 @@ public class LayoutsImporterImpl implements LayoutsImporter {
 	private static final String _MESSAGE_KEY_TYPE_INVALID =
 		"x-could-not-be-imported-because-its-content-type-or-subtype-is-" +
 			"missing";
+
+	private static final String _MESSAGE_UNINSTANCEABLE_PORTLET_ID_EXCEPTION =
+		"x-could-not-be-imported-because-the-uninstanceable-portlet-with-id-" +
+			"x-already-exists-on-page";
 
 	private static final String _PAGE_TEMPLATE_COLLECTION_KEY_DEFAULT =
 		"imported";
