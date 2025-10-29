@@ -157,7 +157,8 @@ public class ObjectRelationshipLocalServiceTest {
 	public void setUp() throws Exception {
 		_modifiableSystemObjectDefinition =
 			_addAndPublishModifiableSystemObjectDefinition();
-		_objectDefinition1 = _addAndPublishCustomObjectDefinition();
+		_objectDefinition1 = _addAndPublishCustomObjectDefinition(
+			"A" + StringUtil.randomString(40));
 		_objectDefinition2 = _addAndPublishCustomObjectDefinition();
 		_objectDefinitionTreeFactory = new ObjectDefinitionTreeFactory(
 			_objectDefinitionLocalService, _objectRelationshipLocalService);
@@ -257,6 +258,24 @@ public class ObjectRelationshipLocalServiceTest {
 				StringUtil.randomId(), false,
 				ObjectRelationshipConstants.TYPE_ONE_TO_MANY, null));
 
+		int expectedAvailableLength = 16;
+
+		AssertUtils.assertFailure(
+			ObjectRelationshipNameException.class,
+			StringBundler.concat(
+				"The relationship name must be less than ",
+				expectedAvailableLength, " characters. Long object definition ",
+				"names reduce the characters available for the relationship ",
+				"name."),
+			() -> _objectRelationshipLocalService.addObjectRelationship(
+				null, TestPropsValues.getUserId(),
+				_objectDefinition1.getObjectDefinitionId(),
+				_objectDefinition2.getObjectDefinitionId(), 0,
+				ObjectRelationshipConstants.DELETION_TYPE_CASCADE, false,
+				LocalizedMapUtil.getLocalizedMap(RandomTestUtil.randomString()),
+				"a" + StringUtil.randomString(40), false,
+				ObjectRelationshipConstants.TYPE_ONE_TO_MANY, null));
+
 		String objectFieldName1 = "a" + RandomTestUtil.randomString();
 		String objectFieldName2 = "a" + RandomTestUtil.randomString();
 
@@ -345,8 +364,7 @@ public class ObjectRelationshipLocalServiceTest {
 				ObjectRelationshipConstants.TYPE_ONE_TO_MANY, null));
 
 		ObjectDefinition objectDefinition =
-			_addAndPublishCustomObjectDefinition(
-				"A" + StringUtil.randomString(40));
+			_addAndPublishCustomObjectDefinition();
 
 		AssertUtils.assertFailure(
 			ObjectRelationshipNameException.class,
@@ -378,24 +396,6 @@ public class ObjectRelationshipLocalServiceTest {
 				LocalizedMapUtil.getLocalizedMap(RandomTestUtil.randomString()),
 				"able", false, ObjectRelationshipConstants.TYPE_MANY_TO_MANY,
 				null));
-
-		int expectedAvailableLength = 16;
-
-		AssertUtils.assertFailure(
-			ObjectRelationshipNameException.class,
-			StringBundler.concat(
-				"The relationship name must be less than ",
-				expectedAvailableLength, " characters. Long object definition ",
-				"names reduce the characters available for the relationship ",
-				"name."),
-			() -> _objectRelationshipLocalService.addObjectRelationship(
-				null, TestPropsValues.getUserId(),
-				objectDefinition.getObjectDefinitionId(),
-				_objectDefinition2.getObjectDefinitionId(), 0,
-				ObjectRelationshipConstants.DELETION_TYPE_CASCADE, false,
-				LocalizedMapUtil.getLocalizedMap(RandomTestUtil.randomString()),
-				"a" + StringUtil.randomString(40), false,
-				ObjectRelationshipConstants.TYPE_ONE_TO_MANY, null));
 
 		AssertUtils.assertFailure(
 			ObjectRelationshipNameException.class,
