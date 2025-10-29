@@ -943,7 +943,9 @@ public class DocumentResourceImpl extends BaseDocumentResourceImpl {
 			}
 		}
 
-		if (folderId != null) {
+		if ((folderId != null) &&
+			(folderId != existingFileEntry.getFolderId())) {
+
 			return _dlAppService.moveFileEntry(
 				documentId, folderId, new ServiceContext());
 		}
