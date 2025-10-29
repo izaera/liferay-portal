@@ -38,6 +38,7 @@ import com.liferay.template.test.util.TemplateTestUtil;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.ClassRule;
@@ -73,6 +74,11 @@ public class DeleteTemplateEntryMVCActionCommandTest {
 
 		_templateEntry = TemplateTestUtil.addAnyTemplateEntry(
 			_infoItemServiceRegistry, _serviceContext);
+	}
+
+	@After
+	public void tearDown() {
+		ServiceContextThreadLocal.popServiceContext();
 	}
 
 	@Test

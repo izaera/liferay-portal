@@ -53,6 +53,7 @@ import java.util.List;
 import javax.portlet.ActionRequest;
 import javax.portlet.ActionResponse;
 
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.ClassRule;
@@ -87,6 +88,11 @@ public class AddTemplateEntryMVCActionCommandTest {
 		serviceContext.setCompanyId(TestPropsValues.getCompanyId());
 
 		ServiceContextThreadLocal.pushServiceContext(serviceContext);
+	}
+
+	@After
+	public void tearDown() {
+		ServiceContextThreadLocal.popServiceContext();
 	}
 
 	@Test
