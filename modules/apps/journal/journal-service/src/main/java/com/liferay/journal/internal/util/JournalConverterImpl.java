@@ -108,7 +108,7 @@ public class JournalConverterImpl implements JournalConverter {
 			for (DDMFormField ddmFormField : ddmForm.getDDMFormFields()) {
 				_addDDMFields(
 					availableLanguageIds, defaultLanguageId, ddmFields,
-					ddmFormField, ddmStructure, rootElement);
+					ddmFormField, ddmStructure, rootElement, rootElement);
 			}
 
 			return ddmFields;
@@ -156,7 +156,7 @@ public class JournalConverterImpl implements JournalConverter {
 	private void _addDDMFields(
 			String[] availableLanguageIds, String defaultLanguageId,
 			Fields ddmFields, DDMFormField ddmFormField,
-			DDMStructure ddmStructure, Element element)
+			DDMStructure ddmStructure, Element element, Element rootElement)
 		throws PortalException {
 
 		String fieldName = ddmFormField.getName();
@@ -171,6 +171,16 @@ public class JournalConverterImpl implements JournalConverter {
 		}
 
 		if (dynamicElementElements == null) {
+
+			// This may happen when fields in the structure have been
+			// rearranged.  In this case, look for the field starting from the
+			// root again.  See LPP-69008.
+
+			dynamicElementElements = _getDynamicElementElements(
+				rootElement, ddmFormFieldName);
+		}
+
+		if (dynamicElementElements == null) {
 			if (Objects.equals(
 					ddmFormField.getType(),
 					DDMFormFieldTypeConstants.FIELDSET)) {
@@ -182,7 +192,7 @@ public class JournalConverterImpl implements JournalConverter {
 
 			_addNestedDDMFields(
 				availableLanguageIds, defaultLanguageId, ddmFields,
-				ddmFormField, ddmStructure, element);
+				ddmFormField, ddmStructure, element, rootElement);
 
 			return;
 		}
@@ -225,14 +235,14 @@ public class JournalConverterImpl implements JournalConverter {
 
 			_addNestedDDMFields(
 				availableLanguageIds, defaultLanguageId, ddmFields,
-				ddmFormField, ddmStructure, dynamicElementElement);
+				ddmFormField, ddmStructure, dynamicElementElement, rootElement);
 		}
 	}
 
 	private void _addNestedDDMFields(
 			String[] availableLanguageIds, String defaultLanguageId,
 			Fields ddmFields, DDMFormField ddmFormField,
-			DDMStructure ddmStructure, Element element)
+			DDMStructure ddmStructure, Element element, Element rootElement)
 		throws PortalException {
 
 		for (DDMFormField nestedDDMFormField :
@@ -240,7 +250,7 @@ public class JournalConverterImpl implements JournalConverter {
 
 			_addDDMFields(
 				availableLanguageIds, defaultLanguageId, ddmFields,
-				nestedDDMFormField, ddmStructure, element);
+				nestedDDMFormField, ddmStructure, element, rootElement);
 		}
 	}
 
