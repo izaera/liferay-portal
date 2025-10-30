@@ -251,8 +251,8 @@ public class SitePageResourceImpl extends BaseSitePageResourceImpl {
 					document.get(Field.ENTRY_CLASS_PK));
 
 				return _toSitePage(
-					_isEmbeddedPageDefinition(),
-					_layoutLocalService.getLayout(plid), null);
+					_isEmbeddedPageDefinition(), _layoutService.getLayout(plid),
+					null);
 			});
 	}
 
@@ -441,7 +441,7 @@ public class SitePageResourceImpl extends BaseSitePageResourceImpl {
 		_importPageDefinition(
 			layout, sitePage.getPageDefinition(), serviceContext);
 
-		layout = _layoutLocalService.getLayout(layout.getPlid());
+		layout = _layoutService.getLayout(layout.getPlid());
 
 		PageDefinition pageDefinition = sitePage.getPageDefinition();
 
@@ -668,7 +668,7 @@ public class SitePageResourceImpl extends BaseSitePageResourceImpl {
 			_friendlyURLEntryLocalService.getFriendlyURLEntryLocalization(
 				groupId, _portal.getClassNameId(resourceName), friendlyUrlPath);
 
-		return _layoutLocalService.getLayout(
+		return _layoutService.getLayout(
 			friendlyURLEntryLocalization.getClassPK());
 	}
 
