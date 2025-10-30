@@ -14,17 +14,26 @@ import React, {useEffect, useRef, useState} from 'react';
 
 import '@liferay/document-library-preview-css';
 
-const KEY_CODE_ENTER = 13;
+import '../css/main.scss';
 
-const KEY_CODE_ESC = 27;
-
-/**
- * Valid list of keycodes
- * Includes backspace, tab, arrows, delete and numbers
- * @type {Array<number>}
- */
-const VALID_KEY_CODES = [
-	8, 9, 37, 38, 39, 40, 46, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57,
+const VALID_KEYS = [
+	'Backspace',
+	'Tab',
+	'ArrowLeft',
+	'ArrowUp',
+	'ArrowRight',
+	'ArrowDown',
+	'Delete',
+	'0',
+	'1',
+	'2',
+	'3',
+	'4',
+	'5',
+	'6',
+	'7',
+	'8',
+	'9',
 ];
 
 /**
@@ -163,17 +172,17 @@ const DocumentPreviewer = ({alt, baseImageURL, initialPage, totalPages}) => {
 	};
 
 	const handleKeyDownPageInput = (event) => {
-		const code = event.keyCode || event.charCode;
+		const {key} = event;
 
-		if (code === KEY_CODE_ENTER) {
+		if (key === 'Enter') {
 			processPageInput(event.currentTarget.value);
 
 			hidePageInput();
 		}
-		else if (code === KEY_CODE_ESC) {
+		else if (key === 'Escape') {
 			hidePageInput();
 		}
-		else if (VALID_KEY_CODES.indexOf(code) === -1) {
+		else if (!VALID_KEYS.includes(key)) {
 			event.preventDefault();
 		}
 	};
