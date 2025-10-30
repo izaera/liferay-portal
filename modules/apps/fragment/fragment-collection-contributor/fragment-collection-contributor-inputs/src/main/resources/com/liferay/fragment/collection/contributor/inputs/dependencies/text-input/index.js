@@ -142,7 +142,8 @@ function main() {
 						const translationInput =
 							getOrCreateTranslationInput(languageId);
 
-						translationInput.value = value;
+						translationInput.value =
+							Liferay.Util.unescapeHTML(value);
 					}
 				);
 			}

@@ -74,7 +74,7 @@ else if (layoutMode !== 'edit' && input.localizable) {
 		Object.entries(input.valueI18n).forEach(([languageId, value]) => {
 			const translationInput = getOrCreateTranslationInput(languageId);
 
-			translationInput.value = value;
+			translationInput.value = Liferay.Util.unescapeHTML(value);
 		});
 	}
 }
