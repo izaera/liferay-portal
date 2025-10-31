@@ -914,3 +914,4 @@ export {loadModule} from './utils/client_extensions/loadModule';
  * Utils
  */
 export {default as dateUtils} from './utils/dateUtils';
+export {default as pkceChallenge} from './utils/pkceChallenge';
