@@ -132,7 +132,14 @@ public class AddTemplateEntryMVCActionCommand
 	private JSONObject _getErrorJSONObject(
 		PortalException portalException, ThemeDisplay themeDisplay) {
 
-		if (portalException instanceof TemplateNameException) {
+		if (portalException instanceof PrincipalException.MustHavePermission) {
+			return JSONUtil.put(
+				"other",
+				_language.get(
+					themeDisplay.getLocale(),
+					"you-do-not-have-the-required-permissions"));
+		}
+		else if (portalException instanceof TemplateNameException) {
 			return JSONUtil.put(
 				"name",
 				_language.get(
@@ -143,15 +150,6 @@ public class AddTemplateEntryMVCActionCommand
 				"other",
 				_language.get(
 					themeDisplay.getLocale(), "please-enter-a-valid-script"));
-		}
-		else if (portalException instanceof
-					PrincipalException.MustHavePermission) {
-
-			return JSONUtil.put(
-				"other",
-				_language.get(
-					themeDisplay.getLocale(),
-					"you-do-not-have-the-required-permissions"));
 		}
 
 		if (_log.isDebugEnabled()) {
