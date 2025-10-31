@@ -1203,7 +1203,7 @@ public class WebServerServlet extends HttpServlet {
 			cacheControlValue = HttpHeaders.CACHE_CONTROL_NO_CACHE_VALUE;
 		}
 
-		httpServletResponse.addHeader(
+		httpServletResponse.setHeader(
 			HttpHeaders.CACHE_CONTROL,
 			FileEntryHttpHeaderCustomizerUtil.getHttpHeaderValue(
 				fileEntry, HttpHeaders.CACHE_CONTROL, cacheControlValue));
@@ -1236,7 +1236,7 @@ public class WebServerServlet extends HttpServlet {
 		FileEntry fileEntry = DLAppLocalServiceUtil.getFileEntry(
 			groupId, folderId, title);
 
-		httpServletResponse.addHeader(
+		httpServletResponse.setHeader(
 			HttpHeaders.CACHE_CONTROL,
 			FileEntryHttpHeaderCustomizerUtil.getHttpHeaderValue(
 				fileEntry, HttpHeaders.CACHE_CONTROL,
@@ -1329,7 +1329,7 @@ public class WebServerServlet extends HttpServlet {
 			fileName = trashTitleResolver.getOriginalTitle(fileName);
 		}
 
-		httpServletResponse.addHeader(
+		httpServletResponse.setHeader(
 			HttpHeaders.CACHE_CONTROL,
 			FileEntryHttpHeaderCustomizerUtil.getHttpHeaderValue(
 				fileEntry, HttpHeaders.CACHE_CONTROL,
