@@ -89,8 +89,6 @@
 						<then>
 							<execute failonerror="false">
 								<![CDATA[
-									docker rmi ${analytics.cloud.asah.image.names.list}
-
 									docker system prune --all --force &> /dev/null
 
 									docker system df
