@@ -5,17 +5,25 @@
 
 package com.liferay.portal.kernel.util;
 
+import com.liferay.portal.kernel.test.util.PropsTestUtil;
+
 import java.text.Collator;
 
 import java.util.Arrays;
 
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 
 /**
  * @author Hugo Huijser
  */
 public class NaturalOrderStringComparatorTest {
+
+	@Before
+	public void setUp() throws Exception {
+		PropsTestUtil.setProps("", "");
+	}
 
 	@Test
 	public void testSortAccentuation() {
