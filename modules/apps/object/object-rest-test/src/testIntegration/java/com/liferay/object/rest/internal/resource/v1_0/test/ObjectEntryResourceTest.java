@@ -190,6 +190,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
+import java.util.Random;
 import java.util.Stack;
 import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Function;
@@ -8300,6 +8301,88 @@ public class ObjectEntryResourceTest {
 			_testPostCustomObjectEntryWithInvalidNestedCustomObjectEntriesInOneToManyRelationship(
 				_objectDefinition1.getRESTContextPath(), _objectRelationship1);
 		}
+	}
+
+	@FeatureFlags("LPD-39967")
+	@Test
+	public void testPostCustomObjectEntryWithLargeAttachmentObjectField()
+		throws Exception {
+
+		String attachmentFieldName = "x" + RandomTestUtil.randomString();
+
+		JSONObject scopeJSONObject = JSONUtil.put(
+			"externalReferenceCode",
+			() -> {
+				Group globalGroup = _groupLocalService.getFriendlyURLGroup(
+					_groupLocalService.getGroup(
+						_testGroupId
+					).getCompanyId(),
+					"/global");
+
+				return globalGroup.getExternalReferenceCode();
+			}
+		).put(
+			"type", Scope.Type.SITE.getValue()
+		);
+
+		ObjectField objectField = ObjectFieldUtil.createObjectField(
+			ObjectFieldConstants.BUSINESS_TYPE_ATTACHMENT,
+			ObjectFieldConstants.DB_TYPE_LONG, true, false, null,
+			attachmentFieldName, attachmentFieldName,
+			Arrays.asList(
+				new ObjectFieldSettingBuilder(
+				).name(
+					ObjectFieldSettingConstants.NAME_ACCEPTED_FILE_EXTENSIONS
+				).value(
+					"txt"
+				).build(),
+				new ObjectFieldSettingBuilder(
+				).name(
+					ObjectFieldSettingConstants.NAME_FILE_SOURCE
+				).value(
+					ObjectFieldSettingConstants.VALUE_USER_COMPUTER
+				).build(),
+				new ObjectFieldSettingBuilder(
+				).name(
+					ObjectFieldSettingConstants.NAME_MAX_FILE_SIZE
+				).value(
+					String.valueOf(100)
+				).build()),
+			false);
+
+		objectField.setObjectDefinitionId(
+			_objectDefinition1.getObjectDefinitionId());
+
+		ObjectFieldTestUtil.addCustomObjectField(
+			TestPropsValues.getUserId(), objectField);
+
+		byte[] data = new byte[60_000_000];
+
+		Random random = new Random();
+
+		random.nextBytes(data);
+
+		String base64 = Base64.encode(data);
+
+		JSONObject jsonObject = HTTPTestUtil.invokeToJSONObject(
+			JSONUtil.put(
+				attachmentFieldName,
+				JSONUtil.put(
+					"fileBase64", base64
+				).put(
+					"name", StringUtil.randomString() + ".txt"
+				)
+			).toString(),
+			StringBundler.concat(
+				_objectDefinition1.getRESTContextPath(), "?nestedFields=",
+				attachmentFieldName, ".fileBase64"),
+			Http.Method.POST);
+
+		_assertAttachmentJSONObject(
+			_dlFileEntryLocalService.getDLFileEntry(
+				_testDLFileEntryModelListener.getLastFileEntryId()),
+			base64, jsonObject.getJSONObject(attachmentFieldName),
+			scopeJSONObject);
 	}
 
 	@Test
