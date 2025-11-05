@@ -6448,7 +6448,9 @@ public class JournalArticleLocalServiceImpl
 
 			Group group = _groupLocalService.fetchGroup(groupId);
 
-			if ((group != null) && group.isCompany()) {
+			if ((group != null) && group.isCompany() &&
+				(themeDisplay != null)) {
+
 				groupId = themeDisplay.getScopeGroupId();
 			}
 
