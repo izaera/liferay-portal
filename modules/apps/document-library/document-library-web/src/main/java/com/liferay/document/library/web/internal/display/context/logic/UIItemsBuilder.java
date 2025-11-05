@@ -945,14 +945,17 @@ public class UIItemsBuilder {
 		return false;
 	}
 
-	public boolean isViewUsagesActionAvailable() {
-		if (FeatureFlagManagerUtil.isEnabled(
-				_themeDisplay.getCompanyId(), "LPD-36446")) {
+	public boolean isViewUsagesActionAvailable() throws PortalException {
+		if (((_fileShortcut != null) &&
+			 !_fileShortcutDisplayContextHelper.
+				 isViewUsagesActionAvailable()) ||
+			((_fileShortcut == null) &&
+			 !_fileEntryDisplayContextHelper.isViewUsagesActionAvailable())) {
 
-			return true;
+			return false;
 		}
 
-		return false;
+		return true;
 	}
 
 	public boolean isViewVersionActionAvailable() {
