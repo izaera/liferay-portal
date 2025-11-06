@@ -15,6 +15,7 @@ import {InstanceSettingsPage} from '../configuration-admin-web/InstanceSettingsP
 export class ChangeTrackingPage {
 	readonly frontendDataSetEntries: Locator;
 	readonly instanceSettingsPage: InstanceSettingsPage;
+	readonly newButton: Locator;
 	readonly page: Page;
 	readonly reviewChangesButton: Locator;
 	readonly tabsContainer: Locator;
@@ -24,6 +25,9 @@ export class ChangeTrackingPage {
 			'[data-testid="visualization-mode-table"]'
 		);
 		this.instanceSettingsPage = new InstanceSettingsPage(page);
+		this.newButton = page.locator(
+			'[data-testid="fdsCreationActionButton"]'
+		);
 		this.page = page;
 		this.reviewChangesButton = page.getByRole('menuitem', {
 			name: 'Review Changes',
@@ -207,6 +211,23 @@ export class ChangeTrackingPage {
 		if (!(await changeTrackingIndicatorButton.isVisible())) {
 			await this.enablePublications(true);
 		}
+	}
+
+	async goToAddPublication() {
+		await this.goto();
+
+		await this.newButton.click();
+
+		await expect(
+			this.page.getByRole('heading', {
+				name: 'Create New Publication',
+			})
+		).toBeVisible();
+
+		await expect(this.page.getByText('Name')).toBeVisible();
+		await expect(
+			this.page.getByRole('button', {name: 'Create'})
+		).toBeVisible();
 	}
 
 	async goToPublicationHistory() {
