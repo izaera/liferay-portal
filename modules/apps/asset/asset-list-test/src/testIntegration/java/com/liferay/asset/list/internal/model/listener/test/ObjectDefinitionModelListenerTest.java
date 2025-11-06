@@ -126,7 +126,6 @@ public class ObjectDefinitionModelListenerTest {
 		Assert.assertEquals(
 			Boolean.FALSE.toString(),
 			unicodeProperties.getProperty("anyAssetType"));
-
 		Assert.assertArrayEquals(
 			new long[] {journalArticleClassNameId, blogsEntryClassNameId},
 			GetterUtil.getLongValues(
