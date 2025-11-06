@@ -81,12 +81,12 @@ public class ObjectDefinitionModelListener
 		for (AssetListEntrySegmentsEntryRel assetListEntrySegmentsEntryRel :
 				assetListEntrySegmentsEntryRels) {
 
-			_removeClassNameIdFromTypeSettings(
+			_removeClassNameId(
 				assetListEntrySegmentsEntryRel, String.valueOf(classNameId));
 		}
 	}
 
-	private void _removeClassNameIdFromTypeSettings(
+	private void _removeClassNameId(
 			AssetListEntrySegmentsEntryRel assetListEntrySegmentsEntryRel,
 			String classNameId)
 		throws PortalException {
@@ -101,10 +101,8 @@ public class ObjectDefinitionModelListener
 			typeSettings
 		).build();
 
-		String classNameIdsString = unicodeProperties.getProperty(
-			"classNameIds");
-
-		String[] classNameIds = StringUtil.split(classNameIdsString);
+		String[] classNameIds = StringUtil.split(
+			unicodeProperties.getProperty("classNameIds"));
 
 		if (!ArrayUtil.contains(classNameIds, classNameId)) {
 			return;
