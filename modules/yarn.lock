@@ -1957,10 +1957,10 @@
     "@clayui/sticker" "^3.111.0"
     classnames "^2.2.6"
 
-"@clayui/charts@3.124.0":
-  version "3.124.0"
-  resolved "https://registry.yarnpkg.com/@clayui/charts/-/charts-3.124.0.tgz#6c04ef2c0f4873932dd3495482fb21486ee220e8"
-  integrity sha512-YGfM2aTKVn9wSvN87pI9UqqFMt5A70gK59bMhmIF7evF/csVbSTL1BqsQlhKkq4qhyTdysalSWdwW/G5/jAcgg==
+"@clayui/charts@3.154.0":
+  version "3.154.0"
+  resolved "https://registry.yarnpkg.com/@clayui/charts/-/charts-3.154.0.tgz#a0c8cb24901f9c151c09540982c94110f31aab2c"
+  integrity sha512-l4G036NuBBJ7m/GuFxR/d0Lw8jCsYDa4peFwGllRxtkt9bKE/6LPirVj44ihcPbRNmlKyiNg3Um8B/HIDqNuuQ==
   dependencies:
     billboard.js "^1.8.0"
     classnames "^2.2.6"
