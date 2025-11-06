@@ -454,10 +454,7 @@ public class LayoutsImporterImpl implements LayoutsImporter {
 			layoutStructureItemImporter);
 	}
 
-	private void _deleteLayoutWidgetConfigurations(long groupId, long plid) {
-		_fragmentEntryLinkLocalService.
-			deleteLayoutPageTemplateEntryFragmentEntryLinks(groupId, plid);
-
+	private void _deleteExistingPortletPreferences(long plid) {
 		List<PortletPreferences> portletPreferencesList =
 			_portletPreferencesLocalService.getPortletPreferences(
 				PortletKeys.PREFS_OWNER_ID_DEFAULT,
@@ -1613,8 +1610,12 @@ public class LayoutsImporterImpl implements LayoutsImporter {
 						LayoutsImportStrategy.OVERWRITE,
 						layoutsImportStrategy)) {
 
-				_deleteLayoutWidgetConfigurations(
-					layoutPageTemplateEntry.getGroupId(),
+				_fragmentEntryLinkLocalService.
+					deleteLayoutPageTemplateEntryFragmentEntryLinks(
+						layoutPageTemplateEntry.getGroupId(),
+						layoutPageTemplateEntry.getPlid());
+
+				_deleteExistingPortletPreferences(
 					layoutPageTemplateEntry.getPlid());
 
 				layoutPageTemplateEntry =
@@ -1820,8 +1821,12 @@ public class LayoutsImporterImpl implements LayoutsImporter {
 						LayoutsImportStrategy.OVERWRITE,
 						layoutsImportStrategy)) {
 
-				_deleteLayoutWidgetConfigurations(
-					layoutUtilityPageEntry.getGroupId(),
+				_fragmentEntryLinkLocalService.
+					deleteLayoutPageTemplateEntryFragmentEntryLinks(
+						layoutUtilityPageEntry.getGroupId(),
+						layoutUtilityPageEntry.getPlid());
+
+				_deleteExistingPortletPreferences(
 					layoutUtilityPageEntry.getPlid());
 
 				layoutUtilityPageEntry =
