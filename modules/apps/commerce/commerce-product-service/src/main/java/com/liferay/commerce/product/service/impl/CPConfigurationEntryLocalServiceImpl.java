@@ -100,7 +100,7 @@ public class CPConfigurationEntryLocalServiceImpl
 		cpConfigurationEntry.setShippingExtraPrice(shippingExtraPrice);
 		cpConfigurationEntry.setShipSeparately(shipSeparately);
 		cpConfigurationEntry.setTaxExempt(taxExempt);
-		cpConfigurationEntry.setVisible(visible);
+
 		cpConfigurationEntry.setWeight(weight);
 		cpConfigurationEntry.setWidth(width);
 
@@ -352,7 +352,7 @@ public class CPConfigurationEntryLocalServiceImpl
 		cpConfigurationEntry.setShippingExtraPrice(shippingExtraPrice);
 		cpConfigurationEntry.setShipSeparately(shipSeparately);
 		cpConfigurationEntry.setTaxExempt(taxExempt);
-		cpConfigurationEntry.setVisible(visible);
+
 		cpConfigurationEntry.setWeight(weight);
 		cpConfigurationEntry.setWidth(width);
 

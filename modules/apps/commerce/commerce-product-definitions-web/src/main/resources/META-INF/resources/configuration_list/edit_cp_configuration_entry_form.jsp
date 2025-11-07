@@ -21,10 +21,6 @@ CPConfigurationEntry cpConfigurationEntry = cpConfigurationListDisplayContext.ge
 	>
 		<div class="row">
 			<div class="col-6">
-				<aui:input checked='<%= BeanParamUtil.getBoolean(cpConfigurationEntry, request, "visible", true) %>' data-qa-id="visibleInput" inlineLabel="right" name="visible" type="toggle-switch" />
-			</div>
-
-			<div class="col-6">
 				<aui:input checked='<%= BeanParamUtil.getBoolean(cpConfigurationEntry, request, "purchasable", true) %>' data-qa-id="purchasableInput" inlineLabel="right" name="purchasable" type="toggle-switch" />
 			</div>
 		</div>

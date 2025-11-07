@@ -5,8 +5,6 @@
 
 package com.liferay.commerce.product.internal.util;
 
-import com.liferay.commerce.context.CommerceContext;
-import com.liferay.commerce.context.CommerceContextThreadLocal;
 import com.liferay.commerce.media.CommerceMediaResolverUtil;
 import com.liferay.commerce.product.catalog.CPCatalogEntry;
 import com.liferay.commerce.product.catalog.CPQuery;
@@ -38,7 +36,6 @@ import com.liferay.friendly.url.service.FriendlyURLEntryLocalService;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.module.configuration.ConfigurationProvider;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.feature.flag.FeatureFlagManagerUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Group;
@@ -109,15 +106,7 @@ public class CPDefinitionHelperImpl implements CPDefinitionHelper {
 		CPDefinition cpDefinition = _cpDefinitionLocalService.getCPDefinition(
 			cpDefinitionId);
 
-		CommerceContext commerceContext = CommerceContextThreadLocal.get();
-
-		if (!cpDefinition.isApproved() || !cpDefinition.isPublished() ||
-			(FeatureFlagManagerUtil.isEnabled(
-				cpDefinition.getCompanyId(), "LPD-10889") &&
-			 !cpDefinition.isVisible(
-				 commerceContext.getCPConfigurationListId(
-					 cpDefinition.getGroupId())))) {
-
+		if (!cpDefinition.isApproved() || !cpDefinition.isPublished()) {
 			return null;
 		}
 
