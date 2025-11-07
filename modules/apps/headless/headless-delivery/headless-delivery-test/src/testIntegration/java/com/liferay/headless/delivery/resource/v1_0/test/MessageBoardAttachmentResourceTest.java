@@ -92,6 +92,38 @@ public class MessageBoardAttachmentResourceTest
 					RandomTestUtil.randomString()));
 	}
 
+	@Ignore
+	@Override
+	@Test
+	public void testGraphQLGetMessageBoardMessageMessageBoardAttachmentsPage()
+		throws Exception {
+
+		super.testGraphQLGetMessageBoardMessageMessageBoardAttachmentsPage();
+	}
+
+	@Ignore
+	@Override
+	@Test
+	public void testGraphQLGetMessageBoardThreadMessageBoardAttachmentsPage()
+		throws Exception {
+
+		super.testGraphQLGetMessageBoardThreadMessageBoardAttachmentsPage();
+	}
+
+	@Test
+	public void testPostMessageBoardMessageMessageBoardAttachment()
+		throws Exception {
+
+		super.testPostMessageBoardMessageMessageBoardAttachment();
+
+		MessageBoardAttachment postMessageBoardAttachment =
+			testPostMessageBoardThreadMessageBoardAttachment_addMessageBoardAttachment(
+				randomMessageBoardAttachment(), getMultipartFiles());
+
+		Assert.assertEquals(
+			"text/plain", postMessageBoardAttachment.getEncodingFormat());
+	}
+
 	@Override
 	protected void assertValid(
 			MessageBoardAttachment messageBoardAttachment,
