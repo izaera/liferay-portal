@@ -102,11 +102,7 @@ public class ContentPageEditorDefaultEditorConfigurationTest {
 	private void _assertItemSelectorURL(String eventName, String url) {
 		Assert.assertTrue(
 			url,
-			StringUtil.contains(
-				url,
-				"_com_liferay_item_selector_web_portlet_ItemSelectorPortlet_" +
-					"itemSelectedEventName=_EDITOR_NAME_" + eventName,
-				StringPool.BLANK));
+			url.contains("/_EDITOR_NAME_" + eventName + StringPool.QUESTION));
 	}
 
 	private void _assertTextEditorConfigJSONObject(
