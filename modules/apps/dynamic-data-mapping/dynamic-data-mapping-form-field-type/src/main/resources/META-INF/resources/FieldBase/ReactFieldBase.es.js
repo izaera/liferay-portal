@@ -264,6 +264,10 @@ export default function FieldBase({
 		(label && showLabel) || hideField || repeatable || required || tooltip;
 	const showDisabledFieldIcon =
 		editOnlyInDefaultLanguage && showLabel && readOnly;
+
+	const showNonLocalizableFieldTooltip =
+		showDisabledFieldIcon && !hiddenTranslations.length;
+
 	const showGroup =
 		type === 'checkbox_multiple' ||
 		type === 'grid' ||
@@ -605,7 +609,7 @@ export default function FieldBase({
 								/>
 							)}
 
-							{showDisabledFieldIcon && (
+							{showNonLocalizableFieldTooltip && (
 								<FieldInformation
 									tooltip={Liferay.Language.get(
 										'this-field-cannot-be-localized'
@@ -646,7 +650,7 @@ export default function FieldBase({
 								/>
 							)}
 
-							{showDisabledFieldIcon && (
+							{showNonLocalizableFieldTooltip && (
 								<FieldInformation
 									tooltip={Liferay.Language.get(
 										'this-field-cannot-be-localized'
