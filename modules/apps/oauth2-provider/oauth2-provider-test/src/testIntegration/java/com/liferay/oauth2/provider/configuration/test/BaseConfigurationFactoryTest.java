@@ -175,8 +175,7 @@ public class BaseConfigurationFactoryTest {
 
 		Configuration configuration =
 			_configurationAdmin.getFactoryConfiguration(
-				className, _CONFIGURATION_EXTERNAL_REFERENCE_CODE,
-				StringPool.QUESTION);
+				className, _EXTERNAL_REFERENCE_CODE, StringPool.QUESTION);
 
 		ConfigurationTestUtil.saveConfiguration(configuration, properties);
 
@@ -195,7 +194,7 @@ public class BaseConfigurationFactoryTest {
 				oAuth2Application =
 					_oAuth2ApplicationLocalService.
 						getOAuth2ApplicationByExternalReferenceCode(
-							_CONFIGURATION_EXTERNAL_REFERENCE_CODE, companyId);
+							_EXTERNAL_REFERENCE_CODE, companyId);
 			}
 			catch (Exception exception) {
 
@@ -228,8 +227,7 @@ public class BaseConfigurationFactoryTest {
 				user.getUserId(),
 				oAuth2Application.getClientCredentialUserId());
 			Assert.assertEquals(
-				_CONFIGURATION_EXTERNAL_REFERENCE_CODE,
-				oAuth2Application.getName());
+				_EXTERNAL_REFERENCE_CODE, oAuth2Application.getName());
 		}
 		finally {
 			ConfigurationTestUtil.deleteConfiguration(configuration);
@@ -242,7 +240,7 @@ public class BaseConfigurationFactoryTest {
 		Assert.assertNull(oAuth2Application);
 	}
 
-	private static final String _CONFIGURATION_EXTERNAL_REFERENCE_CODE = "foo";
+	private static final String _EXTERNAL_REFERENCE_CODE = "foo";
 
 	@Inject
 	private static ConfigurationAdmin _configurationAdmin;
