@@ -47,6 +47,7 @@ import com.liferay.portal.test.rule.Inject;
 import java.math.BigDecimal;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
 
@@ -101,6 +102,14 @@ public class PlacedOrderResourceTest extends BasePlacedOrderResourceTestCase {
 			_country.getCountryId(), true, RandomTestUtil.randomString(),
 			RandomTestUtil.nextDouble(), RandomTestUtil.randomString(),
 			_serviceContext);
+	}
+
+	@Override
+	@Test
+	public void testGetChannelAccountPlacedOrdersPage() throws Exception {
+		super.testGetChannelAccountPlacedOrdersPage();
+
+		_testGetChannelAccountPlacedOrdersPageWithSearchByPurchaseOrderNumber();
 	}
 
 	@Override
@@ -395,6 +404,26 @@ public class PlacedOrderResourceTest extends BasePlacedOrderResourceTestCase {
 				zip = address.getZip();
 			}
 		};
+	}
+
+	private void _testGetChannelAccountPlacedOrdersPageWithSearchByPurchaseOrderNumber()
+		throws Exception {
+
+		for (String purchaseOrderNumber : Arrays.asList("ABC", "Abc", "abc")) {
+			PlacedOrder placedOrder = randomPlacedOrder();
+
+			placedOrder.setPurchaseOrderNumber(purchaseOrderNumber);
+
+			_addCommerceOrder(placedOrder);
+		}
+
+		Page<PlacedOrder> page =
+			placedOrderResource.getChannelAccountPlacedOrdersPage(
+				_accountEntry.getAccountEntryId(),
+				_commerceChannel.getCommerceChannelId(), "abc", null,
+				Pagination.of(1, 10), null);
+
+		Assert.assertEquals(3, page.getTotalCount());
 	}
 
 	private void _testGetChannelPlacedOrdersPageWithFilter() throws Exception {
