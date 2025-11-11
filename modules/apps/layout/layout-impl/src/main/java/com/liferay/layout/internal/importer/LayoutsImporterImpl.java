@@ -927,7 +927,7 @@ public class LayoutsImporterImpl implements LayoutsImporter {
 		return null;
 	}
 
-	private void _handleEntryImportException(
+	private void _handlePortalException(
 			PortalException portalException,
 			List<LayoutsImporterResultEntry> layoutsImporterResultEntries,
 			String name, String typeName, String zipPath)
@@ -1680,7 +1680,7 @@ public class LayoutsImporterImpl implements LayoutsImporter {
 			}
 		}
 		catch (PortalException portalException) {
-			_handleEntryImportException(
+			_handlePortalException(
 				portalException, layoutsImporterResultEntries, name,
 				_toTypeName(layoutPageTemplateEntryType), zipPath);
 
@@ -1869,7 +1869,7 @@ public class LayoutsImporterImpl implements LayoutsImporter {
 			}
 		}
 		catch (PortalException portalException) {
-			_handleEntryImportException(
+			_handlePortalException(
 				portalException, layoutsImporterResultEntries, name,
 				"utility page", zipPath);
 		}
