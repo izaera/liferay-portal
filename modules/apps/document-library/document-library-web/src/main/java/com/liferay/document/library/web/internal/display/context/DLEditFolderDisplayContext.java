@@ -216,6 +216,16 @@ public class DLEditFolderDisplayContext {
 		return _workflowDefinitions;
 	}
 
+public boolean isERCFieldEnabled() {
+		Folder folder = getFolder();
+
+		if (folder != null) {
+			return true;
+		}
+
+		return false;
+	}
+
 	public boolean isFileEntryTypeSelected(DLFileEntryType dlFileEntryType) {
 		DLFolder dlFolder = _getDLFolder();
 
