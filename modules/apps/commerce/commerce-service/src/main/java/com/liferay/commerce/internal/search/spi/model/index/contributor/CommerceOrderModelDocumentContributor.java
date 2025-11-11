@@ -126,7 +126,8 @@ public class CommerceOrderModelDocumentContributor
 				"orderItemNames", _getCommerceOrderItemNames(commerceOrder));
 			document.addKeyword("orderStatus", commerceOrder.getOrderStatus());
 			document.addKeyword(
-				"purchaseOrderNumber", commerceOrder.getPurchaseOrderNumber());
+				"purchaseOrderNumber", commerceOrder.getPurchaseOrderNumber(),
+				true);
 			document.addKeyword(
 				"sku", _getCommerceOrderItemSKUs(commerceOrder));
 			document.addNumber("total", commerceOrder.getTotal());
