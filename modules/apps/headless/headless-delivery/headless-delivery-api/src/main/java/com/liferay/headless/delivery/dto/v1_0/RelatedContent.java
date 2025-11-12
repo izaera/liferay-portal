@@ -16,6 +16,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.util.Iterator;
@@ -49,9 +51,7 @@ public class RelatedContent implements Serializable {
 		return ObjectMapperUtil.unsafeReadValue(RelatedContent.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The type of the content."
-	)
+	@Schema(description = "The type of the content.")
 	public String getContentType() {
 		if (_contentTypeSupplier != null) {
 			contentType = _contentTypeSupplier.get();
@@ -92,9 +92,7 @@ public class RelatedContent implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _contentTypeSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The identifier of the resource."
-	)
+	@Schema(description = "The identifier of the resource.")
 	public Long getId() {
 		if (_idSupplier != null) {
 			id = _idSupplier.get();
@@ -133,9 +131,7 @@ public class RelatedContent implements Serializable {
 	@JsonIgnore
 	private Supplier<Long> _idSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The title of the content."
-	)
+	@Schema(description = "The title of the content.")
 	public String getTitle() {
 		if (_titleSupplier != null) {
 			title = _titleSupplier.get();
@@ -252,8 +248,8 @@ public class RelatedContent implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.RelatedContent",
 		name = "x-class-name"
 	)

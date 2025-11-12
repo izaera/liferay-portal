@@ -16,6 +16,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.util.Iterator;
@@ -46,7 +48,7 @@ public class Tablet implements Serializable {
 		return ObjectMapperUtil.unsafeReadValue(Tablet.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema
+	@Schema
 	public Integer getModulesPerRow() {
 		if (_modulesPerRowSupplier != null) {
 			modulesPerRow = _modulesPerRowSupplier.get();
@@ -87,7 +89,7 @@ public class Tablet implements Serializable {
 	@JsonIgnore
 	private Supplier<Integer> _modulesPerRowSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema
+	@Schema
 	public Boolean getReverseOrder() {
 		if (_reverseOrderSupplier != null) {
 			reverseOrder = _reverseOrderSupplier.get();
@@ -128,7 +130,7 @@ public class Tablet implements Serializable {
 	@JsonIgnore
 	private Supplier<Boolean> _reverseOrderSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema
+	@Schema
 	public String getVerticalAlignment() {
 		if (_verticalAlignmentSupplier != null) {
 			verticalAlignment = _verticalAlignmentSupplier.get();
@@ -241,8 +243,8 @@ public class Tablet implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.Tablet",
 		name = "x-class-name"
 	)

@@ -16,6 +16,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.util.Iterator;
@@ -53,7 +55,7 @@ public class PageFormStepContainerDefinition implements Serializable {
 			PageFormStepContainerDefinition.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "A list of CSS Classes that are applied to the element."
 	)
 	public String[] getCssClasses() {
@@ -98,9 +100,7 @@ public class PageFormStepContainerDefinition implements Serializable {
 	@JsonIgnore
 	private Supplier<String[]> _cssClassesSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "Custom CSS that is applied on the fragment."
-	)
+	@Schema(description = "Custom CSS that is applied on the fragment.")
 	public String getCustomCSS() {
 		if (_customCSSSupplier != null) {
 			customCSS = _customCSSSupplier.get();
@@ -141,9 +141,7 @@ public class PageFormStepContainerDefinition implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _customCSSSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The custom CSS viewports of the page collection."
-	)
+	@Schema(description = "The custom CSS viewports of the page collection.")
 	@Valid
 	public CustomCSSViewport[] getCustomCSSViewports() {
 		if (_customCSSViewportsSupplier != null) {
@@ -188,9 +186,7 @@ public class PageFormStepContainerDefinition implements Serializable {
 	@JsonIgnore
 	private Supplier<CustomCSSViewport[]> _customCSSViewportsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The fragment style of a Page row."
-	)
+	@Schema(description = "The fragment style of a Page row.")
 	@Valid
 	public FragmentStyle getFragmentStyle() {
 		if (_fragmentStyleSupplier != null) {
@@ -232,9 +228,7 @@ public class PageFormStepContainerDefinition implements Serializable {
 	@JsonIgnore
 	private Supplier<FragmentStyle> _fragmentStyleSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "A list of fragment viewports of a Page row."
-	)
+	@Schema(description = "A list of fragment viewports of a Page row.")
 	@Valid
 	public FragmentViewport[] getFragmentViewports() {
 		if (_fragmentViewportsSupplier != null) {
@@ -277,7 +271,7 @@ public class PageFormStepContainerDefinition implements Serializable {
 	@JsonIgnore
 	private Supplier<FragmentViewport[]> _fragmentViewportsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "A flag that indicates whether the page row is indexed or not."
 	)
 	public Boolean getIndexed() {
@@ -466,8 +460,8 @@ public class PageFormStepContainerDefinition implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.PageFormStepContainerDefinition",
 		name = "x-class-name"
 	)

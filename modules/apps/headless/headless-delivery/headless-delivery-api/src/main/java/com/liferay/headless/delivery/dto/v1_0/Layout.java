@@ -19,6 +19,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.util.Iterator;
@@ -51,8 +53,8 @@ public class Layout implements Serializable {
 		return ObjectMapperUtil.unsafeReadValue(Layout.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(deprecated = true)
 	@JsonGetter("align")
+	@Schema(deprecated = true)
 	@Valid
 	public Align getAlign() {
 		if (_alignSupplier != null) {
@@ -104,7 +106,7 @@ public class Layout implements Serializable {
 	@JsonIgnore
 	private Supplier<Align> _alignSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(deprecated = true)
+	@Schema(deprecated = true)
 	public String getBorderColor() {
 		if (_borderColorSupplier != null) {
 			borderColor = _borderColorSupplier.get();
@@ -146,8 +148,8 @@ public class Layout implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _borderColorSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(deprecated = true)
 	@JsonGetter("borderRadius")
+	@Schema(deprecated = true)
 	@Valid
 	public BorderRadius getBorderRadius() {
 		if (_borderRadiusSupplier != null) {
@@ -201,7 +203,7 @@ public class Layout implements Serializable {
 	@JsonIgnore
 	private Supplier<BorderRadius> _borderRadiusSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(deprecated = true)
+	@Schema(deprecated = true)
 	public Integer getBorderWidth() {
 		if (_borderWidthSupplier != null) {
 			borderWidth = _borderWidthSupplier.get();
@@ -243,10 +245,8 @@ public class Layout implements Serializable {
 	@JsonIgnore
 	private Supplier<Integer> _borderWidthSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The container's type (fixed or fluid)."
-	)
 	@JsonGetter("containerType")
+	@Schema(description = "The container's type (fixed or fluid).")
 	@Valid
 	public ContainerType getContainerType() {
 		if (_containerTypeSupplier != null) {
@@ -299,8 +299,8 @@ public class Layout implements Serializable {
 	@JsonIgnore
 	private Supplier<ContainerType> _containerTypeSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(deprecated = true)
 	@JsonGetter("contentDisplay")
+	@Schema(deprecated = true)
 	@Valid
 	public ContentDisplay getContentDisplay() {
 		if (_contentDisplaySupplier != null) {
@@ -355,8 +355,8 @@ public class Layout implements Serializable {
 	@JsonIgnore
 	private Supplier<ContentDisplay> _contentDisplaySupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema
 	@JsonGetter("flexWrap")
+	@Schema
 	@Valid
 	public FlexWrap getFlexWrap() {
 		if (_flexWrapSupplier != null) {
@@ -409,8 +409,8 @@ public class Layout implements Serializable {
 	@JsonIgnore
 	private Supplier<FlexWrap> _flexWrapSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(deprecated = true)
 	@JsonGetter("justify")
+	@Schema(deprecated = true)
 	@Valid
 	public Justify getJustify() {
 		if (_justifySupplier != null) {
@@ -464,7 +464,7 @@ public class Layout implements Serializable {
 	@JsonIgnore
 	private Supplier<Justify> _justifySupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(deprecated = true)
+	@Schema(deprecated = true)
 	public Integer getMarginBottom() {
 		if (_marginBottomSupplier != null) {
 			marginBottom = _marginBottomSupplier.get();
@@ -506,7 +506,7 @@ public class Layout implements Serializable {
 	@JsonIgnore
 	private Supplier<Integer> _marginBottomSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(deprecated = true)
+	@Schema(deprecated = true)
 	public Integer getMarginLeft() {
 		if (_marginLeftSupplier != null) {
 			marginLeft = _marginLeftSupplier.get();
@@ -548,7 +548,7 @@ public class Layout implements Serializable {
 	@JsonIgnore
 	private Supplier<Integer> _marginLeftSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(deprecated = true)
+	@Schema(deprecated = true)
 	public Integer getMarginRight() {
 		if (_marginRightSupplier != null) {
 			marginRight = _marginRightSupplier.get();
@@ -590,7 +590,7 @@ public class Layout implements Serializable {
 	@JsonIgnore
 	private Supplier<Integer> _marginRightSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(deprecated = true)
+	@Schema(deprecated = true)
 	public Integer getMarginTop() {
 		if (_marginTopSupplier != null) {
 			marginTop = _marginTopSupplier.get();
@@ -632,7 +632,7 @@ public class Layout implements Serializable {
 	@JsonIgnore
 	private Supplier<Integer> _marginTopSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(deprecated = true)
+	@Schema(deprecated = true)
 	public Integer getOpacity() {
 		if (_opacitySupplier != null) {
 			opacity = _opacitySupplier.get();
@@ -674,7 +674,7 @@ public class Layout implements Serializable {
 	@JsonIgnore
 	private Supplier<Integer> _opacitySupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(deprecated = true)
+	@Schema(deprecated = true)
 	public Integer getPaddingBottom() {
 		if (_paddingBottomSupplier != null) {
 			paddingBottom = _paddingBottomSupplier.get();
@@ -716,7 +716,7 @@ public class Layout implements Serializable {
 	@JsonIgnore
 	private Supplier<Integer> _paddingBottomSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(deprecated = true)
+	@Schema(deprecated = true)
 	public Integer getPaddingHorizontal() {
 		if (_paddingHorizontalSupplier != null) {
 			paddingHorizontal = _paddingHorizontalSupplier.get();
@@ -758,7 +758,7 @@ public class Layout implements Serializable {
 	@JsonIgnore
 	private Supplier<Integer> _paddingHorizontalSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(deprecated = true)
+	@Schema(deprecated = true)
 	public Integer getPaddingLeft() {
 		if (_paddingLeftSupplier != null) {
 			paddingLeft = _paddingLeftSupplier.get();
@@ -800,7 +800,7 @@ public class Layout implements Serializable {
 	@JsonIgnore
 	private Supplier<Integer> _paddingLeftSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(deprecated = true)
+	@Schema(deprecated = true)
 	public Integer getPaddingRight() {
 		if (_paddingRightSupplier != null) {
 			paddingRight = _paddingRightSupplier.get();
@@ -842,7 +842,7 @@ public class Layout implements Serializable {
 	@JsonIgnore
 	private Supplier<Integer> _paddingRightSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(deprecated = true)
+	@Schema(deprecated = true)
 	public Integer getPaddingTop() {
 		if (_paddingTopSupplier != null) {
 			paddingTop = _paddingTopSupplier.get();
@@ -884,8 +884,8 @@ public class Layout implements Serializable {
 	@JsonIgnore
 	private Supplier<Integer> _paddingTopSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(deprecated = true)
 	@JsonGetter("shadow")
+	@Schema(deprecated = true)
 	@Valid
 	public Shadow getShadow() {
 		if (_shadowSupplier != null) {
@@ -939,10 +939,8 @@ public class Layout implements Serializable {
 	@JsonIgnore
 	private Supplier<Shadow> _shadowSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The width's type (fixed or fluid)."
-	)
 	@JsonGetter("widthType")
+	@Schema(description = "The width's type (fixed or fluid).")
 	@Valid
 	public WidthType getWidthType() {
 		if (_widthTypeSupplier != null) {
@@ -1303,8 +1301,8 @@ public class Layout implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.Layout",
 		name = "x-class-name"
 	)

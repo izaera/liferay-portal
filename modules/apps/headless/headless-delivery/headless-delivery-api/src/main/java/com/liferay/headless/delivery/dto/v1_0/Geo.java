@@ -16,6 +16,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.util.Iterator;
@@ -48,9 +50,7 @@ public class Geo implements Serializable {
 		return ObjectMapperUtil.unsafeReadValue(Geo.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The latitude of a point in space."
-	)
+	@Schema(description = "The latitude of a point in space.")
 	public Double getLatitude() {
 		if (_latitudeSupplier != null) {
 			latitude = _latitudeSupplier.get();
@@ -91,9 +91,7 @@ public class Geo implements Serializable {
 	@JsonIgnore
 	private Supplier<Double> _latitudeSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The longitude of a point in space."
-	)
+	@Schema(description = "The longitude of a point in space.")
 	public Double getLongitude() {
 		if (_longitudeSupplier != null) {
 			longitude = _longitudeSupplier.get();
@@ -190,8 +188,8 @@ public class Geo implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.Geo",
 		name = "x-class-name"
 	)

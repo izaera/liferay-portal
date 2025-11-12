@@ -19,6 +19,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.text.DateFormat;
@@ -47,11 +49,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 	description = "Represents a folder for organizing Knowledge Base articles.",
 	value = "KnowledgeBaseFolder"
 )
-@io.swagger.v3.oas.annotations.media.Schema(
+@JsonFilter("Liferay.Vulcan")
+@Schema(
 	description = "Represents a folder for organizing Knowledge Base articles.",
 	requiredProperties = {"name"}
 )
-@JsonFilter("Liferay.Vulcan")
 @XmlRootElement(name = "KnowledgeBaseFolder")
 public class KnowledgeBaseFolder implements Serializable {
 
@@ -64,7 +66,7 @@ public class KnowledgeBaseFolder implements Serializable {
 			KnowledgeBaseFolder.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "Block of actions allowed by the user making the request."
 	)
 	@Valid
@@ -111,9 +113,7 @@ public class KnowledgeBaseFolder implements Serializable {
 	@JsonIgnore
 	private Supplier<Map<String, Map<String, String>>> _actionsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The folder's creator."
-	)
+	@Schema(description = "The folder's creator.")
 	@Valid
 	public Creator getCreator() {
 		if (_creatorSupplier != null) {
@@ -155,7 +155,7 @@ public class KnowledgeBaseFolder implements Serializable {
 	@JsonIgnore
 	private Supplier<Creator> _creatorSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "A list of the custom fields associated with the folder."
 	)
 	@Valid
@@ -201,9 +201,7 @@ public class KnowledgeBaseFolder implements Serializable {
 	@JsonIgnore
 	private Supplier<CustomField[]> _customFieldsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The date the folder was created."
-	)
+	@Schema(description = "The date the folder was created.")
 	public Date getDateCreated() {
 		if (_dateCreatedSupplier != null) {
 			dateCreated = _dateCreatedSupplier.get();
@@ -244,9 +242,7 @@ public class KnowledgeBaseFolder implements Serializable {
 	@JsonIgnore
 	private Supplier<Date> _dateCreatedSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The last time the folder was modified."
-	)
+	@Schema(description = "The last time the folder was modified.")
 	public Date getDateModified() {
 		if (_dateModifiedSupplier != null) {
 			dateModified = _dateModifiedSupplier.get();
@@ -287,9 +283,7 @@ public class KnowledgeBaseFolder implements Serializable {
 	@JsonIgnore
 	private Supplier<Date> _dateModifiedSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The folder's description."
-	)
+	@Schema(description = "The folder's description.")
 	public String getDescription() {
 		if (_descriptionSupplier != null) {
 			description = _descriptionSupplier.get();
@@ -330,9 +324,7 @@ public class KnowledgeBaseFolder implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _descriptionSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The folder's external reference code."
-	)
+	@Schema(description = "The folder's external reference code.")
 	public String getExternalReferenceCode() {
 		if (_externalReferenceCodeSupplier != null) {
 			externalReferenceCode = _externalReferenceCodeSupplier.get();
@@ -373,9 +365,7 @@ public class KnowledgeBaseFolder implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _externalReferenceCodeSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The folder's ID."
-	)
+	@Schema(description = "The folder's ID.")
 	public Long getId() {
 		if (_idSupplier != null) {
 			id = _idSupplier.get();
@@ -414,9 +404,7 @@ public class KnowledgeBaseFolder implements Serializable {
 	@JsonIgnore
 	private Supplier<Long> _idSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The folder's main title/name."
-	)
+	@Schema(description = "The folder's main title/name.")
 	public String getName() {
 		if (_nameSupplier != null) {
 			name = _nameSupplier.get();
@@ -456,7 +444,7 @@ public class KnowledgeBaseFolder implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _nameSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The number of Knowledge Base articles in this folder."
 	)
 	public Integer getNumberOfKnowledgeBaseArticles() {
@@ -505,7 +493,7 @@ public class KnowledgeBaseFolder implements Serializable {
 	@JsonIgnore
 	private Supplier<Integer> _numberOfKnowledgeBaseArticlesSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The number of Knowledge Base folders in this folder."
 	)
 	public Integer getNumberOfKnowledgeBaseFolders() {
@@ -554,7 +542,7 @@ public class KnowledgeBaseFolder implements Serializable {
 	@JsonIgnore
 	private Supplier<Integer> _numberOfKnowledgeBaseFoldersSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The folder's parent Knowledge Base folder, if it exists."
 	)
 	@Valid
@@ -605,7 +593,7 @@ public class KnowledgeBaseFolder implements Serializable {
 	private Supplier<ParentKnowledgeBaseFolder>
 		_parentKnowledgeBaseFolderSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The ID of the folder's parent Knowledge Base folder, if such a parent folder exists."
 	)
 	public Long getParentKnowledgeBaseFolderId() {
@@ -654,9 +642,7 @@ public class KnowledgeBaseFolder implements Serializable {
 	@JsonIgnore
 	private Supplier<Long> _parentKnowledgeBaseFolderIdSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The ID of the site to which this folder is scoped."
-	)
+	@Schema(description = "The ID of the site to which this folder is scoped.")
 	public Long getSiteId() {
 		if (_siteIdSupplier != null) {
 			siteId = _siteIdSupplier.get();
@@ -699,10 +685,10 @@ public class KnowledgeBaseFolder implements Serializable {
 	@JsonIgnore
 	private Supplier<Long> _siteIdSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@JsonGetter("viewableBy")
+	@Schema(
 		description = "A write-only property that specifies the folder's default permissions."
 	)
-	@JsonGetter("viewableBy")
 	@Valid
 	public ViewableBy getViewableBy() {
 		if (_viewableBySupplier != null) {
@@ -1009,8 +995,8 @@ public class KnowledgeBaseFolder implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.KnowledgeBaseFolder",
 		name = "x-class-name"
 	)

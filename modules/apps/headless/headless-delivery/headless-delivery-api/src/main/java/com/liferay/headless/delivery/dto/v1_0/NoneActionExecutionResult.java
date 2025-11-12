@@ -16,6 +16,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.util.Iterator;
@@ -51,7 +53,7 @@ public class NoneActionExecutionResult implements Serializable {
 			NoneActionExecutionResult.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "Whether to reload the page after the action is executed."
 	)
 	public Boolean getReload() {
@@ -141,8 +143,8 @@ public class NoneActionExecutionResult implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.NoneActionExecutionResult",
 		name = "x-class-name"
 	)

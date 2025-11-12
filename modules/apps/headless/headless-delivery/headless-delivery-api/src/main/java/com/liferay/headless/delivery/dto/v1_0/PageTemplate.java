@@ -16,6 +16,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.text.DateFormat;
@@ -54,9 +56,7 @@ public class PageTemplate implements Serializable {
 		return ObjectMapperUtil.unsafeReadValue(PageTemplate.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The page template's creator."
-	)
+	@Schema(description = "The page template's creator.")
 	@Valid
 	public Creator getCreator() {
 		if (_creatorSupplier != null) {
@@ -98,9 +98,7 @@ public class PageTemplate implements Serializable {
 	@JsonIgnore
 	private Supplier<Creator> _creatorSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The page template's creation date."
-	)
+	@Schema(description = "The page template's creation date.")
 	public Date getDateCreated() {
 		if (_dateCreatedSupplier != null) {
 			dateCreated = _dateCreatedSupplier.get();
@@ -141,9 +139,7 @@ public class PageTemplate implements Serializable {
 	@JsonIgnore
 	private Supplier<Date> _dateCreatedSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The last time the page template changed."
-	)
+	@Schema(description = "The last time the page template changed.")
 	public Date getDateModified() {
 		if (_dateModifiedSupplier != null) {
 			dateModified = _dateModifiedSupplier.get();
@@ -184,9 +180,7 @@ public class PageTemplate implements Serializable {
 	@JsonIgnore
 	private Supplier<Date> _dateModifiedSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The page template's ID."
-	)
+	@Schema(description = "The page template's ID.")
 	public Long getId() {
 		if (_idSupplier != null) {
 			id = _idSupplier.get();
@@ -225,9 +219,7 @@ public class PageTemplate implements Serializable {
 	@JsonIgnore
 	private Supplier<Long> _idSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "A list of keywords describing the page template."
-	)
+	@Schema(description = "A list of keywords describing the page template.")
 	public String[] getKeywords() {
 		if (_keywordsSupplier != null) {
 			keywords = _keywordsSupplier.get();
@@ -270,9 +262,7 @@ public class PageTemplate implements Serializable {
 	@JsonIgnore
 	private Supplier<String[]> _keywordsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The page template's name."
-	)
+	@Schema(description = "The page template's name.")
 	public String getName() {
 		if (_nameSupplier != null) {
 			name = _nameSupplier.get();
@@ -311,9 +301,7 @@ public class PageTemplate implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _nameSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The page template's definition."
-	)
+	@Schema(description = "The page template's definition.")
 	@Valid
 	public PageDefinition getPageDefinition() {
 		if (_pageDefinitionSupplier != null) {
@@ -356,9 +344,7 @@ public class PageTemplate implements Serializable {
 	@JsonIgnore
 	private Supplier<PageDefinition> _pageDefinitionSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The page template's collection."
-	)
+	@Schema(description = "The page template's collection.")
 	@Valid
 	public PageTemplateCollection getPageTemplateCollection() {
 		if (_pageTemplateCollectionSupplier != null) {
@@ -403,9 +389,7 @@ public class PageTemplate implements Serializable {
 	@JsonIgnore
 	private Supplier<PageTemplateCollection> _pageTemplateCollectionSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The categories associated with this page template."
-	)
+	@Schema(description = "The categories associated with this page template.")
 	@Valid
 	public TaxonomyCategoryBrief[] getTaxonomyCategoryBriefs() {
 		if (_taxonomyCategoryBriefsSupplier != null) {
@@ -452,7 +436,7 @@ public class PageTemplate implements Serializable {
 	@JsonIgnore
 	private Supplier<TaxonomyCategoryBrief[]> _taxonomyCategoryBriefsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "A write-only field that adds `TaxonomyCategory` instances to the page template."
 	)
 	public Long[] getTaxonomyCategoryIds() {
@@ -497,7 +481,7 @@ public class PageTemplate implements Serializable {
 	@JsonIgnore
 	private Supplier<Long[]> _taxonomyCategoryIdsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "A valid external identifier to reference this page template."
 	)
 	public String getUuid() {
@@ -759,8 +743,8 @@ public class PageTemplate implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.PageTemplate",
 		name = "x-class-name"
 	)

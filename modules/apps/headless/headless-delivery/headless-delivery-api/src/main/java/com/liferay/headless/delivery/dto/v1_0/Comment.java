@@ -16,6 +16,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.text.DateFormat;
@@ -55,7 +57,7 @@ public class Comment implements Serializable {
 		return ObjectMapperUtil.unsafeReadValue(Comment.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "Block of actions allowed by the user making the request."
 	)
 	@Valid
@@ -102,9 +104,7 @@ public class Comment implements Serializable {
 	@JsonIgnore
 	private Supplier<Map<String, Map<String, String>>> _actionsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The comment's author."
-	)
+	@Schema(description = "The comment's author.")
 	@Valid
 	public Creator getCreator() {
 		if (_creatorSupplier != null) {
@@ -146,9 +146,7 @@ public class Comment implements Serializable {
 	@JsonIgnore
 	private Supplier<Creator> _creatorSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The comment's creation date."
-	)
+	@Schema(description = "The comment's creation date.")
 	public Date getDateCreated() {
 		if (_dateCreatedSupplier != null) {
 			dateCreated = _dateCreatedSupplier.get();
@@ -189,9 +187,7 @@ public class Comment implements Serializable {
 	@JsonIgnore
 	private Supplier<Date> _dateCreatedSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The comment's latest modification date."
-	)
+	@Schema(description = "The comment's latest modification date.")
 	public Date getDateModified() {
 		if (_dateModifiedSupplier != null) {
 			dateModified = _dateModifiedSupplier.get();
@@ -232,9 +228,7 @@ public class Comment implements Serializable {
 	@JsonIgnore
 	private Supplier<Date> _dateModifiedSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The comment's external reference code."
-	)
+	@Schema(description = "The comment's external reference code.")
 	public String getExternalReferenceCode() {
 		if (_externalReferenceCodeSupplier != null) {
 			externalReferenceCode = _externalReferenceCodeSupplier.get();
@@ -275,9 +269,7 @@ public class Comment implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _externalReferenceCodeSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The comment's ID."
-	)
+	@Schema(description = "The comment's ID.")
 	public Long getId() {
 		if (_idSupplier != null) {
 			id = _idSupplier.get();
@@ -316,9 +308,7 @@ public class Comment implements Serializable {
 	@JsonIgnore
 	private Supplier<Long> _idSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The number of child comments on this comment."
-	)
+	@Schema(description = "The number of child comments on this comment.")
 	public Integer getNumberOfComments() {
 		if (_numberOfCommentsSupplier != null) {
 			numberOfComments = _numberOfCommentsSupplier.get();
@@ -359,9 +349,7 @@ public class Comment implements Serializable {
 	@JsonIgnore
 	private Supplier<Integer> _numberOfCommentsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "the ID of the comment's parent, if it exists."
-	)
+	@Schema(description = "the ID of the comment's parent, if it exists.")
 	public Long getParentCommentId() {
 		if (_parentCommentIdSupplier != null) {
 			parentCommentId = _parentCommentIdSupplier.get();
@@ -402,9 +390,7 @@ public class Comment implements Serializable {
 	@JsonIgnore
 	private Supplier<Long> _parentCommentIdSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The comment's text content."
-	)
+	@Schema(description = "The comment's text content.")
 	public String getText() {
 		if (_textSupplier != null) {
 			text = _textSupplier.get();
@@ -602,8 +588,8 @@ public class Comment implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.Comment",
 		name = "x-class-name"
 	)

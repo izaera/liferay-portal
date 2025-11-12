@@ -190,8 +190,8 @@ public interface ContentSetElementResource {
 		private Map<String, String> _headers = new LinkedHashMap<>();
 		private String _host = "localhost";
 		private Locale _locale;
-		private String _login;
-		private String _password;
+		private String _login = "";
+		private String _password = "";
 		private Map<String, String> _parameters = new LinkedHashMap<>();
 		private int _port = 8080;
 		private String _scheme = "http";
@@ -310,10 +310,8 @@ public interface ContentSetElementResource {
 			httpInvoker.path("assetLibraryId", assetLibraryId);
 			httpInvoker.path("key", key);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -427,10 +425,8 @@ public interface ContentSetElementResource {
 			httpInvoker.path("assetLibraryId", assetLibraryId);
 			httpInvoker.path("uuid", uuid);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -542,10 +538,8 @@ public interface ContentSetElementResource {
 
 			httpInvoker.path("contentSetId", contentSetId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -659,10 +653,8 @@ public interface ContentSetElementResource {
 			httpInvoker.path("siteId", siteId);
 			httpInvoker.path("key", key);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -776,10 +768,8 @@ public interface ContentSetElementResource {
 			httpInvoker.path("siteId", siteId);
 			httpInvoker.path("key", key);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -893,10 +883,8 @@ public interface ContentSetElementResource {
 			httpInvoker.path("siteId", siteId);
 			httpInvoker.path("uuid", uuid);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}

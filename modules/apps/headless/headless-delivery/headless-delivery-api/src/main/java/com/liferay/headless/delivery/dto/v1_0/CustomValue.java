@@ -17,6 +17,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.util.Iterator;
@@ -49,9 +51,7 @@ public class CustomValue implements Serializable {
 		return ObjectMapperUtil.unsafeReadValue(CustomValue.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The field's content value for simple types."
-	)
+	@Schema(description = "The field's content value for simple types.")
 	@Valid
 	public Object getData() {
 		if (_dataSupplier != null) {
@@ -91,7 +91,7 @@ public class CustomValue implements Serializable {
 	@JsonIgnore
 	private Supplier<Object> _dataSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The localized field's content values for simple types."
 	)
 	@Valid
@@ -138,9 +138,7 @@ public class CustomValue implements Serializable {
 	@JsonIgnore
 	private Supplier<Map<String, String>> _data_i18nSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "A point determined by latitude and longitude."
-	)
+	@Schema(description = "A point determined by latitude and longitude.")
 	@Valid
 	public Geo getGeo() {
 		if (_geoSupplier != null) {
@@ -258,8 +256,8 @@ public class CustomValue implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.CustomValue",
 		name = "x-class-name"
 	)

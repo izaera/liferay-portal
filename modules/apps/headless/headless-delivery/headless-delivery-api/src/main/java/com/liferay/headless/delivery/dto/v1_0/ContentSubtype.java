@@ -16,6 +16,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.util.Iterator;
@@ -49,9 +51,7 @@ public class ContentSubtype implements Serializable {
 		return ObjectMapperUtil.unsafeReadValue(ContentSubtype.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The content subtype's ID."
-	)
+	@Schema(description = "The content subtype's ID.")
 	public Long getSubtypeId() {
 		if (_subtypeIdSupplier != null) {
 			subtypeId = _subtypeIdSupplier.get();
@@ -92,9 +92,7 @@ public class ContentSubtype implements Serializable {
 	@JsonIgnore
 	private Supplier<Long> _subtypeIdSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The content subtype's Key."
-	)
+	@Schema(description = "The content subtype's Key.")
 	public String getSubtypeKey() {
 		if (_subtypeKeySupplier != null) {
 			subtypeKey = _subtypeKeySupplier.get();
@@ -195,8 +193,8 @@ public class ContentSubtype implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.ContentSubtype",
 		name = "x-class-name"
 	)

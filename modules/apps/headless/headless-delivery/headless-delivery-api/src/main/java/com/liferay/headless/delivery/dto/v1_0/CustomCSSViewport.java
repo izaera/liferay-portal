@@ -16,6 +16,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.util.Iterator;
@@ -39,11 +41,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 	description = "Represents a custom CSS viewport.",
 	value = "CustomCSSViewport"
 )
-@io.swagger.v3.oas.annotations.media.Schema(
+@JsonFilter("Liferay.Vulcan")
+@Schema(
 	description = "Represents a custom CSS viewport.",
 	requiredProperties = {"id", "customCSS"}
 )
-@JsonFilter("Liferay.Vulcan")
 @XmlRootElement(name = "CustomCSSViewport")
 public class CustomCSSViewport implements Serializable {
 
@@ -55,9 +57,7 @@ public class CustomCSSViewport implements Serializable {
 		return ObjectMapperUtil.unsafeReadValue(CustomCSSViewport.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The definition of the custom CSS viewport."
-	)
+	@Schema(description = "The definition of the custom CSS viewport.")
 	public String getCustomCSS() {
 		if (_customCSSSupplier != null) {
 			customCSS = _customCSSSupplier.get();
@@ -99,9 +99,7 @@ public class CustomCSSViewport implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _customCSSSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The custom CSS viewport's ID."
-	)
+	@Schema(description = "The custom CSS viewport's ID.")
 	public String getId() {
 		if (_idSupplier != null) {
 			id = _idSupplier.get();
@@ -205,8 +203,8 @@ public class CustomCSSViewport implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.CustomCSSViewport",
 		name = "x-class-name"
 	)

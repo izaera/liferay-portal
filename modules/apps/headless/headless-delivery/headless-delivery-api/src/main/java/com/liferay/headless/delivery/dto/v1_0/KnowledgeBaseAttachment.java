@@ -16,6 +16,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.util.Iterator;
@@ -50,9 +52,7 @@ public class KnowledgeBaseAttachment implements Serializable {
 			KnowledgeBaseAttachment.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The file's relative URL."
-	)
+	@Schema(description = "The file's relative URL.")
 	public String getContentUrl() {
 		if (_contentUrlSupplier != null) {
 			contentUrl = _contentUrlSupplier.get();
@@ -93,7 +93,7 @@ public class KnowledgeBaseAttachment implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _contentUrlSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "optional field with the content of the document in Base64, can be embedded with nestedFields"
 	)
 	public String getContentValue() {
@@ -138,7 +138,7 @@ public class KnowledgeBaseAttachment implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _contentValueSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The file's media type (e.g., application/pdf, etc.)."
 	)
 	public String getEncodingFormat() {
@@ -183,9 +183,7 @@ public class KnowledgeBaseAttachment implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _encodingFormatSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The attachment's external reference code."
-	)
+	@Schema(description = "The attachment's external reference code.")
 	public String getExternalReferenceCode() {
 		if (_externalReferenceCodeSupplier != null) {
 			externalReferenceCode = _externalReferenceCodeSupplier.get();
@@ -226,9 +224,7 @@ public class KnowledgeBaseAttachment implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _externalReferenceCodeSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The file's extension."
-	)
+	@Schema(description = "The file's extension.")
 	public String getFileExtension() {
 		if (_fileExtensionSupplier != null) {
 			fileExtension = _fileExtensionSupplier.get();
@@ -269,7 +265,7 @@ public class KnowledgeBaseAttachment implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _fileExtensionSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(description = "The file's ID.")
+	@Schema(description = "The file's ID.")
 	public Long getId() {
 		if (_idSupplier != null) {
 			id = _idSupplier.get();
@@ -308,9 +304,7 @@ public class KnowledgeBaseAttachment implements Serializable {
 	@JsonIgnore
 	private Supplier<Long> _idSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The file's size in bytes."
-	)
+	@Schema(description = "The file's size in bytes.")
 	public Long getSizeInBytes() {
 		if (_sizeInBytesSupplier != null) {
 			sizeInBytes = _sizeInBytesSupplier.get();
@@ -351,9 +345,7 @@ public class KnowledgeBaseAttachment implements Serializable {
 	@JsonIgnore
 	private Supplier<Long> _sizeInBytesSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The file's main title."
-	)
+	@Schema(description = "The file's main title.")
 	public String getTitle() {
 		if (_titleSupplier != null) {
 			title = _titleSupplier.get();
@@ -547,8 +539,8 @@ public class KnowledgeBaseAttachment implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.KnowledgeBaseAttachment",
 		name = "x-class-name"
 	)

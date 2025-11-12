@@ -21,6 +21,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.text.DateFormat;
@@ -50,13 +52,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 	description = "Represents a document data definition type.",
 	value = "DocumentDataDefinitionType"
 )
-@io.swagger.v3.oas.annotations.media.Schema(
+@JsonFilter("Liferay.Vulcan")
+@Schema(
 	description = "Represents a document data definition type.",
 	requiredProperties = {
 		"availableLanguages", "dataDefinitionFields", "dataLayout", "name"
 	}
 )
-@JsonFilter("Liferay.Vulcan")
 @XmlRootElement(name = "DocumentDataDefinitionType")
 public class DocumentDataDefinitionType implements Serializable {
 
@@ -70,7 +72,7 @@ public class DocumentDataDefinitionType implements Serializable {
 			DocumentDataDefinitionType.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "Block of actions allowed by the user making the request."
 	)
 	@Valid
@@ -117,7 +119,7 @@ public class DocumentDataDefinitionType implements Serializable {
 	@JsonIgnore
 	private Supplier<Map<String, Map<String, String>>> _actionsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The key of the asset library to which the document data definition type is scoped."
 	)
 	public String getAssetLibraryKey() {
@@ -162,7 +164,7 @@ public class DocumentDataDefinitionType implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _assetLibraryKeySupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The list of languages the document data definition type has a translation for."
 	)
 	public String[] getAvailableLanguages() {
@@ -208,9 +210,7 @@ public class DocumentDataDefinitionType implements Serializable {
 	@JsonIgnore
 	private Supplier<String[]> _availableLanguagesSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The document data definition type's creator."
-	)
+	@Schema(description = "The document data definition type's creator.")
 	@Valid
 	public Creator getCreator() {
 		if (_creatorSupplier != null) {
@@ -252,7 +252,7 @@ public class DocumentDataDefinitionType implements Serializable {
 	@JsonIgnore
 	private Supplier<Creator> _creatorSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The list of the document data definition type's data definition fields."
 	)
 	@Valid
@@ -302,7 +302,7 @@ public class DocumentDataDefinitionType implements Serializable {
 	@JsonIgnore
 	private Supplier<DataDefinitionField[]> _dataDefinitionFieldsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The layout of the document data definition type fields."
 	)
 	@Valid
@@ -349,9 +349,7 @@ public class DocumentDataDefinitionType implements Serializable {
 	@JsonIgnore
 	private Supplier<DataLayout> _dataLayoutSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The document data definition type's creation date."
-	)
+	@Schema(description = "The document data definition type's creation date.")
 	public Date getDateCreated() {
 		if (_dateCreatedSupplier != null) {
 			dateCreated = _dateCreatedSupplier.get();
@@ -394,7 +392,7 @@ public class DocumentDataDefinitionType implements Serializable {
 	@JsonIgnore
 	private Supplier<Date> _dateCreatedSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The last time a field of the document data definition type changed."
 	)
 	public Date getDateModified() {
@@ -439,9 +437,7 @@ public class DocumentDataDefinitionType implements Serializable {
 	@JsonIgnore
 	private Supplier<Date> _dateModifiedSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The document data definition type's description."
-	)
+	@Schema(description = "The document data definition type's description.")
 	public String getDescription() {
 		if (_descriptionSupplier != null) {
 			description = _descriptionSupplier.get();
@@ -484,7 +480,7 @@ public class DocumentDataDefinitionType implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _descriptionSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The localized document data definition type's description."
 	)
 	@Valid
@@ -531,7 +527,7 @@ public class DocumentDataDefinitionType implements Serializable {
 	@JsonIgnore
 	private Supplier<Map<String, String>> _description_i18nSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The list of document data definition type's id associated with document type."
 	)
 	public Long[] getDocumentMetadataSetIds() {
@@ -577,7 +573,7 @@ public class DocumentDataDefinitionType implements Serializable {
 	@JsonIgnore
 	private Supplier<Long[]> _documentMetadataSetIdsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The document data definition type's external reference code."
 	)
 	public String getExternalReferenceCode() {
@@ -622,9 +618,7 @@ public class DocumentDataDefinitionType implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _externalReferenceCodeSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The document data definition type's ID."
-	)
+	@Schema(description = "The document data definition type's ID.")
 	public Long getId() {
 		if (_idSupplier != null) {
 			id = _idSupplier.get();
@@ -663,9 +657,7 @@ public class DocumentDataDefinitionType implements Serializable {
 	@JsonIgnore
 	private Supplier<Long> _idSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The document data definition type's name."
-	)
+	@Schema(description = "The document data definition type's name.")
 	public String getName() {
 		if (_nameSupplier != null) {
 			name = _nameSupplier.get();
@@ -705,7 +697,7 @@ public class DocumentDataDefinitionType implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _nameSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The localized document data definition type's names."
 	)
 	@Valid
@@ -752,7 +744,7 @@ public class DocumentDataDefinitionType implements Serializable {
 	@JsonIgnore
 	private Supplier<Map<String, String>> _name_i18nSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The ID of the site to which the document data definition type is scoped."
 	)
 	public Long getSiteId() {
@@ -797,10 +789,10 @@ public class DocumentDataDefinitionType implements Serializable {
 	@JsonIgnore
 	private Supplier<Long> _siteIdSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@JsonGetter("viewableBy")
+	@Schema(
 		description = "A write-only property that specifies the document data definition type's default permissions."
 	)
-	@JsonGetter("viewableBy")
 	@Valid
 	public ViewableBy getViewableBy() {
 		if (_viewableBySupplier != null) {
@@ -1158,8 +1150,8 @@ public class DocumentDataDefinitionType implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.DocumentDataDefinitionType",
 		name = "x-class-name"
 	)

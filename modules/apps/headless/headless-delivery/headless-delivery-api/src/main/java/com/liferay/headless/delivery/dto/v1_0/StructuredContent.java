@@ -19,6 +19,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.text.DateFormat;
@@ -48,11 +50,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 	description = "Represents content that has fields and is rendered by a template backed by a `ContentStructure`. This is modeled internally as a `JournalArticle`.",
 	value = "StructuredContent"
 )
-@io.swagger.v3.oas.annotations.media.Schema(
+@JsonFilter("Liferay.Vulcan")
+@Schema(
 	description = "Represents content that has fields and is rendered by a template backed by a `ContentStructure`. This is modeled internally as a `JournalArticle`.",
 	requiredProperties = {"contentStructureId", "title"}
 )
-@JsonFilter("Liferay.Vulcan")
 @XmlRootElement(name = "StructuredContent")
 public class StructuredContent implements Serializable {
 
@@ -64,7 +66,7 @@ public class StructuredContent implements Serializable {
 		return ObjectMapperUtil.unsafeReadValue(StructuredContent.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "Block of actions allowed by the user making the request."
 	)
 	@Valid
@@ -111,9 +113,7 @@ public class StructuredContent implements Serializable {
 	@JsonIgnore
 	private Supplier<Map<String, Map<String, String>>> _actionsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The structured content's average rating."
-	)
+	@Schema(description = "The structured content's average rating.")
 	@Valid
 	public AggregateRating getAggregateRating() {
 		if (_aggregateRatingSupplier != null) {
@@ -156,7 +156,7 @@ public class StructuredContent implements Serializable {
 	@JsonIgnore
 	private Supplier<AggregateRating> _aggregateRatingSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The key of the asset library to which the structure content is scoped."
 	)
 	public String getAssetLibraryKey() {
@@ -201,7 +201,7 @@ public class StructuredContent implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _assetLibraryKeySupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The list of languages the structured content has a translation for."
 	)
 	public String[] getAvailableLanguages() {
@@ -246,7 +246,7 @@ public class StructuredContent implements Serializable {
 	@JsonIgnore
 	private Supplier<String[]> _availableLanguagesSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The list of fields that store the structured content's information."
 	)
 	@Valid
@@ -292,9 +292,7 @@ public class StructuredContent implements Serializable {
 	@JsonIgnore
 	private Supplier<ContentField[]> _contentFieldsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The ID of the `ContentStructure`."
-	)
+	@Schema(description = "The ID of the `ContentStructure`.")
 	public Long getContentStructureId() {
 		if (_contentStructureIdSupplier != null) {
 			contentStructureId = _contentStructureIdSupplier.get();
@@ -336,9 +334,7 @@ public class StructuredContent implements Serializable {
 	@JsonIgnore
 	private Supplier<Long> _contentStructureIdSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The structured content's creator."
-	)
+	@Schema(description = "The structured content's creator.")
 	@Valid
 	public Creator getCreator() {
 		if (_creatorSupplier != null) {
@@ -380,7 +376,7 @@ public class StructuredContent implements Serializable {
 	@JsonIgnore
 	private Supplier<Creator> _creatorSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "A list of the custom fields associated with the structured content."
 	)
 	@Valid
@@ -426,9 +422,7 @@ public class StructuredContent implements Serializable {
 	@JsonIgnore
 	private Supplier<CustomField[]> _customFieldsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The structured content's creation date."
-	)
+	@Schema(description = "The structured content's creation date.")
 	public Date getDateCreated() {
 		if (_dateCreatedSupplier != null) {
 			dateCreated = _dateCreatedSupplier.get();
@@ -469,9 +463,7 @@ public class StructuredContent implements Serializable {
 	@JsonIgnore
 	private Supplier<Date> _dateCreatedSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The expiration date of the structured content."
-	)
+	@Schema(description = "The expiration date of the structured content.")
 	public Date getDateExpired() {
 		if (_dateExpiredSupplier != null) {
 			dateExpired = _dateExpiredSupplier.get();
@@ -514,7 +506,7 @@ public class StructuredContent implements Serializable {
 	@JsonIgnore
 	private Supplier<Date> _dateExpiredSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The last time any field of the structured content was changed."
 	)
 	public Date getDateModified() {
@@ -559,7 +551,7 @@ public class StructuredContent implements Serializable {
 	@JsonIgnore
 	private Supplier<Date> _dateModifiedSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The structured content's most recent publication date."
 	)
 	public Date getDatePublished() {
@@ -604,9 +596,7 @@ public class StructuredContent implements Serializable {
 	@JsonIgnore
 	private Supplier<Date> _datePublishedSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The structured content's description."
-	)
+	@Schema(description = "The structured content's description.")
 	public String getDescription() {
 		if (_descriptionSupplier != null) {
 			description = _descriptionSupplier.get();
@@ -647,9 +637,7 @@ public class StructuredContent implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _descriptionSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The localized structured content's descriptions."
-	)
+	@Schema(description = "The localized structured content's descriptions.")
 	@Valid
 	public Map<String, String> getDescription_i18n() {
 		if (_description_i18nSupplier != null) {
@@ -694,9 +682,7 @@ public class StructuredContent implements Serializable {
 	@JsonIgnore
 	private Supplier<Map<String, String>> _description_i18nSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The structured content's external reference code."
-	)
+	@Schema(description = "The structured content's external reference code.")
 	public String getExternalReferenceCode() {
 		if (_externalReferenceCodeSupplier != null) {
 			externalReferenceCode = _externalReferenceCodeSupplier.get();
@@ -739,7 +725,7 @@ public class StructuredContent implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _externalReferenceCodeSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "A relative URL to the structured content's rendered content."
 	)
 	public String getFriendlyUrlPath() {
@@ -784,7 +770,7 @@ public class StructuredContent implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _friendlyUrlPathSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The localized relative URLs to the structured content's rendered content."
 	)
 	@Valid
@@ -833,9 +819,7 @@ public class StructuredContent implements Serializable {
 	@JsonIgnore
 	private Supplier<Map<String, String>> _friendlyUrlPath_i18nSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The structured content's ID."
-	)
+	@Schema(description = "The structured content's ID.")
 	public Long getId() {
 		if (_idSupplier != null) {
 			id = _idSupplier.get();
@@ -874,7 +858,7 @@ public class StructuredContent implements Serializable {
 	@JsonIgnore
 	private Supplier<Long> _idSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "An identifier, independent of the database, that can be used to reference the structured content."
 	)
 	public String getKey() {
@@ -917,7 +901,7 @@ public class StructuredContent implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _keySupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "A list of keywords describing the structured content."
 	)
 	public String[] getKeywords() {
@@ -962,7 +946,7 @@ public class StructuredContent implements Serializable {
 	@JsonIgnore
 	private Supplier<String[]> _keywordsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "Whether the web content article is not set to auto expire"
 	)
 	public Boolean getNeverExpire() {
@@ -1007,7 +991,7 @@ public class StructuredContent implements Serializable {
 	@JsonIgnore
 	private Supplier<Boolean> _neverExpireSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The number of comments the structured content has received."
 	)
 	public Integer getNumberOfComments() {
@@ -1052,7 +1036,7 @@ public class StructuredContent implements Serializable {
 	@JsonIgnore
 	private Supplier<Integer> _numberOfCommentsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema
+	@Schema
 	@Valid
 	public com.liferay.portal.vulcan.permission.Permission[] getPermissions() {
 		if (_permissionsSupplier != null) {
@@ -1099,9 +1083,7 @@ public class StructuredContent implements Serializable {
 	private Supplier<com.liferay.portal.vulcan.permission.Permission[]>
 		_permissionsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The structured content's priority."
-	)
+	@Schema(description = "The structured content's priority.")
 	public Double getPriority() {
 		if (_prioritySupplier != null) {
 			priority = _prioritySupplier.get();
@@ -1142,7 +1124,7 @@ public class StructuredContent implements Serializable {
 	@JsonIgnore
 	private Supplier<Double> _prioritySupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "A list of related contents to this structured content."
 	)
 	@Valid
@@ -1189,7 +1171,7 @@ public class StructuredContent implements Serializable {
 	@JsonIgnore
 	private Supplier<RelatedContent[]> _relatedContentsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "A list of rendered content, which results from using a template to process the content and return HTML."
 	)
 	@Valid
@@ -1236,7 +1218,7 @@ public class StructuredContent implements Serializable {
 	@JsonIgnore
 	private Supplier<RenderedContent[]> _renderedContentsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The ID of the site to which this structured content is scoped."
 	)
 	public Long getSiteId() {
@@ -1281,7 +1263,7 @@ public class StructuredContent implements Serializable {
 	@JsonIgnore
 	private Supplier<Long> _siteIdSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The ID of the folder where structured content is stored."
 	)
 	public Long getStructuredContentFolderId() {
@@ -1328,7 +1310,7 @@ public class StructuredContent implements Serializable {
 	@JsonIgnore
 	private Supplier<Long> _structuredContentFolderIdSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "A flag that indicates whether the user making the requests is subscribed to this structured content."
 	)
 	public Boolean getSubscribed() {
@@ -1373,7 +1355,7 @@ public class StructuredContent implements Serializable {
 	@JsonIgnore
 	private Supplier<Boolean> _subscribedSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The categories associated with this structured content."
 	)
 	@Valid
@@ -1422,7 +1404,7 @@ public class StructuredContent implements Serializable {
 	@JsonIgnore
 	private Supplier<TaxonomyCategoryBrief[]> _taxonomyCategoryBriefsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "A write-only field that adds `TaxonomyCategory` instances to the structured content."
 	)
 	public Long[] getTaxonomyCategoryIds() {
@@ -1467,9 +1449,7 @@ public class StructuredContent implements Serializable {
 	@JsonIgnore
 	private Supplier<Long[]> _taxonomyCategoryIdsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The structured content's main title."
-	)
+	@Schema(description = "The structured content's main title.")
 	public String getTitle() {
 		if (_titleSupplier != null) {
 			title = _titleSupplier.get();
@@ -1511,9 +1491,7 @@ public class StructuredContent implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _titleSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The localized structured content's main titles."
-	)
+	@Schema(description = "The localized structured content's main titles.")
 	@Valid
 	public Map<String, String> getTitle_i18n() {
 		if (_title_i18nSupplier != null) {
@@ -1558,7 +1536,7 @@ public class StructuredContent implements Serializable {
 	@JsonIgnore
 	private Supplier<Map<String, String>> _title_i18nSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "A valid external identifier to reference this structured content."
 	)
 	public String getUuid() {
@@ -1601,10 +1579,10 @@ public class StructuredContent implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _uuidSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@JsonGetter("viewableBy")
+	@Schema(
 		description = "A write-only property that specifies the structured content's default permissions."
 	)
-	@JsonGetter("viewableBy")
 	@Valid
 	public ViewableBy getViewableBy() {
 		if (_viewableBySupplier != null) {
@@ -2262,8 +2240,8 @@ public class StructuredContent implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.StructuredContent",
 		name = "x-class-name"
 	)

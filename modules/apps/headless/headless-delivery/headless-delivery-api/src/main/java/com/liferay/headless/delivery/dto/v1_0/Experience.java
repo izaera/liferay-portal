@@ -17,6 +17,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.util.Iterator;
@@ -52,9 +54,7 @@ public class Experience implements Serializable {
 		return ObjectMapperUtil.unsafeReadValue(Experience.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "the experience's key."
-	)
+	@Schema(description = "the experience's key.")
 	public String getKey() {
 		if (_keySupplier != null) {
 			key = _keySupplier.get();
@@ -93,9 +93,7 @@ public class Experience implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _keySupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "the experience's name."
-	)
+	@Schema(description = "the experience's name.")
 	public String getName() {
 		if (_nameSupplier != null) {
 			name = _nameSupplier.get();
@@ -134,9 +132,7 @@ public class Experience implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _nameSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "the localized experience's names."
-	)
+	@Schema(description = "the localized experience's names.")
 	@Valid
 	public Map<String, String> getName_i18n() {
 		if (_name_i18nSupplier != null) {
@@ -179,9 +175,7 @@ public class Experience implements Serializable {
 	@JsonIgnore
 	private Supplier<Map<String, String>> _name_i18nSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "A list of segments the experience is used for."
-	)
+	@Schema(description = "A list of segments the experience is used for.")
 	@Valid
 	public Segment[] getSegments() {
 		if (_segmentsSupplier != null) {
@@ -323,8 +317,8 @@ public class Experience implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.Experience",
 		name = "x-class-name"
 	)

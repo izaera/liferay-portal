@@ -19,6 +19,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.text.DateFormat;
@@ -58,7 +60,7 @@ public class WikiNode implements Serializable {
 		return ObjectMapperUtil.unsafeReadValue(WikiNode.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "Block of actions allowed by the user making the request."
 	)
 	@Valid
@@ -105,9 +107,7 @@ public class WikiNode implements Serializable {
 	@JsonIgnore
 	private Supplier<Map<String, Map<String, String>>> _actionsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The wiki node's creator."
-	)
+	@Schema(description = "The wiki node's creator.")
 	@Valid
 	public Creator getCreator() {
 		if (_creatorSupplier != null) {
@@ -149,9 +149,7 @@ public class WikiNode implements Serializable {
 	@JsonIgnore
 	private Supplier<Creator> _creatorSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The date the wiki node was created."
-	)
+	@Schema(description = "The date the wiki node was created.")
 	public Date getDateCreated() {
 		if (_dateCreatedSupplier != null) {
 			dateCreated = _dateCreatedSupplier.get();
@@ -192,7 +190,7 @@ public class WikiNode implements Serializable {
 	@JsonIgnore
 	private Supplier<Date> _dateCreatedSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The last time any of the wiki node's fields changed."
 	)
 	public Date getDateModified() {
@@ -237,9 +235,7 @@ public class WikiNode implements Serializable {
 	@JsonIgnore
 	private Supplier<Date> _dateModifiedSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The wiki node's description."
-	)
+	@Schema(description = "The wiki node's description.")
 	public String getDescription() {
 		if (_descriptionSupplier != null) {
 			description = _descriptionSupplier.get();
@@ -280,9 +276,7 @@ public class WikiNode implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _descriptionSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The wiki node's external reference code."
-	)
+	@Schema(description = "The wiki node's external reference code.")
 	public String getExternalReferenceCode() {
 		if (_externalReferenceCodeSupplier != null) {
 			externalReferenceCode = _externalReferenceCodeSupplier.get();
@@ -323,9 +317,7 @@ public class WikiNode implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _externalReferenceCodeSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The wiki node's ID."
-	)
+	@Schema(description = "The wiki node's ID.")
 	public Long getId() {
 		if (_idSupplier != null) {
 			id = _idSupplier.get();
@@ -364,9 +356,7 @@ public class WikiNode implements Serializable {
 	@JsonIgnore
 	private Supplier<Long> _idSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The wiki node's name."
-	)
+	@Schema(description = "The wiki node's name.")
 	public String getName() {
 		if (_nameSupplier != null) {
 			name = _nameSupplier.get();
@@ -405,9 +395,7 @@ public class WikiNode implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _nameSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The number of child wiki page on this wiki node."
-	)
+	@Schema(description = "The number of child wiki page on this wiki node.")
 	public Integer getNumberOfWikiPages() {
 		if (_numberOfWikiPagesSupplier != null) {
 			numberOfWikiPages = _numberOfWikiPagesSupplier.get();
@@ -450,7 +438,7 @@ public class WikiNode implements Serializable {
 	@JsonIgnore
 	private Supplier<Integer> _numberOfWikiPagesSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The ID of the site to which this wiki node is scoped."
 	)
 	public Long getSiteId() {
@@ -495,7 +483,7 @@ public class WikiNode implements Serializable {
 	@JsonIgnore
 	private Supplier<Long> _siteIdSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "A flag that indicates whether the user making the requests is subscribed to this wiki node."
 	)
 	public Boolean getSubscribed() {
@@ -540,10 +528,10 @@ public class WikiNode implements Serializable {
 	@JsonIgnore
 	private Supplier<Boolean> _subscribedSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@JsonGetter("viewableBy")
+	@Schema(
 		description = "A write-only property that specifies the default permissions."
 	)
-	@JsonGetter("viewableBy")
 	@Valid
 	public ViewableBy getViewableBy() {
 		if (_viewableBySupplier != null) {
@@ -801,8 +789,8 @@ public class WikiNode implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.WikiNode",
 		name = "x-class-name"
 	)

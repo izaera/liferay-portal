@@ -16,6 +16,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.util.Iterator;
@@ -49,9 +51,7 @@ public class StyleBook implements Serializable {
 		return ObjectMapperUtil.unsafeReadValue(StyleBook.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The stylebook's key."
-	)
+	@Schema(description = "The stylebook's key.")
 	public String getKey() {
 		if (_keySupplier != null) {
 			key = _keySupplier.get();
@@ -90,9 +90,7 @@ public class StyleBook implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _keySupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The stylebook's name."
-	)
+	@Schema(description = "The stylebook's name.")
 	public String getName() {
 		if (_nameSupplier != null) {
 			name = _nameSupplier.get();
@@ -195,8 +193,8 @@ public class StyleBook implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.StyleBook",
 		name = "x-class-name"
 	)

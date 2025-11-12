@@ -374,8 +374,8 @@ public interface MessageBoardThreadResource {
 		private Map<String, String> _headers = new LinkedHashMap<>();
 		private String _host = "localhost";
 		private Locale _locale;
-		private String _login;
-		private String _password;
+		private String _login = "";
+		private String _password = "";
 		private Map<String, String> _parameters = new LinkedHashMap<>();
 		private int _port = 8080;
 		private String _scheme = "http";
@@ -510,10 +510,8 @@ public interface MessageBoardThreadResource {
 
 			httpInvoker.path("messageBoardSectionId", messageBoardSectionId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -640,10 +638,8 @@ public interface MessageBoardThreadResource {
 
 			httpInvoker.path("messageBoardSectionId", messageBoardSectionId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -752,10 +748,8 @@ public interface MessageBoardThreadResource {
 
 			httpInvoker.path("messageBoardSectionId", messageBoardSectionId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -857,10 +851,8 @@ public interface MessageBoardThreadResource {
 
 			httpInvoker.path("messageBoardSectionId", messageBoardSectionId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -999,10 +991,8 @@ public interface MessageBoardThreadResource {
 					_builder._port + _builder._contextPath +
 						"/o/headless-delivery/v1.0/message-board-threads/ranked");
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -1104,10 +1094,8 @@ public interface MessageBoardThreadResource {
 
 			httpInvoker.path("messageBoardThreadId", messageBoardThreadId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -1205,10 +1193,8 @@ public interface MessageBoardThreadResource {
 					_builder._port + _builder._contextPath +
 						"/o/headless-delivery/v1.0/message-board-threads/batch");
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -1311,10 +1297,8 @@ public interface MessageBoardThreadResource {
 
 			httpInvoker.path("messageBoardThreadId", messageBoardThreadId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -1422,10 +1406,8 @@ public interface MessageBoardThreadResource {
 
 			httpInvoker.path("messageBoardThreadId", messageBoardThreadId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -1533,10 +1515,8 @@ public interface MessageBoardThreadResource {
 
 			httpInvoker.path("messageBoardThreadId", messageBoardThreadId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -1633,10 +1613,8 @@ public interface MessageBoardThreadResource {
 					_builder._port + _builder._contextPath +
 						"/o/headless-delivery/v1.0/message-board-threads/batch");
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -1740,10 +1718,8 @@ public interface MessageBoardThreadResource {
 
 			httpInvoker.path("messageBoardThreadId", messageBoardThreadId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -1846,10 +1822,8 @@ public interface MessageBoardThreadResource {
 
 			httpInvoker.path("messageBoardThreadId", messageBoardThreadId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -1956,10 +1930,8 @@ public interface MessageBoardThreadResource {
 
 			httpInvoker.path("messageBoardThreadId", messageBoardThreadId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -2066,10 +2038,8 @@ public interface MessageBoardThreadResource {
 
 			httpInvoker.path("messageBoardThreadId", messageBoardThreadId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -2178,10 +2148,8 @@ public interface MessageBoardThreadResource {
 
 			httpInvoker.path("messageBoardThreadId", messageBoardThreadId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -2294,10 +2262,8 @@ public interface MessageBoardThreadResource {
 
 			httpInvoker.path("messageBoardThreadId", messageBoardThreadId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -2403,10 +2369,8 @@ public interface MessageBoardThreadResource {
 
 			httpInvoker.path("messageBoardThreadId", messageBoardThreadId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -2512,10 +2476,8 @@ public interface MessageBoardThreadResource {
 
 			httpInvoker.path("messageBoardThreadId", messageBoardThreadId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -2648,10 +2610,8 @@ public interface MessageBoardThreadResource {
 
 			httpInvoker.path("siteId", siteId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -2778,10 +2738,8 @@ public interface MessageBoardThreadResource {
 
 			httpInvoker.path("siteId", siteId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -2887,10 +2845,8 @@ public interface MessageBoardThreadResource {
 
 			httpInvoker.path("siteId", siteId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -2991,10 +2947,8 @@ public interface MessageBoardThreadResource {
 
 			httpInvoker.path("siteId", siteId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -3100,10 +3054,8 @@ public interface MessageBoardThreadResource {
 			httpInvoker.path("siteId", siteId);
 			httpInvoker.path("friendlyUrlPath", friendlyUrlPath);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -3212,10 +3164,8 @@ public interface MessageBoardThreadResource {
 
 			httpInvoker.path("siteId", siteId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -3328,10 +3278,8 @@ public interface MessageBoardThreadResource {
 
 			httpInvoker.path("siteId", siteId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}

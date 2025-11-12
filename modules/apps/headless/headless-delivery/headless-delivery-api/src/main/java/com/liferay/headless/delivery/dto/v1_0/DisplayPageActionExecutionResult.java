@@ -16,6 +16,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.util.Iterator;
@@ -53,9 +55,7 @@ public class DisplayPageActionExecutionResult implements Serializable {
 			DisplayPageActionExecutionResult.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The mapping of the display page action result."
-	)
+	@Schema(description = "The mapping of the display page action result.")
 	@Valid
 	public Mapping getMapping() {
 		if (_mappingSupplier != null) {
@@ -145,8 +145,8 @@ public class DisplayPageActionExecutionResult implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.DisplayPageActionExecutionResult",
 		name = "x-class-name"
 	)

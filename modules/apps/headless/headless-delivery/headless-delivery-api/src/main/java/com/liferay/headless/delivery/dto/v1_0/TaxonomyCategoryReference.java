@@ -16,6 +16,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.util.Iterator;
@@ -39,11 +41,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 	description = "A unique reference to a taxonomy category.",
 	value = "TaxonomyCategoryReference"
 )
-@io.swagger.v3.oas.annotations.media.Schema(
+@JsonFilter("Liferay.Vulcan")
+@Schema(
 	description = "A unique reference to a taxonomy category.",
 	requiredProperties = {"externalReferenceCode"}
 )
-@JsonFilter("Liferay.Vulcan")
 @XmlRootElement(name = "TaxonomyCategoryReference")
 public class TaxonomyCategoryReference implements Serializable {
 
@@ -57,9 +59,7 @@ public class TaxonomyCategoryReference implements Serializable {
 			TaxonomyCategoryReference.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The taxonomy category's external reference code."
-	)
+	@Schema(description = "The taxonomy category's external reference code.")
 	public String getExternalReferenceCode() {
 		if (_externalReferenceCodeSupplier != null) {
 			externalReferenceCode = _externalReferenceCodeSupplier.get();
@@ -103,7 +103,7 @@ public class TaxonomyCategoryReference implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _externalReferenceCodeSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The key of the site or asset library where the taxonomy category is located. It can be left out if the taxonomy category is in the same site as the page."
 	)
 	public String getSiteKey() {
@@ -213,8 +213,8 @@ public class TaxonomyCategoryReference implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.TaxonomyCategoryReference",
 		name = "x-class-name"
 	)

@@ -16,6 +16,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.util.Iterator;
@@ -50,9 +52,7 @@ public class CustomMetaTag implements Serializable {
 		return ObjectMapperUtil.unsafeReadValue(CustomMetaTag.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The custom metatag's key."
-	)
+	@Schema(description = "The custom metatag's key.")
 	public String getKey() {
 		if (_keySupplier != null) {
 			key = _keySupplier.get();
@@ -91,9 +91,7 @@ public class CustomMetaTag implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _keySupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The custom metatag's value"
-	)
+	@Schema(description = "The custom metatag's value")
 	public String getValue() {
 		if (_valueSupplier != null) {
 			value = _valueSupplier.get();
@@ -134,9 +132,7 @@ public class CustomMetaTag implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _valueSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The localized custom metatag's values."
-	)
+	@Schema(description = "The localized custom metatag's values.")
 	@Valid
 	public Map<String, String> getValue_i18n() {
 		if (_value_i18nSupplier != null) {
@@ -255,8 +251,8 @@ public class CustomMetaTag implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.CustomMetaTag",
 		name = "x-class-name"
 	)

@@ -16,6 +16,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.util.Iterator;
@@ -51,7 +53,7 @@ public class PageRowDefinition implements Serializable {
 		return ObjectMapperUtil.unsafeReadValue(PageRowDefinition.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "A list of CSS Classes that are applied to the element."
 	)
 	public String[] getCssClasses() {
@@ -96,9 +98,7 @@ public class PageRowDefinition implements Serializable {
 	@JsonIgnore
 	private Supplier<String[]> _cssClassesSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "Custom CSS that is applied on the fragment."
-	)
+	@Schema(description = "Custom CSS that is applied on the fragment.")
 	public String getCustomCSS() {
 		if (_customCSSSupplier != null) {
 			customCSS = _customCSSSupplier.get();
@@ -139,9 +139,7 @@ public class PageRowDefinition implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _customCSSSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The custom CSS viewports of the page collection."
-	)
+	@Schema(description = "The custom CSS viewports of the page collection.")
 	@Valid
 	public CustomCSSViewport[] getCustomCSSViewports() {
 		if (_customCSSViewportsSupplier != null) {
@@ -186,9 +184,7 @@ public class PageRowDefinition implements Serializable {
 	@JsonIgnore
 	private Supplier<CustomCSSViewport[]> _customCSSViewportsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The fragment style of a Page row."
-	)
+	@Schema(description = "The fragment style of a Page row.")
 	@Valid
 	public FragmentStyle getFragmentStyle() {
 		if (_fragmentStyleSupplier != null) {
@@ -230,9 +226,7 @@ public class PageRowDefinition implements Serializable {
 	@JsonIgnore
 	private Supplier<FragmentStyle> _fragmentStyleSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "A list of fragment viewports of a Page row."
-	)
+	@Schema(description = "A list of fragment viewports of a Page row.")
 	@Valid
 	public FragmentViewport[] getFragmentViewports() {
 		if (_fragmentViewportsSupplier != null) {
@@ -275,7 +269,7 @@ public class PageRowDefinition implements Serializable {
 	@JsonIgnore
 	private Supplier<FragmentViewport[]> _fragmentViewportsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "A flag that indicates whether the page row has gutters."
 	)
 	public Boolean getGutters() {
@@ -320,7 +314,7 @@ public class PageRowDefinition implements Serializable {
 	@JsonIgnore
 	private Supplier<Boolean> _guttersSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "A flag that indicates whether the page row is indexed or not."
 	)
 	public Boolean getIndexed() {
@@ -365,9 +359,7 @@ public class PageRowDefinition implements Serializable {
 	@JsonIgnore
 	private Supplier<Boolean> _indexedSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The page row's modules per row."
-	)
+	@Schema(description = "The page row's modules per row.")
 	public Integer getModulesPerRow() {
 		if (_modulesPerRowSupplier != null) {
 			modulesPerRow = _modulesPerRowSupplier.get();
@@ -408,9 +400,7 @@ public class PageRowDefinition implements Serializable {
 	@JsonIgnore
 	private Supplier<Integer> _modulesPerRowSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The custom name of a Page row."
-	)
+	@Schema(description = "The custom name of a Page row.")
 	public String getName() {
 		if (_nameSupplier != null) {
 			name = _nameSupplier.get();
@@ -449,9 +439,7 @@ public class PageRowDefinition implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _nameSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The page row's number of columns."
-	)
+	@Schema(description = "The page row's number of columns.")
 	public Integer getNumberOfColumns() {
 		if (_numberOfColumnsSupplier != null) {
 			numberOfColumns = _numberOfColumnsSupplier.get();
@@ -492,7 +480,7 @@ public class PageRowDefinition implements Serializable {
 	@JsonIgnore
 	private Supplier<Integer> _numberOfColumnsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "A flag that indicates whether the page row has reverse order."
 	)
 	public Boolean getReverseOrder() {
@@ -537,7 +525,7 @@ public class PageRowDefinition implements Serializable {
 	@JsonIgnore
 	private Supplier<Boolean> _reverseOrderSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		deprecated = true,
 		description = "Deprecated as of Athanasius (7.3.x), replaced by rowViewports"
 	)
@@ -586,9 +574,7 @@ public class PageRowDefinition implements Serializable {
 	@JsonIgnore
 	private Supplier<RowViewportConfig> _rowViewportConfigSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "A list of viewports of the page row."
-	)
+	@Schema(description = "A list of viewports of the page row.")
 	@Valid
 	public RowViewport[] getRowViewports() {
 		if (_rowViewportsSupplier != null) {
@@ -630,9 +616,7 @@ public class PageRowDefinition implements Serializable {
 	@JsonIgnore
 	private Supplier<RowViewport[]> _rowViewportsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The vertical aligment property of the page row."
-	)
+	@Schema(description = "The vertical aligment property of the page row.")
 	public String getVerticalAlignment() {
 		if (_verticalAlignmentSupplier != null) {
 			verticalAlignment = _verticalAlignmentSupplier.get();
@@ -931,8 +915,8 @@ public class PageRowDefinition implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.PageRowDefinition",
 		name = "x-class-name"
 	)

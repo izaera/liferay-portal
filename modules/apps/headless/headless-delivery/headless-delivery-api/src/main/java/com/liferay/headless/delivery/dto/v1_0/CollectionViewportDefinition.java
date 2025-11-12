@@ -16,6 +16,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.util.Iterator;
@@ -51,9 +53,7 @@ public class CollectionViewportDefinition implements Serializable {
 			CollectionViewportDefinition.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The number of columns of the collection viewport."
-	)
+	@Schema(description = "The number of columns of the collection viewport.")
 	public Integer getNumberOfColumns() {
 		if (_numberOfColumnsSupplier != null) {
 			numberOfColumns = _numberOfColumnsSupplier.get();
@@ -142,8 +142,8 @@ public class CollectionViewportDefinition implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.CollectionViewportDefinition",
 		name = "x-class-name"
 	)

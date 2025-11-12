@@ -43,7 +43,7 @@ import com.liferay.portal.kernel.test.util.RoleTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.test.util.UserTestUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
-import com.liferay.portal.kernel.util.FastDateFormatFactoryUtil;
+import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -58,7 +58,7 @@ import com.liferay.portal.vulcan.resource.EntityModelResource;
 
 import java.lang.reflect.Method;
 
-import java.text.Format;
+import java.text.DateFormat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -97,7 +97,7 @@ public abstract class BaseDocumentFolderResourceTestCase {
 
 	@BeforeClass
 	public static void setUpClass() throws Exception {
-		_format = FastDateFormatFactoryUtil.getSimpleDateFormat(
+		_dateFormat = DateFormatFactoryUtil.getSimpleDateFormat(
 			"yyyy-MM-dd'T'HH:mm:ss'Z'");
 	}
 
@@ -122,12 +122,14 @@ public abstract class BaseDocumentFolderResourceTestCase {
 
 		_documentFolderResource.setContextCompany(testCompany);
 
-		_testCompanyAdminUser = UserTestUtil.getAdminUser(
-			testCompany.getCompanyId());
+		com.liferay.portal.kernel.model.User testCompanyAdminUser =
+			UserTestUtil.getAdminUser(testCompany.getCompanyId());
 
-		documentFolderResource = DocumentFolderResource.builder(
-		).authentication(
-			_testCompanyAdminUser.getEmailAddress(),
+		DocumentFolderResource.Builder builder =
+			DocumentFolderResource.builder();
+
+		documentFolderResource = builder.authentication(
+			testCompanyAdminUser.getEmailAddress(),
 			PropsValues.DEFAULT_ADMIN_PASSWORD
 		).endpoint(
 			testCompany.getVirtualHostname(), 8080, "http"
@@ -3965,11 +3967,13 @@ public abstract class BaseDocumentFolderResourceTestCase {
 				sb.append("(");
 				sb.append(entityFieldName);
 				sb.append(" gt ");
-				sb.append(_format.format(date.getTime() - (2 * Time.SECOND)));
+				sb.append(
+					_dateFormat.format(date.getTime() - (2 * Time.SECOND)));
 				sb.append(" and ");
 				sb.append(entityFieldName);
 				sb.append(" lt ");
-				sb.append(_format.format(date.getTime() + (2 * Time.SECOND)));
+				sb.append(
+					_dateFormat.format(date.getTime() + (2 * Time.SECOND)));
 				sb.append(")");
 			}
 			else {
@@ -3979,7 +3983,7 @@ public abstract class BaseDocumentFolderResourceTestCase {
 				sb.append(operator);
 				sb.append(" ");
 
-				sb.append(_format.format(documentFolder.getDateCreated()));
+				sb.append(_dateFormat.format(documentFolder.getDateCreated()));
 			}
 
 			return sb.toString();
@@ -3994,11 +3998,13 @@ public abstract class BaseDocumentFolderResourceTestCase {
 				sb.append("(");
 				sb.append(entityFieldName);
 				sb.append(" gt ");
-				sb.append(_format.format(date.getTime() - (2 * Time.SECOND)));
+				sb.append(
+					_dateFormat.format(date.getTime() - (2 * Time.SECOND)));
 				sb.append(" and ");
 				sb.append(entityFieldName);
 				sb.append(" lt ");
-				sb.append(_format.format(date.getTime() + (2 * Time.SECOND)));
+				sb.append(
+					_dateFormat.format(date.getTime() + (2 * Time.SECOND)));
 				sb.append(")");
 			}
 			else {
@@ -4008,7 +4014,7 @@ public abstract class BaseDocumentFolderResourceTestCase {
 				sb.append(operator);
 				sb.append(" ");
 
-				sb.append(_format.format(documentFolder.getDateModified()));
+				sb.append(_dateFormat.format(documentFolder.getDateModified()));
 			}
 
 			return sb.toString();
@@ -4481,9 +4487,7 @@ public abstract class BaseDocumentFolderResourceTestCase {
 	private static final com.liferay.portal.kernel.log.Log _log =
 		LogFactoryUtil.getLog(BaseDocumentFolderResourceTestCase.class);
 
-	private static Format _format;
-
-	private com.liferay.portal.kernel.model.User _testCompanyAdminUser;
+	private static DateFormat _dateFormat;
 
 	@Inject
 	private com.liferay.headless.delivery.resource.v1_0.DocumentFolderResource

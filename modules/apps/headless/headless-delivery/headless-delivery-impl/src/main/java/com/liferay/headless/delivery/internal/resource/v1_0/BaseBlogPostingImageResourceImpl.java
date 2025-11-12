@@ -13,6 +13,8 @@ import com.liferay.petra.function.UnsafeConsumer;
 import com.liferay.petra.function.UnsafeFunction;
 import com.liferay.petra.function.transform.TransformUtil;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.search.Sort;
+import com.liferay.portal.kernel.search.filter.Filter;
 import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.ResourceActionLocalService;
@@ -266,11 +268,9 @@ public abstract class BaseBlogPostingImageResourceImpl
 			String search,
 			@javax.ws.rs.core.Context
 				com.liferay.portal.vulcan.aggregation.Aggregation aggregation,
-			@javax.ws.rs.core.Context
-				com.liferay.portal.kernel.search.filter.Filter filter,
+			@javax.ws.rs.core.Context Filter filter,
 			@javax.ws.rs.core.Context Pagination pagination,
-			@javax.ws.rs.core.Context com.liferay.portal.kernel.search.Sort[]
-				sorts)
+			@javax.ws.rs.core.Context Sort[] sorts)
 		throws Exception {
 
 		return Page.of(Collections.emptyList());
@@ -331,10 +331,8 @@ public abstract class BaseBlogPostingImageResourceImpl
 			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
 			@javax.ws.rs.QueryParam("search")
 			String search,
-			@javax.ws.rs.core.Context
-				com.liferay.portal.kernel.search.filter.Filter filter,
-			@javax.ws.rs.core.Context com.liferay.portal.kernel.search.Sort[]
-				sorts,
+			@javax.ws.rs.core.Context Filter filter,
+			@javax.ws.rs.core.Context Sort[] sorts,
 			@io.swagger.v3.oas.annotations.Parameter(hidden = true)
 			@javax.ws.rs.QueryParam("callbackURL")
 			String callbackURL,
@@ -612,25 +610,8 @@ public abstract class BaseBlogPostingImageResourceImpl
 			Map<String, Serializable> parameters)
 		throws Exception {
 
-		UnsafeFunction<BlogPostingImage, BlogPostingImage, Exception>
-			blogPostingImageUnsafeFunction = blogPostingImage -> {
-				deleteBlogPostingImage(blogPostingImage.getId());
-
-				return blogPostingImage;
-			};
-
-		if (contextBatchUnsafeBiConsumer != null) {
-			contextBatchUnsafeBiConsumer.accept(
-				blogPostingImages, blogPostingImageUnsafeFunction);
-		}
-		else if (contextBatchUnsafeConsumer != null) {
-			contextBatchUnsafeConsumer.accept(
-				blogPostingImages, blogPostingImageUnsafeFunction::apply);
-		}
-		else {
-			for (BlogPostingImage blogPostingImage : blogPostingImages) {
-				blogPostingImageUnsafeFunction.apply(blogPostingImage);
-			}
+		for (BlogPostingImage blogPostingImage : blogPostingImages) {
+			deleteBlogPostingImage(blogPostingImage.getId());
 		}
 	}
 
@@ -667,9 +648,7 @@ public abstract class BaseBlogPostingImageResourceImpl
 
 	@Override
 	public Page<BlogPostingImage> read(
-			com.liferay.portal.kernel.search.filter.Filter filter,
-			Pagination pagination,
-			com.liferay.portal.kernel.search.Sort[] sorts,
+			Filter filter, Pagination pagination, Sort[] sorts,
 			Map<String, Serializable> parameters, String search)
 		throws Exception {
 
@@ -767,8 +746,7 @@ public abstract class BaseBlogPostingImageResourceImpl
 	}
 
 	public void setExpressionConvert(
-		ExpressionConvert<com.liferay.portal.kernel.search.filter.Filter>
-			expressionConvert) {
+		ExpressionConvert<Filter> expressionConvert) {
 
 		this.expressionConvert = expressionConvert;
 	}
@@ -820,7 +798,7 @@ public abstract class BaseBlogPostingImageResourceImpl
 	}
 
 	@Override
-	public com.liferay.portal.kernel.search.filter.Filter toFilter(
+	public Filter toFilter(
 		String filterString, Map<String, List<String>> multivaluedMap) {
 
 		try {
@@ -845,7 +823,7 @@ public abstract class BaseBlogPostingImageResourceImpl
 	}
 
 	@Override
-	public com.liferay.portal.kernel.search.Sort[] toSorts(String sortString) {
+	public Sort[] toSorts(String sortString) {
 		if (Validator.isNull(sortString)) {
 			return null;
 		}
@@ -863,13 +841,13 @@ public abstract class BaseBlogPostingImageResourceImpl
 					sortParser.parse(sortString));
 
 			List<SortField> sortFields = oDataSort.getSortFields();
-			com.liferay.portal.kernel.search.Sort[] sorts =
-				new com.liferay.portal.kernel.search.Sort[sortFields.size()];
+
+			Sort[] sorts = new Sort[sortFields.size()];
 
 			for (int i = 0; i < sortFields.size(); i++) {
 				SortField sortField = sortFields.get(i);
 
-				sorts[i] = new com.liferay.portal.kernel.search.Sort(
+				sorts[i] = new Sort(
 					sortField.getSortableFieldName(
 						contextAcceptLanguage.getPreferredLocale()),
 					!sortField.isAscending());
@@ -880,7 +858,7 @@ public abstract class BaseBlogPostingImageResourceImpl
 		catch (Exception exception) {
 			_log.error("Invalid sort " + sortString, exception);
 
-			return new com.liferay.portal.kernel.search.Sort[0];
+			return new Sort[0];
 		}
 	}
 
@@ -1007,8 +985,7 @@ public abstract class BaseBlogPostingImageResourceImpl
 	protected Object contextScopeChecker;
 	protected UriInfo contextUriInfo;
 	protected com.liferay.portal.kernel.model.User contextUser;
-	protected ExpressionConvert<com.liferay.portal.kernel.search.filter.Filter>
-		expressionConvert;
+	protected ExpressionConvert<Filter> expressionConvert;
 	protected FilterParserProvider filterParserProvider;
 	protected GroupLocalService groupLocalService;
 	protected ResourceActionLocalService resourceActionLocalService;

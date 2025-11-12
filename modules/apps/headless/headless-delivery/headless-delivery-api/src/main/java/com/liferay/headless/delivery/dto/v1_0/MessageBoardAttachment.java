@@ -16,6 +16,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.util.Iterator;
@@ -52,7 +54,7 @@ public class MessageBoardAttachment implements Serializable {
 			MessageBoardAttachment.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "Block of actions allowed by the user making the request."
 	)
 	@Valid
@@ -99,9 +101,7 @@ public class MessageBoardAttachment implements Serializable {
 	@JsonIgnore
 	private Supplier<Map<String, Map<String, String>>> _actionsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The file's relative URL."
-	)
+	@Schema(description = "The file's relative URL.")
 	public String getContentUrl() {
 		if (_contentUrlSupplier != null) {
 			contentUrl = _contentUrlSupplier.get();
@@ -142,7 +142,7 @@ public class MessageBoardAttachment implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _contentUrlSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "optional field with the content of the document in Base64, can be embedded with nestedFields"
 	)
 	public String getContentValue() {
@@ -187,7 +187,7 @@ public class MessageBoardAttachment implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _contentValueSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The file's media format (e.g., application/pdf, etc.)."
 	)
 	public String getEncodingFormat() {
@@ -232,9 +232,7 @@ public class MessageBoardAttachment implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _encodingFormatSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The message board's external reference code."
-	)
+	@Schema(description = "The message board's external reference code.")
 	public String getExternalReferenceCode() {
 		if (_externalReferenceCodeSupplier != null) {
 			externalReferenceCode = _externalReferenceCodeSupplier.get();
@@ -275,9 +273,7 @@ public class MessageBoardAttachment implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _externalReferenceCodeSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The file's extension."
-	)
+	@Schema(description = "The file's extension.")
 	public String getFileExtension() {
 		if (_fileExtensionSupplier != null) {
 			fileExtension = _fileExtensionSupplier.get();
@@ -318,7 +314,7 @@ public class MessageBoardAttachment implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _fileExtensionSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(description = "The file's ID.")
+	@Schema(description = "The file's ID.")
 	public Long getId() {
 		if (_idSupplier != null) {
 			id = _idSupplier.get();
@@ -357,9 +353,7 @@ public class MessageBoardAttachment implements Serializable {
 	@JsonIgnore
 	private Supplier<Long> _idSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The file's size in bytes."
-	)
+	@Schema(description = "The file's size in bytes.")
 	public Long getSizeInBytes() {
 		if (_sizeInBytesSupplier != null) {
 			sizeInBytes = _sizeInBytesSupplier.get();
@@ -400,9 +394,7 @@ public class MessageBoardAttachment implements Serializable {
 	@JsonIgnore
 	private Supplier<Long> _sizeInBytesSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The file's title."
-	)
+	@Schema(description = "The file's title.")
 	public String getTitle() {
 		if (_titleSupplier != null) {
 			title = _titleSupplier.get();
@@ -608,8 +600,8 @@ public class MessageBoardAttachment implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.MessageBoardAttachment",
 		name = "x-class-name"
 	)

@@ -16,6 +16,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.util.Iterator;
@@ -53,7 +55,7 @@ public class NotificationActionExecutionResult implements Serializable {
 			NotificationActionExecutionResult.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "Whether to reload the page after the action is executed."
 	)
 	public Boolean getReload() {
@@ -98,7 +100,7 @@ public class NotificationActionExecutionResult implements Serializable {
 	@JsonIgnore
 	private Supplier<Boolean> _reloadSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The localized text to display when an action is executed."
 	)
 	@Valid
@@ -202,8 +204,8 @@ public class NotificationActionExecutionResult implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.NotificationActionExecutionResult",
 		name = "x-class-name"
 	)

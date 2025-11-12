@@ -16,6 +16,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.util.Iterator;
@@ -38,11 +40,11 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Generated("")
 @GraphQLName(description = "Represents a row viewport.", value = "RowViewport")
-@io.swagger.v3.oas.annotations.media.Schema(
+@JsonFilter("Liferay.Vulcan")
+@Schema(
 	description = "Represents a row viewport.",
 	requiredProperties = {"id", "rowViewportDefinition"}
 )
-@JsonFilter("Liferay.Vulcan")
 @XmlRootElement(name = "RowViewport")
 public class RowViewport implements Serializable {
 
@@ -54,9 +56,7 @@ public class RowViewport implements Serializable {
 		return ObjectMapperUtil.unsafeReadValue(RowViewport.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The row viewport's ID."
-	)
+	@Schema(description = "The row viewport's ID.")
 	public String getId() {
 		if (_idSupplier != null) {
 			id = _idSupplier.get();
@@ -96,9 +96,7 @@ public class RowViewport implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _idSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The definition of the row viewport."
-	)
+	@Schema(description = "The definition of the row viewport.")
 	@Valid
 	public RowViewportDefinition getRowViewportDefinition() {
 		if (_rowViewportDefinitionSupplier != null) {
@@ -205,8 +203,8 @@ public class RowViewport implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.RowViewport",
 		name = "x-class-name"
 	)

@@ -277,8 +277,8 @@ public interface MessageBoardAttachmentResource {
 		private Map<String, String> _headers = new LinkedHashMap<>();
 		private String _host = "localhost";
 		private Locale _locale;
-		private String _login;
-		private String _password;
+		private String _login = "";
+		private String _password = "";
 		private Map<String, String> _parameters = new LinkedHashMap<>();
 		private int _port = 8080;
 		private String _scheme = "http";
@@ -388,10 +388,8 @@ public interface MessageBoardAttachmentResource {
 			httpInvoker.path(
 				"messageBoardAttachmentId", messageBoardAttachmentId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -490,10 +488,8 @@ public interface MessageBoardAttachmentResource {
 					_builder._port + _builder._contextPath +
 						"/o/headless-delivery/v1.0/message-board-attachments/batch");
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -597,10 +593,8 @@ public interface MessageBoardAttachmentResource {
 			httpInvoker.path(
 				"messageBoardAttachmentId", messageBoardAttachmentId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -706,10 +700,8 @@ public interface MessageBoardAttachmentResource {
 
 			httpInvoker.path("messageBoardMessageId", messageBoardMessageId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -823,10 +815,8 @@ public interface MessageBoardAttachmentResource {
 
 			httpInvoker.path("messageBoardMessageId", messageBoardMessageId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -947,10 +937,8 @@ public interface MessageBoardAttachmentResource {
 
 			httpInvoker.path("messageBoardMessageId", messageBoardMessageId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -1058,10 +1046,8 @@ public interface MessageBoardAttachmentResource {
 
 			httpInvoker.path("messageBoardMessageId", messageBoardMessageId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -1167,10 +1153,8 @@ public interface MessageBoardAttachmentResource {
 
 			httpInvoker.path("messageBoardThreadId", messageBoardThreadId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -1283,10 +1267,8 @@ public interface MessageBoardAttachmentResource {
 
 			httpInvoker.path("messageBoardThreadId", messageBoardThreadId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -1407,10 +1389,8 @@ public interface MessageBoardAttachmentResource {
 
 			httpInvoker.path("messageBoardThreadId", messageBoardThreadId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -1518,10 +1498,8 @@ public interface MessageBoardAttachmentResource {
 
 			httpInvoker.path("messageBoardThreadId", messageBoardThreadId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -1636,10 +1614,8 @@ public interface MessageBoardAttachmentResource {
 				messageBoardMessageExternalReferenceCode);
 			httpInvoker.path("externalReferenceCode", externalReferenceCode);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -1754,10 +1730,8 @@ public interface MessageBoardAttachmentResource {
 				messageBoardMessageExternalReferenceCode);
 			httpInvoker.path("externalReferenceCode", externalReferenceCode);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}

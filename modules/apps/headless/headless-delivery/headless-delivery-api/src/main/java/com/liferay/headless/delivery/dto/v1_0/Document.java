@@ -19,6 +19,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.text.DateFormat;
@@ -58,7 +60,7 @@ public class Document implements Serializable {
 		return ObjectMapperUtil.unsafeReadValue(Document.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "Block of actions allowed by the user making the request."
 	)
 	@Valid
@@ -105,7 +107,7 @@ public class Document implements Serializable {
 	@JsonIgnore
 	private Supplier<Map<String, Map<String, String>>> _actionsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "An array of images in several resolutions and sizes, created by the Adaptive Media framework."
 	)
 	@Valid
@@ -151,9 +153,7 @@ public class Document implements Serializable {
 	@JsonIgnore
 	private Supplier<AdaptedImage[]> _adaptedImagesSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The document's average rating."
-	)
+	@Schema(description = "The document's average rating.")
 	@Valid
 	public AggregateRating getAggregateRating() {
 		if (_aggregateRatingSupplier != null) {
@@ -196,7 +196,7 @@ public class Document implements Serializable {
 	@JsonIgnore
 	private Supplier<AggregateRating> _aggregateRatingSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The key of the asset library to which the document is scoped."
 	)
 	public String getAssetLibraryKey() {
@@ -241,9 +241,7 @@ public class Document implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _assetLibraryKeySupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The document's relative URL."
-	)
+	@Schema(description = "The document's relative URL.")
 	public String getContentUrl() {
 		if (_contentUrlSupplier != null) {
 			contentUrl = _contentUrlSupplier.get();
@@ -284,7 +282,7 @@ public class Document implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _contentUrlSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The optional field with the content of the document in Base64, can be embedded with nestedFields."
 	)
 	public String getContentValue() {
@@ -329,9 +327,7 @@ public class Document implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _contentValueSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The document's creator."
-	)
+	@Schema(description = "The document's creator.")
 	@Valid
 	public Creator getCreator() {
 		if (_creatorSupplier != null) {
@@ -373,7 +369,7 @@ public class Document implements Serializable {
 	@JsonIgnore
 	private Supplier<Creator> _creatorSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "A list of the custom fields associated with the document."
 	)
 	@Valid
@@ -419,9 +415,7 @@ public class Document implements Serializable {
 	@JsonIgnore
 	private Supplier<CustomField[]> _customFieldsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The document's creation date."
-	)
+	@Schema(description = "The document's creation date.")
 	public Date getDateCreated() {
 		if (_dateCreatedSupplier != null) {
 			dateCreated = _dateCreatedSupplier.get();
@@ -462,9 +456,7 @@ public class Document implements Serializable {
 	@JsonIgnore
 	private Supplier<Date> _dateCreatedSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The expiration date of the document."
-	)
+	@Schema(description = "The expiration date of the document.")
 	public Date getDateExpired() {
 		if (_dateExpiredSupplier != null) {
 			dateExpired = _dateExpiredSupplier.get();
@@ -505,9 +497,7 @@ public class Document implements Serializable {
 	@JsonIgnore
 	private Supplier<Date> _dateExpiredSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The last time a field of the document changed."
-	)
+	@Schema(description = "The last time a field of the document changed.")
 	public Date getDateModified() {
 		if (_dateModifiedSupplier != null) {
 			dateModified = _dateModifiedSupplier.get();
@@ -550,9 +540,7 @@ public class Document implements Serializable {
 	@JsonIgnore
 	private Supplier<Date> _dateModifiedSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The document's most recent publication date."
-	)
+	@Schema(description = "The document's most recent publication date.")
 	public Date getDatePublished() {
 		if (_datePublishedSupplier != null) {
 			datePublished = _datePublishedSupplier.get();
@@ -593,9 +581,7 @@ public class Document implements Serializable {
 	@JsonIgnore
 	private Supplier<Date> _datePublishedSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The document's description."
-	)
+	@Schema(description = "The document's description.")
 	public String getDescription() {
 		if (_descriptionSupplier != null) {
 			description = _descriptionSupplier.get();
@@ -636,7 +622,7 @@ public class Document implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _descriptionSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The external reference code of the `DocumentFolder` where this document is stored."
 	)
 	public String getDocumentFolderExternalReferenceCode() {
@@ -686,7 +672,7 @@ public class Document implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _documentFolderExternalReferenceCodeSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The ID of the `DocumentFolder` where this document is stored."
 	)
 	public Long getDocumentFolderId() {
@@ -731,7 +717,7 @@ public class Document implements Serializable {
 	@JsonIgnore
 	private Supplier<Long> _documentFolderIdSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema
+	@Schema
 	@Valid
 	public DocumentType getDocumentType() {
 		if (_documentTypeSupplier != null) {
@@ -773,7 +759,7 @@ public class Document implements Serializable {
 	@JsonIgnore
 	private Supplier<DocumentType> _documentTypeSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The document's content type (e.g., `application/pdf`, etc.)."
 	)
 	public String getEncodingFormat() {
@@ -818,9 +804,7 @@ public class Document implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _encodingFormatSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The document's external reference code."
-	)
+	@Schema(description = "The document's external reference code.")
 	public String getExternalReferenceCode() {
 		if (_externalReferenceCodeSupplier != null) {
 			externalReferenceCode = _externalReferenceCodeSupplier.get();
@@ -861,9 +845,7 @@ public class Document implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _externalReferenceCodeSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The document's file extension."
-	)
+	@Schema(description = "The document's file extension.")
 	public String getFileExtension() {
 		if (_fileExtensionSupplier != null) {
 			fileExtension = _fileExtensionSupplier.get();
@@ -904,9 +886,7 @@ public class Document implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _fileExtensionSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The document's file name."
-	)
+	@Schema(description = "The document's file name.")
 	public String getFileName() {
 		if (_fileNameSupplier != null) {
 			fileName = _fileNameSupplier.get();
@@ -947,9 +927,7 @@ public class Document implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _fileNameSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The document's file relative URL."
-	)
+	@Schema(description = "The document's file relative URL.")
 	public String getFriendlyUrlPath() {
 		if (_friendlyUrlPathSupplier != null) {
 			friendlyUrlPath = _friendlyUrlPathSupplier.get();
@@ -990,9 +968,7 @@ public class Document implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _friendlyUrlPathSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The document's ID."
-	)
+	@Schema(description = "The document's ID.")
 	public Long getId() {
 		if (_idSupplier != null) {
 			id = _idSupplier.get();
@@ -1031,9 +1007,7 @@ public class Document implements Serializable {
 	@JsonIgnore
 	private Supplier<Long> _idSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "A list of keywords describing the document."
-	)
+	@Schema(description = "A list of keywords describing the document.")
 	public String[] getKeywords() {
 		if (_keywordsSupplier != null) {
 			keywords = _keywordsSupplier.get();
@@ -1074,9 +1048,7 @@ public class Document implements Serializable {
 	@JsonIgnore
 	private Supplier<String[]> _keywordsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The number of comments on the document."
-	)
+	@Schema(description = "The number of comments on the document.")
 	public Integer getNumberOfComments() {
 		if (_numberOfCommentsSupplier != null) {
 			numberOfComments = _numberOfCommentsSupplier.get();
@@ -1117,9 +1089,7 @@ public class Document implements Serializable {
 	@JsonIgnore
 	private Supplier<Integer> _numberOfCommentsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "A list of related contents to this document."
-	)
+	@Schema(description = "A list of related contents to this document.")
 	@Valid
 	public RelatedContent[] getRelatedContents() {
 		if (_relatedContentsSupplier != null) {
@@ -1162,7 +1132,7 @@ public class Document implements Serializable {
 	@JsonIgnore
 	private Supplier<RelatedContent[]> _relatedContentsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "A list of rendered documents, which results from using a display page to process the document and return HTML."
 	)
 	@Valid
@@ -1209,7 +1179,7 @@ public class Document implements Serializable {
 	@JsonIgnore
 	private Supplier<RenderedContent[]> _renderedContentsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The ID of the site to which this document is scoped."
 	)
 	public Long getSiteId() {
@@ -1254,9 +1224,7 @@ public class Document implements Serializable {
 	@JsonIgnore
 	private Supplier<Long> _siteIdSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The document's size in bytes."
-	)
+	@Schema(description = "The document's size in bytes.")
 	public Long getSizeInBytes() {
 		if (_sizeInBytesSupplier != null) {
 			sizeInBytes = _sizeInBytesSupplier.get();
@@ -1297,9 +1265,7 @@ public class Document implements Serializable {
 	@JsonIgnore
 	private Supplier<Long> _sizeInBytesSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The categories associated with this document."
-	)
+	@Schema(description = "The categories associated with this document.")
 	@Valid
 	public TaxonomyCategoryBrief[] getTaxonomyCategoryBriefs() {
 		if (_taxonomyCategoryBriefsSupplier != null) {
@@ -1344,7 +1310,7 @@ public class Document implements Serializable {
 	@JsonIgnore
 	private Supplier<TaxonomyCategoryBrief[]> _taxonomyCategoryBriefsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "A write-only field that adds `TaxonomyCategory` instances to the document."
 	)
 	public Long[] getTaxonomyCategoryIds() {
@@ -1389,9 +1355,7 @@ public class Document implements Serializable {
 	@JsonIgnore
 	private Supplier<Long[]> _taxonomyCategoryIdsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The document's main title/name."
-	)
+	@Schema(description = "The document's main title/name.")
 	public String getTitle() {
 		if (_titleSupplier != null) {
 			title = _titleSupplier.get();
@@ -1432,10 +1396,10 @@ public class Document implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _titleSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@JsonGetter("viewableBy")
+	@Schema(
 		description = "A write-only property that specifies the document's default permissions."
 	)
-	@JsonGetter("viewableBy")
 	@Valid
 	public ViewableBy getViewableBy() {
 		if (_viewableBySupplier != null) {
@@ -2049,8 +2013,8 @@ public class Document implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.Document",
 		name = "x-class-name"
 	)

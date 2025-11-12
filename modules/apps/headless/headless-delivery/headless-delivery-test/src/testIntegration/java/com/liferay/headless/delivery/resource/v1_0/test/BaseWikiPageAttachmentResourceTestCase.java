@@ -32,7 +32,7 @@ import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.UserTestUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
-import com.liferay.portal.kernel.util.FastDateFormatFactoryUtil;
+import com.liferay.portal.kernel.util.DateFormatFactoryUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.odata.entity.EntityField;
@@ -46,7 +46,7 @@ import java.io.File;
 
 import java.lang.reflect.Method;
 
-import java.text.Format;
+import java.text.DateFormat;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -85,7 +85,7 @@ public abstract class BaseWikiPageAttachmentResourceTestCase {
 
 	@BeforeClass
 	public static void setUpClass() throws Exception {
-		_format = FastDateFormatFactoryUtil.getSimpleDateFormat(
+		_dateFormat = DateFormatFactoryUtil.getSimpleDateFormat(
 			"yyyy-MM-dd'T'HH:mm:ss'Z'");
 	}
 
@@ -99,12 +99,14 @@ public abstract class BaseWikiPageAttachmentResourceTestCase {
 
 		_wikiPageAttachmentResource.setContextCompany(testCompany);
 
-		_testCompanyAdminUser = UserTestUtil.getAdminUser(
-			testCompany.getCompanyId());
+		com.liferay.portal.kernel.model.User testCompanyAdminUser =
+			UserTestUtil.getAdminUser(testCompany.getCompanyId());
 
-		wikiPageAttachmentResource = WikiPageAttachmentResource.builder(
-		).authentication(
-			_testCompanyAdminUser.getEmailAddress(),
+		WikiPageAttachmentResource.Builder builder =
+			WikiPageAttachmentResource.builder();
+
+		wikiPageAttachmentResource = builder.authentication(
+			testCompanyAdminUser.getEmailAddress(),
 			PropsValues.DEFAULT_ADMIN_PASSWORD
 		).endpoint(
 			testCompany.getVirtualHostname(), 8080, "http"
@@ -1907,9 +1909,7 @@ public abstract class BaseWikiPageAttachmentResourceTestCase {
 	private static final com.liferay.portal.kernel.log.Log _log =
 		LogFactoryUtil.getLog(BaseWikiPageAttachmentResourceTestCase.class);
 
-	private static Format _format;
-
-	private com.liferay.portal.kernel.model.User _testCompanyAdminUser;
+	private static DateFormat _dateFormat;
 
 	@Inject
 	private

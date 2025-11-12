@@ -16,6 +16,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.util.Iterator;
@@ -49,9 +51,7 @@ public class PageRuleAction implements Serializable {
 		return ObjectMapperUtil.unsafeReadValue(PageRuleAction.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The page rule action's action."
-	)
+	@Schema(description = "The page rule action's action.")
 	public String getAction() {
 		if (_actionSupplier != null) {
 			action = _actionSupplier.get();
@@ -92,9 +92,7 @@ public class PageRuleAction implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _actionSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The page rule action's ID."
-	)
+	@Schema(description = "The page rule action's ID.")
 	public String getId() {
 		if (_idSupplier != null) {
 			id = _idSupplier.get();
@@ -133,9 +131,7 @@ public class PageRuleAction implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _idSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The page rule condition's item ID."
-	)
+	@Schema(description = "The page rule condition's item ID.")
 	public String getItemId() {
 		if (_itemIdSupplier != null) {
 			itemId = _itemIdSupplier.get();
@@ -176,9 +172,7 @@ public class PageRuleAction implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _itemIdSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The page rule action's type."
-	)
+	@Schema(description = "The page rule action's type.")
 	public String getType() {
 		if (_typeSupplier != null) {
 			type = _typeSupplier.get();
@@ -313,8 +307,8 @@ public class PageRuleAction implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.PageRuleAction",
 		name = "x-class-name"
 	)

@@ -16,6 +16,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.util.Iterator;
@@ -51,9 +53,7 @@ public class CustomField implements Serializable {
 		return ObjectMapperUtil.unsafeReadValue(CustomField.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The field's value."
-	)
+	@Schema(description = "The field's value.")
 	@Valid
 	public CustomValue getCustomValue() {
 		if (_customValueSupplier != null) {
@@ -95,9 +95,7 @@ public class CustomField implements Serializable {
 	@JsonIgnore
 	private Supplier<CustomValue> _customValueSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The field type (e.g., image, text, etc.)."
-	)
+	@Schema(description = "The field type (e.g., image, text, etc.).")
 	public String getDataType() {
 		if (_dataTypeSupplier != null) {
 			dataType = _dataTypeSupplier.get();
@@ -138,7 +136,7 @@ public class CustomField implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _dataTypeSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The field's internal name. This is valid for comparisons and unique in the structured content."
 	)
 	public String getName() {
@@ -257,8 +255,8 @@ public class CustomField implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.CustomField",
 		name = "x-class-name"
 	)

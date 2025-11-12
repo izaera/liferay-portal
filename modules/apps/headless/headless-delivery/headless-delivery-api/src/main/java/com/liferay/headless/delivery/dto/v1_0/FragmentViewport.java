@@ -16,6 +16,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.util.Iterator;
@@ -40,11 +42,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @GraphQLName(
 	description = "Represents a fragment viewport.", value = "FragmentViewport"
 )
-@io.swagger.v3.oas.annotations.media.Schema(
+@JsonFilter("Liferay.Vulcan")
+@Schema(
 	description = "Represents a fragment viewport.",
 	requiredProperties = {"fragmentViewportStyle", "id"}
 )
-@JsonFilter("Liferay.Vulcan")
 @XmlRootElement(name = "FragmentViewport")
 public class FragmentViewport implements Serializable {
 
@@ -56,9 +58,7 @@ public class FragmentViewport implements Serializable {
 		return ObjectMapperUtil.unsafeReadValue(FragmentViewport.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The fragment's viewport style."
-	)
+	@Schema(description = "The fragment's viewport style.")
 	@Valid
 	public FragmentViewportStyle getFragmentViewportStyle() {
 		if (_fragmentViewportStyleSupplier != null) {
@@ -104,9 +104,7 @@ public class FragmentViewport implements Serializable {
 	@JsonIgnore
 	private Supplier<FragmentViewportStyle> _fragmentViewportStyleSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The fragment viewport's ID."
-	)
+	@Schema(description = "The fragment viewport's ID.")
 	public String getId() {
 		if (_idSupplier != null) {
 			id = _idSupplier.get();
@@ -207,8 +205,8 @@ public class FragmentViewport implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.FragmentViewport",
 		name = "x-class-name"
 	)

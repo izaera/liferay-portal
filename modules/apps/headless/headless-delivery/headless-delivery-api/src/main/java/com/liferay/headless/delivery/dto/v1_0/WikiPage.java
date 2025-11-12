@@ -19,6 +19,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.text.DateFormat;
@@ -44,11 +46,11 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Generated("")
 @GraphQLName(description = "Represents a wiki page.", value = "WikiPage")
-@io.swagger.v3.oas.annotations.media.Schema(
+@JsonFilter("Liferay.Vulcan")
+@Schema(
 	description = "Represents a wiki page.",
 	requiredProperties = {"encodingFormat", "headline"}
 )
-@JsonFilter("Liferay.Vulcan")
 @XmlRootElement(name = "WikiPage")
 public class WikiPage implements Serializable {
 
@@ -60,7 +62,7 @@ public class WikiPage implements Serializable {
 		return ObjectMapperUtil.unsafeReadValue(WikiPage.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "Block of actions allowed by the user making the request."
 	)
 	@Valid
@@ -107,9 +109,7 @@ public class WikiPage implements Serializable {
 	@JsonIgnore
 	private Supplier<Map<String, Map<String, String>>> _actionsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The blog post's average rating."
-	)
+	@Schema(description = "The blog post's average rating.")
 	@Valid
 	public AggregateRating getAggregateRating() {
 		if (_aggregateRatingSupplier != null) {
@@ -152,9 +152,7 @@ public class WikiPage implements Serializable {
 	@JsonIgnore
 	private Supplier<AggregateRating> _aggregateRatingSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The wiki page's content."
-	)
+	@Schema(description = "The wiki page's content.")
 	public String getContent() {
 		if (_contentSupplier != null) {
 			content = _contentSupplier.get();
@@ -195,9 +193,7 @@ public class WikiPage implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _contentSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The wiki page's creator."
-	)
+	@Schema(description = "The wiki page's creator.")
 	@Valid
 	public Creator getCreator() {
 		if (_creatorSupplier != null) {
@@ -239,7 +235,7 @@ public class WikiPage implements Serializable {
 	@JsonIgnore
 	private Supplier<Creator> _creatorSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "A list of the custom fields associated with the wiki page."
 	)
 	@Valid
@@ -285,9 +281,7 @@ public class WikiPage implements Serializable {
 	@JsonIgnore
 	private Supplier<CustomField[]> _customFieldsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The date the wiki page was created."
-	)
+	@Schema(description = "The date the wiki page was created.")
 	public Date getDateCreated() {
 		if (_dateCreatedSupplier != null) {
 			dateCreated = _dateCreatedSupplier.get();
@@ -328,7 +322,7 @@ public class WikiPage implements Serializable {
 	@JsonIgnore
 	private Supplier<Date> _dateCreatedSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The last time any of the wiki page's fields changed."
 	)
 	public Date getDateModified() {
@@ -373,9 +367,7 @@ public class WikiPage implements Serializable {
 	@JsonIgnore
 	private Supplier<Date> _dateModifiedSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The wiki page's description."
-	)
+	@Schema(description = "The wiki page's description.")
 	public String getDescription() {
 		if (_descriptionSupplier != null) {
 			description = _descriptionSupplier.get();
@@ -416,7 +408,7 @@ public class WikiPage implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _descriptionSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The wiki page's media format (e.g., HTML, BBCode, etc.)."
 	)
 	public String getEncodingFormat() {
@@ -462,9 +454,7 @@ public class WikiPage implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _encodingFormatSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The wiki page's external reference code."
-	)
+	@Schema(description = "The wiki page's external reference code.")
 	public String getExternalReferenceCode() {
 		if (_externalReferenceCodeSupplier != null) {
 			externalReferenceCode = _externalReferenceCodeSupplier.get();
@@ -505,9 +495,7 @@ public class WikiPage implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _externalReferenceCodeSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The wiki page's main title."
-	)
+	@Schema(description = "The wiki page's main title.")
 	public String getHeadline() {
 		if (_headlineSupplier != null) {
 			headline = _headlineSupplier.get();
@@ -549,9 +537,7 @@ public class WikiPage implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _headlineSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The wiki page's ID."
-	)
+	@Schema(description = "The wiki page's ID.")
 	public Long getId() {
 		if (_idSupplier != null) {
 			id = _idSupplier.get();
@@ -590,9 +576,7 @@ public class WikiPage implements Serializable {
 	@JsonIgnore
 	private Supplier<Long> _idSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "A list of keywords describing the blog post."
-	)
+	@Schema(description = "A list of keywords describing the blog post.")
 	public String[] getKeywords() {
 		if (_keywordsSupplier != null) {
 			keywords = _keywordsSupplier.get();
@@ -633,9 +617,7 @@ public class WikiPage implements Serializable {
 	@JsonIgnore
 	private Supplier<String[]> _keywordsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The wiki page's number attachments."
-	)
+	@Schema(description = "The wiki page's number attachments.")
 	public Integer getNumberOfAttachments() {
 		if (_numberOfAttachmentsSupplier != null) {
 			numberOfAttachments = _numberOfAttachmentsSupplier.get();
@@ -676,9 +658,7 @@ public class WikiPage implements Serializable {
 	@JsonIgnore
 	private Supplier<Integer> _numberOfAttachmentsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The number of child wiki page on this wiki page."
-	)
+	@Schema(description = "The number of child wiki page on this wiki page.")
 	public Integer getNumberOfWikiPages() {
 		if (_numberOfWikiPagesSupplier != null) {
 			numberOfWikiPages = _numberOfWikiPagesSupplier.get();
@@ -721,9 +701,7 @@ public class WikiPage implements Serializable {
 	@JsonIgnore
 	private Supplier<Integer> _numberOfWikiPagesSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The ID of the wiki page's parent, if it exists."
-	)
+	@Schema(description = "The ID of the wiki page's parent, if it exists.")
 	public Long getParentWikiPageId() {
 		if (_parentWikiPageIdSupplier != null) {
 			parentWikiPageId = _parentWikiPageIdSupplier.get();
@@ -766,9 +744,7 @@ public class WikiPage implements Serializable {
 	@JsonIgnore
 	private Supplier<Long> _parentWikiPageIdSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "A list of related contents to this wiki page."
-	)
+	@Schema(description = "A list of related contents to this wiki page.")
 	@Valid
 	public RelatedContent[] getRelatedContents() {
 		if (_relatedContentsSupplier != null) {
@@ -811,7 +787,7 @@ public class WikiPage implements Serializable {
 	@JsonIgnore
 	private Supplier<RelatedContent[]> _relatedContentsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The ID of the site to which this wiki page is scoped."
 	)
 	public Long getSiteId() {
@@ -856,7 +832,7 @@ public class WikiPage implements Serializable {
 	@JsonIgnore
 	private Supplier<Long> _siteIdSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "A flag that indicates whether the user making the requests is subscribed to this wiki page."
 	)
 	public Boolean getSubscribed() {
@@ -901,9 +877,7 @@ public class WikiPage implements Serializable {
 	@JsonIgnore
 	private Supplier<Boolean> _subscribedSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The categories associated with this wiki page."
-	)
+	@Schema(description = "The categories associated with this wiki page.")
 	@Valid
 	public TaxonomyCategoryBrief[] getTaxonomyCategoryBriefs() {
 		if (_taxonomyCategoryBriefsSupplier != null) {
@@ -950,7 +924,7 @@ public class WikiPage implements Serializable {
 	@JsonIgnore
 	private Supplier<TaxonomyCategoryBrief[]> _taxonomyCategoryBriefsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "A write-only field that adds `TaxonomyCategory` instances to the wiki page."
 	)
 	public Long[] getTaxonomyCategoryIds() {
@@ -995,10 +969,10 @@ public class WikiPage implements Serializable {
 	@JsonIgnore
 	private Supplier<Long[]> _taxonomyCategoryIdsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@JsonGetter("viewableBy")
+	@Schema(
 		description = "A write-only property that specifies the default permissions."
 	)
-	@JsonGetter("viewableBy")
 	@Valid
 	public ViewableBy getViewableBy() {
 		if (_viewableBySupplier != null) {
@@ -1053,7 +1027,7 @@ public class WikiPage implements Serializable {
 	@JsonIgnore
 	private Supplier<ViewableBy> _viewableBySupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The ID of the wiki node to which the wiki page belongs."
 	)
 	public Long getWikiNodeId() {
@@ -1496,8 +1470,8 @@ public class WikiPage implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.WikiPage",
 		name = "x-class-name"
 	)

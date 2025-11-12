@@ -16,6 +16,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.util.Iterator;
@@ -52,9 +54,7 @@ public class StructuredContentLink implements Serializable {
 			StructuredContentLink.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The type of content."
-	)
+	@Schema(description = "The type of content.")
 	public String getContentType() {
 		if (_contentTypeSupplier != null) {
 			contentType = _contentTypeSupplier.get();
@@ -95,7 +95,7 @@ public class StructuredContentLink implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _contentTypeSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "Optional field with the structured content, can be embedded with nestedFields."
 	)
 	@Valid
@@ -145,9 +145,7 @@ public class StructuredContentLink implements Serializable {
 	@JsonIgnore
 	private Supplier<StructuredContent> _embeddedStructuredContentSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The resource's ID."
-	)
+	@Schema(description = "The resource's ID.")
 	public Long getId() {
 		if (_idSupplier != null) {
 			id = _idSupplier.get();
@@ -186,9 +184,7 @@ public class StructuredContentLink implements Serializable {
 	@JsonIgnore
 	private Supplier<Long> _idSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The resource's title."
-	)
+	@Schema(description = "The resource's title.")
 	public String getTitle() {
 		if (_titleSupplier != null) {
 			title = _titleSupplier.get();
@@ -319,8 +315,8 @@ public class StructuredContentLink implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.StructuredContentLink",
 		name = "x-class-name"
 	)

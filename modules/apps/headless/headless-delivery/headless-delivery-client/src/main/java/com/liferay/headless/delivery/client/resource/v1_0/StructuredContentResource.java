@@ -530,8 +530,8 @@ public interface StructuredContentResource {
 		private Map<String, String> _headers = new LinkedHashMap<>();
 		private String _host = "localhost";
 		private Locale _locale;
-		private String _login;
-		private String _password;
+		private String _login = "";
+		private String _password = "";
 		private Map<String, String> _parameters = new LinkedHashMap<>();
 		private int _port = 8080;
 		private String _scheme = "http";
@@ -669,10 +669,8 @@ public interface StructuredContentResource {
 
 			httpInvoker.path("assetLibraryId", assetLibraryId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -799,10 +797,8 @@ public interface StructuredContentResource {
 
 			httpInvoker.path("assetLibraryId", assetLibraryId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -909,10 +905,8 @@ public interface StructuredContentResource {
 
 			httpInvoker.path("assetLibraryId", assetLibraryId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -1013,10 +1007,8 @@ public interface StructuredContentResource {
 
 			httpInvoker.path("assetLibraryId", assetLibraryId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -1122,10 +1114,8 @@ public interface StructuredContentResource {
 			httpInvoker.path("assetLibraryId", assetLibraryId);
 			httpInvoker.path("externalReferenceCode", externalReferenceCode);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -1232,10 +1222,8 @@ public interface StructuredContentResource {
 			httpInvoker.path("assetLibraryId", assetLibraryId);
 			httpInvoker.path("externalReferenceCode", externalReferenceCode);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -1346,10 +1334,8 @@ public interface StructuredContentResource {
 			httpInvoker.path("assetLibraryId", assetLibraryId);
 			httpInvoker.path("externalReferenceCode", externalReferenceCode);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -1458,10 +1444,8 @@ public interface StructuredContentResource {
 
 			httpInvoker.path("assetLibraryId", assetLibraryId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -1574,10 +1558,8 @@ public interface StructuredContentResource {
 
 			httpInvoker.path("assetLibraryId", assetLibraryId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -1707,10 +1689,8 @@ public interface StructuredContentResource {
 
 			httpInvoker.path("contentStructureId", contentStructureId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -1837,10 +1817,8 @@ public interface StructuredContentResource {
 
 			httpInvoker.path("contentStructureId", contentStructureId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -1973,10 +1951,8 @@ public interface StructuredContentResource {
 
 			httpInvoker.path("siteId", siteId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -2103,10 +2079,8 @@ public interface StructuredContentResource {
 
 			httpInvoker.path("siteId", siteId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -2212,10 +2186,8 @@ public interface StructuredContentResource {
 
 			httpInvoker.path("siteId", siteId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -2316,10 +2288,8 @@ public interface StructuredContentResource {
 
 			httpInvoker.path("siteId", siteId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -2425,10 +2395,8 @@ public interface StructuredContentResource {
 			httpInvoker.path("siteId", siteId);
 			httpInvoker.path("externalReferenceCode", externalReferenceCode);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -2535,10 +2503,8 @@ public interface StructuredContentResource {
 			httpInvoker.path("siteId", siteId);
 			httpInvoker.path("externalReferenceCode", externalReferenceCode);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -2649,10 +2615,8 @@ public interface StructuredContentResource {
 			httpInvoker.path("siteId", siteId);
 			httpInvoker.path("externalReferenceCode", externalReferenceCode);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -2757,10 +2721,8 @@ public interface StructuredContentResource {
 			httpInvoker.path("siteId", siteId);
 			httpInvoker.path("key", key);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -2865,10 +2827,8 @@ public interface StructuredContentResource {
 			httpInvoker.path("siteId", siteId);
 			httpInvoker.path("uuid", uuid);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -2977,10 +2937,8 @@ public interface StructuredContentResource {
 
 			httpInvoker.path("siteId", siteId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -3093,10 +3051,8 @@ public interface StructuredContentResource {
 
 			httpInvoker.path("siteId", siteId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -3233,10 +3189,8 @@ public interface StructuredContentResource {
 			httpInvoker.path(
 				"structuredContentFolderId", structuredContentFolderId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -3365,10 +3319,8 @@ public interface StructuredContentResource {
 			httpInvoker.path(
 				"structuredContentFolderId", structuredContentFolderId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -3478,10 +3430,8 @@ public interface StructuredContentResource {
 			httpInvoker.path(
 				"structuredContentFolderId", structuredContentFolderId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -3585,10 +3535,8 @@ public interface StructuredContentResource {
 			httpInvoker.path(
 				"structuredContentFolderId", structuredContentFolderId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -3690,10 +3638,8 @@ public interface StructuredContentResource {
 
 			httpInvoker.path("structuredContentId", structuredContentId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -3791,10 +3737,8 @@ public interface StructuredContentResource {
 					_builder._port + _builder._contextPath +
 						"/o/headless-delivery/v1.0/structured-contents/batch");
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -3896,10 +3840,8 @@ public interface StructuredContentResource {
 
 			httpInvoker.path("structuredContentId", structuredContentId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -4005,10 +3947,8 @@ public interface StructuredContentResource {
 
 			httpInvoker.path("structuredContentId", structuredContentId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -4114,10 +4054,8 @@ public interface StructuredContentResource {
 
 			httpInvoker.path("structuredContentId", structuredContentId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -4213,10 +4151,8 @@ public interface StructuredContentResource {
 					_builder._port + _builder._contextPath +
 						"/o/headless-delivery/v1.0/structured-contents/batch");
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -4320,10 +4256,8 @@ public interface StructuredContentResource {
 
 			httpInvoker.path("structuredContentId", structuredContentId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -4426,10 +4360,8 @@ public interface StructuredContentResource {
 
 			httpInvoker.path("structuredContentId", structuredContentId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -4536,10 +4468,8 @@ public interface StructuredContentResource {
 
 			httpInvoker.path("structuredContentId", structuredContentId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -4646,10 +4576,8 @@ public interface StructuredContentResource {
 
 			httpInvoker.path("structuredContentId", structuredContentId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -4758,10 +4686,8 @@ public interface StructuredContentResource {
 
 			httpInvoker.path("structuredContentId", structuredContentId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -4874,10 +4800,8 @@ public interface StructuredContentResource {
 
 			httpInvoker.path("structuredContentId", structuredContentId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -4984,10 +4908,8 @@ public interface StructuredContentResource {
 			httpInvoker.path("structuredContentId", structuredContentId);
 			httpInvoker.path("displayPageKey", displayPageKey);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -5093,10 +5015,8 @@ public interface StructuredContentResource {
 			httpInvoker.path("structuredContentId", structuredContentId);
 			httpInvoker.path("contentTemplateId", contentTemplateId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -5201,10 +5121,8 @@ public interface StructuredContentResource {
 
 			httpInvoker.path("structuredContentId", structuredContentId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}
@@ -5310,10 +5228,8 @@ public interface StructuredContentResource {
 
 			httpInvoker.path("structuredContentId", structuredContentId);
 
-			if ((_builder._login != null) && (_builder._password != null)) {
-				httpInvoker.userNameAndPassword(
-					_builder._login + ":" + _builder._password);
-			}
+			httpInvoker.userNameAndPassword(
+				_builder._login + ":" + _builder._password);
 
 			return httpInvoker.invoke();
 		}

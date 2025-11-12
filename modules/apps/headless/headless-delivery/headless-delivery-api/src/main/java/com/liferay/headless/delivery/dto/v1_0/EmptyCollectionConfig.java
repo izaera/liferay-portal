@@ -16,6 +16,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.util.Iterator;
@@ -49,7 +51,7 @@ public class EmptyCollectionConfig implements Serializable {
 			EmptyCollectionConfig.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "Whether to display a message when the collection is empty or no results match the applied filters (true by default)."
 	)
 	public Boolean getDisplayMessage() {
@@ -94,7 +96,7 @@ public class EmptyCollectionConfig implements Serializable {
 	@JsonIgnore
 	private Supplier<Boolean> _displayMessageSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The localized message to display when the collection is empty or no results match the applied filters ('No Results Found' by default)."
 	)
 	@Valid
@@ -198,8 +200,8 @@ public class EmptyCollectionConfig implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.EmptyCollectionConfig",
 		name = "x-class-name"
 	)

@@ -16,6 +16,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.util.Iterator;
@@ -52,7 +54,7 @@ public class ColumnViewportConfig implements Serializable {
 			ColumnViewportConfig.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema
+	@Schema
 	@Valid
 	public LandscapeMobile getLandscapeMobile() {
 		if (_landscapeMobileSupplier != null) {
@@ -95,7 +97,7 @@ public class ColumnViewportConfig implements Serializable {
 	@JsonIgnore
 	private Supplier<LandscapeMobile> _landscapeMobileSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema
+	@Schema
 	@Valid
 	public PortraitMobile getPortraitMobile() {
 		if (_portraitMobileSupplier != null) {
@@ -138,7 +140,7 @@ public class ColumnViewportConfig implements Serializable {
 	@JsonIgnore
 	private Supplier<PortraitMobile> _portraitMobileSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema
+	@Schema
 	@Valid
 	public Tablet getTablet() {
 		if (_tabletSupplier != null) {
@@ -249,8 +251,8 @@ public class ColumnViewportConfig implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.ColumnViewportConfig",
 		name = "x-class-name"
 	)

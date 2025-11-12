@@ -17,6 +17,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.util.Iterator;
@@ -49,9 +51,7 @@ public class ContentElement implements Serializable {
 		return ObjectMapperUtil.unsafeReadValue(ContentElement.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The content's fields."
-	)
+	@Schema(description = "The content's fields.")
 	@Valid
 	public Object getContent() {
 		if (_contentSupplier != null) {
@@ -93,9 +93,7 @@ public class ContentElement implements Serializable {
 	@JsonIgnore
 	private Supplier<Object> _contentSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The content set element's type."
-	)
+	@Schema(description = "The content set element's type.")
 	public String getContentType() {
 		if (_contentTypeSupplier != null) {
 			contentType = _contentTypeSupplier.get();
@@ -136,9 +134,7 @@ public class ContentElement implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _contentTypeSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The content set element's ID."
-	)
+	@Schema(description = "The content set element's ID.")
 	public Long getId() {
 		if (_idSupplier != null) {
 			id = _idSupplier.get();
@@ -177,9 +173,7 @@ public class ContentElement implements Serializable {
 	@JsonIgnore
 	private Supplier<Long> _idSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The content's title."
-	)
+	@Schema(description = "The content's title.")
 	public String getTitle() {
 		if (_titleSupplier != null) {
 			title = _titleSupplier.get();
@@ -220,9 +214,7 @@ public class ContentElement implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _titleSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The localized content's titles."
-	)
+	@Schema(description = "The localized content's titles.")
 	@Valid
 	public Map<String, String> getTitle_i18n() {
 		if (_title_i18nSupplier != null) {
@@ -375,8 +367,8 @@ public class ContentElement implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.ContentElement",
 		name = "x-class-name"
 	)

@@ -16,6 +16,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.util.Iterator;
@@ -50,9 +52,7 @@ public class SEOSettings implements Serializable {
 		return ObjectMapperUtil.unsafeReadValue(SEOSettings.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The canonical URL of the page, if it exists."
-	)
+	@Schema(description = "The canonical URL of the page, if it exists.")
 	public String getCustomCanonicalURL() {
 		if (_customCanonicalURLSupplier != null) {
 			customCanonicalURL = _customCanonicalURLSupplier.get();
@@ -93,7 +93,7 @@ public class SEOSettings implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _customCanonicalURLSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The localized canonical URL of the page, if it exists."
 	)
 	@Valid
@@ -142,7 +142,7 @@ public class SEOSettings implements Serializable {
 	@JsonIgnore
 	private Supplier<Map<String, String>> _customCanonicalURL_i18nSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The page's description to be used as summary for search engines."
 	)
 	public String getDescription() {
@@ -187,7 +187,7 @@ public class SEOSettings implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _descriptionSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The localized descriptions of the page to be used as summary for search engines."
 	)
 	@Valid
@@ -234,9 +234,7 @@ public class SEOSettings implements Serializable {
 	@JsonIgnore
 	private Supplier<Map<String, String>> _description_i18nSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The page's main title to be used by search engines."
-	)
+	@Schema(description = "The page's main title to be used by search engines.")
 	public String getHtmlTitle() {
 		if (_htmlTitleSupplier != null) {
 			htmlTitle = _htmlTitleSupplier.get();
@@ -279,7 +277,7 @@ public class SEOSettings implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _htmlTitleSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The localized main titles of the page to be used by search engines."
 	)
 	@Valid
@@ -326,7 +324,7 @@ public class SEOSettings implements Serializable {
 	@JsonIgnore
 	private Supplier<Map<String, String>> _htmlTitle_i18nSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "A tag telling search engines if and how they should crawl the page."
 	)
 	public String getRobots() {
@@ -371,7 +369,7 @@ public class SEOSettings implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _robotsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "A localized tag telling search engines if and how they should crawl the page."
 	)
 	@Valid
@@ -418,7 +416,7 @@ public class SEOSettings implements Serializable {
 	@JsonIgnore
 	private Supplier<Map<String, String>> _robots_i18nSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "A list of target keywords of the page to be used by search engines."
 	)
 	public String getSeoKeywords() {
@@ -463,7 +461,7 @@ public class SEOSettings implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _seoKeywordsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "A list of localized target keywords of the page to be used by search engines."
 	)
 	@Valid
@@ -510,9 +508,7 @@ public class SEOSettings implements Serializable {
 	@JsonIgnore
 	private Supplier<Map<String, String>> _seoKeywords_i18nSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "Represents settings related with the site map."
-	)
+	@Schema(description = "Represents settings related with the site map.")
 	@Valid
 	public SiteMapSettings getSiteMapSettings() {
 		if (_siteMapSettingsSupplier != null) {
@@ -742,8 +738,8 @@ public class SEOSettings implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.SEOSettings",
 		name = "x-class-name"
 	)

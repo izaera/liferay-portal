@@ -16,6 +16,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.util.Iterator;
@@ -51,7 +53,7 @@ public class PageFormDefinition implements Serializable {
 		return ObjectMapperUtil.unsafeReadValue(PageFormDefinition.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "A list of CSS Classes that are applied to the element."
 	)
 	public String[] getCssClasses() {
@@ -96,9 +98,7 @@ public class PageFormDefinition implements Serializable {
 	@JsonIgnore
 	private Supplier<String[]> _cssClassesSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "Custom CSS that is applied on the fragment."
-	)
+	@Schema(description = "Custom CSS that is applied on the fragment.")
 	public String getCustomCSS() {
 		if (_customCSSSupplier != null) {
 			customCSS = _customCSSSupplier.get();
@@ -139,9 +139,7 @@ public class PageFormDefinition implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _customCSSSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The custom CSS viewports of the page collection."
-	)
+	@Schema(description = "The custom CSS viewports of the page collection.")
 	@Valid
 	public CustomCSSViewport[] getCustomCSSViewports() {
 		if (_customCSSViewportsSupplier != null) {
@@ -186,9 +184,7 @@ public class PageFormDefinition implements Serializable {
 	@JsonIgnore
 	private Supplier<CustomCSSViewport[]> _customCSSViewportsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The page form's configuration."
-	)
+	@Schema(description = "The page form's configuration.")
 	@Valid
 	public FormConfig getFormConfig() {
 		if (_formConfigSupplier != null) {
@@ -230,9 +226,7 @@ public class PageFormDefinition implements Serializable {
 	@JsonIgnore
 	private Supplier<FormConfig> _formConfigSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The fragment style of a Page form."
-	)
+	@Schema(description = "The fragment style of a Page form.")
 	@Valid
 	public FragmentStyle getFragmentStyle() {
 		if (_fragmentStyleSupplier != null) {
@@ -274,9 +268,7 @@ public class PageFormDefinition implements Serializable {
 	@JsonIgnore
 	private Supplier<FragmentStyle> _fragmentStyleSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "A list of fragment viewports of a Page form."
-	)
+	@Schema(description = "A list of fragment viewports of a Page form.")
 	@Valid
 	public FragmentViewport[] getFragmentViewports() {
 		if (_fragmentViewportsSupplier != null) {
@@ -319,7 +311,7 @@ public class PageFormDefinition implements Serializable {
 	@JsonIgnore
 	private Supplier<FragmentViewport[]> _fragmentViewportsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "A flag that indicates whether the page fragment instance is indexed or not."
 	)
 	public Boolean getIndexed() {
@@ -364,9 +356,7 @@ public class PageFormDefinition implements Serializable {
 	@JsonIgnore
 	private Supplier<Boolean> _indexedSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "the page section's layout."
-	)
+	@Schema(description = "the page section's layout.")
 	@Valid
 	public Layout getLayout() {
 		if (_layoutSupplier != null) {
@@ -408,9 +398,7 @@ public class PageFormDefinition implements Serializable {
 	@JsonIgnore
 	private Supplier<Layout> _layoutSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The custom name of of a Page form."
-	)
+	@Schema(description = "The custom name of of a Page form.")
 	public String getName() {
 		if (_nameSupplier != null) {
 			name = _nameSupplier.get();
@@ -631,8 +619,8 @@ public class PageFormDefinition implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.PageFormDefinition",
 		name = "x-class-name"
 	)

@@ -18,6 +18,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.text.DateFormat;
@@ -47,13 +49,13 @@ import javax.xml.bind.annotation.XmlRootElement;
 	description = "Represents a Document Metadata Set.",
 	value = "DocumentMetadataSet"
 )
-@io.swagger.v3.oas.annotations.media.Schema(
+@JsonFilter("Liferay.Vulcan")
+@Schema(
 	description = "Represents a Document Metadata Set.",
 	requiredProperties = {
 		"availableLanguages", "dataDefinitionFields", "dataLayout", "name"
 	}
 )
-@JsonFilter("Liferay.Vulcan")
 @XmlRootElement(name = "DocumentMetadataSet")
 public class DocumentMetadataSet implements Serializable {
 
@@ -66,7 +68,7 @@ public class DocumentMetadataSet implements Serializable {
 			DocumentMetadataSet.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "Block of actions allowed by the user making the request."
 	)
 	@Valid
@@ -113,7 +115,7 @@ public class DocumentMetadataSet implements Serializable {
 	@JsonIgnore
 	private Supplier<Map<String, Map<String, String>>> _actionsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The key of the asset library to which the Document Metadata Set is scoped."
 	)
 	public String getAssetLibraryKey() {
@@ -158,7 +160,7 @@ public class DocumentMetadataSet implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _assetLibraryKeySupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The list of languages the navigation menu item has a translation for."
 	)
 	public String[] getAvailableLanguages() {
@@ -204,7 +206,7 @@ public class DocumentMetadataSet implements Serializable {
 	@JsonIgnore
 	private Supplier<String[]> _availableLanguagesSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The list of fields that store the structured content's information."
 	)
 	@Valid
@@ -254,7 +256,7 @@ public class DocumentMetadataSet implements Serializable {
 	@JsonIgnore
 	private Supplier<DataDefinitionField[]> _dataDefinitionFieldsSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The layout of the document data definition type fields."
 	)
 	@Valid
@@ -301,9 +303,7 @@ public class DocumentMetadataSet implements Serializable {
 	@JsonIgnore
 	private Supplier<DataLayout> _dataLayoutSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The Document Metadata Set's creation date."
-	)
+	@Schema(description = "The Document Metadata Set's creation date.")
 	public Date getDateCreated() {
 		if (_dateCreatedSupplier != null) {
 			dateCreated = _dateCreatedSupplier.get();
@@ -344,7 +344,7 @@ public class DocumentMetadataSet implements Serializable {
 	@JsonIgnore
 	private Supplier<Date> _dateCreatedSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The last time a field of the Document Metadata Set changed."
 	)
 	public Date getDateModified() {
@@ -389,9 +389,7 @@ public class DocumentMetadataSet implements Serializable {
 	@JsonIgnore
 	private Supplier<Date> _dateModifiedSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The Document Metadata Set's description."
-	)
+	@Schema(description = "The Document Metadata Set's description.")
 	public String getDescription() {
 		if (_descriptionSupplier != null) {
 			description = _descriptionSupplier.get();
@@ -432,9 +430,7 @@ public class DocumentMetadataSet implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _descriptionSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The localized Document Metadata Set descriptions."
-	)
+	@Schema(description = "The localized Document Metadata Set descriptions.")
 	@Valid
 	public Map<String, String> getDescription_i18n() {
 		if (_description_i18nSupplier != null) {
@@ -479,7 +475,7 @@ public class DocumentMetadataSet implements Serializable {
 	@JsonIgnore
 	private Supplier<Map<String, String>> _description_i18nSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The Document Metadata Set's external reference code."
 	)
 	public String getExternalReferenceCode() {
@@ -524,9 +520,7 @@ public class DocumentMetadataSet implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _externalReferenceCodeSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The ID of the Document Metadata Set."
-	)
+	@Schema(description = "The ID of the Document Metadata Set.")
 	public Long getId() {
 		if (_idSupplier != null) {
 			id = _idSupplier.get();
@@ -565,9 +559,7 @@ public class DocumentMetadataSet implements Serializable {
 	@JsonIgnore
 	private Supplier<Long> _idSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The Document Metadata Set's name."
-	)
+	@Schema(description = "The Document Metadata Set's name.")
 	public String getName() {
 		if (_nameSupplier != null) {
 			name = _nameSupplier.get();
@@ -607,9 +599,7 @@ public class DocumentMetadataSet implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _nameSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "the localized Document Metadata Set's names."
-	)
+	@Schema(description = "the localized Document Metadata Set's names.")
 	@Valid
 	public Map<String, String> getName_i18n() {
 		if (_name_i18nSupplier != null) {
@@ -652,7 +642,7 @@ public class DocumentMetadataSet implements Serializable {
 	@JsonIgnore
 	private Supplier<Map<String, String>> _name_i18nSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The ID of the site to which this Document Metadata Set is scoped."
 	)
 	public Long getSiteId() {
@@ -948,8 +938,8 @@ public class DocumentMetadataSet implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.DocumentMetadataSet",
 		name = "x-class-name"
 	)

@@ -16,6 +16,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.util.Iterator;
@@ -51,9 +53,7 @@ public class Creator implements Serializable {
 		return ObjectMapperUtil.unsafeReadValue(Creator.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The author's additional name (e.g., middle name)."
-	)
+	@Schema(description = "The author's additional name (e.g., middle name).")
 	public String getAdditionalName() {
 		if (_additionalNameSupplier != null) {
 			additionalName = _additionalNameSupplier.get();
@@ -96,9 +96,7 @@ public class Creator implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _additionalNameSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The type of the content."
-	)
+	@Schema(description = "The type of the content.")
 	public String getContentType() {
 		if (_contentTypeSupplier != null) {
 			contentType = _contentTypeSupplier.get();
@@ -139,9 +137,7 @@ public class Creator implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _contentTypeSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The external reference code of the author."
-	)
+	@Schema(description = "The external reference code of the author.")
 	public String getExternalReferenceCode() {
 		if (_externalReferenceCodeSupplier != null) {
 			externalReferenceCode = _externalReferenceCodeSupplier.get();
@@ -182,9 +178,7 @@ public class Creator implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _externalReferenceCodeSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The author's surname."
-	)
+	@Schema(description = "The author's surname.")
 	public String getFamilyName() {
 		if (_familyNameSupplier != null) {
 			familyName = _familyNameSupplier.get();
@@ -225,9 +219,7 @@ public class Creator implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _familyNameSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The author's first name."
-	)
+	@Schema(description = "The author's first name.")
 	public String getGivenName() {
 		if (_givenNameSupplier != null) {
 			givenName = _givenNameSupplier.get();
@@ -268,9 +260,7 @@ public class Creator implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _givenNameSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The author's ID."
-	)
+	@Schema(description = "The author's ID.")
 	public Long getId() {
 		if (_idSupplier != null) {
 			id = _idSupplier.get();
@@ -309,9 +299,7 @@ public class Creator implements Serializable {
 	@JsonIgnore
 	private Supplier<Long> _idSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "A relative URL to the author's profile image."
-	)
+	@Schema(description = "A relative URL to the author's profile image.")
 	public String getImage() {
 		if (_imageSupplier != null) {
 			image = _imageSupplier.get();
@@ -352,9 +340,7 @@ public class Creator implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _imageSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The author's full name."
-	)
+	@Schema(description = "The author's full name.")
 	public String getName() {
 		if (_nameSupplier != null) {
 			name = _nameSupplier.get();
@@ -393,7 +379,7 @@ public class Creator implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _nameSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "A relative URL to the author's user profile. Optional field, can be embedded with nestedFields."
 	)
 	public String getProfileURL() {
@@ -438,9 +424,7 @@ public class Creator implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _profileURLSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "A list of userGroups information."
-	)
+	@Schema(description = "A list of userGroups information.")
 	@Valid
 	public UserGroupBrief[] getUserGroupBriefs() {
 		if (_userGroupBriefsSupplier != null) {
@@ -677,8 +661,8 @@ public class Creator implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.Creator",
 		name = "x-class-name"
 	)

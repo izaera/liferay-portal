@@ -19,6 +19,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.util.Iterator;
@@ -54,9 +56,7 @@ public class BlogPostingImage implements Serializable {
 		return ObjectMapperUtil.unsafeReadValue(BlogPostingImage.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The image's relative URL."
-	)
+	@Schema(description = "The image's relative URL.")
 	public String getContentUrl() {
 		if (_contentUrlSupplier != null) {
 			contentUrl = _contentUrlSupplier.get();
@@ -97,7 +97,7 @@ public class BlogPostingImage implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _contentUrlSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "optional field with the content of the image in Base64, can be embedded with nestedFields"
 	)
 	public String getContentValue() {
@@ -142,7 +142,7 @@ public class BlogPostingImage implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _contentValueSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The image's content type (e.g., `application/png`, etc.)."
 	)
 	public String getEncodingFormat() {
@@ -187,9 +187,7 @@ public class BlogPostingImage implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _encodingFormatSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The image's external reference code."
-	)
+	@Schema(description = "The image's external reference code.")
 	public String getExternalReferenceCode() {
 		if (_externalReferenceCodeSupplier != null) {
 			externalReferenceCode = _externalReferenceCodeSupplier.get();
@@ -230,9 +228,7 @@ public class BlogPostingImage implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _externalReferenceCodeSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The image's file extension."
-	)
+	@Schema(description = "The image's file extension.")
 	public String getFileExtension() {
 		if (_fileExtensionSupplier != null) {
 			fileExtension = _fileExtensionSupplier.get();
@@ -273,7 +269,7 @@ public class BlogPostingImage implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _fileExtensionSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(description = "The image's ID.")
+	@Schema(description = "The image's ID.")
 	public Long getId() {
 		if (_idSupplier != null) {
 			id = _idSupplier.get();
@@ -312,9 +308,7 @@ public class BlogPostingImage implements Serializable {
 	@JsonIgnore
 	private Supplier<Long> _idSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The image's size in bytes."
-	)
+	@Schema(description = "The image's size in bytes.")
 	public Long getSizeInBytes() {
 		if (_sizeInBytesSupplier != null) {
 			sizeInBytes = _sizeInBytesSupplier.get();
@@ -355,9 +349,7 @@ public class BlogPostingImage implements Serializable {
 	@JsonIgnore
 	private Supplier<Long> _sizeInBytesSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The image's title text."
-	)
+	@Schema(description = "The image's title text.")
 	public String getTitle() {
 		if (_titleSupplier != null) {
 			title = _titleSupplier.get();
@@ -398,11 +390,11 @@ public class BlogPostingImage implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _titleSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@JsonGetter("viewableBy")
+	@Schema(
 		deprecated = true,
 		description = "A write-only property that specifies the default permissions."
 	)
-	@JsonGetter("viewableBy")
 	@Valid
 	public ViewableBy getViewableBy() {
 		if (_viewableBySupplier != null) {
@@ -626,8 +618,8 @@ public class BlogPostingImage implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.BlogPostingImage",
 		name = "x-class-name"
 	)

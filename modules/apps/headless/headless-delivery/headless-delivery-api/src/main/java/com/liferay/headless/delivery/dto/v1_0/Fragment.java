@@ -16,6 +16,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.util.Iterator;
@@ -49,9 +51,7 @@ public class Fragment implements Serializable {
 		return ObjectMapperUtil.unsafeReadValue(Fragment.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The collection name this fragment belongs to."
-	)
+	@Schema(description = "The collection name this fragment belongs to.")
 	public String getCollectionName() {
 		if (_collectionNameSupplier != null) {
 			collectionName = _collectionNameSupplier.get();
@@ -92,9 +92,7 @@ public class Fragment implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _collectionNameSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The fragment's key."
-	)
+	@Schema(description = "The fragment's key.")
 	public String getKey() {
 		if (_keySupplier != null) {
 			key = _keySupplier.get();
@@ -133,9 +131,7 @@ public class Fragment implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _keySupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The fragment's name."
-	)
+	@Schema(description = "The fragment's name.")
 	public String getName() {
 		if (_nameSupplier != null) {
 			name = _nameSupplier.get();
@@ -174,7 +170,7 @@ public class Fragment implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _nameSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The key of the site to which this fragment is scoped."
 	)
 	public String getSiteKey() {
@@ -315,8 +311,8 @@ public class Fragment implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.Fragment",
 		name = "x-class-name"
 	)

@@ -17,6 +17,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.util.Iterator;
@@ -51,9 +53,7 @@ public class FragmentImage implements Serializable {
 		return ObjectMapperUtil.unsafeReadValue(FragmentImage.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The fragment image's description."
-	)
+	@Schema(description = "The fragment image's description.")
 	@Valid
 	public Object getDescription() {
 		if (_descriptionSupplier != null) {
@@ -95,9 +95,7 @@ public class FragmentImage implements Serializable {
 	@JsonIgnore
 	private Supplier<Object> _descriptionSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "A reference to a fragment image class primary key."
-	)
+	@Schema(description = "A reference to a fragment image class primary key.")
 	@Valid
 	public FragmentImageClassPKReference getFragmentImageClassPKReference() {
 		if (_fragmentImageClassPKReferenceSupplier != null) {
@@ -146,9 +144,7 @@ public class FragmentImage implements Serializable {
 	private Supplier<FragmentImageClassPKReference>
 		_fragmentImageClassPKReferenceSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		description = "The fragment image's title."
-	)
+	@Schema(description = "The fragment image's title.")
 	@Valid
 	public Object getTitle() {
 		if (_titleSupplier != null) {
@@ -190,7 +186,7 @@ public class FragmentImage implements Serializable {
 	@JsonIgnore
 	private Supplier<Object> _titleSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema(
+	@Schema(
 		description = "The fragment image's url. Can be inline or mapped to an external value."
 	)
 	@Valid
@@ -346,8 +342,8 @@ public class FragmentImage implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.headless.delivery.dto.v1_0.FragmentImage",
 		name = "x-class-name"
 	)
