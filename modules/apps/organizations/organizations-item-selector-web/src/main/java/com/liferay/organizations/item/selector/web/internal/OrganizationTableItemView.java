@@ -93,7 +93,7 @@ public class OrganizationTableItemView implements TableItemView {
 
 		organization = organizations.get(size - 1);
 
-		sb.append(organization.getName());
+		sb.append(HtmlUtil.escape(organization.getName()));
 
 		for (int i = size - 2; i >= 0; i--) {
 			organization = organizations.get(i);
@@ -101,7 +101,7 @@ public class OrganizationTableItemView implements TableItemView {
 			sb.append(StringPool.SPACE);
 			sb.append(StringPool.GREATER_THAN);
 			sb.append(StringPool.SPACE);
-			sb.append(organization.getName());
+			sb.append(HtmlUtil.escape(organization.getName()));
 		}
 
 		return sb.toString();
