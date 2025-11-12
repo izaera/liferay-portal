@@ -9,6 +9,7 @@ import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.change.tracking.constants.CTActionKeys;
 import com.liferay.change.tracking.constants.CTConstants;
 import com.liferay.change.tracking.model.CTCollectionTemplate;
+import com.liferay.change.tracking.service.CTCollectionTemplateLocalService;
 import com.liferay.change.tracking.service.CTCollectionTemplateService;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
@@ -22,7 +23,6 @@ import com.liferay.portal.kernel.security.permission.PermissionCheckerFactoryUti
 import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 import com.liferay.portal.kernel.test.context.ContextUserReplace;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
-import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.RoleTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
@@ -89,22 +89,38 @@ public class CTCollectionTemplateServiceTest {
 
 	@Test
 	public void testGetCTCollectionTemplates() throws Exception {
+		_addCTCollectionTemplate(RandomTestUtil.randomString());
+
 		String name = RandomTestUtil.randomString();
 
-		_addCTCollectionTemplate(name);
+		CTCollectionTemplate ctCollectionTemplate = _addCTCollectionTemplate(
+			name);
 
-		_testGetCTCollectionTemplates(StringPool.BLANK);
-		_testGetCTCollectionTemplates(name);
+		_assertGetCTCollectionTemplates(
+			_ctCollectionTemplateLocalService.getCTCollectionTemplates(
+				TestPropsValues.getCompanyId(), QueryUtil.ALL_POS,
+				QueryUtil.ALL_POS),
+			StringPool.BLANK);
+		_assertGetCTCollectionTemplates(
+			Collections.singletonList(ctCollectionTemplate), name);
 	}
 
 	@Test
 	public void testGetCTCollectionTemplatesCount() throws Exception {
+		_addCTCollectionTemplate(RandomTestUtil.randomString());
+
 		String name = RandomTestUtil.randomString();
 
 		_addCTCollectionTemplate(name);
 
-		_testGetCTCollectionTemplatesCount(StringPool.BLANK);
-		_testGetCTCollectionTemplatesCount(_name);
+		Assert.assertEquals(
+			_ctCollectionTemplateLocalService.getCTCollectionTemplatesCount(),
+			_ctCollectionTemplateService.getCTCollectionTemplatesCount(
+				StringPool.BLANK));
+
+		Assert.assertEquals(
+			1,
+			_ctCollectionTemplateService.getCTCollectionTemplatesCount(name));
 	}
 
 	private CTCollectionTemplate _addCTCollectionTemplate(String name)
@@ -125,33 +141,26 @@ public class CTCollectionTemplateServiceTest {
 			).toString());
 	}
 
-	private void _testGetCTCollectionTemplates(String keywords) {
+	private void _assertGetCTCollectionTemplates(
+		List<CTCollectionTemplate> expectedCTCollectionTemplates,
+		String keywords) {
+
 		List<CTCollectionTemplate> ctCollectionTemplates =
 			_ctCollectionTemplateService.getCTCollectionTemplates(
 				keywords, QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 
 		Assert.assertEquals(
-			ctCollectionTemplates.toString(), 1, ctCollectionTemplates.size());
-
-		CTCollectionTemplate ctCollectionTemplate = ctCollectionTemplates.get(
-			0);
-
-		Assert.assertEquals(_name, ctCollectionTemplate.getName());
-	}
-
-	private void _testGetCTCollectionTemplatesCount(String keywords) {
-		long count = _ctCollectionTemplateService.getCTCollectionTemplatesCount(
-			keywords);
-
-		Assert.assertEquals(1, count);
+			ctCollectionTemplates.toString(),
+			expectedCTCollectionTemplates.size(), ctCollectionTemplates.size());
+		Assert.assertTrue(
+			ctCollectionTemplates.containsAll(expectedCTCollectionTemplates));
 	}
 
 	@Inject
+	private static CTCollectionTemplateLocalService
+		_ctCollectionTemplateLocalService;
+
+	@Inject
 	private static CTCollectionTemplateService _ctCollectionTemplateService;
-
-	@DeleteAfterTestRun
-	private CTCollectionTemplate _ctCollectionTemplate;
-
-	private String _name;
 
 }
