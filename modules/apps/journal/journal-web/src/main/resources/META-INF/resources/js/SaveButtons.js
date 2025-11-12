@@ -6,7 +6,8 @@
 import ClayButton from '@clayui/button';
 import ClayDropDown from '@clayui/drop-down';
 import ClayIcon from '@clayui/icon';
-import React, {useEffect, useState} from 'react';
+import {sub} from 'frontend-js-web';
+import React, {useEffect, useRef, useState} from 'react';
 
 import initializeLock from './initializeLock';
 import PublishModal from './modals/PublishModal';
@@ -40,6 +41,8 @@ export default function SaveButtons({
 
 	const [saveButtonDisabled, setSaveButtonDisabled] = useState(false);
 
+	const lockRef = useRef(null);
+
 	useEffect(() => {
 		initializeLock('publishing', {
 			errorIndicator: document.getElementById(
@@ -64,6 +67,12 @@ export default function SaveButtons({
 				`${portletNamespace}changesSavedIndicator`
 			),
 		});
+
+		Liferay.componentReady(`${portletNamespace}publishing`).then(
+			(publishLock) => {
+				lockRef.current = publishLock;
+			}
+		);
 	}, [portletNamespace]);
 
 	const onClick = (action) => {
@@ -88,6 +97,12 @@ export default function SaveButtons({
 	};
 
 	const handleButtonClick = (action) => {
+		if (lockRef.current?.isLocked()) {
+			return;
+		}
+
+		lockRef.current?.lock();
+
 		removeAlert();
 
 		const workflowActionInput = document.getElementById(
