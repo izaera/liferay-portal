@@ -3328,6 +3328,14 @@ public abstract class BaseDocumentFolderResourceTestCase {
 				continue;
 			}
 
+			if (Objects.equals("permissions", additionalAssertFieldName)) {
+				if (documentFolder.getPermissions() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
 			if (Objects.equals("subscribed", additionalAssertFieldName)) {
 				if (documentFolder.getSubscribed() == null) {
 					valid = false;
@@ -3666,6 +3674,17 @@ public abstract class BaseDocumentFolderResourceTestCase {
 				if (!Objects.deepEquals(
 						documentFolder1.getParentDocumentFolderId(),
 						documentFolder2.getParentDocumentFolderId())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("permissions", additionalAssertFieldName)) {
+				if (!Objects.deepEquals(
+						documentFolder1.getPermissions(),
+						documentFolder2.getPermissions())) {
 
 					return false;
 				}
@@ -4177,6 +4196,11 @@ public abstract class BaseDocumentFolderResourceTestCase {
 		}
 
 		if (entityFieldName.equals("parentDocumentFolderId")) {
+			throw new IllegalArgumentException(
+				"Invalid entity field " + entityFieldName);
+		}
+
+		if (entityFieldName.equals("permissions")) {
 			throw new IllegalArgumentException(
 				"Invalid entity field " + entityFieldName);
 		}

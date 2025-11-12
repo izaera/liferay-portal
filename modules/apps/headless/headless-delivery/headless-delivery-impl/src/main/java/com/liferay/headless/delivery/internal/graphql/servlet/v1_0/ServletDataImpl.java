@@ -2794,11 +2794,6 @@ public class ServletDataImpl implements ServletData {
 							KnowledgeBaseArticleResourceImpl.class,
 							"getKnowledgeBaseArticlePermissionsPage"));
 					put(
-						"query#DocumentFolder.permissions",
-						new ObjectValuePair<>(
-							DocumentFolderResourceImpl.class,
-							"getDocumentFolderPermissionsPage"));
-					put(
 						"query#KnowledgeBaseFolder.permissions",
 						new ObjectValuePair<>(
 							KnowledgeBaseFolderResourceImpl.class,
@@ -2927,11 +2922,6 @@ public class ServletDataImpl implements ServletData {
 						new ObjectValuePair<>(
 							MessageBoardThreadResourceImpl.class,
 							"getMessageBoardThreadMyRating"));
-					put(
-						"query#Document.permissions",
-						new ObjectValuePair<>(
-							DocumentResourceImpl.class,
-							"getDocumentPermissionsPage"));
 					put(
 						"query#MessageBoardThread.messageBoardMessages",
 						new ObjectValuePair<>(

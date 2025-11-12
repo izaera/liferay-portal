@@ -3414,6 +3414,14 @@ public abstract class BaseDocumentResourceTestCase {
 				continue;
 			}
 
+			if (Objects.equals("permissions", additionalAssertFieldName)) {
+				if (document.getPermissions() == null) {
+					valid = false;
+				}
+
+				continue;
+			}
+
 			if (Objects.equals("relatedContents", additionalAssertFieldName)) {
 				if (document.getRelatedContents() == null) {
 					valid = false;
@@ -3913,6 +3921,17 @@ public abstract class BaseDocumentResourceTestCase {
 				if (!Objects.deepEquals(
 						document1.getNumberOfComments(),
 						document2.getNumberOfComments())) {
+
+					return false;
+				}
+
+				continue;
+			}
+
+			if (Objects.equals("permissions", additionalAssertFieldName)) {
+				if (!Objects.deepEquals(
+						document1.getPermissions(),
+						document2.getPermissions())) {
 
 					return false;
 				}
@@ -4833,6 +4852,11 @@ public abstract class BaseDocumentResourceTestCase {
 			sb.append(String.valueOf(document.getNumberOfComments()));
 
 			return sb.toString();
+		}
+
+		if (entityFieldName.equals("permissions")) {
+			throw new IllegalArgumentException(
+				"Invalid entity field " + entityFieldName);
 		}
 
 		if (entityFieldName.equals("relatedContents")) {
