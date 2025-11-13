@@ -485,14 +485,7 @@ export default function _JournalPortlet({
 		eventHandlers.push(
 			attachFormChangeListener(
 				form,
-				() => {
-					return !lockHolder.lock?.isLocked();
-				},
 				(mutationRecord) => {
-					if (lockHolder.lock?.isLocked()) {
-						return false;
-					}
-
 					return [
 						mutationRecord.target,
 						...mutationRecord.addedNodes,
@@ -542,7 +535,6 @@ export default function _JournalPortlet({
 
 function attachFormChangeListener(
 	form,
-	accentChangeEvent,
 	acceptMutationRecord,
 	callback,
 	namespace
@@ -578,26 +570,22 @@ function attachFormChangeListener(
 		}
 	});
 
-	mutationObserver.observe(form, {
-		attributeFilter: ['value'],
-		attributeOldValue: true,
-		attributes: true,
-		childList: true,
-		subtree: true,
+	Liferay.componentReady(`${namespace}SelectAssetDisplayPage`).then(() => {
+		mutationObserver.observe(form, {
+			attributeFilter: ['value'],
+			attributeOldValue: true,
+			attributes: true,
+			childList: true,
+			subtree: true,
+		});
+
+		form.addEventListener('change', handleChange);
 	});
-
-	const handleFormChange = (event) => {
-		if (accentChangeEvent(event)) {
-			handleChange();
-		}
-	};
-
-	form.addEventListener('change', handleFormChange);
 
 	return {
 		detach() {
 			mutationObserver.disconnect();
-			form.removeEventListener('change', handleFormChange);
+			form.removeEventListener('change', handleChange);
 		},
 	};
 }
