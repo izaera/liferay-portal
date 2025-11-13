@@ -18,8 +18,10 @@ import com.liferay.portal.kernel.security.permission.PermissionChecker;
 import com.liferay.portal.kernel.test.portlet.MockLiferayPortletURL;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.PropsUtil;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.test.rule.LiferayUnitTestRule;
+import com.liferay.portal.util.PropsImpl;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -139,6 +141,10 @@ public class JournalHistoryManagementToolbarDisplayContextTest {
 	}
 
 	private void _setUpPortletURLUtil() {
+		PropsUtil.setProps(new PropsImpl());
+
+		_portletURLUtilMockedStatic = Mockito.mockStatic(PortletURLUtil.class);
+
 		_portletURLUtilMockedStatic.when(
 			() -> PortletURLUtil.getCurrent(
 				Mockito.any(LiferayPortletRequest.class),
@@ -154,8 +160,7 @@ public class JournalHistoryManagementToolbarDisplayContextTest {
 	private static final MockedStatic<JournalArticlePermission>
 		_journalArticlePermissionMockedStatic = Mockito.mockStatic(
 			JournalArticlePermission.class);
-	private static final MockedStatic<PortletURLUtil>
-		_portletURLUtilMockedStatic = Mockito.mockStatic(PortletURLUtil.class);
+	private static MockedStatic<PortletURLUtil> _portletURLUtilMockedStatic;
 
 	private JournalArticle _journalArticle;
 	private PermissionChecker _permissionChecker;
