@@ -99,6 +99,19 @@ export default function _JournalPortlet({
 		contextualSidebarButton.setAttribute('title', title);
 	};
 
+	const handleAutoSave = () => {
+		lockHolder.lock?.lock();
+
+		actionInput.value = articleId
+			? '/journal/update_article'
+			: '/journal/add_article';
+
+		handleDDMFormValid({
+			redirectOnSave: false,
+			showErrors: false,
+		});
+	};
+
 	const handleContextualSidebarButtonClick = () => {
 		handleContextualSidebarButton();
 
@@ -323,6 +336,8 @@ export default function _JournalPortlet({
 		});
 	};
 
+	let hasUnsavedChanges = false;
+
 	const submitAsyncForm = (
 		formElement,
 		{redirectOnSave} = {redirectOnSave: false}
@@ -407,6 +422,12 @@ export default function _JournalPortlet({
 					formDateInput.value = data.modifiedDate;
 					lockHolder.lock?.unlock();
 					removeAlert();
+
+					if (hasUnsavedChanges) {
+						hasUnsavedChanges = false;
+
+						handleAutoSave();
+					}
 				}
 				else {
 					formDateInput.value = data.modifiedDate;
@@ -498,19 +519,12 @@ export default function _JournalPortlet({
 				},
 				callback: () => {
 					if (lockHolder.lock?.isLocked()) {
+						hasUnsavedChanges = true;
+
 						return;
 					}
 
-					lockHolder.lock?.lock();
-
-					actionInput.value = articleId
-						? '/journal/update_article'
-						: '/journal/add_article';
-
-					handleDDMFormValid({
-						redirectOnSave: false,
-						showErrors: false,
-					});
+					handleAutoSave();
 				},
 				form,
 				namespace,
