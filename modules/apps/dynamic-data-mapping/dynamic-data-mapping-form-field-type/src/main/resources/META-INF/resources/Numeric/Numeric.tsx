@@ -349,6 +349,7 @@ const Numeric: React.FC<{children?: React.ReactNode | undefined} & IProps> = ({
 	return (
 		<FieldBase
 			{...otherProps}
+			displayErrors={displayErrors}
 			id={id}
 			localizedValue={localizedValue}
 			name={name}
