@@ -994,14 +994,27 @@ public class UserManagerImpl implements UserManager {
 
 		Contact contact = portalUser.getContact();
 
+		String screenName;
+
+		if (Objects.equals(
+				scimClientOAuth2ApplicationConfiguration.matcherField(),
+				"userName")) {
+
+			screenName = portalUser.getScreenName();
+		}
+		else {
+			screenName = scimUser.getScreenName();
+		}
+
 		portalUser = _userService.updateUser(
 			portalUser.getUserId(), scimUser.getPassword(), StringPool.BLANK,
 			StringPool.BLANK, false, portalUser.getReminderQueryQuestion(),
-			portalUser.getReminderQueryAnswer(), portalUser.getScreenName(),
-			scimUser.getEmailAddress(), false, null, portalUser.getLanguageId(),
-			portalUser.getTimeZoneId(), portalUser.getGreeting(),
-			portalUser.getComments(), scimUser.getFirstName(),
-			scimUser.getMiddleName(), scimUser.getLastName(), 0, 0,
+			portalUser.getReminderQueryAnswer(), screenName,
+			scimUser.getEmailAddresses()[0], false, null,
+			portalUser.getLanguageId(), scimUser.getTimeZoneId(),
+			portalUser.getGreeting(), portalUser.getComments(),
+			scimUser.getFirstName(), scimUser.getMiddleName(),
+			scimUser.getLastName(), scimUser.getPrefix(), scimUser.getSuffix(),
 			scimUser.isMale(), birthdayMonth, birthdayDay, birthdayYear,
 			contact.getSmsSn(), contact.getFacebookSn(), contact.getJabberSn(),
 			contact.getSkypeSn(), contact.getTwitterSn(),
