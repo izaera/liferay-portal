@@ -418,8 +418,7 @@ public class PlacedOrderResourceTest extends BasePlacedOrderResourceTestCase {
 		}
 
 		Page<PlacedOrder> page =
-			placedOrderResource.getChannelAccountPlacedOrdersPage(
-				_accountEntry.getAccountEntryId(),
+			placedOrderResource.getChannelPlacedOrdersPage(
 				_commerceChannel.getCommerceChannelId(), "abc", null,
 				Pagination.of(1, 10), null);
 
