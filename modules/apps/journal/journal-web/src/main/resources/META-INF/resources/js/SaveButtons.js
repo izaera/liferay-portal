@@ -21,6 +21,7 @@ export default function SaveButtons({
 	defaultLanguageId,
 	displayDate,
 	editingDefaultValues,
+	isPending,
 	permissionsURL,
 	portletNamespace,
 	publishButtonLabel,
@@ -213,7 +214,7 @@ export default function SaveButtons({
 										'select-and-confirm-publish-settings'
 									)
 						}
-						disabled={saveButtonDisabled}
+						disabled={saveButtonDisabled || isPending}
 						title={
 							workflowEnabled
 								? Liferay.Language.get(
