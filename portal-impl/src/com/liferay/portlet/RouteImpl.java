@@ -145,10 +145,19 @@ public class RouteImpl implements Route {
 			}
 		}
 
+		Set<String> removedParameterNames = new HashSet<>(
+			allParameters.keySet());
+
 		String url = _stringParser.build(allParameters);
 
 		if (Validator.isNull(url)) {
 			return null;
+		}
+
+		removedParameterNames.removeAll(allParameters.keySet());
+
+		for (String name : removedParameterNames) {
+			parameters.remove(name);
 		}
 
 		for (String name : generatedParameters.keySet()) {
