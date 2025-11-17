@@ -648,31 +648,8 @@ public class StructuredContentResourceTest
 
 		super.testPostStructuredContentFolderStructuredContent();
 
-		_layoutPageTemplateEntryLocalService.addLayoutPageTemplateEntry(
-			null, testGroup.getCreatorUserId(), testGroup.getGroupId(), 0,
-			_portal.getClassNameId(JournalArticle.class.getName()),
-			_localizedDDMStructure.getStructureId(),
-			RandomTestUtil.randomString(),
-			LayoutPageTemplateEntryTypeConstants.DISPLAY_PAGE, 0, true, 0, 0, 0,
-			WorkflowConstants.STATUS_APPROVED,
-			ServiceContextTestUtil.getServiceContext(testGroup.getGroupId()));
-
-		Locale locale = LocaleUtil.getDefault();
-
-		StructuredContent randomStructuredContent = _randomStructuredContent(
-			locale, true);
-
-		StructuredContentResource structuredContentResource =
-			_buildStructureContentResource(locale);
-
-		StructuredContent postStructuredContent =
-			structuredContentResource.
-				postStructuredContentFolderStructuredContent(
-					_journalFolder.getFolderId(), randomStructuredContent);
-
-		Assert.assertTrue(
-			postStructuredContent.getRenderedContents()[0].
-				getMarkedAsDefault());
+		_testPostStructuredContentFolderStructuredContentWithDisplayPageTemplate();
+		_testPostStructuredContentFolderStructuredContentWithImageContentField();
 	}
 
 	@Override
@@ -2667,6 +2644,91 @@ public class StructuredContentResourceTest
 
 		Assert.assertEquals(1, jsonObject.getLong("processedItemsCount"));
 		Assert.assertEquals(1, jsonObject.getLong("totalItemsCount"));
+	}
+
+	private void _testPostStructuredContentFolderStructuredContentWithDisplayPageTemplate()
+		throws Exception {
+
+		_layoutPageTemplateEntryLocalService.addLayoutPageTemplateEntry(
+			null, testGroup.getCreatorUserId(), testGroup.getGroupId(), 0,
+			_portal.getClassNameId(JournalArticle.class.getName()),
+			_localizedDDMStructure.getStructureId(),
+			RandomTestUtil.randomString(),
+			LayoutPageTemplateEntryTypeConstants.DISPLAY_PAGE, 0, true, 0, 0, 0,
+			WorkflowConstants.STATUS_APPROVED,
+			ServiceContextTestUtil.getServiceContext(testGroup.getGroupId()));
+
+		Locale locale = LocaleUtil.getDefault();
+
+		StructuredContent randomStructuredContent = _randomStructuredContent(
+			locale, true);
+
+		StructuredContentResource structuredContentResource =
+			_buildStructureContentResource(locale);
+
+		StructuredContent postStructuredContent =
+			structuredContentResource.
+				postStructuredContentFolderStructuredContent(
+					_journalFolder.getFolderId(), randomStructuredContent);
+
+		Assert.assertTrue(
+			postStructuredContent.getRenderedContents()[0].
+				getMarkedAsDefault());
+	}
+
+	private void _testPostStructuredContentFolderStructuredContentWithImageContentField()
+		throws Exception {
+
+		StructuredContent structuredContent = randomStructuredContent();
+
+		structuredContent.setContentFields(
+			new ContentField[] {
+				new ContentField() {
+					{
+						contentFieldValue = new ContentFieldValue() {
+							{
+								image = new ContentDocument() {
+									{
+										description =
+											RandomTestUtil.randomString();
+										id = _dlFileEntry.getFileEntryId();
+									}
+								};
+							}
+						};
+						name = "image";
+					}
+				}
+			});
+
+		DDMStructure imageDDMStructure = _addDDMStructure(
+			testGroup, "test-ddm-structure-image.json");
+
+		structuredContent.setContentStructureId(
+			imageDDMStructure.getStructureId());
+
+		StructuredContent postStructuredContent =
+			structuredContentResource.
+				postStructuredContentFolderStructuredContent(
+					_journalFolder.getFolderId(), structuredContent);
+
+		assertValid(postStructuredContent);
+
+		StructuredContent getStructuredContent =
+			structuredContentResource.getStructuredContent(
+				postStructuredContent.getId());
+
+		ContentField contentField = getStructuredContent.getContentFields()[0];
+
+		ContentFieldValue contentFieldValue =
+			contentField.getContentFieldValue();
+
+		ContentDocument contentDocument = contentFieldValue.getImage();
+
+		Assert.assertEquals(
+			_dlFileEntry.getFileEntryId(), (long)contentDocument.getId());
+
+		Assert.assertEquals("image", contentField.getName());
 	}
 
 	private void _testPutStructuredContent(boolean containsI18nMap)
