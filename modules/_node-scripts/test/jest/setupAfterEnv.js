@@ -9,11 +9,6 @@ afterEach(() => {
 	global.fetch.mockRestore();
 });
 
-beforeAll(() => {
-	global.TextEncoder = require('util').TextEncoder;
-	global.TextDecoder = require('util').TextDecoder;
-});
-
 beforeEach(() => {
 	jest.spyOn(global, 'fetch').mockImplementation((...args) => {
 		throw new Error(
