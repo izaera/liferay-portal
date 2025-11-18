@@ -260,7 +260,7 @@ public class LayoutClassedModelUsageOrphanDataUpgradeProcess
 	}
 
 	private <T> void _updateLayoutClassedModelUsages(
-		Consumer<T> consumer, List<T> items, Function<T, ?> logIdExtractor,
+		Consumer<T> consumer, List<T> items, Function<T, ?> function,
 		String logPrefix) {
 
 		for (T item : items) {
@@ -273,8 +273,7 @@ public class LayoutClassedModelUsageOrphanDataUpgradeProcess
 			}
 			catch (Exception exception) {
 				if (_log.isWarnEnabled()) {
-					_log.warn(
-						logPrefix + logIdExtractor.apply(item), exception);
+					_log.warn(logPrefix + function.apply(item), exception);
 				}
 			}
 		}
