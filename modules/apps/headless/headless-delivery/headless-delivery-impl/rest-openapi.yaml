@@ -1193,6 +1193,11 @@ components:
             description:
                 Represents a definition of a submission result of type display page template.
             properties:
+                defaultDisplayPage:
+                    # @review
+                    description:
+                        Default display page when a form container submission is successful.
+                    type: boolean
                 mapping:
                     # @review
                     description:
