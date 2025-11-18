@@ -31,7 +31,6 @@ module.exports = {
 			),
 			sourcemap: true,
 			target: ['es2020'],
-			external: ['frontend-js-web'],
 		},
 	},
 	main: 'src/main/resources/META-INF/resources/js/index.ts',

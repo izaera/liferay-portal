@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import {pkceChallenge} from 'frontend-js-web';
+import pkceChallenge from 'pkce-challenge';
 
 interface IOAuth2ClientFromParametersOptions {
 	authorizeURL?: string;
@@ -71,10 +71,7 @@ class OAuth2Client {
 	}
 
 	private _createIframe(
-		challenge: {
-			code_challenge: string;
-			code_verifier: string;
-		},
+		challenge: ReturnType<typeof pkceChallenge>,
 		sessionKey: string
 	): Promise<any> {
 		const oauth2Client = this;
@@ -227,40 +224,44 @@ class OAuth2Client {
 		});
 	}
 
-	private async _getOrRequestToken(): Promise<any> {
+	private _getOrRequestToken(): Promise<any> {
 		const oauth2Client = this;
 		const sessionKey = `${oauth2Client.clientId}-${Liferay.authToken}-token`;
 
-		const cachedTokenData = Liferay.Util.SessionStorage.getItem(
-			sessionKey,
-			Liferay.Util.SessionStorage.TYPES.NECESSARY
-		);
-
-		if (oauth2Client.debug && cachedTokenData) {
-
-			// eslint-disable-next-line no-console
-			console.debug(
-				'OAuth2Client._getOrRequestToken.cachedTokenData',
-				cachedTokenData
+		return new Promise((resolve) => {
+			const cachedTokenData = Liferay.Util.SessionStorage.getItem(
+				sessionKey,
+				Liferay.Util.SessionStorage.TYPES.NECESSARY
 			);
-		}
 
-		if (cachedTokenData !== null && cachedTokenData !== undefined) {
-			const cachedToken = JSON.parse(
-				cachedTokenData
-			) as IOAuth2ClientTokenResponse;
+			if (oauth2Client.debug && cachedTokenData) {
 
-			if (new Date().getTime() < cachedToken.expires_after_ms) {
-				return cachedToken;
+				// eslint-disable-next-line no-console
+				console.debug(
+					'OAuth2Client._getOrRequestToken.cachedTokenData',
+					cachedTokenData
+				);
 			}
-		}
 
-		return await oauth2Client._requestTokenSilently(sessionKey);
+			if (cachedTokenData !== null && cachedTokenData !== undefined) {
+				const cachedToken = JSON.parse(
+					cachedTokenData
+				) as IOAuth2ClientTokenResponse;
+
+				if (new Date().getTime() < cachedToken.expires_after_ms) {
+					resolve(cachedToken);
+
+					return;
+				}
+			}
+
+			resolve(oauth2Client._requestTokenSilently(sessionKey));
+		});
 	}
 
-	private async _requestTokenSilently(sessionKey: string): Promise<any> {
+	private _requestTokenSilently(sessionKey: string): Promise<any> {
 		const oauth2Client = this;
-		const challenge = await pkceChallenge(128);
+		const challenge = pkceChallenge(128);
 
 		return oauth2Client._createIframe(challenge, sessionKey);
 	}

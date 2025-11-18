@@ -97,4 +97,3 @@ export {default as loadClientExtensions} from './utils/client_extensions/loadCli
 export {default as loadEditorClientExtensions} from './utils/client_extensions/loadEditorClientExtensions';
 export {loadModule} from './utils/client_extensions/loadModule';
 export {default as dateUtils} from './utils/date_time/index';
-export {default as pkceChallenge} from './utils/pkceChallenge';
