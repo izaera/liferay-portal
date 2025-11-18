@@ -29,43 +29,6 @@ const COMMANDS = {
 `,
 		script: './bundle/theme.mjs',
 	},
-	'check:ci': {
-		description: `
-		Runs checks as in CI's pull requests.
-
-		Typical checks are:
-
-		  - Preflight checks (see below).
-		  - Source format checks for modified files.
-		  - Correct generation of tsconfig.json files.
-		  - TypeScript checks for modified files.
-		  - ...
-`,
-		script: './check/ci.mjs',
-	},
-	'check:preflight': {
-		description: `
-		Runs "lightweight" global checks not implemented by ESLint or Prettier.
-
-		Typical preflight checks are:
-
-		  - No forbidden configuration file names are used.
-		  - All package.json files are correctly formatted.
-		  - The yarn.lock file is correct (eg: doesn't point to local npm registries).
-		  - The node-scripts hash is correct.
-		  - ...
-`,
-		script: './check/preflight.mjs',
-	},
-	'check:tsc': {
-		description: `
-		Runs TypeScript checks in the current project or globally (when run from modules).
-
-		See this help's introduction to find the meaning of --all, --current-branch, ... parameters.
-`,
-		parameters: '[{--all|--current-branch|--local-changes}]',
-		script: './check/tsc.mjs',
-	},
 	'format': {
 		description: `
 		Formats and lints source files with eslint and prettier in the current project or globally
@@ -76,26 +39,11 @@ const COMMANDS = {
 
 		If --emit-suppressed is passed, the list of errors that are suppressed will be logged as well.
 
-		See this help's introduction to find the meaning of --all, --current-branch, ... parameters.
+		See this help's introduction to find the meaning of --current-branch and --local-changes parameters.
 `,
 		parameters:
-			'[--check] [--emit-suppressed] [{--all|--current-branch|--local-changes}]',
+			'[--check] [--emit-suppressed] [--ignore-typescript] [{--current-branch|--local-changes}]',
 		script: './format/index.mjs',
-	},
-	'format:ci': {
-		description: `
-		Runs checks as in CI's pull requests. Similar to check:ci, but this command will modify
-		files in place when it is run.
-
-		Typical checks are:
-
-		  - Preflight checks (see below).
-		  - Source format checks for modified files.
-		  - Correct generation of tsconfig.json files.
-		  - TypeScript checks for modified files.
-`,
-		parameters: '[{--all|--ignore-preflight|--ignore-typescript}]',
-		script: './format/ci.mjs',
 	},
 	'format:file': {
 		description: `
@@ -103,30 +51,6 @@ const COMMANDS = {
 `,
 		parameters: '<source file path>',
 		script: './format/file.mjs',
-	},
-	'format:self': {
-		description: `
-		Formats node-scripts.
-
-		This is a internal command that must not to be used from any other project nor from the
-		command	line.
-`,
-		parameters: '',
-		script: './format/self.mjs',
-	},
-	'generate:global-config': {
-		description: `
-		Generates global node-scripts.config.js.
-`,
-		parameters: '',
-		script: './generate/globalConfig.mjs',
-	},
-	'generate:tsconfig': {
-		description: `
-		Generates tsconfig.json files for all projects.
-`,
-		parameters: '',
-		script: './generate/tsconfig.mjs',
 	},
 	'gitmerge:self': {
 		description: `
@@ -264,19 +188,16 @@ Usage: node-scripts <command>
 
 	Actions can usually be executed:
 
-	  - Only globally (eg: check:preflight).
 	  - Only per project (eg: build).
 	  - Globally or per project based on the directory of invocation (eg: format). Typically these
 	    commands run globally when invoked at 'modules' and per project when invoked from a
 	    project's directory.
 
-	Some actions may receive one of the arguments {--all|--current-branch|--local-changes} to
-	restrict the set of files to which they must be	applied. Typically --all is assumed if none is
-	given.
+	Some actions may receive one of the arguments {--current-branch|--local-changes} to	restrict
+	the set of files to which they must be applied.
 
 	The meaning of such flags is:
 
-	  --all:            check everything (may take long to run for some tasks)
 	  --current-branch: only check changed stuff that has been committed to the active branch
 	  --local-changes:  only check locally uncommitted changed stuff
 

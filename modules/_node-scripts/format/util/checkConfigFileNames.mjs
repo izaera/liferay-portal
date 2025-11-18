@@ -6,6 +6,8 @@
 import fg from 'fast-glob';
 import path from 'path';
 
+import indent from '../../util/indent.mjs';
+
 const BABEL_CONFIG_FILE_NAME = '.babelrc.js';
 const ESLINT_CONFIG_FILE_NAME = '.eslintrc.js';
 const PRETTIER_CONFIG_FILE_NAME = '.prettierrc.js';
@@ -59,14 +61,31 @@ const DISALLOWED_CONFIG_FILE_NAMES = {
  *
  * Returns a (possibly empty) array of error messages.
  */
-export async function checkConfigFileNames() {
+export default async function checkConfigFileNames() {
+	let checksPassed = true;
+
+	console.log('\n\n🔍️️️ Checking config file names...\n');
+
 	const disallowedConfigs = await fg(
 		Object.keys(DISALLOWED_CONFIG_FILE_NAMES)
 	);
 
-	return disallowedConfigs.map((file) => {
+	disallowedConfigs.forEach((file) => {
 		const suggested = DISALLOWED_CONFIG_FILE_NAMES[path.basename(file)];
 
-		return `${file}: BAD - use ${suggested} instead`;
+		console.log(
+			indent(
+				4,
+				`❌ Invalid config file ${file} found (use '${suggested}' instead)`
+			)
+		);
+
+		checksPassed = false;
 	});
+
+	if (checksPassed) {
+		console.log(indent(4, `✅ No disallowed configuration files found`));
+	}
+
+	return checksPassed;
 }

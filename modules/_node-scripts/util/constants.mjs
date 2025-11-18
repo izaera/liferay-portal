@@ -11,6 +11,15 @@ import fileExists from './fileExists.mjs';
 
 const __dirname = path.dirname(url.fileURLToPath(import.meta.url));
 
+export const NODE_SCRIPTS_DIR = path.resolve(__dirname, '..');
+export const PLAYWRIGHT_DIR = path.resolve(
+	__dirname,
+	'..',
+	'..',
+	'test',
+	'playwright'
+);
+
 export const SRC_PATH = path.join(
 	'src',
 	'main',
@@ -20,6 +29,8 @@ export const SRC_PATH = path.join(
 );
 export const SRC_LANGUAGE_JSON_PATH = path.join(SRC_PATH, 'language.json');
 export const SRC_TSCONFIG_PATH = path.join(SRC_PATH, 'tsconfig.json');
+
+export const TEST_TSCONFIG_PATH = path.join('test', 'tsconfig.json');
 
 export const BUILD_PATH = path.join('build', 'node', 'packageRunBuild');
 export const BUILD_RESOURCES_PATH = path.join(BUILD_PATH, 'resources');
@@ -44,8 +55,6 @@ export const BUILD_SASS_CACHE_PATH = path.join(
 export const LIFERAY_WORKING_BRANCH = 'master';
 export const GIT_ORIGIN_NAME = 'upstream';
 
-export const NODE_SCRIPTS_PATH = path.resolve(__dirname, '..');
-
 export const WORK_PATH = path.join('build', 'node-scripts');
 export const WORK_EXPORT_PATH = path.join(WORK_PATH, 'export');
 
@@ -65,6 +74,10 @@ const NO_RECURSE_PROJECT_DIRS = [
 
 export async function getBuildPropertiesPath() {
 	return path.resolve(await getRootDir(), '..', 'build.properties');
+}
+
+export async function getNodeDirPath() {
+	return path.resolve(await getRootDir(), '..', 'build', 'node');
 }
 
 let cachedProjectDirs;

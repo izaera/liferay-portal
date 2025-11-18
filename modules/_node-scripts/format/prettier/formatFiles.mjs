@@ -9,14 +9,14 @@ import path from 'path';
 import prettier from 'prettier';
 import stylelint from 'stylelint';
 
-import {getRootDir} from '../util/constants.mjs';
-import fileExists from '../util/fileExists.mjs';
-import getFilePaths from '../util/getFilePaths.mjs';
-import {ID_END, ID_START} from './jsp/getPaddedReplacement.mjs';
-import processJSP from './jsp/processJSP.mjs';
-import {SCRIPTLET_CONTENT} from './jsp/substituteTags.mjs';
-import {BLOCK_CLOSE, BLOCK_OPEN} from './jsp/tagReplacements.mjs';
-import {FILLER_CHAR, SPACE_CHAR, TAB_CHAR} from './jsp/toFiller.mjs';
+import {getRootDir} from '../../util/constants.mjs';
+import fileExists from '../../util/fileExists.mjs';
+import getFilePaths from '../../util/getFilePaths.mjs';
+import {ID_END, ID_START} from '../jsp/getPaddedReplacement.mjs';
+import processJSP from '../jsp/processJSP.mjs';
+import {SCRIPTLET_CONTENT} from '../jsp/substituteTags.mjs';
+import {BLOCK_CLOSE, BLOCK_OPEN} from '../jsp/tagReplacements.mjs';
+import {FILLER_CHAR, SPACE_CHAR, TAB_CHAR} from '../jsp/toFiller.mjs';
 import logError from './logError.mjs';
 
 const ESLINT_IGNORE_FILE = '.eslintignore';
@@ -31,7 +31,7 @@ const FALLBACK_FILE_PATH = '__fallback__.js';
  * A string with the result of the format operation (empty if nothing was formatted or had errors)
  * or undefined if no files were checked.
  */
-export default async function format(
+export default async function formatFiles(
 	fix,
 	filesToFormat = undefined,
 	{emitSuppressed} = {}
@@ -42,6 +42,7 @@ export default async function format(
 	);
 
 	const rootDir = await getRootDir();
+	const portalDir = path.resolve(rootDir, '..');
 
 	const filepaths = await getFilePaths(rootDir, filesToFormat);
 
@@ -239,8 +240,12 @@ export default async function format(
 	}
 
 	if (fixedFiles.length) {
-		summary += `• The following files were automatically formatted:\n`;
-		summary += fixedFiles.map((file) => `  · ${file}`).join('\n');
+		summary += fixedFiles
+			.map(
+				(file) =>
+					`✍  Formatted file '${path.relative(portalDir, file)}'`
+			)
+			.join('\n');
 	}
 
 	return summary;

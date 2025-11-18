@@ -7,7 +7,13 @@ import {$} from 'execa';
 import path from 'path';
 import resolve from 'resolve';
 
-import fileExists from '../util/fileExists.mjs';
+import {
+	PLAYWRIGHT_DIR,
+	SRC_TSCONFIG_PATH,
+	TEST_TSCONFIG_PATH,
+	getNodeDirPath,
+} from '../../util/constants.mjs';
+import fileExists from '../../util/fileExists.mjs';
 
 /**
  * @returns string|boolean
@@ -17,37 +23,54 @@ import fileExists from '../util/fileExists.mjs';
 export default async function checkProject(projectDir, captureOutput) {
 	const tscPath = resolve.sync('typescript/bin/tsc', {basedir: '.'});
 
-	const configPath = path.join(
-		'src',
-		'main',
-		'resources',
-		'META-INF',
-		'resources',
-		'tsconfig.json'
-	);
+	if (projectDir === PLAYWRIGHT_DIR) {
+		const nodeDirPath = await getNodeDirPath();
+
+		const {all, exitCode} = await $({
+			all: true,
+			cwd: projectDir,
+			reject: false,
+			stdout: 'pipe',
+		})`${path.join(nodeDirPath, 'bin', 'npm')} install`;
+
+		if (exitCode !== 0) {
+			if (captureOutput) {
+				return all;
+			}
+			else {
+				console.log(all);
+
+				return false;
+			}
+		}
+	}
 
 	let content = '';
 	let total = 0;
+
+	const configArg = (await fileExists(
+		path.join(projectDir, SRC_TSCONFIG_PATH)
+	))
+		? ` -b ${SRC_TSCONFIG_PATH}`
+		: '';
 
 	const {all} = await $({
 		all: true,
 		cwd: projectDir,
 		reject: false,
 		stdout: captureOutput ? 'pipe' : ['inherit', 'pipe'],
-	})`${tscPath} -b ${configPath}`;
+	})`${tscPath}${configArg}`;
 
-	content = all;
-	total = all.trim().length;
+	content += all;
+	total += all.trim().length;
 
-	const testConfigPath = path.join(projectDir, 'test', 'tsconfig.json');
-
-	if (await fileExists(testConfigPath)) {
+	if (await fileExists(path.join(projectDir, TEST_TSCONFIG_PATH))) {
 		const {all: testAll} = await $({
 			all: true,
 			cwd: projectDir,
 			reject: false,
 			stdout: captureOutput ? 'pipe' : ['inherit', 'pipe'],
-		})`${tscPath} -b ${testConfigPath}`;
+		})`${tscPath} -b ${TEST_TSCONFIG_PATH}`;
 
 		content += '\n' + testAll;
 		total += testAll.trim().length;

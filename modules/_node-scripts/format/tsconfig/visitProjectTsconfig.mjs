@@ -8,9 +8,13 @@ import fg from 'fast-glob';
 import fs from 'fs/promises';
 import path from 'path';
 
-import {SRC_PATH, SRC_TSCONFIG_PATH, getRootDir} from '../util/constants.mjs';
-import fileExists from '../util/fileExists.mjs';
-import objectSF from '../util/objectSF.mjs';
+import {
+	SRC_PATH,
+	SRC_TSCONFIG_PATH,
+	getRootDir,
+} from '../../util/constants.mjs';
+import fileExists from '../../util/fileExists.mjs';
+import objectSF from '../../util/objectSF.mjs';
 import baseTsconfig from './baseTsconfig.mjs';
 
 const GENERATED = '@generated';

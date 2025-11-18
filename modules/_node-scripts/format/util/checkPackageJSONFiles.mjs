@@ -7,8 +7,9 @@ import fg from 'fast-glob';
 import fs from 'fs';
 import path from 'path';
 
-import {getRootDir} from '../util/constants.mjs';
-import projectScopeRequire from '../util/projectScopeRequire.mjs';
+import {getRootDir} from '../../util/constants.mjs';
+import indent from '../../util/indent.mjs';
+import projectScopeRequire from '../../util/projectScopeRequire.mjs';
 
 /**
  * Runs checks against package.json files; detects:
@@ -18,7 +19,11 @@ import projectScopeRequire from '../util/projectScopeRequire.mjs';
  *
  * Returns a (possibly empty) array of error messages.
  */
-export async function checkPackageJSONFiles() {
+export default async function checkPackageJSONFiles() {
+	let checksPassed = true;
+
+	console.log(`\n\n🔍️️️ Checking 'package.json' files...\n`);
+
 	let packages = await fg('**/package.json', {
 		ignore: [
 			'_node-scripts',
@@ -54,12 +59,17 @@ export async function checkPackageJSONFiles() {
 		);
 	});
 
-	const errors = [];
-
 	const definedDependenciesSet = await collectDefinedDependencies();
 
 	packages.forEach((pkg) => {
-		const bad = (message) => errors.push(`${pkg}: BAD - ${message}`);
+		let pkgPassed = true;
+
+		const bad = (message) => {
+			console.log(indent(4, `❌ ${message} (in file ${pkg})`));
+
+			checksPassed = false;
+			pkgPassed = false;
+		};
 
 		try {
 			const {dependencies, main, name} = JSON.parse(
@@ -75,7 +85,7 @@ export async function checkPackageJSONFiles() {
 				!ALLOWED_NAMED_SCOPE_EXCEPTIONS.includes(name)
 			) {
 				bad(
-					`package name ${name} should be under @liferay/ named scope - https://git.io/JOgy7`
+					`Package name ${name} should be under '@liferay/' scope (see https://git.io/JOgy7)`
 				);
 			}
 
@@ -91,7 +101,7 @@ export async function checkPackageJSONFiles() {
 					!ALLOWED_NON_GLOBAL_DEPENDENCIES.includes(name)
 				) {
 					bad(
-						`dependency not provided by a specific module: ${name} - See https://issues.liferay.com/browse/LPS-168443\n`
+						`Dependency '${name}' is not provided by a specific module (see https://issues.liferay.com/browse/LPS-168443)`
 					);
 				}
 			});
@@ -126,7 +136,7 @@ export async function checkPackageJSONFiles() {
 
 				if (indexExists) {
 					bad(
-						`package.json doesn't contain a "main" entry point when you have an ${indexExists} file - https://github.com/liferay/liferay-frontend-projects/issues/719`
+						`The 'package.json' file does not have a 'main' entry point but you have an ${indexExists} file (see https://github.com/liferay/liferay-frontend-projects/issues/719)`
 					);
 				}
 			}
@@ -142,7 +152,7 @@ export async function checkPackageJSONFiles() {
 
 				if (!fs.existsSync(filePath)) {
 					bad(
-						`package.json contains a "main" entry point that doesn't exist.`
+						`The 'package.json' file contains a 'main' entry point that doesn't exist.`
 					);
 				}
 				else {
@@ -150,18 +160,22 @@ export async function checkPackageJSONFiles() {
 
 					if (entryFile.toString().match(/\s*export\s+default\s*/i)) {
 						bad(
-							`package.json's "main" entry point contains "export default". Use named exports only.`
+							`The 'package.json' file's 'main' entry point contains 'export default' (use named exports only)`
 						);
 					}
 				}
 			}
 		}
 		catch (error) {
-			bad(`error thrown during checks: ${error}`);
+			bad(`Unexpected error thrown during checks: ${error}`);
+		}
+
+		if (pkgPassed) {
+			console.log(indent(4, `✅ Checked '${pkg}'`));
 		}
 	});
 
-	return errors;
+	return checksPassed;
 }
 
 async function collectDefinedDependencies() {

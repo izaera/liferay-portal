@@ -3,81 +3,81 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import fg from 'fast-glob';
 import path from 'path';
 
-import {getRootDir} from '../util/constants.mjs';
+import {
+	NODE_SCRIPTS_DIR,
+	PLAYWRIGHT_DIR,
+	getRootDir,
+} from '../util/constants.mjs';
 import getNamedArguments from '../util/getNamedArguments.mjs';
-import gitUtil from '../util/gitUtil.mjs';
-import format from './format.mjs';
+import formatNodeScripts from './formatNodeScripts.mjs';
+import formatPlaywright from './formatPlaywright.mjs';
+import formatPortal from './formatPortal.mjs';
+import formatProject from './formatProject.mjs';
+import getFiles from './getFiles.mjs';
 
 export default async function main() {
-	const {all, check, currentBranch, emitSuppressed, localChanges} =
-		getNamedArguments({
-			all: '--all',
-			check: '--check',
-			currentBranch: '--current-branch',
-			emitSuppressed: '--emit-suppressed',
-			localChanges: '--local-changes',
-		});
-
-	const cwd = path.resolve('.');
-	const rootDir = await getRootDir();
-	const portalDir = path.resolve(rootDir, '..');
-
-	let files;
-
-	if (cwd === rootDir) {
-		if (currentBranch) {
-			files = await gitUtil('current-branch');
-		}
-		else if (localChanges) {
-			files = await gitUtil('local-changes');
-		}
-		else {
-			if (!all) {
-				console.log(`
-⚠️ Formatting all files takes long, you may want to use --local-changes or --current-branch arguments
-`);
-			}
-
-			files = undefined;
-		}
-	}
-	else {
-		if (currentBranch || localChanges) {
-			console.error(`
-❌ Arguments --current-branch or --local-changes are not valid when formatting a single project.
-`);
-
-			process.exit(2);
-		}
-
-		files = await fg(['**/*'], {
-			cwd,
-			dot: true,
-			ignore: ['node_modules/**'],
-		});
-
-		files = files
-			.map((file) => path.resolve(cwd, file))
-			.map((file) => path.relative(portalDir, file));
-	}
-
-	console.log('📝 Running format...\n');
-
-	const formatOutput = await format(!check, files, {
-		emitSuppressed,
+	const {check} = getNamedArguments({
+		check: '--check',
 	});
 
-	if (check && formatOutput) {
-		console.error(formatOutput);
-		process.exit(1);
+	const rootDir = await getRootDir();
+	const portalDir = path.resolve(rootDir, '..');
+	const currentDir = path.resolve('.');
+
+	const files = await getFiles(portalDir, rootDir, currentDir);
+
+	console.log(
+		`\nℹ️  ${check ? 'Checking' : 'Formatting'} ${files ? files.length : 'ALL'} files...`
+	);
+
+	let checksPassed;
+
+	if (currentDir === rootDir) {
+		checksPassed = await formatPortal(
+			check,
+			portalDir,
+			rootDir,
+			currentDir,
+			files
+		);
 	}
-	else if (formatOutput) {
-		console.log(formatOutput);
+	else if (currentDir === NODE_SCRIPTS_DIR) {
+		checksPassed = await formatNodeScripts(
+			check,
+			portalDir,
+			rootDir,
+			currentDir,
+			files
+		);
+	}
+	else if (currentDir === PLAYWRIGHT_DIR) {
+		checksPassed = await formatPlaywright(
+			check,
+			portalDir,
+			rootDir,
+			currentDir,
+			files
+		);
 	}
 	else {
-		console.log('ℹ️ Nothing needed to be formatted (no changes detected).');
+		checksPassed = await formatProject(
+			check,
+			portalDir,
+			rootDir,
+			currentDir,
+			files
+		);
+	}
+
+	if (checksPassed) {
+		console.log('\n\n🎉 Everything is correct.\n\n');
+	}
+	else {
+		console.error(
+			'\n\n💥 Some errors could not be fixed automatically.\n\n'
+		);
+		process.exit(1);
 	}
 }

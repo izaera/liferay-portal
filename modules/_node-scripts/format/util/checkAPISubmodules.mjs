@@ -6,7 +6,8 @@
 import fg from 'fast-glob';
 import path from 'path';
 
-import {getRootDir} from '../util/constants.mjs';
+import {getRootDir} from '../../util/constants.mjs';
+import indent from '../../util/indent.mjs';
 
 const REGEX_API_DIR = /\/resources\/js\/api\/api\.(js|ts)$/;
 
@@ -17,7 +18,11 @@ const REGEX_API_DIR = /\/resources\/js\/api\/api\.(js|ts)$/;
  *
  * Returns a (possibly empty) array of error messages.
  */
-export async function checkAPISubmodules() {
+export default async function checkAPISubmodules() {
+	let checksPassed = true;
+
+	console.log('\n\n🔍️️️ Checking API submodules...\n');
+
 	const nodeScriptConfigs = await fg('**/node-scripts.config.js', {
 		ignore: ['**/build', '**/classes', '**/node_modules'],
 	});
@@ -36,11 +41,21 @@ export async function checkAPISubmodules() {
 		return config?.submodules?.api;
 	});
 
-	return configsWithAPISubmodule
-		.map(({config, path}) => {
-			if (!REGEX_API_DIR.test(config.submodules.api)) {
-				return `BAD - 'api' submodule must be located in /resources/js/api/api.js (or .ts). See '${path}'`;
-			}
-		})
-		.filter(Boolean);
+	configsWithAPISubmodule.forEach(({config, path}) => {
+		if (!REGEX_API_DIR.test(config.submodules.api)) {
+			console.log(
+				indent(
+					4,
+					`❌ Invalid API module at path ${path} (must be located in /resources/js/api/api.{js|ts})`
+				)
+			);
+
+			checksPassed = false;
+		}
+		else {
+			console.log(indent(4, `✅ Checked '${path}'`));
+		}
+	});
+
+	return checksPassed;
 }
