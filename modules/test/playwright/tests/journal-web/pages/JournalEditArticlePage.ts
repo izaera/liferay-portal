@@ -37,6 +37,7 @@ export class JournalEditArticlePage {
 	readonly titleInput: Locator;
 	readonly undoButton: Locator;
 	readonly alertErrorMessage: Locator;
+	readonly submitArticleForWorkflowButton: Locator;
 
 	constructor(page: Page) {
 		this.page = page;
@@ -68,6 +69,7 @@ export class JournalEditArticlePage {
 		this.publishDropdown = page.getByRole('button', {
 			name: /select and confirm publish settings|sélectionnez et confirmez les/i,
 		});
+		this.submitArticleForWorkflowButton = page.getByLabel('Select and Confirm Submit for');
 		this.publishButton = page.locator(
 			'#_com_liferay_journal_web_portlet_JournalPortlet_publishButton'
 		);
