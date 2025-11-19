@@ -186,16 +186,19 @@ public class FormLayoutStructureItemMapper
 							successMessageJSONObject.getJSONObject("message"));
 					});
 
-				messageFormSubmissionResult.setNotificationText(
-					() -> {
-						if (!successMessageJSONObject.has("notificationText")) {
-							return null;
-						}
+				messageFormSubmissionResult.
+					setNotificationTextFragmentInlineValue(
+						() -> {
+							if (!successMessageJSONObject.has(
+									"notificationText")) {
 
-						return _toFragmentInlineValue(
-							successMessageJSONObject.getJSONObject(
-								"notificationText"));
-					});
+								return null;
+							}
+
+							return _toFragmentInlineValue(
+								successMessageJSONObject.getJSONObject(
+									"notificationText"));
+						});
 				messageFormSubmissionResult.setShowNotification(
 					() -> {
 						if (!successMessageJSONObject.has("showNotification")) {
@@ -241,16 +244,19 @@ public class FormLayoutStructureItemMapper
 					() -> FragmentMappedValueUtil.toLayoutClassFieldsReference(
 						layoutJSONObject));
 
-				sitePageFormSubmissionResult.setNotificationText(
-					() -> {
-						if (!successMessageJSONObject.has("notificationText")) {
-							return null;
-						}
+				sitePageFormSubmissionResult.
+					setNotificationTextFragmentInlineValue(
+						() -> {
+							if (!successMessageJSONObject.has(
+									"notificationText")) {
 
-						return _toFragmentInlineValue(
-							successMessageJSONObject.getJSONObject(
-								"notificationText"));
-					});
+								return null;
+							}
+
+							return _toFragmentInlineValue(
+								successMessageJSONObject.getJSONObject(
+									"notificationText"));
+						});
 				sitePageFormSubmissionResult.setShowNotification(
 					() -> {
 						if (!successMessageJSONObject.has("showNotification")) {
@@ -289,16 +295,19 @@ public class FormLayoutStructureItemMapper
 						}
 					});
 
-				displayPageFormSubmissionResult.setNotificationText(
-					() -> {
-						if (!successMessageJSONObject.has("notificationText")) {
-							return null;
-						}
+				displayPageFormSubmissionResult.
+					setNotificationTextFragmentInlineValue(
+						() -> {
+							if (!successMessageJSONObject.has(
+									"notificationText")) {
 
-						return _toFragmentInlineValue(
-							successMessageJSONObject.getJSONObject(
-								"notificationText"));
-					});
+								return null;
+							}
+
+							return _toFragmentInlineValue(
+								successMessageJSONObject.getJSONObject(
+									"notificationText"));
+						});
 				displayPageFormSubmissionResult.setShowNotification(
 					() -> {
 						if (!successMessageJSONObject.has("showNotification")) {
