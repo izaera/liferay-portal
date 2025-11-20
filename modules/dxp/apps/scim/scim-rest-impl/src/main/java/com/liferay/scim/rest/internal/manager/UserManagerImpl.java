@@ -994,8 +994,8 @@ public class UserManagerImpl implements UserManager {
 
 		Contact contact = portalUser.getContact();
 
-		String emailAddress;
-		String screenName;
+		String emailAddress = portalUser.getEmailAddress();
+		String screenName = scimUser.getScreenName();
 
 		if (Objects.equals(
 				scimClientOAuth2ApplicationConfiguration.matcherField(),
@@ -1003,10 +1003,6 @@ public class UserManagerImpl implements UserManager {
 
 			emailAddress = scimUser.getEmailAddresses()[0];
 			screenName = portalUser.getScreenName();
-		}
-		else {
-			emailAddress = portalUser.getEmailAddress();
-			screenName = scimUser.getScreenName();
 		}
 
 		portalUser = _userService.updateUser(
