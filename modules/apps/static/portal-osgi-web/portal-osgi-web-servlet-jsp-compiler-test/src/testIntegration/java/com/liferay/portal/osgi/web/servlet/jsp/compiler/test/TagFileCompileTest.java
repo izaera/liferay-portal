@@ -30,9 +30,9 @@ import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.URLUtil;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 
-import jakarta.portlet.Portlet;
+import javax.portlet.Portlet;
 
-import jakarta.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import java.io.File;
 import java.io.FileOutputStream;
