@@ -37,7 +37,9 @@ import com.liferay.portal.kernel.change.tracking.CTCollectionThreadLocal;
 import com.liferay.portal.kernel.comment.CommentManager;
 import com.liferay.portal.kernel.exception.NoSuchLayoutException;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
+import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Image;
@@ -72,6 +74,7 @@ import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.CopyLayoutThreadLocal;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.Portal;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.UnicodeProperties;
 import com.liferay.portal.kernel.util.UnicodePropertiesBuilder;
 import com.liferay.portal.kernel.util.Validator;
@@ -296,6 +299,7 @@ public class LayoutLocalServiceWrapper
 	}
 
 	private void _copyLayoutPageTemplateStructure(
+			Map<String, String> instanceIdsMap, boolean masterLayoutCopy,
 			long[] segmentsExperiencesIds, Layout sourceLayout,
 			Layout targetLayout, User user)
 		throws Exception {
@@ -343,8 +347,8 @@ public class LayoutLocalServiceWrapper
 
 			JSONObject dataJSONObject = _processDataJSONObject(
 				LayoutStructure.of(data), sourceLayout, targetLayout,
-				fragmentEntryLinksMap, targetFragmentEntryLinkIds,
-				entry.getValue(), user);
+				fragmentEntryLinksMap, instanceIdsMap, masterLayoutCopy,
+				targetFragmentEntryLinkIds, entry.getValue(), user);
 
 			_layoutPageTemplateStructureLocalService.
 				updateLayoutPageTemplateStructureData(
@@ -357,6 +361,7 @@ public class LayoutLocalServiceWrapper
 	}
 
 	private void _copyLayoutPageTemplateStructureFromSegmentsExperience(
+			Map<String, String> instanceIdsMap, boolean masterLayoutCopy,
 			Layout sourceLayout, long sourceSegmentsExperienceId,
 			Layout targetLayout, long targetSegmentsExperienceId, User user)
 		throws Exception {
@@ -390,7 +395,8 @@ public class LayoutLocalServiceWrapper
 			_getFragmentEntryLinksMap(
 				sourceLayout, new long[] {sourceSegmentsExperienceId},
 				targetLayout),
-			targetFragmentEntryLinkIds, targetSegmentsExperienceId, user);
+			instanceIdsMap, masterLayoutCopy, targetFragmentEntryLinkIds,
+			targetSegmentsExperienceId, user);
 
 		_layoutPageTemplateStructureLocalService.
 			updateLayoutPageTemplateStructureData(
@@ -503,6 +509,7 @@ public class LayoutLocalServiceWrapper
 	}
 
 	private void _copyPortletPreferences(
+		Map<String, String> instanceIdsMap, boolean masterLayoutCopy,
 		List<String> portletIds, Layout sourceLayout, Layout targetLayout) {
 
 		boolean stagingAdvicesThreadLocalEnabled =
@@ -532,6 +539,18 @@ public class LayoutLocalServiceWrapper
 					continue;
 				}
 
+				String newPortletId = portletId;
+
+				if (masterLayoutCopy && portlet.isInstanceable()) {
+					String instanceId = instanceIdsMap.get(
+						PortletIdCodec.decodeInstanceId(portletId));
+
+					if (Validator.isNotNull(instanceId)) {
+						newPortletId = PortletIdCodec.encode(
+							portlet.getPortletName(), instanceId);
+					}
+				}
+
 				PortletPreferences targetPortletPreferences =
 					_portletPreferencesLocalService.fetchPortletPreferences(
 						portletPreferencesIds.getOwnerId(),
@@ -542,8 +561,7 @@ public class LayoutLocalServiceWrapper
 					_portletPreferencesLocalService.updatePreferences(
 						targetPortletPreferences.getOwnerId(),
 						targetPortletPreferences.getOwnerType(),
-						targetPortletPreferences.getPlid(),
-						targetPortletPreferences.getPortletId(),
+						targetPortletPreferences.getPlid(), newPortletId,
 						jxPortletPreferences);
 				}
 				else {
@@ -551,7 +569,7 @@ public class LayoutLocalServiceWrapper
 						targetLayout.getCompanyId(),
 						portletPreferencesIds.getOwnerId(),
 						portletPreferencesIds.getOwnerType(),
-						targetLayout.getPlid(), portletId, portlet,
+						targetLayout.getPlid(), newPortletId, portlet,
 						PortletPreferencesFactoryUtil.toXML(
 							jxPortletPreferences));
 				}
@@ -882,6 +900,7 @@ public class LayoutLocalServiceWrapper
 			LayoutStructure layoutStructure, Layout sourceLayout,
 			Layout targetLayout,
 			Map<Long, FragmentEntryLink> sourceFragmentEntryLinksMap,
+			Map<String, String> instanceIdsMap, boolean masterLayoutCopy,
 			Set<Long> targetFragmentEntryLinkIds,
 			long targetSegmentsExperienceId, User user)
 		throws Exception {
@@ -908,6 +927,35 @@ public class LayoutLocalServiceWrapper
 
 			if (sourceLayoutfragmentEntryLink == null) {
 				continue;
+			}
+
+			String namespace = sourceLayoutfragmentEntryLink.getNamespace();
+
+			JSONObject editableValuesJSONObject =
+				JSONFactoryUtil.createJSONObject(
+					sourceLayoutfragmentEntryLink.getEditableValues());
+
+			if (masterLayoutCopy &&
+				sourceLayoutfragmentEntryLink.isTypePortlet() &&
+				Validator.isNotNull(
+					editableValuesJSONObject.getString("instanceId"))) {
+
+				namespace = instanceIdsMap.get(
+					editableValuesJSONObject.getString("instanceId"));
+
+				if (Validator.isNull(namespace)) {
+					namespace = StringUtil.randomId();
+
+					instanceIdsMap.put(
+						sourceLayoutfragmentEntryLink.getNamespace(),
+						namespace);
+				}
+
+				editableValuesJSONObject = JSONUtil.put(
+					"instanceId", namespace
+				).put(
+					"portletId", editableValuesJSONObject.getString("portletId")
+				);
 			}
 
 			FragmentEntryLink newFragmentEntryLink = null;
@@ -949,7 +997,8 @@ public class LayoutLocalServiceWrapper
 				targetLayoutFragmentEntryLink.setConfiguration(
 					sourceLayoutfragmentEntryLink.getConfiguration());
 				targetLayoutFragmentEntryLink.setEditableValues(
-					sourceLayoutfragmentEntryLink.getEditableValues());
+					editableValuesJSONObject.toString());
+				targetLayoutFragmentEntryLink.setNamespace(namespace);
 				targetLayoutFragmentEntryLink.setLastPropagationDate(
 					sourceLayoutfragmentEntryLink.getLastPropagationDate());
 
@@ -993,6 +1042,9 @@ public class LayoutLocalServiceWrapper
 					_portal.getClassNameId(Layout.class));
 				newFragmentEntryLink.setClassPK(targetLayout.getPlid());
 				newFragmentEntryLink.setPlid(targetLayout.getPlid());
+				newFragmentEntryLink.setEditableValues(
+					editableValuesJSONObject.toString());
+				newFragmentEntryLink.setNamespace(namespace);
 				newFragmentEntryLink.setLastPropagationDate(
 					sourceLayoutfragmentEntryLink.getLastPropagationDate());
 
@@ -1112,6 +1164,8 @@ public class LayoutLocalServiceWrapper
 
 		@Override
 		public Layout call() throws Exception {
+			boolean masterLayoutCopy = _isMasterLayoutCopy();
+
 			if (Objects.equals(
 					_sourceLayout.getType(), LayoutConstants.TYPE_PORTLET)) {
 
@@ -1121,15 +1175,19 @@ public class LayoutLocalServiceWrapper
 				List<String> oldPortletIds = _deletePortletPermissions(
 					_targetLayout, _targetSegmentsExperiencesIds);
 
+				Map<String, String> instanceIdsMap = new HashMap<>();
+
 				// LPS-108378 Copy structure before permissions and preferences
 
 				if (_copySegmentsExperience) {
 					_copyLayoutPageTemplateStructureFromSegmentsExperience(
-						_sourceLayout, _sourceSegmentsExperiencesIds[0],
-						_targetLayout, _targetSegmentsExperiencesIds[0], _user);
+						instanceIdsMap, masterLayoutCopy, _sourceLayout,
+						_sourceSegmentsExperiencesIds[0], _targetLayout,
+						_targetSegmentsExperiencesIds[0], _user);
 				}
 				else {
 					_copyLayoutPageTemplateStructure(
+						instanceIdsMap, masterLayoutCopy,
 						_sourceSegmentsExperiencesIds, _sourceLayout,
 						_targetLayout, _user);
 				}
@@ -1141,7 +1199,8 @@ public class LayoutLocalServiceWrapper
 					portletIds, _sourceLayout, _targetLayout);
 
 				_copyPortletPreferences(
-					portletIds, _sourceLayout, _targetLayout);
+					instanceIdsMap, masterLayoutCopy, portletIds, _sourceLayout,
+					_targetLayout);
 
 				_deleteOrphanPortletPreferences(portletIds, oldPortletIds);
 			}
@@ -1151,7 +1210,10 @@ public class LayoutLocalServiceWrapper
 			_copyLayoutClassedModelUsages(_sourceLayout, _targetLayout);
 
 			_sites.copyExpandoBridgeAttributes(_sourceLayout, _targetLayout);
-			_sites.copyPortletSetups(_sourceLayout, _targetLayout);
+
+			if (!masterLayoutCopy) {
+				_sites.copyPortletSetups(_sourceLayout, _targetLayout);
+			}
 
 			_copyAssetCategoryIdsAndAssetTagNames(
 				_sourceLayout, _targetLayout, _user.getUserId());
@@ -1267,6 +1329,32 @@ public class LayoutLocalServiceWrapper
 					}
 				}
 			}
+		}
+
+		private boolean _isMasterLayoutCopy() {
+			if (_targetLayout.getMasterLayoutPlid() > 0) {
+				return false;
+			}
+
+			LayoutPageTemplateEntry layoutPageTemplateEntry =
+				_layoutPageTemplateEntryLocalService.
+					fetchLayoutPageTemplateEntryByPlid(_targetLayout.getPlid());
+
+			if (layoutPageTemplateEntry == null) {
+				layoutPageTemplateEntry =
+					_layoutPageTemplateEntryLocalService.
+						fetchLayoutPageTemplateEntryByPlid(
+							_targetLayout.getClassPK());
+			}
+
+			if ((layoutPageTemplateEntry != null) &&
+				(layoutPageTemplateEntry.getType() ==
+					LayoutPageTemplateEntryTypeConstants.MASTER_LAYOUT)) {
+
+				return true;
+			}
+
+			return false;
 		}
 
 		private final boolean _copySegmentsExperience;
