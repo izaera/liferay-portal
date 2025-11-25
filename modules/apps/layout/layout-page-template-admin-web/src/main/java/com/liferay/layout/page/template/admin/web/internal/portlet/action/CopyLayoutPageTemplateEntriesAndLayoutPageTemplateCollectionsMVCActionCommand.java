@@ -141,7 +141,6 @@ public class
 			LayoutPermissionUtil.checkLayoutUpdatePermission(
 				themeDisplay.getPermissionChecker(), targetLayout);
 
-			_layoutLocalService.copyLayoutContent(sourceLayout, targetLayout);
 			_layoutLocalService.copyLayoutContent(
 				sourceLayout, targetLayout.fetchDraftLayout());
 		}
