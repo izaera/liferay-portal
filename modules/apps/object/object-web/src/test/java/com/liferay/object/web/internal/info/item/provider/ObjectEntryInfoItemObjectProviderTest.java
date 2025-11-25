@@ -67,7 +67,7 @@ public class ObjectEntryInfoItemObjectProviderTest {
 			ObjectEntryManagerRegistry.class);
 
 		Mockito.when(
-			_objectEntryManagerRegistry.getObjectEntryManager(null)
+			_objectEntryManagerRegistry.getObjectEntryManager(0, null)
 		).thenReturn(
 			_objectEntryManager
 		);

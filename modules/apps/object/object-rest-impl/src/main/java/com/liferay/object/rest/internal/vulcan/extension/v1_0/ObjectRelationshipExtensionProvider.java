@@ -99,6 +99,7 @@ public class ObjectRelationshipExtensionProvider
 					DefaultObjectEntryManager defaultObjectEntryManager =
 						DefaultObjectEntryManagerProvider.provide(
 							_objectEntryManagerRegistry.getObjectEntryManager(
+								objectDefinition.getCompanyId(),
 								objectDefinition.getStorageType()));
 
 					return defaultObjectEntryManager.
@@ -112,6 +113,7 @@ public class ObjectRelationshipExtensionProvider
 				DefaultObjectEntryManager defaultObjectEntryManager =
 					DefaultObjectEntryManagerProvider.provide(
 						_objectEntryManagerRegistry.getObjectEntryManager(
+							objectDefinition.getCompanyId(),
 							objectDefinition.getStorageType()));
 
 				Page<ObjectEntry> relatedObjectEntriesPage =
@@ -208,6 +210,7 @@ public class ObjectRelationshipExtensionProvider
 
 			ObjectEntryManager objectEntryManager =
 				_objectEntryManagerRegistry.getObjectEntryManager(
+					relatedObjectDefinition.getCompanyId(),
 					relatedObjectDefinition.getStorageType());
 
 			ObjectRelationshipElementsParser objectRelationshipElementsParser =
@@ -224,6 +227,7 @@ public class ObjectRelationshipExtensionProvider
 			DefaultObjectEntryManager defaultObjectEntryManager =
 				DefaultObjectEntryManagerProvider.provide(
 					_objectEntryManagerRegistry.getObjectEntryManager(
+						objectDefinition.getCompanyId(),
 						objectDefinition.getStorageType()));
 
 			defaultObjectEntryManager.disassociateRelatedModels(

@@ -878,6 +878,7 @@ public class DefaultObjectEntryManagerImpl
 			else {
 				ObjectEntryManager objectEntryManager =
 					_objectEntryManagerRegistry.getObjectEntryManager(
+						objectDefinition.getCompanyId(),
 						relatedObjectDefinition.getStorageType());
 
 				boolean manyToOneObjectRelationship =

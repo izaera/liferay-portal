@@ -150,6 +150,7 @@ public class SaveDataSetSortMVCResourceCommand
 		DefaultObjectEntryManager defaultObjectEntryManager =
 			DefaultObjectEntryManagerProvider.provide(
 				_objectEntryManagerRegistry.getObjectEntryManager(
+					dataSetObjectDefinition.getCompanyId(),
 					dataSetObjectDefinition.getStorageType()));
 
 		Page<ObjectEntry> relatedObjectEntriesPage =

@@ -136,6 +136,7 @@ public class AddObjectEntryObjectActionExecutorImpl
 
 		ObjectEntryManager objectEntryManager =
 			_objectEntryManagerRegistry.getObjectEntryManager(
+				objectDefinition.getCompanyId(),
 				objectDefinition.getStorageType());
 
 		ObjectEntry objectEntry = objectEntryManager.addObjectEntry(

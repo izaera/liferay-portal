@@ -59,14 +59,15 @@ public class ObjectEntryInfoItemFieldValuesUpdater
 			int status)
 		throws InfoFormException {
 
+		ObjectEntryManager objectEntryManager =
+			_objectEntryManagerRegistry.getObjectEntryManager(
+				_objectDefinition.getCompanyId(),
+				_objectDefinition.getStorageType());
+
 		ServiceContext serviceContext =
 			ServiceContextThreadLocal.getServiceContext();
 
 		ThemeDisplay themeDisplay = serviceContext.getThemeDisplay();
-
-		ObjectEntryManager objectEntryManager =
-			_objectEntryManagerRegistry.getObjectEntryManager(
-				_objectDefinition.getStorageType());
 
 		int objectEntryStatus = status;
 

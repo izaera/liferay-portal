@@ -164,9 +164,21 @@ public class FDSAdminFragmentRenderer implements FragmentRenderer {
 
 			if (Validator.isNotNull(externalReferenceCode)) {
 				try {
-					dataSetObjectEntry = _getObjectEntry(
-						fragmentEntryLink.getCompanyId(), externalReferenceCode,
-						dataSetObjectDefinition);
+					DefaultObjectEntryManager defaultObjectEntryManager =
+						DefaultObjectEntryManagerProvider.provide(
+							_dataSetObjectEntryManagerRegistry.
+								getObjectEntryManager(
+									dataSetObjectDefinition.getCompanyId(),
+									dataSetObjectDefinition.getStorageType()));
+
+					dataSetObjectEntry =
+						defaultObjectEntryManager.getObjectEntry(
+							fragmentEntryLink.getCompanyId(),
+							new DefaultDTOConverterContext(
+								false, null, null, null, null,
+								LocaleUtil.getMostRelevantLocale(), null, null),
+							externalReferenceCode, dataSetObjectDefinition,
+							null);
 				}
 				catch (Exception exception) {
 					if (_log.isWarnEnabled()) {
@@ -915,6 +927,7 @@ public class FDSAdminFragmentRenderer implements FragmentRenderer {
 		DefaultObjectEntryManager defaultObjectEntryManager =
 			DefaultObjectEntryManagerProvider.provide(
 				_dataSetObjectEntryManagerRegistry.getObjectEntryManager(
+					dataSetObjectDefinition.getCompanyId(),
 					dataSetObjectDefinition.getStorageType()));
 
 		return defaultObjectEntryManager.getObjectEntry(
@@ -955,6 +968,7 @@ public class FDSAdminFragmentRenderer implements FragmentRenderer {
 		DefaultObjectEntryManager defaultObjectEntryManager =
 			DefaultObjectEntryManagerProvider.provide(
 				_dataSetObjectEntryManagerRegistry.getObjectEntryManager(
+					dataSetObjectDefinition.getCompanyId(),
 					dataSetObjectDefinition.getStorageType()));
 
 		Page<ObjectEntry> relatedObjectEntriesPage =

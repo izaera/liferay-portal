@@ -55,6 +55,7 @@ public class ObjectEntryRelatedObjectsResourceImpl
 		DefaultObjectEntryManager defaultObjectEntryManager =
 			DefaultObjectEntryManagerProvider.provide(
 				_objectEntryManagerRegistry.getObjectEntryManager(
+					_objectDefinition.getCompanyId(),
 					_objectDefinition.getStorageType()));
 
 		_checkCurrentObjectEntry(
@@ -100,6 +101,7 @@ public class ObjectEntryRelatedObjectsResourceImpl
 		DefaultObjectEntryManager defaultObjectEntryManager =
 			DefaultObjectEntryManagerProvider.provide(
 				_objectEntryManagerRegistry.getObjectEntryManager(
+					_objectDefinition.getCompanyId(),
 					_objectDefinition.getStorageType()));
 
 		ObjectRelationship objectRelationship =
@@ -141,6 +143,7 @@ public class ObjectEntryRelatedObjectsResourceImpl
 		DefaultObjectEntryManager defaultObjectEntryManager =
 			DefaultObjectEntryManagerProvider.provide(
 				_objectEntryManagerRegistry.getObjectEntryManager(
+					_objectDefinition.getCompanyId(),
 					_objectDefinition.getStorageType()));
 
 		ObjectRelationship objectRelationship =
