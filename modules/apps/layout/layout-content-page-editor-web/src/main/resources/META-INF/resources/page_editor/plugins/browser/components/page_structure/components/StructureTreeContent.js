@@ -205,7 +205,7 @@ export default function StructureTreeContent({expandedKeys, setExpandedKeys}) {
 				onFocus={(event) => event.stopPropagation()}
 				onKeyDown={handleButtonsKeyDown}
 			>
-				{(item.hideable || item.hidden) && (
+				{canUpdatePageStructure && (item.hideable || item.hidden) && (
 					<VisibilityButton
 						className="ml-0"
 						disabled={
