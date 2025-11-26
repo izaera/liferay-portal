@@ -28,9 +28,7 @@ import java.util.Objects;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletContext;
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletRequestWrapper;
 import javax.servlet.http.HttpServletResponse;
 
 import org.osgi.service.component.annotations.Component;
@@ -97,20 +95,12 @@ public class RESTClientTemplateContextContributor
 				AccessControlUtil.setAccessControlContext(null);
 
 				requestDispatcher.forward(
-					new HttpServletRequestWrapper(
-						ProxyUtil.newDelegateProxyInstance(
-							HttpServletRequest.class.getClassLoader(),
-							HttpServletRequest.class,
-							new RESTClientHttpRequestDelegate(
-								_contextObjects, _httpServletRequest, path),
-							_httpServletRequest)) {
-
-						@Override
-						public ServletRequest getRequest() {
-							return _httpServletRequest;
-						}
-
-					},
+					ProxyUtil.newDelegateProxyInstance(
+						HttpServletRequest.class.getClassLoader(),
+						HttpServletRequest.class,
+						new RESTClientHttpRequestDelegate(
+							_contextObjects, _httpServletRequest, path),
+						_httpServletRequest),
 					httpServletResponse);
 			}
 			finally {
