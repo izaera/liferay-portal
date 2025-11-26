@@ -57,6 +57,11 @@ export default function ({
 						groupid: entityId,
 						hasvirtualhost: hasVirtualHost,
 					} = selectedItem;
+
+					if (groupIds.includes(entityId)) {
+						return;
+					}
+
 					const rowColumns = [];
 
 					const title = sub(
