@@ -68,11 +68,6 @@ public class SitemapCompanyConfigurationDisplayContext {
 		siteItemSelectorCriterion.setDesiredItemSelectorReturnTypes(
 			new GroupItemSelectorReturnType());
 
-		Group guestGroup = _getGuestGroup();
-
-		siteItemSelectorCriterion.setExcludedGroupIds(
-			new long[] {guestGroup.getGroupId()});
-
 		siteItemSelectorCriterion.setIncludeCompany(false);
 		siteItemSelectorCriterion.setIncludeParentSites(true);
 		siteItemSelectorCriterion.setIncludeRecentSites(false);
