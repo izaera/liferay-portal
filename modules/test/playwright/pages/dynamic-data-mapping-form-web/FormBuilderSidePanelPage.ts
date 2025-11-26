@@ -18,7 +18,9 @@ export class FormBuilderSidePanelPage {
 	readonly backButton: Locator;
 	readonly helpText: Locator;
 	readonly htmlAutocompleteAttributeField: Locator;
+	readonly inputMaskToggle: Locator;
 	readonly label: Locator;
+	readonly numericTypeDecimal: Locator;
 	readonly objectFieldSelect: Locator;
 	readonly page: Page;
 	readonly paragraphFieldTextarea: Locator;
@@ -55,7 +57,9 @@ export class FormBuilderSidePanelPage {
 		this.htmlAutocompleteAttributeField = page.getByLabel(
 			'HTML Autocomplete Attribute'
 		);
+		this.inputMaskToggle = page.getByLabel('Input Mask');
 		this.label = page.getByLabel('Label', {exact: true}).first();
+		this.numericTypeDecimal = page.getByLabel('Decimal', {exact: true});
 		this.objectFieldSelect = page.getByLabel('Object Field');
 		this.page = page;
 		this.paragraphFieldTextarea = page
