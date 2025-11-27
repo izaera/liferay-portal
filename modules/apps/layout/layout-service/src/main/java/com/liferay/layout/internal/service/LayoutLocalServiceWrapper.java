@@ -1332,7 +1332,10 @@ public class LayoutLocalServiceWrapper
 		}
 
 		private boolean _isMasterLayoutCopy() {
-			if (_targetLayout.getMasterLayoutPlid() > 0) {
+			if ((_sourceLayout.getClassPK() == _targetLayout.getPlid()) ||
+				(_sourceLayout.getPlid() == _targetLayout.getClassPK()) ||
+				(_targetLayout.getMasterLayoutPlid() > 0)) {
+
 				return false;
 			}
 
