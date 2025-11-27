@@ -6,6 +6,8 @@
 package com.liferay.portal.tools.rest.builder.test.resource.v1_0;
 
 import com.liferay.portal.kernel.change.tracking.CTAware;
+import com.liferay.portal.kernel.search.Sort;
+import com.liferay.portal.kernel.search.filter.Filter;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.ResourceActionLocalService;
 import com.liferay.portal.kernel.service.ResourcePermissionLocalService;
@@ -17,6 +19,7 @@ import com.liferay.portal.tools.rest.builder.test.dto.v1_0.TestEntity;
 import com.liferay.portal.vulcan.accept.language.AcceptLanguage;
 import com.liferay.portal.vulcan.batch.engine.resource.VulcanBatchEngineExportTaskResource;
 import com.liferay.portal.vulcan.batch.engine.resource.VulcanBatchEngineImportTaskResource;
+import com.liferay.portal.vulcan.multipart.MultipartBody;
 import com.liferay.portal.vulcan.pagination.Page;
 
 import java.util.Collections;
@@ -62,6 +65,9 @@ public interface TestEntityResource {
 
 	public Integer getTestEntityCount() throws Exception;
 
+	public Response postTestEntityMultipartImage(MultipartBody multipartBody)
+		throws Exception;
+
 	public TestEntity getTestEntity(Long testEntityId) throws Exception;
 
 	public TestEntity patchTestEntity(
@@ -98,8 +104,7 @@ public interface TestEntityResource {
 		com.liferay.portal.kernel.model.User contextUser);
 
 	public void setExpressionConvert(
-		ExpressionConvert<com.liferay.portal.kernel.search.filter.Filter>
-			expressionConvert);
+		ExpressionConvert<Filter> expressionConvert);
 
 	public void setFilterParserProvider(
 		FilterParserProvider filterParserProvider);
@@ -124,23 +129,19 @@ public interface TestEntityResource {
 		VulcanBatchEngineImportTaskResource
 			vulcanBatchEngineImportTaskResource);
 
-	public default com.liferay.portal.kernel.search.filter.Filter toFilter(
-		String filterString) {
-
+	public default Filter toFilter(String filterString) {
 		return toFilter(
 			filterString, Collections.<String, List<String>>emptyMap());
 	}
 
-	public default com.liferay.portal.kernel.search.filter.Filter toFilter(
+	public default Filter toFilter(
 		String filterString, Map<String, List<String>> multivaluedMap) {
 
 		return null;
 	}
 
-	public default com.liferay.portal.kernel.search.Sort[] toSorts(
-		String sortsString) {
-
-		return new com.liferay.portal.kernel.search.Sort[0];
+	public default Sort[] toSorts(String sortsString) {
+		return new Sort[0];
 	}
 
 	@ProviderType

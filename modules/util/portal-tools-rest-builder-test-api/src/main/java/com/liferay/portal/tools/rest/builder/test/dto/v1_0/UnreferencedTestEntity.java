@@ -16,6 +16,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.util.Iterator;
@@ -47,7 +49,7 @@ public class UnreferencedTestEntity implements Serializable {
 			UnreferencedTestEntity.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema
+	@Schema
 	public String getDescription() {
 		if (_descriptionSupplier != null) {
 			description = _descriptionSupplier.get();
@@ -88,7 +90,7 @@ public class UnreferencedTestEntity implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _descriptionSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema
+	@Schema
 	public Long getId() {
 		if (_idSupplier != null) {
 			id = _idSupplier.get();
@@ -127,7 +129,7 @@ public class UnreferencedTestEntity implements Serializable {
 	@JsonIgnore
 	private Supplier<Long> _idSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema
+	@Schema
 	public String getPropertyWithHyphens() {
 		if (_propertyWithHyphensSupplier != null) {
 			propertyWithHyphens = _propertyWithHyphensSupplier.get();
@@ -247,8 +249,8 @@ public class UnreferencedTestEntity implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.portal.tools.rest.builder.test.dto.v1_0.UnreferencedTestEntity",
 		name = "x-class-name"
 	)

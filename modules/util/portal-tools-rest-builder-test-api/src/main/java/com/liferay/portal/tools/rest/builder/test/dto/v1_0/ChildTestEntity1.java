@@ -16,6 +16,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.text.DateFormat;
@@ -50,7 +52,7 @@ public class ChildTestEntity1 extends TestEntity implements Serializable {
 		return ObjectMapperUtil.unsafeReadValue(ChildTestEntity1.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema
+	@Schema
 	public String getProperty1() {
 		if (_property1Supplier != null) {
 			property1 = _property1Supplier.get();
@@ -302,8 +304,8 @@ public class ChildTestEntity1 extends TestEntity implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.portal.tools.rest.builder.test.dto.v1_0.ChildTestEntity1",
 		name = "x-class-name"
 	)

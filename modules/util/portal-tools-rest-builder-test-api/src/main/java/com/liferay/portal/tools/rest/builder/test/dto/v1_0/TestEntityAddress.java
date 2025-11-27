@@ -16,6 +16,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.text.DateFormat;
@@ -53,7 +55,7 @@ public class TestEntityAddress implements Serializable {
 		return ObjectMapperUtil.unsafeReadValue(TestEntityAddress.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema
+	@Schema
 	public Date getDateCreated() {
 		if (_dateCreatedSupplier != null) {
 			dateCreated = _dateCreatedSupplier.get();
@@ -94,7 +96,7 @@ public class TestEntityAddress implements Serializable {
 	@JsonIgnore
 	private Supplier<Date> _dateCreatedSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema
+	@Schema
 	public Date getDateModified() {
 		if (_dateModifiedSupplier != null) {
 			dateModified = _dateModifiedSupplier.get();
@@ -135,7 +137,7 @@ public class TestEntityAddress implements Serializable {
 	@JsonIgnore
 	private Supplier<Date> _dateModifiedSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema
+	@Schema
 	public String getDescription() {
 		if (_descriptionSupplier != null) {
 			description = _descriptionSupplier.get();
@@ -176,7 +178,7 @@ public class TestEntityAddress implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _descriptionSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema
+	@Schema
 	public Long getDocumentId() {
 		if (_documentIdSupplier != null) {
 			documentId = _documentIdSupplier.get();
@@ -217,7 +219,7 @@ public class TestEntityAddress implements Serializable {
 	@JsonIgnore
 	private Supplier<Long> _documentIdSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema
+	@Schema
 	public Long getId() {
 		if (_idSupplier != null) {
 			id = _idSupplier.get();
@@ -256,7 +258,7 @@ public class TestEntityAddress implements Serializable {
 	@JsonIgnore
 	private Supplier<Long> _idSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema
+	@Schema
 	public String getJsonProperty() {
 		if (_jsonPropertySupplier != null) {
 			jsonProperty = _jsonPropertySupplier.get();
@@ -298,7 +300,7 @@ public class TestEntityAddress implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _jsonPropertySupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema
+	@Schema
 	public String getName() {
 		if (_nameSupplier != null) {
 			name = _nameSupplier.get();
@@ -476,8 +478,8 @@ public class TestEntityAddress implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.portal.tools.rest.builder.test.dto.v1_0.TestEntityAddress",
 		name = "x-class-name"
 	)

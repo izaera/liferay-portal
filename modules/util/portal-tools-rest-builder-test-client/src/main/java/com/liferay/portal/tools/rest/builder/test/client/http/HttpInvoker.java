@@ -379,18 +379,16 @@ public class HttpInvoker {
 			inputStream = httpURLConnection.getInputStream();
 		}
 
-		if (inputStream != null) {
-			byte[] bytes = new byte[8192];
+		byte[] bytes = new byte[8192];
 
-			while (true) {
-				int read = inputStream.read(bytes, 0, bytes.length);
+		while (true) {
+			int read = inputStream.read(bytes, 0, bytes.length);
 
-				if (read == -1) {
-					break;
-				}
-
-				byteArrayOutputStream.write(bytes, 0, read);
+			if (read == -1) {
+				break;
 			}
+
+			byteArrayOutputStream.write(bytes, 0, read);
 		}
 
 		byteArrayOutputStream.flush();

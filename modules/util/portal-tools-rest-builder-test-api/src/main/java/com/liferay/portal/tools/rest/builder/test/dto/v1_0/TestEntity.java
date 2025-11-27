@@ -21,6 +21,8 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLField;
 import com.liferay.portal.vulcan.graphql.annotation.GraphQLName;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
+import io.swagger.v3.oas.annotations.media.Schema;
+
 import java.io.Serializable;
 
 import java.text.DateFormat;
@@ -77,7 +79,7 @@ public abstract class TestEntity implements Serializable {
 		return ObjectMapperUtil.unsafeReadValue(TestEntity.class, json);
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema
+	@Schema
 	public Date getDateCreated() {
 		if (_dateCreatedSupplier != null) {
 			dateCreated = _dateCreatedSupplier.get();
@@ -118,7 +120,7 @@ public abstract class TestEntity implements Serializable {
 	@JsonIgnore
 	private Supplier<Date> _dateCreatedSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema
+	@Schema
 	public Date getDateModified() {
 		if (_dateModifiedSupplier != null) {
 			dateModified = _dateModifiedSupplier.get();
@@ -159,7 +161,7 @@ public abstract class TestEntity implements Serializable {
 	@JsonIgnore
 	private Supplier<Date> _dateModifiedSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema
+	@Schema
 	public String getDescription() {
 		if (_descriptionSupplier != null) {
 			description = _descriptionSupplier.get();
@@ -200,7 +202,7 @@ public abstract class TestEntity implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _descriptionSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema
+	@Schema
 	public Long getDocumentId() {
 		if (_documentIdSupplier != null) {
 			documentId = _documentIdSupplier.get();
@@ -241,7 +243,7 @@ public abstract class TestEntity implements Serializable {
 	@JsonIgnore
 	private Supplier<Long> _documentIdSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema
+	@Schema
 	public Long getId() {
 		if (_idSupplier != null) {
 			id = _idSupplier.get();
@@ -280,7 +282,7 @@ public abstract class TestEntity implements Serializable {
 	@JsonIgnore
 	private Supplier<Long> _idSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema
+	@Schema
 	public String getJsonProperty() {
 		if (_jsonPropertySupplier != null) {
 			jsonProperty = _jsonPropertySupplier.get();
@@ -322,7 +324,7 @@ public abstract class TestEntity implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _jsonPropertySupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema
+	@Schema
 	public String getName() {
 		if (_nameSupplier != null) {
 			name = _nameSupplier.get();
@@ -361,7 +363,7 @@ public abstract class TestEntity implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _nameSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema
+	@Schema
 	@Valid
 	public NestedTestEntity getNestedTestEntity() {
 		if (_nestedTestEntitySupplier != null) {
@@ -404,7 +406,7 @@ public abstract class TestEntity implements Serializable {
 	@JsonIgnore
 	private Supplier<NestedTestEntity> _nestedTestEntitySupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema
+	@Schema
 	public String getSelf() {
 		if (_selfSupplier != null) {
 			self = _selfSupplier.get();
@@ -443,7 +445,7 @@ public abstract class TestEntity implements Serializable {
 	@JsonIgnore
 	private Supplier<String> _selfSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema
+	@Schema
 	@Valid
 	public TestEntity getTestEntities() {
 		if (_testEntitiesSupplier != null) {
@@ -485,8 +487,8 @@ public abstract class TestEntity implements Serializable {
 	@JsonIgnore
 	private Supplier<TestEntity> _testEntitiesSupplier;
 
-	@io.swagger.v3.oas.annotations.media.Schema
 	@JsonGetter("type")
+	@Schema
 	@Valid
 	public Type getType() {
 		if (_typeSupplier != null) {
@@ -732,8 +734,8 @@ public abstract class TestEntity implements Serializable {
 		return sb.toString();
 	}
 
-	@io.swagger.v3.oas.annotations.media.Schema(
-		accessMode = io.swagger.v3.oas.annotations.media.Schema.AccessMode.READ_ONLY,
+	@Schema(
+		accessMode = Schema.AccessMode.READ_ONLY,
 		defaultValue = "com.liferay.portal.tools.rest.builder.test.dto.v1_0.TestEntity",
 		name = "x-class-name"
 	)
