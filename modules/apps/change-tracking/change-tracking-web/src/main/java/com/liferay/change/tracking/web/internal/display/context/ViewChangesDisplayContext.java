@@ -1532,7 +1532,7 @@ public class ViewChangesDisplayContext {
 			List<WorkflowTask> workflowTasks = _getWorkflowTasks(
 				ctEntry, classPK, groupId);
 
-			if (workflowTasks == null) {
+			if (ListUtil.isEmpty(workflowTasks)) {
 				return true;
 			}
 
@@ -1545,14 +1545,8 @@ public class ViewChangesDisplayContext {
 				CTCollectionThreadLocal.setCTCollectionIdWithSafeCloseable(
 					ctEntry.getCtCollectionId())) {
 
-			List<WorkflowTask> workflowTasks = _getWorkflowTasks(
-				ctEntry, classPK, groupId);
-
-			if (workflowTasks == null) {
-				return true;
-			}
-
-			return false;
+			return ListUtil.isEmpty(
+				_getWorkflowTasks(ctEntry, classPK, groupId));
 		}
 	}
 
