@@ -241,6 +241,7 @@ public class UserResourceDTOConverter
 					});
 				setLanguageId(user::getLanguageId);
 				setLastLoginDate(user::getLastLoginDate);
+				setLoginDate(user::getLoginDate);
 				setName(user::getFullName);
 				setOrganizationBriefs(
 					() -> TransformUtil.transformToArray(
