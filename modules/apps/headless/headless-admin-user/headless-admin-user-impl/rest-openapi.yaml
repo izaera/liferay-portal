@@ -1189,6 +1189,10 @@ components:
                     format: date-time
                     readOnly: true
                     type: string
+                loginDate:
+                    format: date-time
+                    readOnly: true
+                    type: string
                 name:
                     description:
                         The user's full name.
