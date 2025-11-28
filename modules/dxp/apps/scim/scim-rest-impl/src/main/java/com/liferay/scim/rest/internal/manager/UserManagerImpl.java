@@ -999,7 +999,7 @@ public class UserManagerImpl implements UserManager {
 				scimClientOAuth2ApplicationConfiguration.matcherField(),
 				"userName")) {
 
-			emailAddress = scimUser.getEmailAddresses()[0];
+			emailAddress = scimUser.getEmailAddress();
 			screenName = portalUser.getScreenName();
 		}
 
@@ -1009,12 +1009,12 @@ public class UserManagerImpl implements UserManager {
 			portalUser.getUserId(), scimUser.getPassword(), StringPool.BLANK,
 			StringPool.BLANK, false, portalUser.getReminderQueryQuestion(),
 			portalUser.getReminderQueryAnswer(), screenName, emailAddress,
-			false, null, portalUser.getLanguageId(), scimUser.getTimeZoneId(),
+			false, null, portalUser.getLanguageId(), portalUser.getTimeZoneId(),
 			portalUser.getGreeting(), portalUser.getComments(),
 			scimUser.getFirstName(), scimUser.getMiddleName(),
-			scimUser.getLastName(), scimUser.getPrefix(), scimUser.getSuffix(),
-			scimUser.isMale(), birthdayMonth, birthdayDay, birthdayYear,
-			contact.getSmsSn(), contact.getFacebookSn(), contact.getJabberSn(),
+			scimUser.getLastName(), 0, 0, scimUser.isMale(), birthdayMonth, 
+			birthdayDay, birthdayYear, contact.getSmsSn(),
+			contact.getFacebookSn(), contact.getJabberSn(),
 			contact.getSkypeSn(), contact.getTwitterSn(),
 			scimUser.getJobTitle(), portalUser.getGroupIds(),
 			portalUser.getOrganizationIds(), portalUser.getRoleIds(), null,
