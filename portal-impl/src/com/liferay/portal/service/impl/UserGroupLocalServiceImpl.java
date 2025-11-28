@@ -327,6 +327,7 @@ public class UserGroupLocalServiceImpl extends UserGroupLocalServiceBaseImpl {
 			return false;
 		}
 
+		reindex(userId);
 		reindexUserGroup(getUserGroup(userGroupId));
 
 		return true;
@@ -340,6 +341,7 @@ public class UserGroupLocalServiceImpl extends UserGroupLocalServiceBaseImpl {
 			return false;
 		}
 
+		reindex(userId);
 		reindexUserGroup(userGroup);
 
 		return true;
@@ -352,6 +354,8 @@ public class UserGroupLocalServiceImpl extends UserGroupLocalServiceBaseImpl {
 		if (!super.addUserUserGroups(userId, userGroups)) {
 			return false;
 		}
+
+		reindex(userId);
 
 		for (UserGroup userGroup : userGroups) {
 			reindexUserGroup(userGroup);
@@ -367,6 +371,8 @@ public class UserGroupLocalServiceImpl extends UserGroupLocalServiceBaseImpl {
 		if (!super.addUserUserGroups(userId, userGroupIds)) {
 			return false;
 		}
+
+		reindex(userId);
 
 		for (long userGroupId : userGroupIds) {
 			reindexUserGroup(getUserGroup(userGroupId));
@@ -1301,6 +1307,12 @@ public class UserGroupLocalServiceImpl extends UserGroupLocalServiceBaseImpl {
 		}
 
 		return false;
+	}
+
+	protected void reindex(long userId) throws PortalException {
+		User user = _userLocalService.getUser(userId);
+
+		reindex(user.getCompanyId(), new long[] {userId});
 	}
 
 	protected void reindex(long companyId, long[] userIds)
