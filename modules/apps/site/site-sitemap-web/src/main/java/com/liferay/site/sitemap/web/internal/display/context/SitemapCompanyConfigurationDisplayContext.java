@@ -67,7 +67,6 @@ public class SitemapCompanyConfigurationDisplayContext {
 		siteItemSelectorCriterion.setAllowNavigation(false);
 		siteItemSelectorCriterion.setDesiredItemSelectorReturnTypes(
 			new GroupItemSelectorReturnType());
-
 		siteItemSelectorCriterion.setIncludeCompany(false);
 		siteItemSelectorCriterion.setIncludeParentSites(true);
 		siteItemSelectorCriterion.setIncludeRecentSites(false);
