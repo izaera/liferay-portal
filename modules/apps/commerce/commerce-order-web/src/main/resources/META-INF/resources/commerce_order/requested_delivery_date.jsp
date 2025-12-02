@@ -30,9 +30,9 @@ Date requestedDeliveryDate = commerceOrder.getRequestedDeliveryDate();
 		String requestedDeliveryDateString = null;
 
 		if (requestedDeliveryDate != null) {
-			Calendar calendar = CalendarFactoryUtil.getCalendar(requestedDeliveryDate.getTime());
-
 			Format format = FastDateFormatFactoryUtil.getSimpleDateFormat("yyyy-MM-dd", locale);
+
+			Calendar calendar = CalendarFactoryUtil.getCalendar(requestedDeliveryDate.getTime());
 
 			requestedDeliveryDateString = format.format(calendar.getTime());
 		}

@@ -12,9 +12,9 @@ CommerceShipmentDisplayContext commerceShipmentDisplayContext = (CommerceShipmen
 
 CommerceShipment commerceShipment = commerceShipmentDisplayContext.getCommerceShipment();
 
-Date expectedDate = commerceShipment.getExpectedDate();
-
 String expectedDateString = null;
+
+Date expectedDate = commerceShipment.getExpectedDate();
 
 if (expectedDate != null) {
 	Calendar calendar = CalendarFactoryUtil.getCalendar(expectedDate.getTime());
