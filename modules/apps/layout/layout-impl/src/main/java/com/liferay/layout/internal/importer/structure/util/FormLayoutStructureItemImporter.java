@@ -347,7 +347,9 @@ public class FormLayoutStructureItemImporter
 				"type", "page"
 			);
 		}
-		else if (formSuccessSubmissionResultMap.containsKey("mapping")) {
+		else if (formSuccessSubmissionResultMap.containsKey(
+					"defaultDisplayPage")) {
+
 			JSONObject displayPageTemplateJSONObject =
 				toDisplayPageFormSubmissionResultJSONObject(
 					formSuccessSubmissionResultMap,
