@@ -254,9 +254,14 @@ public class LayoutStructureRenderer {
 
 		ColTag colTag = new ColTag();
 
-		colTag.setCssClass(
-			ResponsiveLayoutStructureUtil.getColumnCssClass(
-				collectionStyledLayoutStructureItem, index));
+		if (Validator.isNull(
+				collectionStyledLayoutStructureItem.getListStyle())) {
+
+			colTag.setCssClass(
+				ResponsiveLayoutStructureUtil.getColumnCssClass(
+					collectionStyledLayoutStructureItem, index));
+		}
+
 		colTag.setPageContext(_pageContext);
 
 		colTag.doStartTag();
