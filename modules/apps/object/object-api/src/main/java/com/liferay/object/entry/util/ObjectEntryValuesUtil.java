@@ -35,7 +35,7 @@ public class ObjectEntryValuesUtil {
 
 		String objectFieldName = objectField.getName();
 
-		if (!values.containsKey(objectFieldName)) {
+		if ((values == null) || !values.containsKey(objectFieldName)) {
 			return modelAttributes.get(objectField.getDBColumnName());
 		}
 
