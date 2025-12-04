@@ -6,6 +6,7 @@
 package com.liferay.layout.service.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
+import com.liferay.counter.kernel.service.CounterLocalService;
 import com.liferay.fragment.constants.FragmentConstants;
 import com.liferay.fragment.model.FragmentCollection;
 import com.liferay.fragment.model.FragmentEntry;
@@ -14,6 +15,7 @@ import com.liferay.fragment.service.FragmentEntryLocalService;
 import com.liferay.friendly.url.service.FriendlyURLEntryLocalServiceUtil;
 import com.liferay.layout.test.util.ContentLayoutTestUtil;
 import com.liferay.layout.test.util.LayoutTestUtil;
+import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.DuplicateLayoutExternalReferenceCodeException;
@@ -358,6 +360,21 @@ public class LayoutLocalServiceTest {
 			layout2,
 			_layoutLocalService.fetchLayoutByFriendlyURL(
 				_group.getGroupId(), false, friendlyURL1));
+	}
+
+	@Test
+	@TestInfo("LPD-73455")
+	public void testGetNextLayoutId() throws Exception {
+		Layout layout = LayoutTestUtil.addTypeContentLayout(_group, true, true);
+
+		_counterLocalService.reset(
+			StringBundler.concat(
+				Layout.class.getName(), StringPool.POUND, _group.getGroupId(),
+				StringPool.POUND, true));
+
+		Assert.assertEquals(
+			layout.getLayoutId() + 2,
+			_layoutLocalService.getNextLayoutId(_group.getGroupId(), true));
 	}
 
 	@Test
@@ -837,6 +854,9 @@ public class LayoutLocalServiceTest {
 		Assert.assertEquals(
 			0, _layoutLocalService.getLayoutsCount(_group.getGroupId()));
 	}
+
+	@Inject
+	private CounterLocalService _counterLocalService;
 
 	@Inject
 	private FragmentCollectionLocalService _fragmentCollectionLocalService;
