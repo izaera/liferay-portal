@@ -924,26 +924,7 @@ public class PageFragmentInstanceDefinitionMapper {
 								jsonObject);
 						}
 
-						Map<String, String> localizedValues =
-							LocalizedValueUtil.toLocalizedValues(jsonObject);
-
-						if (MapUtil.isEmpty(localizedValues)) {
-							return null;
-						}
-
-						FragmentInlineValue fragmentInlineValue =
-							new FragmentInlineValue() {
-								{
-									setValue_i18n(() -> localizedValues);
-								}
-							};
-
-						return new FragmentMappedValue() {
-							{
-								setDefaultFragmentInlineValue(
-									() -> fragmentInlineValue);
-							}
-						};
+						return null;
 					});
 				setDateFormat(
 					() -> {
@@ -969,7 +950,6 @@ public class PageFragmentInstanceDefinitionMapper {
 							}
 						};
 					});
-				setFragmentLink(() -> _toFragmentLink(jsonObject, saveMapping));
 			}
 		};
 	}
