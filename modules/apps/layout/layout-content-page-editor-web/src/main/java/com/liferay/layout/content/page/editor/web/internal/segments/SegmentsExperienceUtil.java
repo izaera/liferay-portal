@@ -53,6 +53,7 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.function.Function;
 
 import javax.servlet.http.HttpServletRequest;
@@ -250,6 +251,10 @@ public class SegmentsExperienceUtil {
 
 			String newPortletId = _getNewPortletId(
 				newFragmentEntryLink.getNamespace(), portletId);
+
+			if (Objects.equals(newPortletId, portletId)) {
+				continue;
+			}
 
 			_getNewPortletPreferences(newPortletId, plid, portletId);
 
