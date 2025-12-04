@@ -206,11 +206,9 @@ public class SegmentsExperienceUtil {
 		long companyId, String namespace, String newNamespace, String portletId,
 		long sourcePlid, long targetPlid) {
 
-		String sourcePortletId = _getNewPortletId(
-			newNamespace, namespace, portletId);
+		String sourcePortletId = _getNewPortletId(namespace, portletId);
 
-		String targetPortletId = _getNewPortletId(
-			namespace, newNamespace, portletId);
+		String targetPortletId = _getNewPortletId(newNamespace, portletId);
 
 		String rootPortletId = PortletIdCodec.decodePortletName(
 			sourcePortletId);
@@ -257,7 +255,6 @@ public class SegmentsExperienceUtil {
 					fragmentEntryLink)) {
 
 			_getNewPortletPreferences(
-				fragmentEntryLink.getNamespace(),
 				newFragmentEntryLink.getNamespace(), plid, portletId);
 
 			_copyPortletPermissions(
@@ -269,8 +266,7 @@ public class SegmentsExperienceUtil {
 	}
 
 	private static String _getNewEditableValues(
-		JSONObject editableValuesJSONObject, String namespace,
-		String newNamespace, long plid) {
+		JSONObject editableValuesJSONObject, String namespace, long plid) {
 
 		String instanceId = editableValuesJSONObject.getString("instanceId");
 		String portletId = editableValuesJSONObject.getString("portletId");
@@ -280,8 +276,7 @@ public class SegmentsExperienceUtil {
 		}
 
 		PortletPreferences portletPreferences = _getNewPortletPreferences(
-			namespace, newNamespace, plid,
-			PortletIdCodec.encode(portletId, instanceId));
+			namespace, plid, PortletIdCodec.encode(portletId, instanceId));
 
 		if (portletPreferences == null) {
 			return editableValuesJSONObject.toString();
@@ -295,7 +290,7 @@ public class SegmentsExperienceUtil {
 	}
 
 	private static String _getNewPortletId(
-		String namespace, String newNamespace, String portletId) {
+		String newInstanceId, String portletId) {
 
 		String instanceId = PortletIdCodec.decodeInstanceId(portletId);
 
@@ -303,11 +298,11 @@ public class SegmentsExperienceUtil {
 			return portletId;
 		}
 
-		return StringUtil.replace(portletId, instanceId, newNamespace);
+		return StringUtil.replace(portletId, instanceId, newInstanceId);
 	}
 
 	private static PortletPreferences _getNewPortletPreferences(
-		String namespace, String newNamespace, long plid, String portletId) {
+		String namespace, long plid, String portletId) {
 
 		PortletPreferences portletPreferences =
 			PortletPreferencesLocalServiceUtil.fetchPortletPreferences(
@@ -324,8 +319,7 @@ public class SegmentsExperienceUtil {
 			return null;
 		}
 
-		String newPortletId = _getNewPortletId(
-			namespace, newNamespace, portletId);
+		String newPortletId = _getNewPortletId(namespace, portletId);
 
 		PortletPreferences existingPortletPreferences =
 			PortletPreferencesLocalServiceUtil.fetchPortletPreferences(
@@ -446,8 +440,7 @@ public class SegmentsExperienceUtil {
 
 			newFragmentEntryLink.setEditableValues(
 				_getNewEditableValues(
-					editableValuesJSONObject, fragmentEntryLink.getNamespace(),
-					newNamespace, layout.getPlid()));
+					editableValuesJSONObject, newNamespace, layout.getPlid()));
 
 			newFragmentEntryLink.setNamespace(newNamespace);
 			newFragmentEntryLink.setLastPropagationDate(new Date());
