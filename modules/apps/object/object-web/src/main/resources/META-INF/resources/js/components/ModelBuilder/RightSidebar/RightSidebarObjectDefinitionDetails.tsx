@@ -269,6 +269,7 @@ export function RightSidebarObjectDefinitionDetails({
 					hasUpdateObjectDefinitionPermission={
 						!!values.actions?.update
 					}
+					isApproved={values?.status?.label === 'approved'}
 					isLinkedObjectDefinition={
 						selectedObjectDefinitionNode?.data
 							?.linkedObjectDefinition ?? false

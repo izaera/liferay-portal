@@ -10,6 +10,7 @@ import React from 'react';
 
 interface ConfigurationContainerProps {
 	hasUpdateObjectDefinitionPermission: boolean;
+	isApproved: boolean;
 	isLinkedObjectDefinition?: boolean;
 	isRootDescendantNode: boolean;
 	onSubmit?: (editedObjectDefinition?: Partial<ObjectDefinition>) => void;
@@ -19,6 +20,7 @@ interface ConfigurationContainerProps {
 
 export function ConfigurationContainer({
 	hasUpdateObjectDefinitionPermission,
+	isApproved,
 	isLinkedObjectDefinition,
 	isRootDescendantNode,
 	onSubmit,
@@ -104,7 +106,7 @@ export function ConfigurationContainer({
 
 			<ClayForm.Group>
 				<Toggle
-					disabled={disabled || values.active}
+					disabled={disabled || isApproved}
 					label={sub(
 						Liferay.Language.get('enable-x'),
 						Liferay.Language.get('indexed-search')
