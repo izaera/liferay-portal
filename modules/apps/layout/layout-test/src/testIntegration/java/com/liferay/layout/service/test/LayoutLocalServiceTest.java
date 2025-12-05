@@ -372,7 +372,7 @@ public class LayoutLocalServiceTest {
 				Layout.class.getName(), StringPool.POUND, _group.getGroupId(),
 				StringPool.POUND, true));
 
-		// A content layout consists of 2 layout entries
+		// A content layout is made up of 2 layouts
 
 		Assert.assertEquals(
 			layout.getLayoutId() + 2,
