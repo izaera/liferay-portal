@@ -250,7 +250,7 @@ public class AgentPortalK8sConfigMapModifier
 			}
 			catch (Exception exception) {
 				_log.error(
-					"Unable to list configurations from ConfigMap " +
+					"Unable to list configurations from config map " +
 						objectMeta.getUid(),
 					exception);
 			}
