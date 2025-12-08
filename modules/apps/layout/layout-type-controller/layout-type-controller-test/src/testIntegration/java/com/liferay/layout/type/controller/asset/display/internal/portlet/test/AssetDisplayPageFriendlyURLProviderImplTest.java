@@ -184,8 +184,12 @@ public class AssetDisplayPageFriendlyURLProviderImplTest {
 			LocaleUtil.getSiteDefault(), null, false, false,
 			ServiceContextThreadLocal.getServiceContext());
 
-		_assertGetFriendlyURL(
-			JournalArticleConstants.CANONICAL_URL_SEPARATOR, journalArticle);
+		Assert.assertNull(
+			_assetDisplayPageFriendlyURLProvider.getFriendlyURL(
+				new InfoItemReference(
+					JournalArticle.class.getName(),
+					journalArticle.getResourcePrimKey()),
+				LocaleUtil.getSiteDefault(), _themeDisplay));
 	}
 
 	private void _assertGetFriendlyURL(String urlSeparator)
@@ -201,23 +205,6 @@ public class AssetDisplayPageFriendlyURLProviderImplTest {
 				new InfoItemReference(
 					JournalArticle.class.getName(),
 					_journalArticle.getResourcePrimKey()),
-				LocaleUtil.getSiteDefault(), _themeDisplay));
-	}
-
-	private void _assertGetFriendlyURL(
-			String urlSeparator, JournalArticle journalArticle)
-		throws PortalException {
-
-		Assert.assertEquals(
-			StringBundler.concat(
-				_portal.getGroupFriendlyURL(
-					_group.getPublicLayoutSet(), _themeDisplay, false, false),
-				urlSeparator,
-				journalArticle.getUrlTitle(LocaleUtil.getSiteDefault())),
-			_assetDisplayPageFriendlyURLProvider.getFriendlyURL(
-				new InfoItemReference(
-					JournalArticle.class.getName(),
-					journalArticle.getResourcePrimKey()),
 				LocaleUtil.getSiteDefault(), _themeDisplay));
 	}
 
