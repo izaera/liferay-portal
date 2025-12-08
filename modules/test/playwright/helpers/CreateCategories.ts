@@ -15,18 +15,21 @@ export async function createCategories({
 	apiHelpers,
 	assetTypes,
 	categoryNames,
+	multiValued,
 	siteId,
 	vocabularyName,
 }: {
 	apiHelpers: ApiHelpers;
 	assetTypes?: AssetType[];
 	categoryNames: TCategory[];
+	multiValued?: boolean;
 	siteId: string;
 	vocabularyName: string;
 }): Promise<({id: number} & TCategory)[]> {
 	const {id: vocabularyId} =
 		await apiHelpers.headlessAdminTaxonomy.postSiteTaxonomyVocabulary({
 			assetTypes,
+			multiValued,
 			name: vocabularyName,
 			siteId,
 		});
