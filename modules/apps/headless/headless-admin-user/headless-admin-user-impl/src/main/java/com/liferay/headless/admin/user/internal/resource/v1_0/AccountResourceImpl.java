@@ -282,7 +282,7 @@ public class AccountResourceImpl extends BaseAccountResourceImpl {
 					document.get(Field.ENTRY_CLASS_PK));
 
 				return _toAccount(
-					_accountEntryService.getAccountEntry(accountEntryId));
+					_accountEntryLocalService.getAccountEntry(accountEntryId));
 			});
 	}
 
