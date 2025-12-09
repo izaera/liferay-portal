@@ -240,7 +240,14 @@ public class PortletRenderUtil {
 		HttpServletRequest httpServletRequest, String originalURL,
 		ThemeDisplay themeDisplay) {
 
-		String url = null;
+		String queryString = HttpComponentsUtil.getQueryString(originalURL);
+
+		if (!Validator.isBlank(queryString)) {
+			originalURL = originalURL.substring(
+				0, originalURL.length() - queryString.length() - 1);
+		}
+
+		String url;
 
 		String proxyPath = PortalUtil.getPathProxy();
 
@@ -268,6 +275,9 @@ public class PortletRenderUtil {
 			}
 		}
 
+		if (!Validator.isBlank(queryString)) {
+			url += "?" + queryString;
+		}
 
 		if (_isTokenized(unhashedFileURI)) {
 			url = HttpComponentsUtil.addParameter(
