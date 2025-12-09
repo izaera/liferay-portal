@@ -34,7 +34,6 @@ import org.junit.Test;
 
 import org.mockito.MockedStatic;
 import org.mockito.Mockito;
-import org.mockito.invocation.InvocationOnMock;
 import org.mockito.stubbing.Answer;
 
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -68,20 +67,20 @@ public class PortletRenderUtilTest {
 				"/header-portal.(" + _HASH + ").css",
 				"/header-portal.tokenized.(" + _HASH +
 					").css?themeId=classic_WAR_classictheme&tokenize=true",
-				"/nocombo-header-portal.(" + _HASH + ").css",
 				"/o/portlet-web/header-portlet.(" + _HASH + ").css",
 				"/o/portlet-web/header-portlet.tokenized.(" + _HASH +
 					").css?themeId=classic_WAR_classictheme&tokenize=true",
-				"/o/portlet-web/nocombo-header-portlet.(" + _HASH + ").css",
 				"http://example.com/header-portal.css",
 				"http://example.com/header-portlet.css"),
 			portletRenderParts.getHeaderCssPaths());
 		_assertEquals(
 			Arrays.asList(
 				"/header-portal.(" + _HASH + ").js",
-				"/nocombo-header-portal.(" + _HASH + ").js",
+				"/header-portal.translatable.(" + _HASH +
+					").js?languageId=en_US&translate=true",
 				"/o/portlet-web/header-portlet.(" + _HASH + ").js",
-				"/o/portlet-web/nocombo-header-portlet.(" + _HASH + ").js",
+				"/o/portlet-web/header-portlet.translatable.(" + _HASH +
+					").js?languageId=en_US&translate=true",
 				"http://example.com/header-portal.js",
 				"http://example.com/header-portlet.js",
 				"module:/module-header-portal.(" + _HASH + ").js",
@@ -93,9 +92,11 @@ public class PortletRenderUtilTest {
 		_assertEquals(
 			Arrays.asList(
 				"/footer-portal.(" + _HASH + ").js",
-				"/nocombo-footer-portal.(" + _HASH + ").js",
+				"/footer-portal.translatable.(" + _HASH +
+					").js?languageId=en_US&translate=true",
 				"/o/portlet-web/footer-portlet.(" + _HASH + ").js",
-				"/o/portlet-web/nocombo-footer-portlet.(" + _HASH + ").js",
+				"/o/portlet-web/footer-portlet.translatable.(" + _HASH +
+					").js?languageId=en_US&translate=true",
 				"http://example.com/footer-portal.js",
 				"http://example.com/footer-portlet.js",
 				"module:/module-footer-portal.(" + _HASH + ").js",
@@ -109,11 +110,9 @@ public class PortletRenderUtilTest {
 				"/footer-portal.(" + _HASH + ").css",
 				"/footer-portal.tokenized.(" + _HASH +
 					").css?themeId=classic_WAR_classictheme&tokenize=true",
-				"/nocombo-footer-portal.(" + _HASH + ").css",
 				"/o/portlet-web/footer-portlet.(" + _HASH + ").css",
 				"/o/portlet-web/footer-portlet.tokenized.(" + _HASH +
 					").css?themeId=classic_WAR_classictheme&tokenize=true",
-				"/o/portlet-web/nocombo-footer-portlet.(" + _HASH + ").css",
 				"http://example.com/footer-portal.css",
 				"http://example.com/footer-portlet.css"),
 			portletRenderParts.getFooterCssPaths());
@@ -137,22 +136,20 @@ public class PortletRenderUtilTest {
 				"/portal/header-portal.(" + _HASH + ").css",
 				"/portal/header-portal.tokenized.(" + _HASH +
 					").css?themeId=classic_WAR_classictheme&tokenize=true",
-				"/portal/nocombo-header-portal.(" + _HASH + ").css",
 				"/portal/o/portlet-web/header-portlet.(" + _HASH + ").css",
 				"/portal/o/portlet-web/header-portlet.tokenized.(" + _HASH +
 					").css?themeId=classic_WAR_classictheme&tokenize=true",
-				"/portal/o/portlet-web/nocombo-header-portlet.(" + _HASH +
-					").css",
 				"http://example.com/header-portal.css",
 				"http://example.com/header-portlet.css"),
 			portletRenderParts.getHeaderCssPaths());
 		_assertEquals(
 			Arrays.asList(
 				"/portal/header-portal.(" + _HASH + ").js",
-				"/portal/nocombo-header-portal.(" + _HASH + ").js",
+				"/portal/header-portal.translatable.(" + _HASH +
+					").js?languageId=en_US&translate=true",
 				"/portal/o/portlet-web/header-portlet.(" + _HASH + ").js",
-				"/portal/o/portlet-web/nocombo-header-portlet.(" + _HASH +
-					").js",
+				"/portal/o/portlet-web/header-portlet.translatable.(" + _HASH +
+					").js?languageId=en_US&translate=true",
 				"http://example.com/header-portal.js",
 				"http://example.com/header-portlet.js",
 				"module:/portal/module-header-portal.(" + _HASH + ").js",
@@ -166,22 +163,20 @@ public class PortletRenderUtilTest {
 				"/portal/footer-portal.(" + _HASH + ").css",
 				"/portal/footer-portal.tokenized.(" + _HASH +
 					").css?themeId=classic_WAR_classictheme&tokenize=true",
-				"/portal/nocombo-footer-portal.(" + _HASH + ").css",
 				"/portal/o/portlet-web/footer-portlet.(" + _HASH + ").css",
 				"/portal/o/portlet-web/footer-portlet.tokenized.(" + _HASH +
 					").css?themeId=classic_WAR_classictheme&tokenize=true",
-				"/portal/o/portlet-web/nocombo-footer-portlet.(" + _HASH +
-					").css",
 				"http://example.com/footer-portal.css",
 				"http://example.com/footer-portlet.css"),
 			portletRenderParts.getFooterCssPaths());
 		_assertEquals(
 			Arrays.asList(
 				"/portal/footer-portal.(" + _HASH + ").js",
-				"/portal/nocombo-footer-portal.(" + _HASH + ").js",
+				"/portal/footer-portal.translatable.(" + _HASH +
+					").js?languageId=en_US&translate=true",
 				"/portal/o/portlet-web/footer-portlet.(" + _HASH + ").js",
-				"/portal/o/portlet-web/nocombo-footer-portlet.(" + _HASH +
-					").js",
+				"/portal/o/portlet-web/footer-portlet.translatable.(" + _HASH +
+					").js?languageId=en_US&translate=true",
 				"http://example.com/footer-portal.js",
 				"http://example.com/footer-portlet.js",
 				"module:/portal/module-footer-portal.(" + _HASH + ").js",
@@ -212,24 +207,22 @@ public class PortletRenderUtilTest {
 				"/proxy/portal/header-portal.(" + _HASH + ").css",
 				"/proxy/portal/header-portal.tokenized.(" + _HASH +
 					").css?themeId=classic_WAR_classictheme&tokenize=true",
-				"/proxy/portal/nocombo-header-portal.(" + _HASH + ").css",
 				"/proxy/portal/o/portlet-web/header-portlet.(" + _HASH +
 					").css",
 				"/proxy/portal/o/portlet-web/header-portlet.tokenized.(" +
 					_HASH +
 						").css?themeId=classic_WAR_classictheme&tokenize=true",
-				"/proxy/portal/o/portlet-web/nocombo-header-portlet.(" + _HASH +
-					").css",
 				"http://example.com/header-portal.css",
 				"http://example.com/header-portlet.css"),
 			portletRenderParts.getHeaderCssPaths());
 		_assertEquals(
 			Arrays.asList(
 				"/proxy/portal/header-portal.(" + _HASH + ").js",
-				"/proxy/portal/nocombo-header-portal.(" + _HASH + ").js",
+				"/proxy/portal/header-portal.translatable.(" + _HASH +
+					").js?languageId=en_US&translate=true",
 				"/proxy/portal/o/portlet-web/header-portlet.(" + _HASH + ").js",
-				"/proxy/portal/o/portlet-web/nocombo-header-portlet.(" + _HASH +
-					").js",
+				"/proxy/portal/o/portlet-web/header-portlet.translatable.(" +
+					_HASH + ").js?languageId=en_US&translate=true",
 				"http://example.com/header-portal.js",
 				"http://example.com/header-portlet.js",
 				"module:/proxy/portal/module-header-portal.(" + _HASH + ").js",
@@ -243,24 +236,22 @@ public class PortletRenderUtilTest {
 				"/proxy/portal/footer-portal.(" + _HASH + ").css",
 				"/proxy/portal/footer-portal.tokenized.(" + _HASH +
 					").css?themeId=classic_WAR_classictheme&tokenize=true",
-				"/proxy/portal/nocombo-footer-portal.(" + _HASH + ").css",
 				"/proxy/portal/o/portlet-web/footer-portlet.(" + _HASH +
 					").css",
 				"/proxy/portal/o/portlet-web/footer-portlet.tokenized.(" +
 					_HASH +
 						").css?themeId=classic_WAR_classictheme&tokenize=true",
-				"/proxy/portal/o/portlet-web/nocombo-footer-portlet.(" + _HASH +
-					").css",
 				"http://example.com/footer-portal.css",
 				"http://example.com/footer-portlet.css"),
 			portletRenderParts.getFooterCssPaths());
 		_assertEquals(
 			Arrays.asList(
 				"/proxy/portal/footer-portal.(" + _HASH + ").js",
-				"/proxy/portal/nocombo-footer-portal.(" + _HASH + ").js",
+				"/proxy/portal/footer-portal.translatable.(" + _HASH +
+					").js?languageId=en_US&translate=true",
 				"/proxy/portal/o/portlet-web/footer-portlet.(" + _HASH + ").js",
-				"/proxy/portal/o/portlet-web/nocombo-footer-portlet.(" + _HASH +
-					").js",
+				"/proxy/portal/o/portlet-web/footer-portlet.translatable.(" +
+					_HASH + ").js?languageId=en_US&translate=true",
 				"http://example.com/footer-portal.js",
 				"http://example.com/footer-portlet.js",
 				"module:/proxy/portal/module-footer-portal.(" + _HASH + ").js",
@@ -289,22 +280,20 @@ public class PortletRenderUtilTest {
 				"/proxy/header-portal.(" + _HASH + ").css",
 				"/proxy/header-portal.tokenized.(" + _HASH +
 					").css?themeId=classic_WAR_classictheme&tokenize=true",
-				"/proxy/nocombo-header-portal.(" + _HASH + ").css",
 				"/proxy/o/portlet-web/header-portlet.(" + _HASH + ").css",
 				"/proxy/o/portlet-web/header-portlet.tokenized.(" + _HASH +
 					").css?themeId=classic_WAR_classictheme&tokenize=true",
-				"/proxy/o/portlet-web/nocombo-header-portlet.(" + _HASH +
-					").css",
 				"http://example.com/header-portal.css",
 				"http://example.com/header-portlet.css"),
 			portletRenderParts.getHeaderCssPaths());
 		_assertEquals(
 			Arrays.asList(
 				"/proxy/header-portal.(" + _HASH + ").js",
-				"/proxy/nocombo-header-portal.(" + _HASH + ").js",
+				"/proxy/header-portal.translatable.(" + _HASH +
+					").js?languageId=en_US&translate=true",
 				"/proxy/o/portlet-web/header-portlet.(" + _HASH + ").js",
-				"/proxy/o/portlet-web/nocombo-header-portlet.(" + _HASH +
-					").js",
+				"/proxy/o/portlet-web/header-portlet.translatable.(" + _HASH +
+					").js?languageId=en_US&translate=true",
 				"http://example.com/header-portal.js",
 				"http://example.com/header-portlet.js",
 				"module:/proxy/module-header-portal.(" + _HASH + ").js",
@@ -318,22 +307,20 @@ public class PortletRenderUtilTest {
 				"/proxy/footer-portal.(" + _HASH + ").css",
 				"/proxy/footer-portal.tokenized.(" + _HASH +
 					").css?themeId=classic_WAR_classictheme&tokenize=true",
-				"/proxy/nocombo-footer-portal.(" + _HASH + ").css",
 				"/proxy/o/portlet-web/footer-portlet.(" + _HASH + ").css",
 				"/proxy/o/portlet-web/footer-portlet.tokenized.(" + _HASH +
 					").css?themeId=classic_WAR_classictheme&tokenize=true",
-				"/proxy/o/portlet-web/nocombo-footer-portlet.(" + _HASH +
-					").css",
 				"http://example.com/footer-portal.css",
 				"http://example.com/footer-portlet.css"),
 			portletRenderParts.getFooterCssPaths());
 		_assertEquals(
 			Arrays.asList(
 				"/proxy/footer-portal.(" + _HASH + ").js",
-				"/proxy/nocombo-footer-portal.(" + _HASH + ").js",
+				"/proxy/footer-portal.translatable.(" + _HASH +
+					").js?languageId=en_US&translate=true",
 				"/proxy/o/portlet-web/footer-portlet.(" + _HASH + ").js",
-				"/proxy/o/portlet-web/nocombo-footer-portlet.(" + _HASH +
-					").js",
+				"/proxy/o/portlet-web/footer-portlet.translatable.(" + _HASH +
+					").js?languageId=en_US&translate=true",
 				"http://example.com/footer-portal.js",
 				"http://example.com/footer-portlet.js",
 				"module:/proxy/module-footer-portal.(" + _HASH + ").js",
@@ -362,8 +349,7 @@ public class PortletRenderUtilTest {
 			"Nonempty expected set " + expectedSet, expectedSet.isEmpty());
 	}
 
-	private void _setUpMocks(String contextPath, String proxyPath)
-		throws Exception {
+	private void _setUpMocks(String contextPath, String proxyPath) {
 
 		// HashedFilesRegistryUtil
 
@@ -388,6 +374,10 @@ public class PortletRenderUtilTest {
 					content = "@theme_image_path@";
 				}
 
+				if (fileURI.contains(".translatable.")) {
+					content = "Liferay.Language.get('portlet')";
+				}
+
 				Mockito.when(
 					url.openStream()
 				).thenReturn(
@@ -404,14 +394,7 @@ public class PortletRenderUtilTest {
 		_htmlUtilMockedStatic.when(
 			() -> HtmlUtil.escapeURL(Mockito.anyString())
 		).thenAnswer(
-			new Answer<String>() {
-
-				@Override
-				public String answer(InvocationOnMock invocationOnMock) {
-					return invocationOnMock.getArgument(0);
-				}
-
-			}
+			(Answer<String>)invocationOnMock -> invocationOnMock.getArgument(0)
 		);
 
 		// PortalUtil
@@ -433,21 +416,15 @@ public class PortletRenderUtilTest {
 				Mockito.any(HttpServletRequest.class), Mockito.anyString(),
 				Mockito.anyLong())
 		).thenAnswer(
-			new Answer<String>() {
+			(Answer<String>)invocationOnMock -> {
+				String uri = invocationOnMock.getArgument(1, String.class);
+				long timestamp = invocationOnMock.getArgument(2, Long.class);
 
-				@Override
-				public String answer(InvocationOnMock invocationOnMock) {
-					String uri = invocationOnMock.getArgument(1, String.class);
-					long timestamp = invocationOnMock.getArgument(
-						2, Long.class);
-
-					if (timestamp < 0) {
-						return uri;
-					}
-
-					return uri + "?t=" + timestamp;
+				if (timestamp < 0) {
+					return uri;
 				}
 
+				return uri + "?t=" + timestamp;
 			}
 		);
 
@@ -468,6 +445,12 @@ public class PortletRenderUtilTest {
 			themeDisplay.getCDNBaseURL()
 		).thenReturn(
 			""
+		);
+
+		Mockito.when(
+			themeDisplay.getLanguageId()
+		).thenReturn(
+			"en_US"
 		);
 
 		Mockito.when(
@@ -505,18 +488,17 @@ public class PortletRenderUtilTest {
 		).thenReturn(
 			Arrays.asList(
 				"/footer-portal.css", "/footer-portal.tokenized.css",
-				"http://example.com/footer-portal.css",
-				"nocombo:/nocombo-footer-portal.css")
+				"http://example.com/footer-portal.css")
 		);
 
 		Mockito.when(
 			_portlet.getFooterPortalJavaScript()
 		).thenReturn(
 			Arrays.asList(
-				"/footer-portal.js", "http://example.com/footer-portal.js",
+				"/footer-portal.js", "/footer-portal.translatable.js",
+				"http://example.com/footer-portal.js",
 				"module:/module-footer-portal.js",
-				"module:http://example.com/module-footer-portal.js",
-				"nocombo:/nocombo-footer-portal.js")
+				"module:http://example.com/module-footer-portal.js")
 		);
 
 		Mockito.when(
@@ -524,18 +506,17 @@ public class PortletRenderUtilTest {
 		).thenReturn(
 			Arrays.asList(
 				"/footer-portlet.css", "/footer-portlet.tokenized.css",
-				"http://example.com/footer-portlet.css",
-				"nocombo:/nocombo-footer-portlet.css")
+				"http://example.com/footer-portlet.css")
 		);
 
 		Mockito.when(
 			_portlet.getFooterPortletJavaScript()
 		).thenReturn(
 			Arrays.asList(
-				"/footer-portlet.js", "http://example.com/footer-portlet.js",
+				"/footer-portlet.js", "/footer-portlet.translatable.js",
+				"http://example.com/footer-portlet.js",
 				"module:/module-footer-portlet.js",
-				"module:http://example.com/module-footer-portlet.js",
-				"nocombo:/nocombo-footer-portlet.js")
+				"module:http://example.com/module-footer-portlet.js")
 		);
 
 		Mockito.when(
@@ -543,18 +524,17 @@ public class PortletRenderUtilTest {
 		).thenReturn(
 			Arrays.asList(
 				"/header-portal.css", "/header-portal.tokenized.css",
-				"http://example.com/header-portal.css",
-				"nocombo:/nocombo-header-portal.css")
+				"http://example.com/header-portal.css")
 		);
 
 		Mockito.when(
 			_portlet.getHeaderPortalJavaScript()
 		).thenReturn(
 			Arrays.asList(
-				"/header-portal.js", "http://example.com/header-portal.js",
+				"/header-portal.js", "/header-portal.translatable.js",
+				"http://example.com/header-portal.js",
 				"module:/module-header-portal.js",
-				"module:http://example.com/module-header-portal.js",
-				"nocombo:/nocombo-header-portal.js")
+				"module:http://example.com/module-header-portal.js")
 		);
 
 		Mockito.when(
@@ -562,18 +542,17 @@ public class PortletRenderUtilTest {
 		).thenReturn(
 			Arrays.asList(
 				"/header-portlet.css", "/header-portlet.tokenized.css",
-				"http://example.com/header-portlet.css",
-				"nocombo:/nocombo-header-portlet.css")
+				"http://example.com/header-portlet.css")
 		);
 
 		Mockito.when(
 			_portlet.getHeaderPortletJavaScript()
 		).thenReturn(
 			Arrays.asList(
-				"/header-portlet.js", "http://example.com/header-portlet.js",
+				"/header-portlet.js", "/header-portlet.translatable.js",
+				"http://example.com/header-portlet.js",
 				"module:/module-header-portlet.js",
-				"module:http://example.com/module-header-portlet.js",
-				"nocombo:/nocombo-header-portlet.js")
+				"module:http://example.com/module-header-portlet.js")
 		);
 
 		Mockito.when(
