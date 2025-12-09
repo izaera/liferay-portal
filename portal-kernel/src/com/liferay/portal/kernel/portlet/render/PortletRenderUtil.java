@@ -21,7 +21,6 @@ import com.liferay.portal.kernel.util.Http;
 import com.liferay.portal.kernel.util.HttpComponentsUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
-import com.liferay.portal.kernel.util.SetUtil;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -359,15 +358,10 @@ public class PortletRenderUtil {
 				for (String portletResource : portletResources) {
 					String prefix = null;
 
-					for (String specialProtocol : _specialPrefixes) {
-						if (portletResource.startsWith(specialProtocol)) {
-							portletResource = portletResource.substring(
-								specialProtocol.length());
+					if (portletResource.startsWith("module:")) {
+						portletResource = portletResource.substring(7);
 
-							prefix = specialProtocol;
-
-							break;
-						}
+						prefix = "module:";
 					}
 
 					if (!HttpComponentsUtil.hasProtocol(portletResource)) {
@@ -435,14 +429,6 @@ public class PortletRenderUtil {
 		else {
 			throw new UnsupportedOperationException(
 				"Unsupported URL type " + urlType);
-		}
-
-		for (int i = 0; i < urls.size(); i++) {
-			String url = urls.get(i);
-
-			if (url.startsWith("nocombo:")) {
-				urls.set(i, url.substring(8));
-			}
 		}
 
 		return urls;
@@ -671,8 +657,6 @@ public class PortletRenderUtil {
 	private static final Log _log = LogFactoryUtil.getLog(
 		PortletRenderUtil.class);
 
-	private static final Set<String> _specialPrefixes = SetUtil.fromArray(
-		"module:", "nocombo:");
 	private static final Map<String, Boolean> _tokenized =
 		new ConcurrentHashMap<>();
 	private static final Map<String, Boolean> _translatable =
