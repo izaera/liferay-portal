@@ -159,6 +159,10 @@ export function historyPushWithSlug(push) {
 	return (url) => push(stringToSlug(url));
 }
 
+export function navigateWithSlug(navigate) {
+	return (url) => navigate(stringToSlug(url));
+}
+
 export function stripHTML(text) {
 	if (!text) {
 		return '';
