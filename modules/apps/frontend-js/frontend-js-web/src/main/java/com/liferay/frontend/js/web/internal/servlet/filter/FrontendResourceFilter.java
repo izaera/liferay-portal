@@ -9,6 +9,7 @@ import com.liferay.frontend.js.web.internal.configuration.FrontendCachingConfigu
 import com.liferay.frontend.js.web.internal.resource.FrontendResource;
 import com.liferay.frontend.js.web.internal.resource.handler.FrontendResourceRequestHandler;
 import com.liferay.frontend.js.web.internal.resource.handler.HashedFileFrontendResourceRequestHandler;
+import com.liferay.frontend.js.web.internal.resource.handler.JavaScriptFrontendResourceRequestHandler;
 import com.liferay.frontend.js.web.internal.resource.handler.LanguageFrontendResourceRequestHandler;
 import com.liferay.frontend.js.web.internal.resource.handler.StyleSheetFrontendResourceRequestHandler;
 import com.liferay.petra.io.StreamUtil;
@@ -18,6 +19,7 @@ import com.liferay.portal.configuration.module.configuration.ConfigurationProvid
 import com.liferay.portal.kernel.frontend.hashed.files.HashedFilesRegistry;
 import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.language.Language;
+import com.liferay.portal.kernel.portlet.PortletConfigFactoryUtil;
 import com.liferay.portal.kernel.service.ThemeLocalService;
 import com.liferay.portal.kernel.servlet.HttpHeaders;
 import com.liferay.portal.kernel.util.ContentTypes;
@@ -90,16 +92,15 @@ public class FrontendResourceFilter extends BasePortalFilter {
 				ContentTypes.APPLICATION_JSON, ".map", _hashedFilesRegistry,
 				86400, "esModulesMaxAge", _portal, false,
 				"sendNoCacheForESModules"));
-		frontendResourceRequestHandlers.add(
-			new HashedFileFrontendResourceRequestHandler(
-				ContentTypes.TEXT_JAVASCRIPT, ".js", _hashedFilesRegistry,
-				86400, "esModulesMaxAge", _portal, false,
-				"sendNoCacheForESModules"));
 
 		FrontendCachingConfiguration frontendCachingConfiguration =
 			ConfigurableUtil.createConfigurable(
 				FrontendCachingConfiguration.class, properties);
 
+		frontendResourceRequestHandlers.add(
+			new JavaScriptFrontendResourceRequestHandler(
+				frontendCachingConfiguration, _hashedFilesRegistry, _language,
+				PortletConfigFactoryUtil.getPortletConfigFactory()));
 		frontendResourceRequestHandlers.add(
 			new StyleSheetFrontendResourceRequestHandler(
 				frontendCachingConfiguration, _hashedFilesRegistry, _portal,

@@ -268,10 +268,50 @@ public class PortletRenderUtil {
 			}
 		}
 
+
 		if (_isTokenized(unhashedFileURI)) {
 			url = HttpComponentsUtil.addParameter(
 				url, "themeId", themeDisplay.getThemeId());
 			url = HttpComponentsUtil.addParameter(url, "tokenize", true);
+		}
+
+		return url;
+	}
+
+	private static String _getStaticJSResourceURL(
+		String originalURL, ThemeDisplay themeDisplay) {
+
+		String queryString = HttpComponentsUtil.getQueryString(originalURL);
+
+		if (!Validator.isBlank(queryString)) {
+			originalURL = originalURL.substring(
+				0, originalURL.length() - queryString.length() - 1);
+		}
+
+		String url;
+
+		String proxyPath = PortalUtil.getPathProxy();
+
+		String unhashedFileURI = originalURL.substring(proxyPath.length());
+
+		String hashedFileURI = HashedFilesRegistryUtil.getHashedFileURI(
+			unhashedFileURI);
+
+		if (hashedFileURI == null) {
+			url = originalURL;
+		}
+		else {
+			url = proxyPath + hashedFileURI;
+		}
+
+		if (!Validator.isBlank(queryString)) {
+			url += "?" + queryString;
+		}
+
+		if (_isTranslatable(unhashedFileURI)) {
+			url = HttpComponentsUtil.addParameter(
+				url, "languageId", themeDisplay.getLanguageId());
+			url = HttpComponentsUtil.addParameter(url, "translate", true);
 		}
 
 		return url;
@@ -327,15 +367,8 @@ public class PortletRenderUtil {
 								contextPath + portletResource, themeDisplay);
 						}
 						else if (urlType == URLType.JAVASCRIPT) {
-							portletResource = contextPath + portletResource;
-
-							String hashedFileURI =
-								HashedFilesRegistryUtil.getHashedFileURI(
-									portletResource);
-
-							if (hashedFileURI != null) {
-								portletResource = hashedFileURI;
-							}
+							portletResource = _getStaticJSResourceURL(
+								contextPath + portletResource, themeDisplay);
 						}
 						else {
 							throw new UnsupportedOperationException(
@@ -435,6 +468,35 @@ public class PortletRenderUtil {
 		}
 
 		return _tokenized.get(resourceURI);
+	}
+
+	private static boolean _isTranslatable(String resourceURI) {
+		if (!_translatable.containsKey(resourceURI)) {
+			URL resourceURL = HashedFilesRegistryUtil.getResource(resourceURI);
+
+			String content;
+
+			try {
+				content = StreamUtil.toString(resourceURL.openStream());
+			}
+			catch (Exception exception) {
+				if (_log.isDebugEnabled()) {
+					_log.debug(
+						"Assuming " + resourceURI +
+							" is not translatable because it could not be read",
+						exception);
+				}
+
+				_translatable.putIfAbsent(resourceURI, false);
+
+				return false;
+			}
+
+			_translatable.putIfAbsent(
+				resourceURI, content.contains("Liferay.Language.get"));
+		}
+
+		return _translatable.get(resourceURI);
 	}
 
 	private static void _writeCSSPath(
@@ -602,6 +664,8 @@ public class PortletRenderUtil {
 	private static final Set<String> _specialPrefixes = SetUtil.fromArray(
 		"module:", "nocombo:");
 	private static final Map<String, Boolean> _tokenized =
+		new ConcurrentHashMap<>();
+	private static final Map<String, Boolean> _translatable =
 		new ConcurrentHashMap<>();
 
 	private enum URLType {
