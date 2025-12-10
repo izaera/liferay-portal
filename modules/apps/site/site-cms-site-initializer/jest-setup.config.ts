@@ -33,8 +33,8 @@ jest.mock('@ckeditor/ckeditor5-widget/dist/index', () => ({}));
 
 class MockBroadcastChannel {
 	name: string;
-	onmessage: ((event: MessageEvent) => void) | null = null;
-	private listeners: ((event: MessageEvent) => void)[] = [];
+	onmessage: ((messageEvent: MessageEvent) => void) | null = null;
+	private listeners: ((messageEvent: MessageEvent) => void)[] = [];
 
 	constructor(name: string) {
 		this.name = name;
