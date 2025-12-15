@@ -26,7 +26,6 @@ import './Numeric.scss';
 import {getTooltipTitle} from '../util/tooltip';
 
 import type {FieldChangeEventHandler, Locale, LocalizedValue} from '../types';
-const NON_NUMERIC_REGEX = /[\D]/g;
 
 const adaptiveMask = (rawValue: string, inputMaskFormat: string) => {
 	const generateMask = (mask: string): string => {
@@ -276,18 +275,6 @@ const Numeric: React.FC<{children?: React.ReactNode | undefined} & IProps> = ({
 						thousandsSeparator: symbols.thousandsSeparator,
 						value,
 					});
-
-		// allows user to delete characters from the mask
-
-		const inputValueRaw = inputValue.raw.replace(NON_NUMERIC_REGEX, '');
-		const rawValue = value.replace(NON_NUMERIC_REGEX, '');
-
-		if (
-			inputValue.masked?.length > value.length &&
-			(inputValueRaw?.length ?? 0) === rawValue.length
-		) {
-			value = inputValueRaw.slice(0, -1);
-		}
 
 		const {masked, raw} = inputMask
 			? getMaskedValue({
