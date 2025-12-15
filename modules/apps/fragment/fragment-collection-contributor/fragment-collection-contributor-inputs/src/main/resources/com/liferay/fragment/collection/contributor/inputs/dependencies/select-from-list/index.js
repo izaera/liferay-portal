@@ -42,6 +42,7 @@ if (layoutMode === 'edit') {
 
 buttonElement.addEventListener('click', toggleDropdown);
 buttonElement.addEventListener('blur', handleResultListBlur);
+buttonElement.addEventListener('keydown', handleButtonPress);
 uiInputElement.addEventListener('click', toggleDropdown);
 uiInputElement.addEventListener('input', debounce(handleInputChange, 1000));
 uiInputElement.addEventListener('blur', handleInputBlur);
@@ -110,6 +111,23 @@ function handleResultListClick(event) {
 	}
 }
 
+function handleButtonPress(event) {
+	event.preventDefault();
+
+	if (checkIsOpenDropdown()) {
+		handleKeydown(event);
+
+		if (event.key === KEYS.Enter) {
+			closeDropdown();
+		}
+	}
+	else {
+		if (event.key === KEYS.Enter) {
+			openDropdown();
+		}
+	}
+}
+
 function handleInputBlur() {
 	if (!uiInputElement.value) {
 		labelInputElement.value = '';
@@ -135,14 +153,18 @@ function handleInputKeyDown(event) {
 		return;
 	}
 
-	const currentFocusedOption = document.getElementById(
-		optionListElement.getAttribute('aria-activedescendant')
-	);
-
 	if (KEYS[event.key]) {
 		openDropdown();
 		event.preventDefault();
 	}
+
+	handleKeydown(event);
+}
+
+function handleKeydown(event) {
+	const currentFocusedOption = document.getElementById(
+		optionListElement.getAttribute('aria-activedescendant')
+	);
 
 	if (event.key === KEYS.ArrowDown && !event.altKey) {
 		if (currentFocusedOption) {
