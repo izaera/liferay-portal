@@ -418,7 +418,8 @@ public interface LayoutUtilityPageEntryLocalService
 		LayoutUtilityPageEntry layoutUtilityPageEntry);
 
 	public LayoutUtilityPageEntry updateLayoutUtilityPageEntry(
-		long layoutUtilityPageEntryId, long previewFileEntryId);
+			long layoutUtilityPageEntryId, long previewFileEntryId)
+		throws PortalException;
 
 	public LayoutUtilityPageEntry updateLayoutUtilityPageEntry(
 			long layoutUtilityPageEntryId, String name)
