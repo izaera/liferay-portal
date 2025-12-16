@@ -268,6 +268,7 @@ const Main = ({
 			localizedValue={localizedValue}
 			name={name}
 			readOnly={readOnly}
+			valid={valid}
 			{...otherProps}
 		>
 			{multiple ? (
@@ -291,6 +292,7 @@ const Main = ({
 				/>
 			) : (
 				<Select
+					displayErrors={displayErrors}
 					fixedOptions={fixedOptions}
 					id={id}
 					label={label}
@@ -307,6 +309,7 @@ const Main = ({
 					required={otherProps.required}
 					selectedKey={selectedKey ?? newValue}
 					showEmptyOption={showEmptyOption}
+					valid={valid}
 					viewMode={viewMode}
 					{...otherProps}
 				/>
