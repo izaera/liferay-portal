@@ -1491,7 +1491,6 @@ public class UserLocalServiceTest {
 				TestPropsValues.getUserId()));
 
 		Assert.assertEquals(WorkflowConstants.STATUS_PENDING, user.getStatus());
-
 		Assert.assertFalse(user.isPasswordModified());
 
 		WorkflowHandler<User> workflowHandler =
@@ -1514,7 +1513,6 @@ public class UserLocalServiceTest {
 
 		Assert.assertEquals(
 			WorkflowConstants.STATUS_APPROVED, user.getStatus());
-
 		Assert.assertFalse(user.isPasswordModified());
 	}
 
