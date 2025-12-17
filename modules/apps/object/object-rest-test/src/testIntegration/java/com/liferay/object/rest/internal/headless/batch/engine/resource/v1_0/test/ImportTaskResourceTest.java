@@ -18,7 +18,10 @@ import com.liferay.portal.kernel.model.role.RoleConstants;
 import com.liferay.portal.kernel.test.util.HTTPTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.RoleTestUtil;
+import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.kernel.util.Http;
+
+import java.io.Serializable;
 
 import org.junit.Assert;
 import org.junit.Test;
@@ -336,6 +339,45 @@ public class ImportTaskResourceTest extends BaseTaskResourceTestCase {
 				OBJECT_FIELD_NAME_TEXT_1
 			));
 
+		// With "updateStrategy" PARTIAL_UPDATE and site scoped Object Entry
+
+		ObjectEntry siteObjectEntry = ObjectEntryTestUtil.addObjectEntry(
+			testGroup.getGroupId(), siteObjectDefinition,
+			HashMapBuilder.<String, Serializable>put(
+				OBJECT_FIELD_NAME_TEXT_1, expectedFieldValue
+			).put(
+				OBJECT_FIELD_NAME_TEXT_2, RandomTestUtil.randomString()
+			).build());
+
+		waitForFinish(
+			"COMPLETED", true,
+			HTTPTestUtil.invokeToJSONObject(
+				JSONUtil.putAll(
+					JSONUtil.put(
+						OBJECT_FIELD_NAME_TEXT_2, RandomTestUtil.randomString()
+					).put(
+						"externalReferenceCode",
+						siteObjectEntry.getExternalReferenceCode()
+					)
+				).toString(),
+				StringBundler.concat(
+					"headless-batch-engine/v1.0/import-task",
+					"/com.liferay.object.rest.dto.v1_0.ObjectEntry",
+					"?createStrategy=UPSERT&siteExternalReferenceCode=",
+					testGroup.getExternalReferenceCode(),
+					"&taskItemDelegateName=", siteObjectDefinition.getName(),
+					"&updateStrategy=PARTIAL_UPDATE"),
+				Http.Method.POST));
+
+		Assert.assertEquals(
+			expectedFieldValue,
+			_getSiteJSONObject(
+				siteObjectEntry.getExternalReferenceCode(),
+				testGroup.getExternalReferenceCode()
+			).getString(
+				OBJECT_FIELD_NAME_TEXT_1
+			));
+
 		// With no "permissions" and "createStrategy" INSERT
 
 		beforeImportJSONObject = JSONUtil.put(
@@ -486,6 +528,19 @@ public class ImportTaskResourceTest extends BaseTaskResourceTestCase {
 			null,
 			StringBundler.concat(
 				objectDefinition.getRESTContextPath(),
+				"/by-external-reference-code/", externalReferenceCode,
+				"?nestedFields=permissions"),
+			Http.Method.GET);
+	}
+
+	private JSONObject _getSiteJSONObject(
+			String externalReferenceCode, String scopeKey)
+		throws Exception {
+
+		return HTTPTestUtil.invokeToJSONObject(
+			null,
+			StringBundler.concat(
+				siteObjectDefinition.getRESTContextPath(), "/scopes/", scopeKey,
 				"/by-external-reference-code/", externalReferenceCode,
 				"?nestedFields=permissions"),
 			Http.Method.GET);
