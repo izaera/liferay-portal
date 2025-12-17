@@ -8,10 +8,12 @@ package com.liferay.object.entry.util;
 import com.liferay.object.system.JaxRsApplicationDescriptor;
 import com.liferay.object.system.SystemObjectDefinitionManager;
 import com.liferay.object.system.SystemObjectDefinitionManagerRegistry;
+import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.vulcan.dto.converter.DTOConverter;
 import com.liferay.portal.vulcan.dto.converter.DTOConverterRegistry;
 import com.liferay.portal.vulcan.dto.converter.DefaultDTOConverterContext;
@@ -92,7 +94,20 @@ public class ObjectEntryDTOConverterUtil {
 				return Collections.emptyMap();
 			}
 
-			return ObjectMapperUtil.readValue(Map.class, dto.toString());
+			String dtoString = JSONFactoryUtil.serialize(dto);
+
+			if (Validator.isNull(dtoString)) {
+				return Collections.emptyMap();
+			}
+
+			Map<String, Object> values = ObjectMapperUtil.readValue(
+				Map.class, dtoString);
+
+			if (values == null) {
+				return Collections.emptyMap();
+			}
+
+			return values;
 		}
 		catch (Exception exception) {
 			_log.error(exception);
