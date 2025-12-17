@@ -41,7 +41,7 @@ const Ratings = ({
 
 	const sendVoteRequest = useCallback(
 		(score) => {
-			if (Liferay.Session.sessionState === 'expired') {
+			if (Liferay.Session?.sessionState === 'expired') {
 				errorToast(
 					`${Liferay.Language.get('you-must-be-signed-in-to-rate')}`
 				);
