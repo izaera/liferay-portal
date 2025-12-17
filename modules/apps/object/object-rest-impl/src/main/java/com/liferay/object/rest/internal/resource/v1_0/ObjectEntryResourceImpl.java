@@ -22,6 +22,9 @@ import com.liferay.object.service.ObjectRelationshipService;
 import com.liferay.object.system.SystemObjectDefinitionManager;
 import com.liferay.object.system.SystemObjectDefinitionManagerRegistry;
 import com.liferay.petra.function.UnsafeFunction;
+import com.liferay.portal.kernel.exception.NoSuchModelException;
+import com.liferay.portal.kernel.log.Log;
+import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.search.Sort;
 import com.liferay.portal.kernel.search.filter.Filter;
@@ -89,20 +92,55 @@ public class ObjectEntryResourceImpl extends BaseObjectEntryResourceImpl {
 		if (objectScopeProvider.isGroupAware()) {
 			UnsafeFunction<ObjectEntry, ObjectEntry, Exception>
 				objectEntryUnsafeFunction = null;
+			String scopeKey = _getScopeKey(parameters);
 
 			String createStrategy = (String)parameters.getOrDefault(
 				"createStrategy", "INSERT");
 
 			if (StringUtil.equalsIgnoreCase(createStrategy, "INSERT")) {
 				objectEntryUnsafeFunction = objectEntry -> postScopeScopeKey(
-					_getScopeKey(parameters), objectEntry);
+					scopeKey, objectEntry);
 			}
 
 			if (StringUtil.equalsIgnoreCase(createStrategy, "UPSERT")) {
-				objectEntryUnsafeFunction =
-					objectEntry -> putScopeScopeKeyByExternalReferenceCode(
-						_getScopeKey(parameters),
-						objectEntry.getExternalReferenceCode(), objectEntry);
+				String updateStrategy = (String)parameters.getOrDefault(
+					"updateStrategy", "UPDATE");
+
+				if (StringUtil.equalsIgnoreCase(
+						updateStrategy, "PARTIAL_UPDATE")) {
+
+					objectEntryUnsafeFunction = objectEntry -> {
+						ObjectEntry getObjectEntry = null;
+						ObjectEntry persistedObjectEntry = null;
+
+						try {
+							getObjectEntry =
+								getScopeScopeKeyByExternalReferenceCode(
+									scopeKey,
+									objectEntry.getExternalReferenceCode());
+
+							persistedObjectEntry = patchObjectEntry(
+								getObjectEntry.getId(), objectEntry);
+						}
+						catch (NoSuchModelException noSuchModelException) {
+							if (_log.isDebugEnabled()) {
+								_log.debug(noSuchModelException);
+							}
+
+							persistedObjectEntry = postScopeScopeKey(
+								scopeKey, objectEntry);
+						}
+
+						return persistedObjectEntry;
+					};
+				}
+
+				if (StringUtil.equalsIgnoreCase(updateStrategy, "UPDATE")) {
+					objectEntryUnsafeFunction =
+						objectEntry -> putScopeScopeKeyByExternalReferenceCode(
+							scopeKey, objectEntry.getExternalReferenceCode(),
+							objectEntry);
+				}
 			}
 
 			if (objectEntryUnsafeFunction == null) {
@@ -683,6 +721,9 @@ public class ObjectEntryResourceImpl extends BaseObjectEntryResourceImpl {
 
 		return null;
 	}
+
+	private static final Log _log = LogFactoryUtil.getLog(
+		ObjectEntryResourceImpl.class);
 
 	private final DTOConverterRegistry _dtoConverterRegistry;
 	private final EntityModelProvider _entityModelProvider;
