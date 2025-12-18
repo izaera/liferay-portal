@@ -96,7 +96,7 @@ public class AccountEntrySearchPermissionFilterContributor
 						permissionChecker, organization,
 						AccountActionKeys.UPDATE_SUBORGANIZATIONS_ACCOUNTS)) {
 
-					organizations.addAll(
+					organizationsSet.addAll(
 						_organizationLocalService.getOrganizations(
 							companyId, organization.getTreePath() + "%/"));
 				}
