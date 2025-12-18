@@ -44,8 +44,8 @@ import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 
-import jakarta.portlet.ActionRequest;
-import jakarta.portlet.ActionResponse;
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -72,9 +72,9 @@ public class DeleteFragmentCompositionPreviewMVCActionCommandTest {
 		_group = _groupLocalService.fetchGroup(TestPropsValues.getGroupId());
 	}
 
-	@Test
+	@Test(expected = NoSuchFileEntryException.class)
 	@TestInfo("LPD-73558")
-	public void testDeleteFragmentCompositionPreview() throws Exception {
+	public void testDoProcessAction() throws Exception {
 		FragmentCollection fragmentCollection =
 			FragmentTestUtil.addFragmentCollection(_group.getGroupId());
 
@@ -107,12 +107,8 @@ public class DeleteFragmentCompositionPreviewMVCActionCommandTest {
 				fragmentComposition, TestPropsValues.getUser()),
 			new MockLiferayPortletActionResponse());
 
-		long previewFileEntryId = fragmentComposition.getPreviewFileEntryId();
-
-		Assert.assertThrows(
-			NoSuchFileEntryException.class,
-			() -> _portletFileRepository.getPortletFileEntry(
-				previewFileEntryId));
+		_portletFileRepository.getPortletFileEntry(
+			fragmentComposition.getPreviewFileEntryId());
 
 		fragmentComposition =
 			_fragmentCompositionLocalService.fetchFragmentComposition(
@@ -121,11 +117,9 @@ public class DeleteFragmentCompositionPreviewMVCActionCommandTest {
 		Assert.assertEquals(0, fragmentComposition.getPreviewFileEntryId());
 	}
 
-	@Test
+	@Test(expected = PrincipalException.class)
 	@TestInfo("LPD-73558")
-	public void testDeleteFragmentCompositionPreviewWithoutPermissions()
-		throws Exception {
-
+	public void testDoProcessActionWithoutPermissions() throws Exception {
 		User user = UserTestUtil.addGroupUser(_group, RoleConstants.POWER_USER);
 
 		FragmentCollection fragmentCollection =
@@ -140,15 +134,12 @@ public class DeleteFragmentCompositionPreviewMVCActionCommandTest {
 		try (ContextUserReplace contextUserReplace = new ContextUserReplace(
 				user, PermissionCheckerFactoryUtil.create(user))) {
 
-			Assert.assertThrows(
-				PrincipalException.class,
-				() -> ReflectionTestUtil.invoke(
-					_deleteFragmentCompositionPreviewMVCActionCommand,
-					"doProcessAction",
-					new Class<?>[] {ActionRequest.class, ActionResponse.class},
-					_getMockLiferayPortletActionRequest(
-						fragmentComposition, user),
-					new MockLiferayPortletActionResponse()));
+			ReflectionTestUtil.invoke(
+				_deleteFragmentCompositionPreviewMVCActionCommand,
+				"doProcessAction",
+				new Class<?>[] {ActionRequest.class, ActionResponse.class},
+				_getMockLiferayPortletActionRequest(fragmentComposition, user),
+				new MockLiferayPortletActionResponse());
 		}
 	}
 
