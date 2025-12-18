@@ -90,7 +90,7 @@ public class ObjectEntryResourceImpl extends BaseObjectEntryResourceImpl {
 				_objectDefinition.getScope());
 
 		if (objectScopeProvider.isGroupAware()) {
-			_siteCreate(objectEntries, parameters);
+			_groupAwareCreate(objectEntries, parameters);
 		}
 		else {
 			UnsafeFunction<ObjectEntry, ObjectEntry, Exception>
@@ -662,7 +662,7 @@ public class ObjectEntryResourceImpl extends BaseObjectEntryResourceImpl {
 		return null;
 	}
 
-	private void _siteCreate(
+	private void _groupAwareCreate(
 			Collection<ObjectEntry> objectEntries,
 			Map<String, Serializable> parameters)
 		throws Exception {
