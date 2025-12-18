@@ -31,8 +31,8 @@ public class ObjectFieldUtil {
 		).put(
 			"defaultValue",
 			com.liferay.object.field.setting.util.ObjectFieldSettingUtil.
-				getDefaultValueAsString(
-					null, objectField, objectFieldSettingLocalService, null)
+				getDefaultValue(
+					null, objectField, null)
 		).put(
 			"externalReferenceCode", objectField.getExternalReferenceCode()
 		).put(

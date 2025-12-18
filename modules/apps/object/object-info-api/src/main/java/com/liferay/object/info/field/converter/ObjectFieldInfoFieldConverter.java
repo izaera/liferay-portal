@@ -237,9 +237,8 @@ public class ObjectFieldInfoFieldConverter {
 						objectField.getListTypeDefinitionId()),
 					listTypeEntry -> new OptionInfoFieldType(
 						Objects.equals(
-							ObjectFieldSettingUtil.getDefaultValueAsString(
-								null, objectField,
-								_objectFieldSettingLocalService, null),
+							ObjectFieldSettingUtil.getDefaultValue(
+								_ddmExpressionFactory, objectField, null),
 							listTypeEntry.getKey()),
 						new FunctionInfoLocalizedValue<>(
 							listTypeEntry::getName),
@@ -422,8 +421,8 @@ public class ObjectFieldInfoFieldConverter {
 	private List<OptionInfoFieldType> _getOptionInfoFieldTypes(
 		ObjectField objectField) {
 
-		String defaultValue = ObjectFieldSettingUtil.getDefaultValueAsString(
-			null, objectField, _objectFieldSettingLocalService, null);
+		String defaultValue =  String.valueOf(ObjectFieldSettingUtil.getDefaultValue(
+			_ddmExpressionFactory, objectField, null));
 
 		if (!objectField.isState()) {
 			return _getOptionInfoFieldTypes(

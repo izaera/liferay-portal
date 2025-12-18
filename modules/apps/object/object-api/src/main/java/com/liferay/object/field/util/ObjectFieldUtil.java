@@ -21,7 +21,6 @@ import com.liferay.object.model.ObjectField;
 import com.liferay.object.model.ObjectFieldSetting;
 import com.liferay.object.service.ObjectEntryLocalServiceUtil;
 import com.liferay.object.service.ObjectFieldLocalServiceUtil;
-import com.liferay.object.service.ObjectFieldSettingLocalServiceUtil;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -281,7 +280,7 @@ public class ObjectFieldUtil {
 			return isReadOnly(
 				ddmExpressionFactory, objectField,
 				ObjectFieldSettingUtil.getDefaultValues(
-					objectField.getObjectDefinitionId()));
+					ddmExpressionFactory, objectField.getObjectDefinitionId()));
 		}
 
 		ObjectEntry objectEntry = ObjectEntryLocalServiceUtil.getObjectEntry(
@@ -330,9 +329,8 @@ public class ObjectFieldUtil {
 			if (existingValues.get(objectField.getName()) == null) {
 				existingValues.put(
 					objectField.getName(),
-					ObjectFieldSettingUtil.getDefaultValueAsString(
-						null, objectField,
-						ObjectFieldSettingLocalServiceUtil.getService(), null));
+					ObjectFieldSettingUtil.getDefaultValue(
+						ddmExpressionFactory, objectField, null));
 			}
 
 			if (objectField.isLocalized()) {

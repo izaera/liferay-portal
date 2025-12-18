@@ -285,9 +285,8 @@ public class ObjectEntryVariablesUtil {
 					objectDefinition.getObjectDefinitionId())) {
 
 			String defaultValue =
-				ObjectFieldSettingUtil.getDefaultValueAsString(
-					null, objectField,
-					ObjectFieldSettingLocalServiceUtil.getService(), null);
+				String.valueOf(ObjectFieldSettingUtil.getDefaultValue(
+					null, objectField, null));
 
 			if (Validator.isNotNull(defaultValue) &&
 				keys.contains(objectField.getName())) {
