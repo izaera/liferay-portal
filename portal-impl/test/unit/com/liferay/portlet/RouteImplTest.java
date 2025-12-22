@@ -36,7 +36,7 @@ public class RouteImplTest {
 			"id", "123"
 		).build();
 
-		Route route = new Route("{action}/{id:\\d+}");
+		Route route = new RouteImpl("{action}/{id:\\d+}");
 
 		String url = route.parametersToUrl(parameters);
 
