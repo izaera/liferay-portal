@@ -96,7 +96,7 @@ public class GraphQLServletTest {
 		Assert.assertArrayEquals(
 			integers,
 			JSONUtil.toIntegerArray(
-				JSONUtil.getValueAsJSONObject(
+				JSONUtil.getValueAsJSONArray(
 					_invoke(
 						new GraphQLField(
 							"testDTOPage",
@@ -105,10 +105,8 @@ public class GraphQLServletTest {
 							).build(),
 							new GraphQLField("integers")),
 						"query"),
-					"JSONObject/data", "JSONObject/testDTOPage"
-				).getJSONArray(
-					"integers"
-				)));
+					"JSONObject/data", "JSONObject/testDTOPage",
+					"JSONArray/integers")));
 	}
 
 	@Test
