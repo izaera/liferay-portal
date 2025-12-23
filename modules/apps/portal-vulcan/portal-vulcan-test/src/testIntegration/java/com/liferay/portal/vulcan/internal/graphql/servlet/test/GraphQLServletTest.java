@@ -749,12 +749,23 @@ public class GraphQLServletTest {
 			return sb.toString();
 		}
 
-		private String _serializeArray(Object array) {
+		private Object _serializeValue(Object value) {
+			if (value == null) {
+				return null;
+			}
+
+			Class<?> clazz = value.getClass();
+
+			if (!clazz.isArray()) {
+				return value;
+			}
+
 			StringBuilder sb = new StringBuilder("[");
-			int length = Array.getLength(array);
+
+			int length = Array.getLength(value);
 
 			for (int i = 0; i < length; i++) {
-				sb.append(_serializeValue(Array.get(array, i)));
+				sb.append(_serializeValue(Array.get(value, i)));
 
 				if (i < (length - 1)) {
 					sb.append(", ");
@@ -764,20 +775,6 @@ public class GraphQLServletTest {
 			sb.append("]");
 
 			return sb.toString();
-		}
-
-		private Object _serializeValue(Object value) {
-			if (value == null) {
-				return null;
-			}
-
-			Class<?> clazz = value.getClass();
-
-			if (clazz.isArray()) {
-				return _serializeArray(value);
-			}
-
-			return value;
 		}
 
 		private final List<GraphQLField> _graphQLFields;
