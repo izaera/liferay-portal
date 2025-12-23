@@ -667,9 +667,9 @@ public class ObjectEntryResourceImpl extends BaseObjectEntryResourceImpl {
 			Map<String, Serializable> parameters)
 		throws Exception {
 
+		String scopeKey = _getScopeKey(parameters);
 		UnsafeFunction<ObjectEntry, ObjectEntry, Exception> unsafeFunction =
 			null;
-		String scopeKey = _getScopeKey(parameters);
 
 		String createStrategy = (String)parameters.getOrDefault(
 			"createStrategy", "INSERT");
