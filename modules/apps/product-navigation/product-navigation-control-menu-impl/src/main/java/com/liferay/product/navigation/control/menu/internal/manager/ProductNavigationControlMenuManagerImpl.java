@@ -20,9 +20,15 @@ import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.product.navigation.control.menu.ProductNavigationControlMenuCategory;
+import com.liferay.product.navigation.control.menu.ProductNavigationControlMenuEntry;
+import com.liferay.product.navigation.control.menu.constants.ProductNavigationControlMenuCategoryKeys;
 import com.liferay.product.navigation.control.menu.manager.ProductNavigationControlMenuManager;
+import com.liferay.product.navigation.control.menu.util.ProductNavigationControlMenuCategoryRegistry;
+import com.liferay.product.navigation.control.menu.util.ProductNavigationControlMenuEntryRegistry;
 import com.liferay.site.configuration.MenuAccessConfiguration;
 
+import java.util.List;
 import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
@@ -96,7 +102,46 @@ public class ProductNavigationControlMenuManagerImpl
 			_log.error(exception);
 		}
 
-		return true;
+		return _hasControlMenuEntries(httpServletRequest);
+	}
+
+	private boolean _hasControlMenuEntries(
+		HttpServletRequest httpServletRequest) {
+
+		List<ProductNavigationControlMenuCategory>
+			productNavigationControlMenuCategories =
+				_productNavigationControlMenuCategoryRegistry.
+					getProductNavigationControlMenuCategories(
+						ProductNavigationControlMenuCategoryKeys.ROOT);
+
+		for (ProductNavigationControlMenuCategory
+				productNavigationControlMenuCategory :
+					productNavigationControlMenuCategories) {
+
+			List<ProductNavigationControlMenuEntry>
+				productNavigationControlMenuEntries =
+					_productNavigationControlMenuEntryRegistry.
+						getProductNavigationControlMenuEntries(
+							productNavigationControlMenuCategory,
+							httpServletRequest);
+
+			if (productNavigationControlMenuEntries.isEmpty()) {
+				continue;
+			}
+
+			for (ProductNavigationControlMenuEntry
+					productNavigationControlMenuEntry :
+						productNavigationControlMenuEntries) {
+
+				if (productNavigationControlMenuEntry.isRelevant(
+						httpServletRequest)) {
+
+					return true;
+				}
+			}
+		}
+
+		return false;
 	}
 
 	private boolean _isGuestUser(HttpServletRequest httpServletRequest) {
@@ -148,5 +193,13 @@ public class ProductNavigationControlMenuManagerImpl
 
 	@Reference
 	private Portal _portal;
+
+	@Reference
+	private ProductNavigationControlMenuCategoryRegistry
+		_productNavigationControlMenuCategoryRegistry;
+
+	@Reference
+	private ProductNavigationControlMenuEntryRegistry
+		_productNavigationControlMenuEntryRegistry;
 
 }
