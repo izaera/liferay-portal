@@ -389,6 +389,12 @@ public class LayoutUtilityPageEntryLocalServiceImpl
 			layoutUtilityPageEntryPersistence.findByPrimaryKey(
 				layoutUtilityPageEntryId);
 
+		layoutUtilityPageEntry.setModifiedDate(new Date());
+		layoutUtilityPageEntry.setPreviewFileEntryId(previewFileEntryId);
+
+		layoutUtilityPageEntry =  layoutUtilityPageEntryPersistence.update(
+			layoutUtilityPageEntry);
+
 		long previousPreviewFileEntryId =
 			layoutUtilityPageEntry.getPreviewFileEntryId();
 
@@ -397,10 +403,7 @@ public class LayoutUtilityPageEntryLocalServiceImpl
 				previousPreviewFileEntryId);
 		}
 
-		layoutUtilityPageEntry.setModifiedDate(new Date());
-		layoutUtilityPageEntry.setPreviewFileEntryId(previewFileEntryId);
-
-		return layoutUtilityPageEntryPersistence.update(layoutUtilityPageEntry);
+		return layoutUtilityPageEntry;
 	}
 
 	@Override
