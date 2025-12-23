@@ -5,10 +5,15 @@
 
 package com.liferay.object.system;
 
+import com.liferay.object.model.ObjectEntry;
+import com.liferay.object.service.ObjectEntryService;
 import com.liferay.petra.sql.dsl.Table;
+import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.security.permission.PermissionChecker;
+import com.liferay.portal.kernel.security.permission.resource.ModelResourcePermission;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
@@ -72,6 +77,19 @@ public abstract class BaseSystemObjectDefinitionManager
 	@Override
 	public String getTitleObjectFieldName() {
 		return "id";
+	}
+
+	@Override
+	public boolean hasModelResourcePermission(
+			long objectDefinitionId, PermissionChecker permissionChecker,
+			long primaryKey, String actionId)
+		throws PortalException {
+
+		ModelResourcePermission<ObjectEntry> modelResourcePermission =
+			objectEntryService.getModelResourcePermission(objectDefinitionId);
+
+		return modelResourcePermission.contains(
+			permissionChecker, primaryKey, actionId);
 	}
 
 	@Override
@@ -164,5 +182,8 @@ public abstract class BaseSystemObjectDefinitionManager
 
 	@Reference
 	protected ExtensionProviderRegistry extensionProviderRegistry;
+
+	@Reference
+	protected ObjectEntryService objectEntryService;
 
 }
