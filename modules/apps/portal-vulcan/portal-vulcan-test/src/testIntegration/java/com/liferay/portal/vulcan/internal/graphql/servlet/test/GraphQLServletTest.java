@@ -88,28 +88,6 @@ public class GraphQLServletTest {
 	}
 
 	@Test
-	public void testArrayQueryParameter() throws Exception {
-		int[] integers = {
-			RandomTestUtil.randomInt(), RandomTestUtil.randomInt()
-		};
-
-		Assert.assertArrayEquals(
-			integers,
-			JSONUtil.toIntegerArray(
-				JSONUtil.getValueAsJSONArray(
-					_invoke(
-						new GraphQLField(
-							"testDTOPage",
-							HashMapBuilder.put(
-								"integers", (Object)integers
-							).build(),
-							new GraphQLField("integers")),
-						"query"),
-					"JSONObject/data", "JSONObject/testDTOPage",
-					"JSONArray/integers")));
-	}
-
-	@Test
 	public void testMutation() throws Exception {
 		TestDTO testDTO = new TestDTO();
 
@@ -349,6 +327,28 @@ public class GraphQLServletTest {
 			0, () -> _test(-1, -1, null, -1));
 		PaginationConfigurationTestUtil.withPageSizeLimit(
 			0, () -> _test(-1, -1, null, 0));
+	}
+
+	@Test
+	public void testQueryWithArrayParameter() throws Exception {
+		int[] integers = {
+			RandomTestUtil.randomInt(), RandomTestUtil.randomInt()
+		};
+
+		Assert.assertArrayEquals(
+			integers,
+			JSONUtil.toIntegerArray(
+				JSONUtil.getValueAsJSONArray(
+					_invoke(
+						new GraphQLField(
+							"testDTOPage",
+							HashMapBuilder.put(
+								"integers", (Object)integers
+							).build(),
+							new GraphQLField("integers")),
+						"query"),
+					"JSONObject/data", "JSONObject/testDTOPage",
+					"JSONArray/integers")));
 	}
 
 	@Test
