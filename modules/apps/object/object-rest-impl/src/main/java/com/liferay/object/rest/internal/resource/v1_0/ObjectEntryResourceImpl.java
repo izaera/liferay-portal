@@ -667,15 +667,15 @@ public class ObjectEntryResourceImpl extends BaseObjectEntryResourceImpl {
 			Map<String, Serializable> parameters)
 		throws Exception {
 
-		UnsafeFunction<ObjectEntry, ObjectEntry, Exception>
-			objectEntryUnsafeFunction = null;
+		UnsafeFunction<ObjectEntry, ObjectEntry, Exception> unsafeFunction =
+			null;
 		String scopeKey = _getScopeKey(parameters);
 
 		String createStrategy = (String)parameters.getOrDefault(
 			"createStrategy", "INSERT");
 
 		if (StringUtil.equalsIgnoreCase(createStrategy, "INSERT")) {
-			objectEntryUnsafeFunction = objectEntry -> postScopeScopeKey(
+			unsafeFunction = objectEntry -> postScopeScopeKey(
 				scopeKey, objectEntry);
 		}
 		else if (StringUtil.equalsIgnoreCase(createStrategy, "UPSERT")) {
@@ -683,7 +683,7 @@ public class ObjectEntryResourceImpl extends BaseObjectEntryResourceImpl {
 				"updateStrategy", "UPDATE");
 
 			if (StringUtil.equalsIgnoreCase(updateStrategy, "PARTIAL_UPDATE")) {
-				objectEntryUnsafeFunction = objectEntry -> {
+				unsafeFunction = objectEntry -> {
 					try {
 						ObjectEntry getObjectEntry =
 							getScopeScopeKeyByExternalReferenceCode(
@@ -703,20 +703,19 @@ public class ObjectEntryResourceImpl extends BaseObjectEntryResourceImpl {
 				};
 			}
 			else if (StringUtil.equalsIgnoreCase(updateStrategy, "UPDATE")) {
-				objectEntryUnsafeFunction =
+				unsafeFunction =
 					objectEntry -> putScopeScopeKeyByExternalReferenceCode(
 						scopeKey, objectEntry.getExternalReferenceCode(),
 						objectEntry);
 			}
 		}
 
-		if (objectEntryUnsafeFunction == null) {
+		if (unsafeFunction == null) {
 			throw new NotSupportedException(
 				"Create strategy \"" + createStrategy + "\" is not supported");
 		}
 
-		contextBatchUnsafeBiConsumer.accept(
-			objectEntries, objectEntryUnsafeFunction);
+		contextBatchUnsafeBiConsumer.accept(objectEntries, unsafeFunction);
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
