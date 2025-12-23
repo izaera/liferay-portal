@@ -89,23 +89,25 @@ public class GraphQLServletTest {
 
 	@Test
 	public void testArrayQueryParameter() throws Exception {
-		int[] types = {RandomTestUtil.randomInt(), RandomTestUtil.randomInt()};
+		int[] integers = {
+			RandomTestUtil.randomInt(), RandomTestUtil.randomInt()
+		};
 
 		Assert.assertArrayEquals(
-			types,
+			integers,
 			JSONUtil.toIntegerArray(
 				JSONUtil.getValueAsJSONObject(
 					_invoke(
 						new GraphQLField(
 							"testDTOPage",
 							HashMapBuilder.put(
-								"types", (Object)types
+								"integers", (Object)integers
 							).build(),
-							new GraphQLField("types")),
+							new GraphQLField("integers")),
 						"query"),
 					"JSONObject/data", "JSONObject/testDTOPage"
 				).getJSONArray(
-					"types"
+					"integers"
 				)));
 	}
 
@@ -597,10 +599,14 @@ public class GraphQLServletTest {
 
 	public static class TestDTOPage {
 
-		public TestDTOPage(int page, int pageSize, Integer[] types) {
+		public TestDTOPage(Integer[] integers, int page, int pageSize) {
+			this.integers = integers;
 			this.page = page;
 			this.pageSize = pageSize;
-			this.types = types;
+		}
+
+		public Integer[] getIntegers() {
+			return integers;
 		}
 
 		public int getPage() {
@@ -611,18 +617,14 @@ public class GraphQLServletTest {
 			return pageSize;
 		}
 
-		public Integer[] getTypes() {
-			return types;
-		}
+		@com.liferay.portal.vulcan.graphql.annotation.GraphQLField
+		protected Integer[] integers;
 
 		@com.liferay.portal.vulcan.graphql.annotation.GraphQLField
 		protected int page;
 
 		@com.liferay.portal.vulcan.graphql.annotation.GraphQLField
 		protected int pageSize;
-
-		@com.liferay.portal.vulcan.graphql.annotation.GraphQLField
-		protected Integer[] types;
 
 	}
 
@@ -651,11 +653,11 @@ public class GraphQLServletTest {
 
 		@com.liferay.portal.vulcan.graphql.annotation.GraphQLField
 		public TestDTOPage testDTOPage(
+			@GraphQLName("integers") Integer[] integers,
 			@GraphQLName("page") int page,
-			@GraphQLName("types") Integer[] types,
 			@GraphQLName("pageSize") int pageSize) {
 
-			return new TestDTOPage(page, pageSize, types);
+			return new TestDTOPage(integers, page, pageSize);
 		}
 
 		@com.liferay.portal.vulcan.graphql.annotation.GraphQLField
