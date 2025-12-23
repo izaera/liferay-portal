@@ -45,8 +45,8 @@ import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 
-import jakarta.portlet.ActionRequest;
-import jakarta.portlet.ActionResponse;
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
 
 import org.junit.Assert;
 import org.junit.Before;
@@ -82,14 +82,14 @@ public class DeleteLayoutUtilityPageEntryPreviewMVCActionCommandTest {
 
 	@Test
 	@TestInfo("LPD-74557")
-	public void testDeleteLayoutUtilityPageEntryPreview() throws Exception {
+	public void testDoProcessAction() throws Exception {
 		String name = RandomTestUtil.randomString();
 
 		LayoutUtilityPageEntry layoutUtilityPageEntry =
 			_layoutUtilityPageEntryLocalService.addLayoutUtilityPageEntry(
 				null, TestPropsValues.getUserId(), _group.getGroupId(), 0,
 				_fileEntry.getFileEntryId(), false, name,
-				LayoutUtilityPageEntryConstants.TYPE_SC_NOT_FOUND, null,
+				LayoutUtilityPageEntryConstants.TYPE_SC_NOT_FOUND, 0,
 				ServiceContextTestUtil.getServiceContext(_group.getGroupId()));
 
 		long groupId = _group.getGroupId();
@@ -125,18 +125,16 @@ public class DeleteLayoutUtilityPageEntryPreviewMVCActionCommandTest {
 		Assert.assertEquals(0, layoutUtilityPageEntry.getPreviewFileEntryId());
 	}
 
-	@Test
+	@Test(expected = PrincipalException.class)
 	@TestInfo("LPD-74557")
-	public void testDeleteLayoutUtilityPageEntryPreviewWithoutPermissions()
-		throws Exception {
-
+	public void testDoProcessActionWithoutPermissions() throws Exception {
 		String name = RandomTestUtil.randomString();
 
 		LayoutUtilityPageEntry layoutUtilityPageEntry =
 			_layoutUtilityPageEntryLocalService.addLayoutUtilityPageEntry(
 				null, TestPropsValues.getUserId(), _group.getGroupId(), 0,
 				_fileEntry.getFileEntryId(), false, name,
-				LayoutUtilityPageEntryConstants.TYPE_SC_NOT_FOUND, null,
+				LayoutUtilityPageEntryConstants.TYPE_SC_NOT_FOUND, 0,
 				ServiceContextTestUtil.getServiceContext(_group.getGroupId()));
 
 		Role role = RoleTestUtil.addRole(RoleConstants.TYPE_REGULAR);
@@ -154,15 +152,13 @@ public class DeleteLayoutUtilityPageEntryPreviewMVCActionCommandTest {
 		try (ContextUserReplace contextUserReplace = new ContextUserReplace(
 				user)) {
 
-			Assert.assertThrows(
-				PrincipalException.class,
-				() -> ReflectionTestUtil.invoke(
-					_deleteLayoutUtilityPageEntryPreviewMVCActionCommand,
-					"doProcessAction",
-					new Class<?>[] {ActionRequest.class, ActionResponse.class},
-					_getMockLiferayPortletActionRequest(
-						layoutUtilityPageEntry, user),
-					new MockLiferayPortletActionResponse()));
+			ReflectionTestUtil.invoke(
+				_deleteLayoutUtilityPageEntryPreviewMVCActionCommand,
+				"doProcessAction",
+				new Class<?>[] {ActionRequest.class, ActionResponse.class},
+				_getMockLiferayPortletActionRequest(
+					layoutUtilityPageEntry, user),
+				new MockLiferayPortletActionResponse());
 		}
 	}
 
