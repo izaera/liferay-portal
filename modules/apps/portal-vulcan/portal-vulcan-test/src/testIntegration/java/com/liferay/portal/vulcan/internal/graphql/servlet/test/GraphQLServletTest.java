@@ -28,6 +28,7 @@ import com.liferay.portal.vulcan.graphql.annotation.GraphQLTypeExtension;
 import com.liferay.portal.vulcan.graphql.servlet.ServletData;
 import com.liferay.portal.vulcan.internal.test.util.PaginationConfigurationTestUtil;
 
+import java.lang.reflect.Array;
 import java.lang.reflect.Field;
 
 import java.util.Arrays;
@@ -84,6 +85,29 @@ public class GraphQLServletTest {
 	@After
 	public void tearDown() {
 		_serviceRegistration.unregister();
+	}
+
+	@Test
+	public void testArrayQueryParameter() throws Exception {
+		Integer[] types = {
+			RandomTestUtil.randomInt(), RandomTestUtil.randomInt()
+		};
+
+		JSONObject jsonObject = JSONUtil.getValueAsJSONObject(
+			_invoke(
+				new GraphQLField(
+					"testDTOPage",
+					HashMapBuilder.put(
+						"types", (Object)types
+					).build(),
+					new GraphQLField("types")),
+				"query"),
+			"JSONObject/data", "JSONObject/testDTOPage");
+
+		Assert.assertArrayEquals(
+			types,
+			ArrayUtil.toArray(
+				JSONUtil.toIntegerArray(jsonObject.getJSONArray("types"))));
 	}
 
 	@Test
@@ -574,9 +598,10 @@ public class GraphQLServletTest {
 
 	public static class TestDTOPage {
 
-		public TestDTOPage(int page, int pageSize) {
+		public TestDTOPage(int page, int pageSize, Integer[] types) {
 			this.page = page;
 			this.pageSize = pageSize;
+			this.types = types;
 		}
 
 		public int getPage() {
@@ -587,11 +612,18 @@ public class GraphQLServletTest {
 			return pageSize;
 		}
 
+		public Integer[] getTypes() {
+			return types;
+		}
+
 		@com.liferay.portal.vulcan.graphql.annotation.GraphQLField
 		protected int page;
 
 		@com.liferay.portal.vulcan.graphql.annotation.GraphQLField
 		protected int pageSize;
+
+		@com.liferay.portal.vulcan.graphql.annotation.GraphQLField
+		protected Integer[] types;
 
 	}
 
@@ -621,9 +653,10 @@ public class GraphQLServletTest {
 		@com.liferay.portal.vulcan.graphql.annotation.GraphQLField
 		public TestDTOPage testDTOPage(
 			@GraphQLName("page") int page,
+			@GraphQLName("types") Integer[] types,
 			@GraphQLName("pageSize") int pageSize) {
 
-			return new TestDTOPage(page, pageSize);
+			return new TestDTOPage(page, pageSize, types);
 		}
 
 		@com.liferay.portal.vulcan.graphql.annotation.GraphQLField
@@ -692,7 +725,7 @@ public class GraphQLServletTest {
 
 					sb.append(entry.getKey());
 					sb.append(": ");
-					sb.append(entry.getValue());
+					sb.append(_serializeValue(entry.getValue()));
 					sb.append(", ");
 				}
 
@@ -715,6 +748,41 @@ public class GraphQLServletTest {
 			}
 
 			return sb.toString();
+		}
+
+		private String _serializeArray(Object array) {
+			StringBuilder sb = new StringBuilder("[");
+			int length = Array.getLength(array);
+
+			for (int i = 0; i < length; i++) {
+				sb.append(_serializeValue(Array.get(array, i)));
+
+				if (i < (length - 1)) {
+					sb.append(", ");
+				}
+			}
+
+			sb.append("]");
+
+			return sb.toString();
+		}
+
+		private String _serializeValue(Object value) {
+			if (value == null) {
+				return "null";
+			}
+
+			if (value instanceof String) {
+				return "\"" + value + "\"";
+			}
+
+			if (value.getClass(
+				).isArray()) {
+
+				return _serializeArray(value);
+			}
+
+			return value.toString();
 		}
 
 		private final List<GraphQLField> _graphQLFields;
