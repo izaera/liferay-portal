@@ -330,28 +330,6 @@ public class GraphQLServletTest {
 	}
 
 	@Test
-	public void testQueryWithIntegerArray() throws Exception {
-		int[] integers = {
-			RandomTestUtil.randomInt(), RandomTestUtil.randomInt()
-		};
-
-		Assert.assertArrayEquals(
-			integers,
-			JSONUtil.toIntegerArray(
-				JSONUtil.getValueAsJSONArray(
-					_invoke(
-						new GraphQLField(
-							"testDTOPage",
-							HashMapBuilder.put(
-								"integers", (Object)integers
-							).build(),
-							new GraphQLField("integers")),
-						"query"),
-					"JSONObject/data", "JSONObject/testDTOPage",
-					"JSONArray/integers")));
-	}
-
-	@Test
 	public void testQueryWithGraphQLNamespace() throws Exception {
 
 		// With namespace
@@ -447,6 +425,28 @@ public class GraphQLServletTest {
 					"query"),
 				"JSONArray/errors", "Object/0", "JSONObject/extensions",
 				"Object/code"));
+	}
+
+	@Test
+	public void testQueryWithIntegerArray() throws Exception {
+		int[] integers = {
+			RandomTestUtil.randomInt(), RandomTestUtil.randomInt()
+		};
+
+		Assert.assertArrayEquals(
+			integers,
+			JSONUtil.toIntegerArray(
+				JSONUtil.getValueAsJSONArray(
+					_invoke(
+						new GraphQLField(
+							"testDTOPage",
+							HashMapBuilder.put(
+								"integers", (Object)integers
+							).build(),
+							new GraphQLField("integers")),
+						"query"),
+					"JSONObject/data", "JSONObject/testDTOPage",
+					"JSONArray/integers")));
 	}
 
 	@Test
