@@ -67,11 +67,11 @@ import com.liferay.layout.test.util.ContentLayoutTestUtil;
 import com.liferay.layout.test.util.LayoutTestUtil;
 import com.liferay.layout.util.structure.LayoutStructure;
 import com.liferay.petra.function.transform.TransformUtil;
-import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
+import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
@@ -123,13 +123,14 @@ import com.liferay.portal.test.rule.FeatureFlags;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
-import com.liferay.portal.util.PropsValues;
 import com.liferay.segments.constants.SegmentsEntryConstants;
 import com.liferay.segments.constants.SegmentsExperienceConstants;
 import com.liferay.segments.model.SegmentsEntry;
 import com.liferay.segments.model.SegmentsExperience;
 import com.liferay.segments.service.SegmentsEntryLocalService;
 import com.liferay.segments.service.SegmentsExperienceLocalService;
+
+import javax.portlet.PortletPreferences;
 
 import java.io.InputStream;
 import java.io.Serializable;
@@ -144,7 +145,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
-import java.util.TimeZone;
 
 import org.junit.After;
 import org.junit.Assert;
@@ -361,17 +361,24 @@ public class SitePageResourceTest extends BaseSitePageResourceTestCase {
 	@Test
 	@TestInfo("LPD-75168")
 	public void testGetSiteSitePageWithLocalization() throws Exception {
-		String originalCompanyLocales = PrefsPropsUtil.getString(
-			testCompany.getCompanyId(), PropsKeys.LOCALES);
+		User user = testCompany.getGuestUser();
 
-		String originalDefaultLocale = PrefsPropsUtil.getString(
-			testCompany.getCompanyId(), PropsKeys.COMPANY_DEFAULT_LOCALE);
+		String originalLanguageId = user.getLanguageId();
 
-		TimeZone timeZone = testCompany.getTimeZone();
+		PortletPreferences portletPreferences = PrefsPropsUtil.getPreferences(
+			testCompany.getCompanyId());
+
+		String originalLanguageIds = portletPreferences.getValue(
+			PropsKeys.LOCALES,
+			StringUtil.merge(
+				LocaleUtil.toLanguageIds(
+					LanguageUtil.getCompanyAvailableLocales(
+						testCompany.getCompanyId())),
+				StringPool.COMMA));
 
 		try {
 			_companyLocalService.updateDisplay(
-				testCompany.getCompanyId(), "ca_ES", timeZone.getID());
+				testCompany.getCompanyId(), "ca_ES", user.getTimeZoneId());
 
 			_companyLocalService.updatePreferences(
 				testCompany.getCompanyId(),
@@ -416,13 +423,12 @@ public class SitePageResourceTest extends BaseSitePageResourceTestCase {
 		}
 		finally {
 			_companyLocalService.updateDisplay(
-				testCompany.getCompanyId(), originalDefaultLocale,
-				timeZone.getID());
-
+				testCompany.getCompanyId(), originalLanguageId,
+				user.getTimeZoneId());
 			_companyLocalService.updatePreferences(
 				testCompany.getCompanyId(),
 				UnicodePropertiesBuilder.put(
-					PropsKeys.LOCALES, originalCompanyLocales
+					PropsKeys.LOCALES, originalLanguageIds
 				).build());
 		}
 	}
