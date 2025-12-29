@@ -152,7 +152,7 @@ public class SitePageResourceImpl extends BaseSitePageResourceImpl {
 	public SitePage getSiteSitePage(Long siteId, String friendlyUrlPath)
 		throws Exception {
 
-		return _toSitePage(true, _getLayout(siteId, friendlyUrlPath), null);
+		return _toSitePage(true, _getLayout(siteId, friendlyUrlPath));
 	}
 
 	@Override
@@ -160,8 +160,12 @@ public class SitePageResourceImpl extends BaseSitePageResourceImpl {
 			Long siteId, String friendlyUrlPath, String experienceKey)
 		throws Exception {
 
+		Layout layout = _getLayout(siteId, friendlyUrlPath);
+
 		return _toSitePage(
-			true, _getLayout(siteId, friendlyUrlPath), experienceKey);
+			true, layout,
+			_segmentsExperienceService.fetchSegmentsExperience(
+				layout.getGroupId(), experienceKey, layout.getPlid()));
 	}
 
 	@Override
@@ -191,8 +195,7 @@ public class SitePageResourceImpl extends BaseSitePageResourceImpl {
 			transform(
 				_getSegmentsExperiences(layout),
 				segmentsExperience -> _toSitePage(
-					_isEmbeddedPageDefinition(), layout,
-					segmentsExperience.getSegmentsExperienceKey())));
+					_isEmbeddedPageDefinition(), layout, segmentsExperience)));
 	}
 
 	@Override
@@ -251,8 +254,8 @@ public class SitePageResourceImpl extends BaseSitePageResourceImpl {
 					document.get(Field.ENTRY_CLASS_PK));
 
 				return _toSitePage(
-					_isEmbeddedPageDefinition(), _layoutService.getLayout(plid),
-					null);
+					_isEmbeddedPageDefinition(),
+					_layoutService.getLayout(plid));
 			});
 	}
 
@@ -914,41 +917,46 @@ public class SitePageResourceImpl extends BaseSitePageResourceImpl {
 		}
 	}
 
-	private SitePage _toSitePage(
-			boolean embeddedPageDefinition, Layout layout,
-			String segmentsExperienceKey)
+	private SitePage _toSitePage(boolean embeddedPageDefinition, Layout layout)
 		throws Exception {
-
-		Map<String, Map<String, String>> actions = null;
-
-		if (Validator.isNotNull(segmentsExperienceKey)) {
-			actions = _getExperienceActions(layout);
-		}
-		else {
-			actions = _getBasicActions(layout);
-		}
 
 		DefaultDTOConverterContext dtoConverterContext =
 			new DefaultDTOConverterContext(
-				contextAcceptLanguage.isAcceptAllLanguages(), actions,
-				_dtoConverterRegistry, contextHttpServletRequest,
-				layout.getPlid(), contextAcceptLanguage.getPreferredLocale(),
-				contextUriInfo, contextUser);
+				contextAcceptLanguage.isAcceptAllLanguages(),
+				_getBasicActions(layout), _dtoConverterRegistry,
+				contextHttpServletRequest, layout.getPlid(),
+				contextAcceptLanguage.getPreferredLocale(), contextUriInfo,
+				contextUser);
+
+		dtoConverterContext.setAttribute(
+			"embeddedPageDefinition", embeddedPageDefinition);
+		dtoConverterContext.setAttribute("groupId", layout.getGroupId());
+		dtoConverterContext.setAttribute(
+			"segmentsExperience", _getUserSegmentsExperience(layout));
+
+		return _sitePageDTOConverter.toDTO(dtoConverterContext, layout);
+	}
+
+	private SitePage _toSitePage(
+			boolean embeddedPageDefinition, Layout layout,
+			SegmentsExperience segmentsExperience)
+		throws Exception {
+
+		DefaultDTOConverterContext dtoConverterContext =
+			new DefaultDTOConverterContext(
+				contextAcceptLanguage.isAcceptAllLanguages(),
+				_getExperienceActions(layout), _dtoConverterRegistry,
+				contextHttpServletRequest, layout.getPlid(),
+				contextAcceptLanguage.getPreferredLocale(), contextUriInfo,
+				contextUser);
 
 		dtoConverterContext.setAttribute(
 			"embeddedPageDefinition", embeddedPageDefinition);
 		dtoConverterContext.setAttribute("groupId", layout.getGroupId());
 
-		if (Validator.isNotNull(segmentsExperienceKey)) {
-			dtoConverterContext.setAttribute(
-				"segmentsExperience",
-				_getSegmentsExperience(layout, segmentsExperienceKey));
-			dtoConverterContext.setAttribute("showExperience", Boolean.TRUE);
-		}
-		else {
-			dtoConverterContext.setAttribute(
-				"segmentsExperience", _getUserSegmentsExperience(layout));
-		}
+		dtoConverterContext.setAttribute(
+			"segmentsExperience", segmentsExperience);
+		dtoConverterContext.setAttribute("showExperience", Boolean.TRUE);
 
 		return _sitePageDTOConverter.toDTO(dtoConverterContext, layout);
 	}
