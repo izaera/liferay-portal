@@ -3,7 +3,7 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import {act, fireEvent, render} from '@testing-library/react';
+import {act, fireEvent, render, screen} from '@testing-library/react';
 import {FormProvider, PageProvider} from 'data-engine-js-components-web';
 import React from 'react';
 
@@ -53,6 +53,40 @@ describe('ReactFieldBase', () => {
 	beforeEach(() => {
 		jest.useFakeTimers();
 		fetch.mockResponseOnce(JSON.stringify({}));
+	});
+
+	it('adds group role and aria-labelledby to field when type is fieldset', () => {
+		render(
+			<FieldBaseWithProvider
+				label=""
+				name="myField"
+				showLabel={false}
+				spritemap={spritemap}
+				text="Help text"
+				type="fieldset"
+			/>
+		);
+
+		const group = screen.getByRole('group');
+
+		expect(group).toBeInTheDocument();
+		expect(group).toHaveAttribute('aria-labelledby');
+	});
+
+	it('does not add aria-labelledby to fieldset when it has a label', () => {
+		render(
+			<FieldBaseWithProvider
+				label="My label"
+				name="myField"
+				spritemap={spritemap}
+				type="fieldset"
+			/>
+		);
+
+		const group = screen.getByRole('group');
+
+		expect(group).toBeInTheDocument();
+		expect(group).not.toHaveAttribute('aria-labelledby');
 	});
 
 	it('renders the default markup', () => {
