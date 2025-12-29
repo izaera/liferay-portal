@@ -67,7 +67,6 @@ import com.liferay.layout.test.util.ContentLayoutTestUtil;
 import com.liferay.layout.test.util.LayoutTestUtil;
 import com.liferay.layout.util.structure.LayoutStructure;
 import com.liferay.petra.function.transform.TransformUtil;
-import com.liferay.petra.lang.SafeCloseable;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
@@ -84,7 +83,6 @@ import com.liferay.portal.kernel.model.ResourcePermission;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.role.RoleConstants;
-import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
@@ -364,10 +362,6 @@ public class SitePageResourceTest extends BaseSitePageResourceTestCase {
 	@Test
 	@TestInfo("LPD-75168")
 	public void testGetSiteSitePageWithLocalization() throws Exception {
-		SafeCloseable safeCloseable =
-			CompanyThreadLocal.setCompanyIdWithSafeCloseable(
-				testCompany.getCompanyId());
-
 		String originalCompanyLocales = PrefsPropsUtil.getString(
 			testCompany.getCompanyId(), PropsKeys.LOCALES);
 
@@ -443,8 +437,6 @@ public class SitePageResourceTest extends BaseSitePageResourceTestCase {
 			if (group != null) {
 				GroupTestUtil.deleteGroup(group);
 			}
-
-			safeCloseable.close();
 		}
 	}
 
