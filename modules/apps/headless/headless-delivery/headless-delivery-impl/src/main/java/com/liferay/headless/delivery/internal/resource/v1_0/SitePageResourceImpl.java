@@ -923,29 +923,6 @@ public class SitePageResourceImpl extends BaseSitePageResourceImpl {
 	}
 
 	private SitePage _toSitePage(
-		boolean embeddedPageDefinition, Layout layout,
-		ThemeDisplay themeDisplay)
-		throws Exception {
-
-		DefaultDTOConverterContext dtoConverterContext =
-			new DefaultDTOConverterContext(
-				contextAcceptLanguage.isAcceptAllLanguages(),
-				_getBasicActions(layout), _dtoConverterRegistry,
-				contextHttpServletRequest, layout.getPlid(),
-				contextAcceptLanguage.getPreferredLocale(), contextUriInfo,
-				contextUser);
-
-		dtoConverterContext.setAttribute(
-			"embeddedPageDefinition", embeddedPageDefinition);
-		dtoConverterContext.setAttribute("groupId", layout.getGroupId());
-		dtoConverterContext.setAttribute(
-			"segmentsExperience",
-			_getUserSegmentsExperience(layout, themeDisplay));
-
-		return _sitePageDTOConverter.toDTO(dtoConverterContext, layout);
-	}
-
-	private SitePage _toSitePage(
 			boolean embeddedPageDefinition, Layout layout,
 			SegmentsExperience segmentsExperience)
 		throws Exception {
@@ -965,6 +942,29 @@ public class SitePageResourceImpl extends BaseSitePageResourceImpl {
 		dtoConverterContext.setAttribute(
 			"segmentsExperience", segmentsExperience);
 		dtoConverterContext.setAttribute("showExperience", Boolean.TRUE);
+
+		return _sitePageDTOConverter.toDTO(dtoConverterContext, layout);
+	}
+
+	private SitePage _toSitePage(
+		boolean embeddedPageDefinition, Layout layout,
+		ThemeDisplay themeDisplay)
+		throws Exception {
+
+		DefaultDTOConverterContext dtoConverterContext =
+			new DefaultDTOConverterContext(
+				contextAcceptLanguage.isAcceptAllLanguages(),
+				_getBasicActions(layout), _dtoConverterRegistry,
+				contextHttpServletRequest, layout.getPlid(),
+				contextAcceptLanguage.getPreferredLocale(), contextUriInfo,
+				contextUser);
+
+		dtoConverterContext.setAttribute(
+			"embeddedPageDefinition", embeddedPageDefinition);
+		dtoConverterContext.setAttribute("groupId", layout.getGroupId());
+		dtoConverterContext.setAttribute(
+			"segmentsExperience",
+			_getUserSegmentsExperience(layout, themeDisplay));
 
 		return _sitePageDTOConverter.toDTO(dtoConverterContext, layout);
 	}
