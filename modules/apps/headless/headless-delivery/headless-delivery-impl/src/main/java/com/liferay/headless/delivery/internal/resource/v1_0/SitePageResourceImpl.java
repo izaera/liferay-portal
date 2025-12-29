@@ -152,9 +152,7 @@ public class SitePageResourceImpl extends BaseSitePageResourceImpl {
 	public SitePage getSiteSitePage(Long siteId, String friendlyUrlPath)
 		throws Exception {
 
-		Layout layout = _getLayout(siteId, friendlyUrlPath);
-
-		return _toSitePage(true, layout, _getThemeDisplay(layout));
+		return _toSitePage(true, _getLayout(siteId, friendlyUrlPath));
 	}
 
 	@Override
@@ -255,11 +253,9 @@ public class SitePageResourceImpl extends BaseSitePageResourceImpl {
 				long plid = GetterUtil.getLong(
 					document.get(Field.ENTRY_CLASS_PK));
 
-				Layout layout = _layoutService.getLayout(plid);
-
 				return _toSitePage(
-					_isEmbeddedPageDefinition(), layout,
-					_getThemeDisplay(layout));
+					_isEmbeddedPageDefinition(),
+					_layoutService.getLayout(plid));
 			});
 	}
 
@@ -916,6 +912,37 @@ public class SitePageResourceImpl extends BaseSitePageResourceImpl {
 		}
 	}
 
+	private SitePage _toSitePage(boolean embeddedPageDefinition, Layout layout)
+		throws Exception {
+
+		try (AutoCloseable autoCloseable =
+				_layoutServiceContextHelper.getServiceContextAutoCloseable(
+					layout, contextUser)) {
+
+			DefaultDTOConverterContext dtoConverterContext =
+				new DefaultDTOConverterContext(
+					contextAcceptLanguage.isAcceptAllLanguages(),
+					_getBasicActions(layout), _dtoConverterRegistry,
+					contextHttpServletRequest, layout.getPlid(),
+					contextAcceptLanguage.getPreferredLocale(), contextUriInfo,
+					contextUser);
+
+			dtoConverterContext.setAttribute(
+				"embeddedPageDefinition", embeddedPageDefinition);
+			dtoConverterContext.setAttribute("groupId", layout.getGroupId());
+
+			ServiceContext serviceContext =
+				ServiceContextThreadLocal.getServiceContext();
+
+			dtoConverterContext.setAttribute(
+				"segmentsExperience",
+				_getUserSegmentsExperience(
+					layout, serviceContext.getThemeDisplay()));
+
+			return _sitePageDTOConverter.toDTO(dtoConverterContext, layout);
+		}
+	}
+
 	private SitePage _toSitePage(
 			boolean embeddedPageDefinition, Layout layout,
 			SegmentsExperience segmentsExperience)
@@ -936,29 +963,6 @@ public class SitePageResourceImpl extends BaseSitePageResourceImpl {
 		dtoConverterContext.setAttribute(
 			"segmentsExperience", segmentsExperience);
 		dtoConverterContext.setAttribute("showExperience", Boolean.TRUE);
-
-		return _sitePageDTOConverter.toDTO(dtoConverterContext, layout);
-	}
-
-	private SitePage _toSitePage(
-			boolean embeddedPageDefinition, Layout layout,
-			ThemeDisplay themeDisplay)
-		throws Exception {
-
-		DefaultDTOConverterContext dtoConverterContext =
-			new DefaultDTOConverterContext(
-				contextAcceptLanguage.isAcceptAllLanguages(),
-				_getBasicActions(layout), _dtoConverterRegistry,
-				contextHttpServletRequest, layout.getPlid(),
-				contextAcceptLanguage.getPreferredLocale(), contextUriInfo,
-				contextUser);
-
-		dtoConverterContext.setAttribute(
-			"embeddedPageDefinition", embeddedPageDefinition);
-		dtoConverterContext.setAttribute("groupId", layout.getGroupId());
-		dtoConverterContext.setAttribute(
-			"segmentsExperience",
-			_getUserSegmentsExperience(layout, themeDisplay));
 
 		return _sitePageDTOConverter.toDTO(dtoConverterContext, layout);
 	}
