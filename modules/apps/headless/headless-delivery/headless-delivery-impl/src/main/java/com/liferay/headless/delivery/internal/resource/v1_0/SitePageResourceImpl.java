@@ -695,11 +695,12 @@ public class SitePageResourceImpl extends BaseSitePageResourceImpl {
 	}
 
 	private SegmentsExperience _getSegmentsExperience(
-			Layout layout, String segmentsExperienceKey)
+			Layout layout, String segmentsExperienceKey,
+			ThemeDisplay themeDisplay)
 		throws Exception {
 
 		if (Validator.isNull(segmentsExperienceKey)) {
-			return _getUserSegmentsExperience(layout, _getThemeDisplay(layout));
+			return _getUserSegmentsExperience(layout, themeDisplay);
 		}
 
 		return _segmentsExperienceService.fetchSegmentsExperience(
@@ -875,18 +876,22 @@ public class SitePageResourceImpl extends BaseSitePageResourceImpl {
 		contextHttpServletRequest = DynamicServletRequest.addQueryString(
 			contextHttpServletRequest, "p_l_id=" + layout.getPlid(), false);
 
-		SegmentsExperience segmentsExperience = _getSegmentsExperience(
-			layout, segmentsExperienceKey);
-
-		if (segmentsExperience != null) {
-			contextHttpServletRequest.setAttribute(
-				SegmentsWebKeys.SEGMENTS_EXPERIENCE_IDS,
-				new long[] {segmentsExperience.getSegmentsExperienceId()});
-		}
-
 		try (AutoCloseable autoCloseable =
 				_layoutServiceContextHelper.getServiceContextAutoCloseable(
 					layout, contextUser)) {
+
+			ServiceContext serviceContext =
+				ServiceContextThreadLocal.getServiceContext();
+
+			SegmentsExperience segmentsExperience = _getSegmentsExperience(
+				layout, segmentsExperienceKey,
+				serviceContext.getThemeDisplay());
+
+			if (segmentsExperience != null) {
+				contextHttpServletRequest.setAttribute(
+					SegmentsWebKeys.SEGMENTS_EXPERIENCE_IDS,
+					new long[] {segmentsExperience.getSegmentsExperienceId()});
+			}
 
 			layout.includeLayoutContent(
 				contextHttpServletRequest, contextHttpServletResponse);
@@ -936,8 +941,8 @@ public class SitePageResourceImpl extends BaseSitePageResourceImpl {
 	}
 
 	private SitePage _toSitePage(
-		boolean embeddedPageDefinition, Layout layout,
-		ThemeDisplay themeDisplay)
+			boolean embeddedPageDefinition, Layout layout,
+			ThemeDisplay themeDisplay)
 		throws Exception {
 
 		DefaultDTOConverterContext dtoConverterContext =
