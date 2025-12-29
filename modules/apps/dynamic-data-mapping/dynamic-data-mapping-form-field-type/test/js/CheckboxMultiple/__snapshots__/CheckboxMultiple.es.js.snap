@@ -3,7 +3,6 @@
 exports[`Field Checkbox Multiple has a helptext 1`] = `
 <div>
   <div
-    aria-labelledby="undefined_fieldDetails"
     class="form-group hide"
   >
     <div
@@ -573,7 +572,7 @@ exports[`Field Checkbox Multiple has a value 1`] = `
       </div>
       <input
         type="hidden"
-        value="true"
+        value=""
       />
     </div>
     <input

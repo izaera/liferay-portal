@@ -3,7 +3,6 @@
 exports[`Field DocumentLibrary has a helptext 1`] = `
 <div>
   <div
-    aria-labelledby="uploadField_fieldDetails"
     class="form-group has-error hide"
     data-field-name="uploadField"
   >
@@ -193,7 +192,6 @@ exports[`Field DocumentLibrary has a label 1`] = `
 exports[`Field DocumentLibrary has a placeholder 1`] = `
 <div>
   <div
-    aria-labelledby="uploadField_fieldDetails"
     class="form-group has-error hide"
     data-field-name="uploadField"
   >
@@ -283,7 +281,6 @@ exports[`Field DocumentLibrary has a placeholder 1`] = `
 exports[`Field DocumentLibrary has a spritemap 1`] = `
 <div>
   <div
-    aria-labelledby="uploadField_fieldDetails"
     class="form-group has-error hide"
     data-field-name="uploadField"
   >
@@ -372,7 +369,6 @@ exports[`Field DocumentLibrary has a spritemap 1`] = `
 exports[`Field DocumentLibrary has a value 1`] = `
 <div>
   <div
-    aria-labelledby="uploadField_fieldDetails"
     class="form-group has-error hide"
     data-field-name="uploadField"
   >
@@ -461,7 +457,6 @@ exports[`Field DocumentLibrary has a value 1`] = `
 exports[`Field DocumentLibrary has an id 1`] = `
 <div>
   <div
-    aria-labelledby="ID_fieldDetails"
     class="form-group has-error hide"
     data-field-name="uploadField"
   >
@@ -616,7 +611,6 @@ exports[`Field DocumentLibrary is not readOnly 1`] = `
 exports[`Field DocumentLibrary is not required 1`] = `
 <div>
   <div
-    aria-labelledby="uploadField_fieldDetails"
     class="form-group has-error hide"
     data-field-name="uploadField"
   >
