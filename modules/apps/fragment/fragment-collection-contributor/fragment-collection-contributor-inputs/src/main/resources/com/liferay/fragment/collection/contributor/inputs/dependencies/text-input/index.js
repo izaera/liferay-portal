@@ -1,10 +1,9 @@
 const currentLength = document.getElementById(
 	`${fragmentNamespace}-current-length`
 );
-const errorMessage = document.getElementById(
-	`${fragmentNamespace}-text-input-error-message`
-);
+const error = document.getElementById(`${fragmentNamespace}-text-input-error`);
 const formGroup = document.getElementById(`${fragmentNamespace}-form-group`);
+const inputElement = document.getElementById(`${fragmentNamespace}-text-input`);
 const lengthInfo = document.getElementById(`${fragmentNamespace}-length-info`);
 const lengthWarning = document.getElementById(
 	`${fragmentNamespace}-length-warning`
@@ -12,8 +11,6 @@ const lengthWarning = document.getElementById(
 const lengthWarningText = document.getElementById(
 	`${fragmentNamespace}-length-warning-text`
 );
-
-const inputElement = document.getElementById(`${fragmentNamespace}-text-input`);
 
 function enableLengthWarning() {
 	formGroup.classList.add('has-error');
@@ -46,8 +43,8 @@ function onInputKeyup(event) {
 
 	currentLength.innerText = length;
 
-	if (errorMessage) {
-		errorMessage.remove();
+	if (error) {
+		error.remove();
 	}
 
 	if (length > input.attributes.maxLength) {
@@ -67,10 +64,7 @@ function main() {
 	else {
 		currentLength.innerText = inputElement.value.length;
 
-		if (
-			!errorMessage &&
-			inputElement.value.length > input.attributes.maxLength
-		) {
+		if (!error && inputElement.value.length > input.attributes.maxLength) {
 			enableLengthWarning();
 		}
 

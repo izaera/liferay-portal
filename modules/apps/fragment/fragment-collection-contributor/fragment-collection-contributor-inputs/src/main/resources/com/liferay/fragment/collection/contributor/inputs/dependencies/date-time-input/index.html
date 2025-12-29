@@ -7,12 +7,12 @@
 		<input aria-describedby="${fragmentEntryLinkNamespace}-date-input-help-text" aria-labelledby="${fragmentEntryLinkNamespace}-date-input-label[#if input.errorMessage?has_content] ${fragmentEntryLinkNamespace}-date-input-error-message[/#if]" class="form-control" id="${fragmentEntryLinkNamespace}-date-input" max="9999-12-31" name="${input.name}" [#if input.readOnly]readonly[/#if] ${input.required?then('required', '')} type="datetime-local" [#if input.value??]value="${input.value}"[/#if] />
 
 		[#if input.errorMessage?has_content]
-			<p class="font-weight-semi-bold mt-1 text-danger" id="${fragmentEntryLinkNamespace}-date-input-error-message">
+			<p class="font-weight-semi-bold mt-1 text-danger" id="${fragmentEntryLinkNamespace}-date-input-error">
 				<svg class="lexicon-icon lexicon-icon-info-circle" focusable="false" role="presentation">
 					<use xlink:href="${siteSpritemap}#info-circle" />
 				</svg>
 
-				<span>
+				<span id="${fragmentEntryLinkNamespace}-date-input-error-message">
 					${input.errorMessage}
 				</span>
 			</p>

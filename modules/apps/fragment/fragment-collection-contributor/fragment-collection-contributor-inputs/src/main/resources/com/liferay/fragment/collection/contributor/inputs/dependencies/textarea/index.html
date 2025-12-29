@@ -22,10 +22,10 @@
 		</p>
 
 		[#if input.errorMessage?has_content]
-			<p class="font-weight-semi-bold mt-1 text-danger" id="${fragmentEntryLinkNamespace}-textarea-error-message">
+			<p class="font-weight-semi-bold mt-1 text-danger" id="${fragmentEntryLinkNamespace}-textarea-error">
 				[@clay["icon"] symbol="info-circle" /]
 
-				<span>
+				<span id="${fragmentEntryLinkNamespace}-textarea-error-message">
 					${input.errorMessage}
 				</span>
 			</p>

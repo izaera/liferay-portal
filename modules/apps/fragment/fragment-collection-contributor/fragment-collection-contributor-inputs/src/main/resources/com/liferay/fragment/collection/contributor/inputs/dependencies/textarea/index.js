@@ -1,9 +1,7 @@
 const currentLength = document.getElementById(
 	`${fragmentNamespace}-current-length`
 );
-const errorMessage = document.getElementById(
-	`${fragmentNamespace}-textarea-error-message`
-);
+const error = document.getElementById(`${fragmentNamespace}-textarea-error`);
 const formGroup = document.getElementById(`${fragmentNamespace}-form-group`);
 const lengthInfo = document.getElementById(`${fragmentNamespace}-length-info`);
 const lengthWarning = document.getElementById(
@@ -45,8 +43,8 @@ function onInputKeyup(event) {
 
 	currentLength.innerText = length;
 
-	if (errorMessage) {
-		errorMessage.remove();
+	if (error) {
+		error.remove();
 	}
 
 	if (length > input.attributes.maxLength) {
@@ -66,10 +64,7 @@ function main() {
 	else {
 		currentLength.innerText = textarea.value.length;
 
-		if (
-			!errorMessage &&
-			textarea.value.length > input.attributes.maxLength
-		) {
+		if (!error && textarea.value.length > input.attributes.maxLength) {
 			enableLengthWarning();
 		}
 
