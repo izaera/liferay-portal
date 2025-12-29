@@ -73,7 +73,6 @@ import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.model.Group;
-import com.liferay.portal.kernel.model.GroupConstants;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.model.ModelHintsUtil;
@@ -370,8 +369,6 @@ public class SitePageResourceTest extends BaseSitePageResourceTestCase {
 
 		TimeZone timeZone = testCompany.getTimeZone();
 
-		Group group = null;
-
 		try {
 			_companyLocalService.updateDisplay(
 				testCompany.getCompanyId(), "ca_ES", timeZone.getID());
@@ -382,20 +379,14 @@ public class SitePageResourceTest extends BaseSitePageResourceTestCase {
 					PropsKeys.LOCALES, "ca_ES,en_US"
 				).build());
 
-			User user = UserTestUtil.getAdminUser(testCompany.getCompanyId());
-
-			group = GroupTestUtil.addGroup(
-				testCompany.getCompanyId(), user.getUserId(),
-				GroupConstants.DEFAULT_PARENT_GROUP_ID);
-
-			group = GroupTestUtil.updateDisplaySettings(
-				group.getGroupId(),
+			testGroup = GroupTestUtil.updateDisplaySettings(
+				testGroup.getGroupId(),
 				ListUtil.fromArray(
 					LocaleUtil.fromLanguageIds(
 						new String[] {"en_US", "ca_ES"})),
 				LocaleUtil.fromLanguageId("en_US"));
 
-			Layout layout = LayoutTestUtil.addTypeContentLayout(group);
+			Layout layout = LayoutTestUtil.addTypeContentLayout(testGroup);
 
 			LayoutTestUtil.updateFriendlyURL(
 				layout,
@@ -414,7 +405,7 @@ public class SitePageResourceTest extends BaseSitePageResourceTestCase {
 			).build();
 
 			SitePage sitePage = localizedSitePageResource.getSiteSitePage(
-				group.getGroupId(), "english-page");
+				testGroup.getGroupId(), "english-page");
 
 			Assert.assertNotNull(sitePage);
 			Assert.assertTrue(
@@ -433,10 +424,6 @@ public class SitePageResourceTest extends BaseSitePageResourceTestCase {
 				UnicodePropertiesBuilder.put(
 					PropsKeys.LOCALES, originalCompanyLocales
 				).build());
-
-			if (group != null) {
-				GroupTestUtil.deleteGroup(group);
-			}
 		}
 	}
 
