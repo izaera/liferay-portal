@@ -1,3 +1,6 @@
+const error = document.getElementById(
+	`${fragmentNamespace}-numeric-input-error`
+);
 const numericInput = fragmentElement.querySelector(
 	`#${fragmentNamespace}-numeric-input`
 );
@@ -36,4 +39,19 @@ if (layoutMode === 'edit') {
 else {
 	numericInput.addEventListener('keydown', handleOnKeydown);
 	numericInput.addEventListener('keyup', handleOnKeyUp);
+
+	if (error) {
+
+		// This delay is intentional to give screen readers time to process and
+		// accept the focus change. Without this delay, the focus is often
+		// ignored by the screen reader even though it works visually.
+
+		setTimeout(() => {
+			numericInput.focus();
+
+			numericInput.scrollIntoView({
+				block: 'center',
+			});
+		}, 50);
+	}
 }

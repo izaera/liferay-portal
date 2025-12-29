@@ -64,6 +64,21 @@ function main() {
 	else {
 		currentLength.innerText = inputElement.value.length;
 
+		if (error) {
+
+			// This delay is intentional to give screen readers time to process and
+			// accept the focus change. Without this delay, the focus is often
+			// ignored by the screen reader even though it works visually.
+
+			setTimeout(() => {
+				inputElement.focus();
+
+				inputElement.scrollIntoView({
+					block: 'center',
+				});
+			}, 50);
+		}
+
 		if (!error && inputElement.value.length > input.attributes.maxLength) {
 			enableLengthWarning();
 		}
