@@ -202,7 +202,7 @@ public class SitePageResourceTest extends BaseSitePageResourceTestCase {
 
 	@Override
 	@Test
-	@TestInfo("LPD-67244")
+	@TestInfo({"LPD-67244", "LPD-75168", "LPD-75364"})
 	public void testGetSiteSitePage() throws Exception {
 		Layout layout = _addLayout(testGroup);
 
@@ -225,6 +225,7 @@ public class SitePageResourceTest extends BaseSitePageResourceTestCase {
 			Assert.assertNotNull(problemException);
 		}
 
+		_testGetSiteSitePageWithLocalization();
 		_testGetSiteSitePageWithoutPermissions();
 	}
 
@@ -322,6 +323,7 @@ public class SitePageResourceTest extends BaseSitePageResourceTestCase {
 
 	@Override
 	@Test
+	@TestInfo("LPD-35928")
 	public void testGetSiteSitePagesPage() throws Exception {
 		Page<SitePage> sitePagePage = sitePageResource.getSiteSitePagesPage(
 			testGroup.getGroupId(), null, null, null, null, null);
@@ -329,12 +331,12 @@ public class SitePageResourceTest extends BaseSitePageResourceTestCase {
 		Assert.assertEquals(
 			_layoutLocalService.getLayoutsCount(testGroup.getGroupId(), false),
 			sitePagePage.getTotalCount());
+
+		_testGetSiteSitePagesPageSet();
 	}
 
-	@Test
-	@TestInfo("LPD-35928")
-	public void testGetSiteSitePagesPageSet() throws Exception {
-		_addLayout(testGroup);
+	private void _testGetSiteSitePagesPageSet() throws Exception {
+		LayoutTestUtil.addTypeContentLayout(testGroup);
 
 		ServiceContext serviceContext =
 			ServiceContextTestUtil.getServiceContext(
@@ -361,9 +363,7 @@ public class SitePageResourceTest extends BaseSitePageResourceTestCase {
 		Assert.assertTrue(pageTypes.contains("Page Set"));
 	}
 
-	@Test
-	@TestInfo({"LPD-75168", "LPD-75364"})
-	public void testGetSiteSitePageWithLocalization() throws Exception {
+	private void _testGetSiteSitePageWithLocalization() throws Exception {
 		User user = testCompany.getGuestUser();
 
 		String originalLanguageId = user.getLanguageId();
