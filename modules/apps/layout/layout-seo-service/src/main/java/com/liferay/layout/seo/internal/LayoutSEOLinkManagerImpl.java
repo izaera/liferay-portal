@@ -30,6 +30,7 @@ import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.HtmlUtil;
 import com.liferay.portal.kernel.util.ListMergeable;
 import com.liferay.portal.kernel.util.LocaleUtil;
+import com.liferay.portal.kernel.util.MapUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -183,7 +184,8 @@ public class LayoutSEOLinkManagerImpl implements LayoutSEOLinkManager {
 				layout.getLayoutId());
 
 		if ((layoutSEOEntry == null) ||
-			!layoutSEOEntry.isCanonicalURLEnabled()) {
+			!layoutSEOEntry.isCanonicalURLEnabled() ||
+			MapUtil.isEmpty(layoutSEOEntry.getCanonicalURLMap())) {
 
 			return alternateURLs;
 		}
