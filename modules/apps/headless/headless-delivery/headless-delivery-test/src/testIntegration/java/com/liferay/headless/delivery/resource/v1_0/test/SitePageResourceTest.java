@@ -418,9 +418,7 @@ public class SitePageResourceTest extends BaseSitePageResourceTestCase {
 				dateCreated = RandomTestUtil.nextDate();
 				dateModified = RandomTestUtil.nextDate();
 				datePublished = RandomTestUtil.nextDate();
-				friendlyUrlPath =
-					StringPool.FORWARD_SLASH +
-						StringUtil.toLowerCase(RandomTestUtil.randomString());
+				friendlyUrlPath = _getRandomFriendlyURL();
 				id = RandomTestUtil.randomLong();
 				pageType = StringUtil.toLowerCase(
 					RandomTestUtil.randomString());
@@ -575,6 +573,14 @@ public class SitePageResourceTest extends BaseSitePageResourceTestCase {
 		}
 	}
 
+	private String _getRandomFriendlyURL() {
+		String urlTitle = StringUtil.toLowerCase(
+			RandomTestUtil.randomString(
+				LayoutFriendlyURLRandomizerBumper.INSTANCE));
+
+		return StringPool.FORWARD_SLASH + urlTitle;
+	}
+
 	private String _read(String fileName) throws Exception {
 		Class<?> clazz = getClass();
 
@@ -664,16 +670,8 @@ public class SitePageResourceTest extends BaseSitePageResourceTestCase {
 
 			Layout layout = LayoutTestUtil.addTypeContentLayout(testGroup);
 
-			String esFriendlyURL =
-				StringPool.FORWARD_SLASH +
-					StringUtil.toLowerCase(
-						RandomTestUtil.randomString(
-							LayoutFriendlyURLRandomizerBumper.INSTANCE));
-			String usFriendlyURL =
-				StringPool.FORWARD_SLASH +
-					StringUtil.toLowerCase(
-						RandomTestUtil.randomString(
-							LayoutFriendlyURLRandomizerBumper.INSTANCE));
+			String esFriendlyURL = _getRandomFriendlyURL();
+			String usFriendlyURL = _getRandomFriendlyURL();
 
 			LayoutTestUtil.updateFriendlyURL(
 				layout,
