@@ -59,8 +59,8 @@ public class ProductNavigationControlMenuManagerImpl
 			(ThemeDisplay)httpServletRequest.getAttribute(
 				WebKeys.THEME_DISPLAY);
 
-		boolean hasControlMenuEntries = _hasControlMenuEntries(
-			httpServletRequest);
+		boolean hasControlMenuEntries =
+			_hasRelevantProductNavigationControlMenuEntries(httpServletRequest);
 
 		Group group = themeDisplay.getScopeGroup();
 		Layout layout = themeDisplay.getLayout();
@@ -108,7 +108,7 @@ public class ProductNavigationControlMenuManagerImpl
 		return hasControlMenuEntries;
 	}
 
-	private boolean _hasControlMenuEntries(
+	private boolean _hasRelevantProductNavigationControlMenuEntries(
 		HttpServletRequest httpServletRequest) {
 
 		List<ProductNavigationControlMenuCategory>
