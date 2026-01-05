@@ -46,8 +46,8 @@ import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 
-import jakarta.portlet.ActionRequest;
-import jakarta.portlet.ActionResponse;
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
 
 import java.util.List;
 import java.util.function.Function;
@@ -174,7 +174,7 @@ public class EditFragmentEntryLinkCommentMVCActionCommandTest {
 			new MockLiferayPortletActionRequest();
 
 		mockLiferayPortletActionRequest.setAttribute(
-			JavaConstants.JAKARTA_PORTLET_RESPONSE,
+			JavaConstants.JAVAX_PORTLET_RESPONSE,
 			new MockLiferayPortletActionResponse());
 		mockLiferayPortletActionRequest.setAttribute(WebKeys.LAYOUT, _layout);
 		mockLiferayPortletActionRequest.setAttribute(
