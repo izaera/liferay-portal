@@ -363,8 +363,7 @@ public class ImportTaskResourceTest extends BaseTaskResourceTestCase {
 				StringBundler.concat(
 					"headless-batch-engine/v1.0/import-task",
 					"/com.liferay.object.rest.dto.v1_0.ObjectEntry",
-					"?createStrategy=UPSERT&siteExternalReferenceCode=",
-					testGroup.getExternalReferenceCode(),
+					"?createStrategy=UPSERT&siteId=", testGroup.getGroupId(),
 					"&taskItemDelegateName=", siteObjectDefinition.getName(),
 					"&updateStrategy=PARTIAL_UPDATE"),
 				Http.Method.POST));
@@ -373,7 +372,7 @@ public class ImportTaskResourceTest extends BaseTaskResourceTestCase {
 			expectedFieldValue,
 			_getSiteJSONObject(
 				siteObjectEntry.getExternalReferenceCode(),
-				testGroup.getExternalReferenceCode()
+				testGroup.getGroupKey()
 			).getString(
 				OBJECT_FIELD_NAME_TEXT_1
 			));
