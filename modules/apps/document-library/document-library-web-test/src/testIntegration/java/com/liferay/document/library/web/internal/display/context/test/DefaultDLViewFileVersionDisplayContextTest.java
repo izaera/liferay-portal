@@ -144,7 +144,7 @@ public class DefaultDLViewFileVersionDisplayContextTest {
 			_serviceContext);
 
 		_workflowDefinitionLinkLocalService.addWorkflowDefinitionLink(
-			null, TestPropsValues.getUserId(), TestPropsValues.getCompanyId(),
+			TestPropsValues.getUserId(), TestPropsValues.getCompanyId(),
 			_group.getGroupId(), DLFolder.class.getName(), folder.getFolderId(),
 			-1, "Single Approver", 1);
 
@@ -206,7 +206,7 @@ public class DefaultDLViewFileVersionDisplayContextTest {
 
 		HttpServletRequest httpServletRequest = new MockHttpServletRequest();
 
-		mockHttpServletRequest.setAttribute(
+		httpServletRequest.setAttribute(
 			ItemSelector.class.getName(), _itemSelector);
 
 		String portletName = RandomTestUtil.randomString();
@@ -226,11 +226,11 @@ public class DefaultDLViewFileVersionDisplayContextTest {
 				portletName, StringPool.DASH, WebKeys.CURRENT_PORTLET_URL),
 			new MockLiferayPortletURL());
 
-		mockHttpServletRequest.setAttribute(
+		httpServletRequest.setAttribute(
 			JavaConstants.JAVAX_PORTLET_REQUEST,
 			mockLiferayPortletRenderRequest);
 
-		mockHttpServletRequest.setAttribute(
+		httpServletRequest.setAttribute(
 			JavaConstants.JAVAX_PORTLET_RESPONSE,
 			new MockLiferayPortletRenderResponse());
 
@@ -248,7 +248,7 @@ public class DefaultDLViewFileVersionDisplayContextTest {
 		themeDisplay.setSiteGroupId(_group.getGroupId());
 		themeDisplay.setUser(TestPropsValues.getUser());
 
-		mockHttpServletRequest.setAttribute(
+		httpServletRequest.setAttribute(
 			WebKeys.THEME_DISPLAY, themeDisplay);
 
 		DLViewFileVersionDisplayContext dLViewFileVersionDisplayContext =
