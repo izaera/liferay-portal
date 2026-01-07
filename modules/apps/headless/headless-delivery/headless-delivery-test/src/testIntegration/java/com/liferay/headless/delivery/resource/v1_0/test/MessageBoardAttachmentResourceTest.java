@@ -92,24 +92,6 @@ public class MessageBoardAttachmentResourceTest
 					RandomTestUtil.randomString()));
 	}
 
-	@Ignore
-	@Override
-	@Test
-	public void testGraphQLGetMessageBoardMessageMessageBoardAttachmentsPage()
-		throws Exception {
-
-		super.testGraphQLGetMessageBoardMessageMessageBoardAttachmentsPage();
-	}
-
-	@Ignore
-	@Override
-	@Test
-	public void testGraphQLGetMessageBoardThreadMessageBoardAttachmentsPage()
-		throws Exception {
-
-		super.testGraphQLGetMessageBoardThreadMessageBoardAttachmentsPage();
-	}
-
 	@Override
 	@Test
 	public void testPostMessageBoardMessageMessageBoardAttachment()
