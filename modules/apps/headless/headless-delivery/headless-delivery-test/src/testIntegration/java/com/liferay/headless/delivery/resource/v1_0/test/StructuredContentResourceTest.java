@@ -660,7 +660,7 @@ public class StructuredContentResourceTest
 		Locale locale = LocaleUtil.getDefault();
 
 		StructuredContent randomStructuredContent = _randomStructuredContent(
-			locale);
+			locale, true);
 
 		StructuredContentResource structuredContentResource =
 			_buildStructureContentResource(locale);
