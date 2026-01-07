@@ -49,13 +49,13 @@ import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 import com.liferay.portlet.test.MockLiferayPortletContext;
 
-import jakarta.portlet.Portlet;
-import jakarta.portlet.PortletURL;
-
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 import java.util.function.Function;
+
+import javax.portlet.Portlet;
+import javax.portlet.PortletURL;
 
 import org.junit.Assert;
 import org.junit.Before;
