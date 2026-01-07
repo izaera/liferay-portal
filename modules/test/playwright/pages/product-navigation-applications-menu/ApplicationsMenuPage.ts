@@ -20,6 +20,7 @@ export class ApplicationsMenuPage {
 	private readonly commerceDiscountsMenuItem: Locator;
 	private readonly commerceOrdersMenuItem: Locator;
 	private readonly commercePanelButton: Locator;
+	private readonly commercePriceListsMenuItem: Locator;
 	private readonly commerceProductConfigurationListsMenuItem: Locator;
 	private readonly commerceReturnsMenuItem: Locator;
 	private readonly commerceShipmentsMenuItem: Locator;
@@ -104,6 +105,10 @@ export class ApplicationsMenuPage {
 		});
 		this.commercePanelButton = page.getByRole('tab', {
 			name: 'Commerce',
+		});
+		this.commercePriceListsMenuItem = page.getByRole('menuitem', {
+			exact: true,
+			name: 'Price Lists',
 		});
 		this.commerceProductConfigurationListsMenuItem = page.getByRole(
 			'menuitem',
@@ -435,6 +440,11 @@ export class ApplicationsMenuPage {
 	async goToCommercePanel(checkTabVisibility = true) {
 		await this.goto(checkTabVisibility);
 		await this.commercePanelButton.click();
+	}
+
+	async goToCommercePriceLists(checkTabVisibility = true) {
+		await this.goToCommercePanel(checkTabVisibility);
+		await this.commercePriceListsMenuItem.click();
 	}
 
 	async goToCommerceOrders(checkTabVisibility = true) {
