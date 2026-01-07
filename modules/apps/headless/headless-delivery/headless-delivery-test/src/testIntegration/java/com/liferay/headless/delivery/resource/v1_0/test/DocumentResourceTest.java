@@ -670,10 +670,7 @@ public class DocumentResourceTest extends BaseDocumentResourceTestCase {
 					{
 						setActionIds(
 							new String[] {ActionKeys.UPDATE, ActionKeys.VIEW});
-						setRoleExternalReferenceCode(
-							userRole.getExternalReferenceCode());
 						setRoleName(userRole.getName());
-						setRoleType(userRole.getTypeLabel());
 					}
 				}
 			});
