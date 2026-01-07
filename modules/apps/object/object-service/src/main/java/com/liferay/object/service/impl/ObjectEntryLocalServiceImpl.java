@@ -130,6 +130,7 @@ import com.liferay.portal.kernel.dao.orm.ActionableDynamicQuery;
 import com.liferay.portal.kernel.dao.orm.FinderCacheUtil;
 import com.liferay.portal.kernel.dao.orm.Property;
 import com.liferay.portal.kernel.dao.orm.PropertyFactoryUtil;
+import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.dao.orm.Session;
 import com.liferay.portal.kernel.encryptor.Encryptor;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -1027,7 +1028,21 @@ public class ObjectEntryLocalServiceImpl
 			_log.debug("Get one to many related object entries: " + dslQuery);
 		}
 
-		return objectEntryPersistence.dslQuery(dslQuery);
+		Sort[] sorts = {new Sort("id", Sort.LONG_TYPE, false)};
+
+		ObjectRelationshipLocalService objectRelationshipLocalService =
+			_objectRelationshipLocalServiceSnapshot.get();
+
+		ObjectRelationship objectRelationship =
+			objectRelationshipLocalService.getObjectRelationship(
+				objectRelationshipId);
+
+		return objectEntryPersistence.dslQuery(
+			_applyOrderBy(
+				dslQuery,
+				_objectDefinitionPersistence.findByPrimaryKey(
+					objectRelationship.getObjectDefinitionId2()),
+				start, end, sorts));
 	}
 
 	@Override
@@ -1128,8 +1143,16 @@ public class ObjectEntryLocalServiceImpl
 			}
 		}
 
+		ObjectDefinition objectDefinition =
+			_objectDefinitionPersistence.findByPrimaryKey(objectDefinitionId);
+
+		if (sorts == null) {
+			sorts = new Sort[] {new Sort("id", Sort.LONG_TYPE, false)};
+		}
+
 		return TransformUtil.transform(
-			objectEntryPersistence.dslQuery(dslQuery),
+			objectEntryPersistence.dslQuery(
+				_applyOrderBy(dslQuery, objectDefinition, start, end, sorts)),
 			value -> (Long)_getResult(
 				value, objectDefinitionId,
 				dynamicObjectDefinitionTable.getPrimaryKeyColumn()));
@@ -2037,6 +2060,44 @@ public class ObjectEntryLocalServiceImpl
 			values.put(
 				objectRelationshipERCObjectFieldName, externalReferenceCode);
 		}
+	}
+
+	private DSLQuery _applyOrderBy(
+			DSLQuery dslQuery, ObjectDefinition objectDefinition, int start,
+			int end, Sort[] sorts)
+		throws PortalException {
+
+		if ((start == QueryUtil.ALL_POS) && (end == QueryUtil.ALL_POS)) {
+			return dslQuery;
+		}
+
+		if (!_containsSortById(sorts)) {
+			sorts = ArrayUtil.append(
+				sorts, new Sort("id", Sort.LONG_TYPE, false));
+		}
+
+		SortDSLQueryVisitor sortDSLQueryVisitor = new SortDSLQueryVisitor(
+			_objectFieldLocalService,
+			_objectRelationshipLocalServiceSnapshot.get());
+
+		for (Sort sort : sorts) {
+			dslQuery = sortDSLQueryVisitor.visit(
+				dslQuery,
+				new com.liferay.object.internal.sort.Sort(
+					objectDefinition, sort));
+		}
+
+		return dslQuery;
+	}
+
+	private boolean _containsSortById(Sort[] sorts) {
+		for (Sort sort : sorts) {
+			if (Objects.equals(sort.getFieldName(), "id")) {
+				return true;
+			}
+		}
+
+		return false;
 	}
 
 	private void _contributeValues(
