@@ -233,7 +233,7 @@ public class TaxonomyCategoryResourceTest
 		TaxonomyCategory randomTaxonomyCategory = randomTaxonomyCategory();
 
 		TaxonomyCategory parentTaxonomyCategory =
-			testGetSiteTaxonomyCategoryByExternalReferenceCode_addTaxonomyCategory();
+			testGetTaxonomyCategory_addTaxonomyCategory();
 
 		randomTaxonomyCategory.setParentTaxonomyCategory(
 			new ParentTaxonomyCategory() {
