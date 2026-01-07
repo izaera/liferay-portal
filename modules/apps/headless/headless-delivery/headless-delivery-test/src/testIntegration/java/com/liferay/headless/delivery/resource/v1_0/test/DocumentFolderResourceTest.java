@@ -191,10 +191,7 @@ public class DocumentFolderResourceTest
 					{
 						setActionIds(
 							new String[] {ActionKeys.UPDATE, ActionKeys.VIEW});
-						setRoleExternalReferenceCode(
-							userRole.getExternalReferenceCode());
 						setRoleName(userRole.getName());
-						setRoleType(userRole.getTypeLabel());
 					}
 				}
 			});
