@@ -305,9 +305,9 @@ public class TopHeadDynamicInclude implements DynamicInclude {
 			ContentSecurityPolicyNonceProviderUtil.getNonceAttribute(
 				httpServletRequest));
 		printWriter.print(" data-senna-track=\"permanent\" src=\"");
-		printWriter.print(url);
+		printWriter.print(url + "\"");
 		printWriter.print(_getCrossOriginAttribute(httpServletRequest));
-		printWriter.println("\" type=\"text/javascript\"></script>");
+		printWriter.println(" type=\"text/javascript\"></script>");
 	}
 
 	@Reference
