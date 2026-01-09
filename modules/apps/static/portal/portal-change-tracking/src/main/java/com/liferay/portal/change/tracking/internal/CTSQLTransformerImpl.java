@@ -1329,6 +1329,8 @@ public class CTSQLTransformerImpl implements CTSQLTransformer {
 					new Column(table, "ctCollectionId"), new LongValue("0"));
 			}
 
+			SubSelect subSelect = new SubSelect();
+
 			CTService<?> ctService = _serviceTrackerMap.getService(
 				ctModelRegistration.getModelClass());
 
@@ -1461,14 +1463,7 @@ public class CTSQLTransformerImpl implements CTSQLTransformer {
 				selectBody = setOperationList;
 			}
 
-			SubSelect subSelect = new SubSelect();
-
 			subSelect.setSelectBody(selectBody);
-
-			ExistsExpression existsExpression = new ExistsExpression();
-
-			existsExpression.setNot(true);
-			existsExpression.setRightExpression(subSelect);
 
 			return new Parenthesis(
 				new OrExpression(
@@ -1480,7 +1475,12 @@ public class CTSQLTransformerImpl implements CTSQLTransformer {
 							equalsTo(
 								new Column(table, "ctCollectionId"),
 								new LongValue("0")),
-							existsExpression))));
+							new ExistsExpression() {
+								{
+									setNot(true);
+									setRightExpression(subSelect);
+								}
+							}))));
 		}
 
 		private final CTSQLModeThreadLocal.CTSQLMode _ctSQLMode;
