@@ -14,6 +14,7 @@ import com.liferay.object.model.ObjectField;
 import com.liferay.object.model.ObjectFieldSetting;
 import com.liferay.object.petra.sql.dsl.DynamicObjectDefinitionTableUtil;
 import com.liferay.object.service.ObjectFieldLocalServiceUtil;
+import com.liferay.object.service.ObjectFieldSettingLocalService;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
@@ -87,6 +88,60 @@ public class ObjectFieldSettingUtil {
 		}
 	}
 
+	public static String getDefaultValueAsString(
+		DDMExpressionFactory ddmExpressionFactory, ObjectField objectField,
+		ObjectFieldSettingLocalService objectFieldSettingLocalService,
+		Map<String, Object> values) {
+
+		List<ObjectFieldSetting> objectFieldSettings =
+			objectField.getObjectFieldSettings();
+
+		ObjectFieldSetting defaultValueObjectFieldSetting =
+			_getObjectFieldSetting(
+				objectFieldSettings,
+				ObjectFieldSettingConstants.NAME_DEFAULT_VALUE);
+
+		if (defaultValueObjectFieldSetting == null) {
+			return null;
+		}
+
+		ObjectFieldSetting defaultValueTypeObjectFieldSetting =
+			_getObjectFieldSetting(
+				objectFieldSettings,
+				ObjectFieldSettingConstants.NAME_DEFAULT_VALUE_TYPE);
+
+		if ((defaultValueTypeObjectFieldSetting == null) ||
+			StringUtil.equals(
+				defaultValueTypeObjectFieldSetting.getValue(),
+				ObjectFieldSettingConstants.VALUE_INPUT_AS_VALUE)) {
+
+			return defaultValueObjectFieldSetting.getValue();
+		}
+
+		if (ddmExpressionFactory == null) {
+			return StringPool.BLANK;
+		}
+
+		try {
+			DDMExpression<String> ddmExpression =
+				ddmExpressionFactory.createExpression(
+					CreateExpressionRequest.Builder.newBuilder(
+						defaultValueObjectFieldSetting.getValue()
+					).build());
+
+			ddmExpression.setVariables(values);
+
+			return ddmExpression.evaluate();
+		}
+		catch (DDMExpressionException ddmExpressionException) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(ddmExpressionException);
+			}
+
+			return StringPool.BLANK;
+		}
+	}
+
 	public static Map<String, Object> getDefaultValues(
 		DDMExpressionFactory ddmExpressionFactory, long objectDefinitionId) {
 
@@ -98,8 +153,7 @@ public class ObjectFieldSettingUtil {
 
 			defaultValues.put(
 				objectField.getName(),
-				getDefaultValue(
-					ddmExpressionFactory, objectField, null));
+				getDefaultValue(ddmExpressionFactory, objectField, null));
 		}
 
 		return defaultValues;
