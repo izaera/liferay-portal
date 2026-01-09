@@ -174,8 +174,8 @@ public class EditableValuesExportImportContentProcessorTest {
 			_fragmentEntryLinkLocalService.getFragmentEntryLinkByUuidAndGroupId(
 				fragmentEntryLink.getUuid(), _liveGroup.getGroupId());
 
-		JSONObject jsonObject =
-			importedFragmentEntryLink.getEditableValuesJSONObject();
+		JSONObject jsonObject = _jsonFactory.createJSONObject(
+			importedFragmentEntryLink.getEditableValues());
 
 		JSONObject editableJSONObject = jsonObject.getJSONObject(
 			FragmentEntryProcessorConstants.
@@ -540,7 +540,7 @@ public class EditableValuesExportImportContentProcessorTest {
 	}
 
 	private void _assertItemSelectorClassPK(
-		long classPK, FragmentEntryLink fragmentEntryLink)
+			long classPK, FragmentEntryLink fragmentEntryLink)
 		throws Exception {
 
 		JSONObject jsonObject = _jsonFactory.createJSONObject(
