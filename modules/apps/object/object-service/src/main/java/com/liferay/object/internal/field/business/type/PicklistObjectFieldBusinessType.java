@@ -21,7 +21,6 @@ import com.liferay.object.model.ObjectFieldSetting;
 import com.liferay.object.model.ObjectState;
 import com.liferay.object.model.ObjectStateFlow;
 import com.liferay.object.rest.dto.v1_0.ListEntry;
-import com.liferay.object.service.ObjectFieldSettingLocalService;
 import com.liferay.object.service.ObjectStateFlowLocalService;
 import com.liferay.object.service.ObjectStateLocalService;
 import com.liferay.petra.function.transform.TransformUtil;
@@ -127,8 +126,9 @@ public class PicklistObjectFieldBusinessType
 
 				localizedValue.addString(
 					objectFieldRenderingContext.getLocale(),
-					String.valueOf(ObjectFieldSettingUtil.getDefaultValue(
-						null, objectField, null)));
+					String.valueOf(
+						ObjectFieldSettingUtil.getDefaultValue(
+							null, objectField, null)));
 
 				return localizedValue;
 			}
@@ -294,8 +294,8 @@ public class PicklistObjectFieldBusinessType
 				objectField.getListTypeDefinitionId());
 		}
 
-		String listEntryKey = String.valueOf(ObjectFieldSettingUtil.getDefaultValue(
-			null, objectField, null));
+		String listEntryKey = String.valueOf(
+			ObjectFieldSettingUtil.getDefaultValue(null, objectField, null));
 
 		if (MapUtil.isNotEmpty(objectFieldRenderingContext.getProperties())) {
 			ListEntry listEntry =
@@ -366,9 +366,6 @@ public class PicklistObjectFieldBusinessType
 
 	@Reference
 	private ListTypeEntryLocalService _listTypeEntryLocalService;
-
-	@Reference
-	private ObjectFieldSettingLocalService _objectFieldSettingLocalService;
 
 	@Reference
 	private ObjectStateFlowLocalService _objectStateFlowLocalService;

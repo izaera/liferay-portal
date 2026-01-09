@@ -421,8 +421,9 @@ public class ObjectFieldInfoFieldConverter {
 	private List<OptionInfoFieldType> _getOptionInfoFieldTypes(
 		ObjectField objectField) {
 
-		String defaultValue =  String.valueOf(ObjectFieldSettingUtil.getDefaultValue(
-			_ddmExpressionFactory, objectField, null));
+		String defaultValue = String.valueOf(
+			ObjectFieldSettingUtil.getDefaultValue(
+				_ddmExpressionFactory, objectField, null));
 
 		if (!objectField.isState()) {
 			return _getOptionInfoFieldTypes(

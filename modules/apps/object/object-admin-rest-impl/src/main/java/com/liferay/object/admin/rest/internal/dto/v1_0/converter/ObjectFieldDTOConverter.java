@@ -56,7 +56,7 @@ public class ObjectFieldDTOConverter
 		ObjectRelationship objectRelationship = null;
 
 		if (objectField.compareBusinessType(
-			ObjectFieldConstants.BUSINESS_TYPE_RELATIONSHIP)) {
+				ObjectFieldConstants.BUSINESS_TYPE_RELATIONSHIP)) {
 
 			objectRelationship =
 				_objectRelationshipLocalService.
