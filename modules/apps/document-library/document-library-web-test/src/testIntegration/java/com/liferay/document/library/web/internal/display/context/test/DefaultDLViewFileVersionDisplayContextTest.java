@@ -44,18 +44,22 @@ import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.theme.PortletDisplay;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.Constants;
 import com.liferay.portal.kernel.util.ContentTypes;
 import com.liferay.portal.kernel.util.JavaConstants;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.WebKeys;
+import com.liferay.portal.kernel.workflow.WorkflowTask;
+import com.liferay.portal.kernel.workflow.WorkflowTaskManager;
 import com.liferay.portal.test.rule.FeatureFlags;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 
 import java.util.List;
+import java.util.Objects;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -102,7 +106,7 @@ public class DefaultDLViewFileVersionDisplayContextTest {
 
 	@Test
 	public void testCreateViewUsageDropdownItemWithoutUsage() throws Exception {
-		DropdownItem dropdownItem = _getViewUsageDropdownItem(_fileEntry);
+		DropdownItem dropdownItem = _getDropdownItem(_fileEntry, "View Usages");
 
 		Assert.assertTrue((Boolean)dropdownItem.get("disabled"));
 		Assert.assertEquals("list-ul", dropdownItem.get("icon"));
@@ -113,7 +117,7 @@ public class DefaultDLViewFileVersionDisplayContextTest {
 	public void testCreateViewUsageDropdownItemWithUsage() throws Exception {
 		_addLayoutClassedModelUsage(_fileEntry);
 
-		DropdownItem dropdownItem = _getViewUsageDropdownItem(_fileEntry);
+		DropdownItem dropdownItem = _getDropdownItem(_fileEntry, "View Usages");
 
 		Assert.assertFalse((Boolean)dropdownItem.get("disabled"));
 		Assert.assertEquals("list-ul", dropdownItem.get("icon"));
@@ -122,9 +126,8 @@ public class DefaultDLViewFileVersionDisplayContextTest {
 
 	@Test
 	public void testGetActionDropdownItems() throws Exception {
-		DropdownItem dropdownItem = _getCheckoutDropdownItem(_fileEntry);
+		DropdownItem dropdownItem = _getDropdownItem(_fileEntry, "Checkout");
 
-		Assert.assertFalse((Boolean)dropdownItem.get("disabled"));
 		Assert.assertEquals("lock", dropdownItem.get("icon"));
 		Assert.assertEquals("Checkout", dropdownItem.get("label"));
 	}
@@ -152,9 +155,30 @@ public class DefaultDLViewFileVersionDisplayContextTest {
 			folder.getFolderId(), RandomTestUtil.randomString(),
 			RandomTestUtil.randomString());
 
-		DropdownItem dropdownItem = _getCheckoutDropdownItem(fileEntry);
+		DropdownItem dropdownItem = _getDropdownItem(fileEntry, "Checkout");
 
-		Assert.assertTrue((Boolean)dropdownItem.get("disabled"));
+		Assert.assertEquals("lock", dropdownItem.get("icon"));
+		Assert.assertEquals("Checkout", dropdownItem.get("label"));
+
+		List<WorkflowTask> workflowTasks =
+			_workflowTaskManager.getWorkflowTasksBySubmittingUser(
+				TestPropsValues.getCompanyId(), TestPropsValues.getUserId(),
+				false, 0, 1, null);
+
+		WorkflowTask workflowTask = workflowTasks.get(0);
+
+		_workflowTaskManager.assignWorkflowTaskToUser(
+			TestPropsValues.getCompanyId(), TestPropsValues.getUserId(),
+			workflowTask.getWorkflowTaskId(), TestPropsValues.getUserId(),
+			StringPool.BLANK, null, null);
+
+		_workflowTaskManager.completeWorkflowTask(
+			TestPropsValues.getCompanyId(), TestPropsValues.getUserId(),
+			workflowTask.getWorkflowTaskId(), Constants.APPROVE,
+			StringPool.BLANK, null);
+
+		dropdownItem = _getDropdownItem(fileEntry, "Checkout");
+
 		Assert.assertEquals("lock", dropdownItem.get("icon"));
 		Assert.assertEquals("Checkout", dropdownItem.get("label"));
 	}
@@ -183,15 +207,6 @@ public class DefaultDLViewFileVersionDisplayContextTest {
 			layout.getPlid(), _serviceContext);
 	}
 
-	private DropdownItem _getCheckoutDropdownItem(FileEntry fileEntry)
-		throws Exception {
-
-		List<DropdownItem> dropdownGroupItems = _getDropdownGroupItems(
-			_getDropdownItems(fileEntry), 1);
-
-		return dropdownGroupItems.get(0);
-	}
-
 	private List<DropdownItem> _getDropdownGroupItems(
 		List<DropdownItem> dropdownItems, int groupIndex) {
 
@@ -199,6 +214,21 @@ public class DefaultDLViewFileVersionDisplayContextTest {
 			(DropdownGroupItem)dropdownItems.get(groupIndex);
 
 		return (List<DropdownItem>)dropdownGroupItem.get("items");
+	}
+
+	private DropdownItem _getDropdownItem(FileEntry fileEntry, String label)
+		throws Exception {
+
+		List<DropdownItem> dropdownGroupItems = _getDropdownGroupItems(
+			_getDropdownItems(fileEntry), 1);
+
+		for (DropdownItem dropdownItem : dropdownGroupItems) {
+			if (Objects.equals(dropdownItem.get("label"), label)) {
+				return dropdownItem;
+			}
+		}
+
+		return null;
 	}
 
 	private List<DropdownItem> _getDropdownItems(FileEntry fileEntry)
@@ -259,15 +289,6 @@ public class DefaultDLViewFileVersionDisplayContextTest {
 		return dLViewFileVersionDisplayContext.getActionDropdownItems();
 	}
 
-	private DropdownItem _getViewUsageDropdownItem(FileEntry fileEntry)
-		throws Exception {
-
-		List<DropdownItem> dropdownGroupItems = _getDropdownGroupItems(
-			_getDropdownItems(fileEntry), 1);
-
-		return dropdownGroupItems.get(3);
-	}
-
 	private Company _company;
 
 	@Inject
@@ -302,5 +323,8 @@ public class DefaultDLViewFileVersionDisplayContextTest {
 	@Inject
 	private WorkflowDefinitionLinkLocalService
 		_workflowDefinitionLinkLocalService;
+
+	@Inject
+	private WorkflowTaskManager _workflowTaskManager;
 
 }
