@@ -113,8 +113,8 @@ public class ObjectEntryPerformanceTest {
 	private void _addObjectEntries(Integer numberOfEntries) throws Exception {
 		ObjectEntryManager objectEntryManager =
 			_objectEntryManagerRegistry.getObjectEntryManager(
-				_customObjectDefinition.getCompanyId(),
-				_customObjectDefinition.getStorageType());
+				_objectDefinition.getCompanyId(),
+				_objectDefinition.getStorageType());
 
 		DTOConverterContext dtoConverterContext =
 			new DefaultDTOConverterContext(
