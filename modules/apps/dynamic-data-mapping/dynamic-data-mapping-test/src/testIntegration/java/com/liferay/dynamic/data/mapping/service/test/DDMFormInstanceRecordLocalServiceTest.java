@@ -39,12 +39,12 @@ import com.liferay.portal.kernel.workflow.WorkflowInstanceManager;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 
-import jakarta.servlet.http.HttpServletRequest;
-
 import java.io.Serializable;
 
 import java.util.List;
 import java.util.Map;
+
+import javax.servlet.http.HttpServletRequest;
 
 import org.junit.Assert;
 import org.junit.ClassRule;
@@ -216,7 +216,7 @@ public class DDMFormInstanceRecordLocalServiceTest
 		HttpServletRequest httpServletRequest = new MockHttpServletRequest();
 
 		httpServletRequest.setAttribute(
-			JavaConstants.JAKARTA_PORTLET_RESPONSE,
+			JavaConstants.JAVAX_PORTLET_RESPONSE,
 			new MockLiferayPortletRenderResponse());
 		httpServletRequest.setAttribute(
 			WebKeys.CURRENT_URL, "http://localhost:8080/currentURL");
