@@ -63,6 +63,14 @@ class TPriceEntry {
 	priceListId: number;
 }
 
+class TPriceList {
+	catalogId: number;
+	currencyCode: string;
+	id?: number;
+	name: string;
+	type: string;
+}
+
 export class HeadlessCommerceAdminPricingApiHelper {
 	readonly apiHelpers: ApiHelpers;
 	readonly basePath: string;
@@ -193,5 +201,23 @@ export class HeadlessCommerceAdminPricingApiHelper {
 		);
 
 		return discountSku;
+	}
+
+	async postPriceList(priceList?: TPriceList) {
+		priceList = await this.apiHelpers.post(
+			`${this.apiHelpers.baseUrl}${this.basePath}/price-lists`,
+			{
+				data: priceList,
+			}
+		);
+
+		if (this.apiHelpers instanceof DataApiHelpers) {
+			this.apiHelpers.data.push({
+				id: priceList.id,
+				type: 'price-list',
+			});
+		}
+
+		return priceList;
 	}
 }

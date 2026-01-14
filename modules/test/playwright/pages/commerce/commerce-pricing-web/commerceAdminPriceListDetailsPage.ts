@@ -25,12 +25,11 @@ export class CommerceAdminPriceListDetailsPage extends CommerceDNDTablePage {
 	constructor(page: Page) {
 		super(
 			page,
-			'#_com_liferay_commerce_pricing_web_internal_portlet_CommercePriceListPortlet_fm .fds table'
+			'#_com_liferay_commerce_pricing_web_internal_portlet_CommercePriceListPortlet_fm .dnd-table'
 		);
-
 		this.addTierPriceButton = page
 			.frameLocator('iframe')
-			.getByTestId('managementToolbar')
+			.getByTestId('management-toolbar')
 			.locator('[data-testid="fdsCreationActionButton"]');
 		this.addTierPriceEntryFrame = page.frameLocator('iframe >> nth=1');
 		this.addTierPriceEntryPrice = this.addTierPriceEntryFrame.getByLabel(

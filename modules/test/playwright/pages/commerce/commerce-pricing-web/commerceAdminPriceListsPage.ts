@@ -15,7 +15,7 @@ export class CommerceAdminPriceListsPage extends CommerceDNDTablePage {
 	constructor(page: Page) {
 		super(
 			page,
-			'#_com_liferay_commerce_pricing_web_internal_portlet_CommercePriceListPortlet_fm .fds table'
+			'#_com_liferay_commerce_pricing_web_internal_portlet_CommercePriceListPortlet_fm .dnd-table'
 		);
 
 		this.applicationsMenuPage = new ApplicationsMenuPage(page);

@@ -88,19 +88,17 @@ test(
 			'50'
 		);
 
-		const price = '100';
+		const price = '100.10';
 		await commerceAdminPriceListDetailsPage.addTierPriceEntryPrice.fill(
 			price
 		);
 
 		await commerceAdminPriceListDetailsPage.addTierPriceEntrySaveButton.click();
 
-		await commerceAdminPriceListDetailsPage
-			.skuLink(`$ ${price}.00`)
-			.click();
+		await commerceAdminPriceListDetailsPage.skuLink(`$ ${price}`).click();
 
 		await expect(
 			commerceAdminPriceListDetailsPage.editPriceTierPrice
-		).toHaveValue(`${price}.00`);
+		).toHaveValue(`${price}`);
 	}
 );
