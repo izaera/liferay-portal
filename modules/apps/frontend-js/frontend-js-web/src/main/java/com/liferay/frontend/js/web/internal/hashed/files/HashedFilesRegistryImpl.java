@@ -12,6 +12,8 @@ import com.liferay.portal.kernel.frontend.hashed.files.HashedFilesRegistry;
 import com.liferay.portal.kernel.frontend.hashed.files.HashedFilesUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.util.Base64;
+import com.liferay.portal.kernel.util.DigesterUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringUtil;
 
@@ -20,6 +22,7 @@ import jakarta.servlet.ServletContext;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -48,7 +51,15 @@ public class HashedFilesRegistryImpl implements HashedFilesRegistry {
 	public void forEach(BiConsumer<String, String> biConsumer) {
 		_lazyActivate();
 
-		for (Map.Entry<String, String> entry : _map.entrySet()) {
+		for (Map.Entry<String, String> entry : _hashedFileURIs.entrySet()) {
+			biConsumer.accept(entry.getKey(), entry.getValue());
+		}
+	}
+
+	public void forEachServletContextHash(BiConsumer<String, String> biConsumer) {
+		_lazyActivate();
+
+		for (Map.Entry<String, String> entry : _servletContextHashes.entrySet()) {
 			biConsumer.accept(entry.getKey(), entry.getValue());
 		}
 	}
@@ -56,7 +67,7 @@ public class HashedFilesRegistryImpl implements HashedFilesRegistry {
 	public String getHashedFileURI(String unhashedFileURI) {
 		_lazyActivate();
 
-		return _map.get(unhashedFileURI);
+		return _hashedFileURIs.get(unhashedFileURI);
 	}
 
 	@Override
@@ -107,6 +118,13 @@ public class HashedFilesRegistryImpl implements HashedFilesRegistry {
 		}
 	}
 
+	@Override
+	public String getServletContextHash(String servletContextName) {
+		_lazyActivate();
+
+		return _servletContextHashes.get(servletContextName);
+	}
+
 	@Activate
 	protected void activate(BundleContext bundleContext) {
 		_bundleContext = bundleContext;
@@ -114,7 +132,7 @@ public class HashedFilesRegistryImpl implements HashedFilesRegistry {
 
 	@Deactivate
 	protected void deactivate() {
-		_map.clear();
+		_hashedFileURIs.clear();
 
 		if (_serviceTracker != null) {
 			_serviceTracker.close();
@@ -169,20 +187,74 @@ public class HashedFilesRegistryImpl implements HashedFilesRegistry {
 						}
 					}
 
-					Map<String, String> map = new HashMap<>();
+					Map<String, String> hashedFileURIs = new HashMap<>();
 
 					String contextPath = servletContext.getContextPath();
 
 					for (String hashedResourcePath : hashedResourcePaths) {
-						map.put(
+						hashedFileURIs.put(
 							contextPath +
 								HashedFilesUtil.removeHash(hashedResourcePath),
 							contextPath + hashedResourcePath);
 					}
 
-					_map.putAll(map);
+					if (hashedFileURIs.isEmpty()) {
+						return hashedFileURIs;
+					}
 
-					return map;
+					// Register hashed URIs and compute global hash
+
+					_hashedFileURIs.putAll(hashedFileURIs);
+
+					Set<String> hashesSet = new HashSet<>();
+
+					for (String hashedFileURI : hashedFileURIs.values()) {
+						hashesSet.add(HashedFilesUtil.getHash(hashedFileURI));
+					}
+
+					ArrayList<String> hashesList = new ArrayList<>(hashesSet);
+
+					Collections.sort(hashesList);
+
+					String hashesString = StringUtil.merge(
+						hashesList, StringPool.PIPE);
+
+					byte[] hash =
+						DigesterUtil.digestRaw(DigesterUtil.MD5, hashesString);
+
+					byte[] truncatedHash = new byte[8];
+
+					System.arraycopy(
+						hash, 0, truncatedHash, 0, truncatedHash.length);
+
+					String encodedTruncatedHash = Base64.encode(truncatedHash);
+
+					encodedTruncatedHash =
+						StringUtil.replace(
+							encodedTruncatedHash,
+							StringPool.PLUS, StringPool.DOLLAR);
+					encodedTruncatedHash =
+						StringUtil.replace(
+							encodedTruncatedHash,
+							StringPool.SLASH, StringPool.AT);
+					encodedTruncatedHash =
+						StringUtil.replace(
+							encodedTruncatedHash,
+							StringPool.EQUAL, StringPool.BLANK);
+
+					System.err.println(
+						">>> Adding " + servletContext.getServletContextName()
+						+ "\n" +
+						">>>     hashes: " + hashesString
+						+ "\n" +
+						">>>     hash:   " + encodedTruncatedHash
+					);
+
+					_servletContextHashes.put(
+						servletContext.getServletContextName(),
+						encodedTruncatedHash);
+
+					return hashedFileURIs;
 				}
 				catch (MalformedURLException malformedURLException) {
 					_log.error(malformedURLException);
@@ -209,8 +281,26 @@ public class HashedFilesRegistryImpl implements HashedFilesRegistry {
 				ServiceReference<ServletContext> serviceReference,
 				Map<String, String> map) {
 
+				if (map.isEmpty()) {
+					return;
+				}
+
 				for (String key : map.keySet()) {
-					_map.remove(key);
+					_hashedFileURIs.remove(key);
+				}
+
+				ServletContext servletContext = _bundleContext.getService(
+					serviceReference);
+
+				System.err.println(
+					">>> Removing " + servletContext.getServletContextName());
+
+				try {
+					_servletContextHashes.remove(
+						servletContext.getServletContextName());
+				}
+				finally {
+					_bundleContext.ungetService(serviceReference);
 				}
 			}
 
@@ -242,39 +332,37 @@ public class HashedFilesRegistryImpl implements HashedFilesRegistry {
 	}
 
 	private void _lazyActivate() {
-		if (_serviceTracker == null) {
-			synchronized (this) {
-				if (_serviceTracker == null) {
-					_serviceTracker = new ServiceTracker<>(
-						_bundleContext, ServletContext.class,
-						_createServiceTrackerCustomizer());
-
-					_serviceTracker.open();
-				}
-			}
+		if (_serviceTracker != null) {
+			return;
 		}
 
-		if (_serviceTrackerMap == null) {
-			synchronized (this) {
-				if (_serviceTrackerMap == null) {
-					_serviceTrackerMap =
-						ServiceTrackerMapFactory.openSingleValueMap(
-							_bundleContext, ServletContext.class, null,
-							(serviceReference, emitter) -> {
-								ServletContext servletContext =
-									_bundleContext.getService(serviceReference);
-
-								try {
-									emitter.emit(
-										servletContext.getContextPath());
-								}
-								finally {
-									_bundleContext.ungetService(
-										serviceReference);
-								}
-							});
-				}
+		synchronized (this) {
+			if (_serviceTracker != null) {
+				return;
 			}
+
+			_serviceTrackerMap =
+				ServiceTrackerMapFactory.openSingleValueMap(
+					_bundleContext, ServletContext.class, null,
+					(serviceReference, emitter) -> {
+						ServletContext servletContext =
+							_bundleContext.getService(serviceReference);
+
+						try {
+							emitter.emit(
+								servletContext.getContextPath());
+						}
+						finally {
+							_bundleContext.ungetService(
+								serviceReference);
+						}
+					});
+
+			_serviceTracker = new ServiceTracker<>(
+				_bundleContext, ServletContext.class,
+				_createServiceTrackerCustomizer());
+
+			_serviceTracker.open();
 		}
 	}
 
@@ -282,7 +370,10 @@ public class HashedFilesRegistryImpl implements HashedFilesRegistry {
 		HashedFilesRegistryImpl.class);
 
 	private BundleContext _bundleContext;
-	private final Map<String, String> _map = new ConcurrentHashMap<>();
+	private final Map<String, String> _hashedFileURIs =
+		new ConcurrentHashMap<>();
+	private final Map<String, String> _servletContextHashes =
+		new ConcurrentHashMap<>();
 
 	@Reference
 	private Portal _portal;

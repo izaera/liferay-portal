@@ -7,6 +7,7 @@ package com.liferay.frontend.js.web.internal.js.importmaps.extender;
 
 import com.liferay.frontend.js.importmaps.extender.DynamicJSImportMapsContributor;
 import com.liferay.frontend.js.web.internal.resource.handler.LanguageFrontendResourceRequestHandler;
+import com.liferay.frontend.js.web.internal.resource.handler.VirtualModuleFrontendResourceRequestHandler;
 import com.liferay.frontend.js.web.internal.util.FrontendJsWebUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.module.configuration.ConfigurationProvider;
@@ -60,19 +61,45 @@ public class FrontendJsWebDynamicJSImportMapsContributor
 			return;
 		}
 
-		_hashedFilesRegistry.forEach(
-			(unhashedFileURI, hashedFileURI) -> {
-				if (!unhashedFileURI.endsWith(".js")) {
-					return;
-				}
+//		_hashedFilesRegistry.forEach(
+//			(unhashedFileURI, hashedFileURI) -> {
+//				if (!unhashedFileURI.endsWith(".js")) {
+//					return;
+//				}
+//
+//				try {
+//					writer.write(", \"");
+//					writer.write(baseURL);
+//					writer.write(unhashedFileURI);
+//					writer.write("\": \"");
+//					writer.write(baseURL);
+//					writer.write(hashedFileURI);
+//					writer.write(StringPool.QUOTE);
+//				}
+//				catch (Exception exception) {
+//					throw new RuntimeException(exception);
+//				}
+//			});
 
+		_hashedFilesRegistry.forEachServletContextHash(
+			(servletContextName, hash) -> {
 				try {
 					writer.write(", \"");
 					writer.write(baseURL);
-					writer.write(unhashedFileURI);
+					writer.write(
+						VirtualModuleFrontendResourceRequestHandler.
+							VIRTUAL_MODULE_URI_PREFIX);
+					writer.write(servletContextName);
+					writer.write(StringPool.SLASH);
 					writer.write("\": \"");
 					writer.write(baseURL);
-					writer.write(hashedFileURI);
+					writer.write(
+						VirtualModuleFrontendResourceRequestHandler.
+							VIRTUAL_MODULE_URI_PREFIX);
+					writer.write(servletContextName);
+					writer.write(StringPool.OPEN_PARENTHESIS);
+					writer.write(hash);
+					writer.write(")/");
 					writer.write(StringPool.QUOTE);
 				}
 				catch (Exception exception) {

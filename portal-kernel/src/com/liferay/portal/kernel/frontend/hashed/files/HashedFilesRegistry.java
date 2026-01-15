@@ -16,6 +16,9 @@ public interface HashedFilesRegistry {
 
 	public void forEach(BiConsumer<String, String> biConsumer);
 
+	public void forEachServletContextHash(
+		BiConsumer<String, String> biConsumer);
+
 	/**
 	 * Get the URI of the hashed file associated to an unhashed file URI.
 	 *
@@ -41,5 +44,14 @@ public interface HashedFilesRegistry {
 	 * @review
 	 */
 	public URL getResource(String path);
+
+	/**
+	 * Get the global hash of all hashed files associated to a servlet context.
+	 *
+	 * @param servletContextName
+	 * @return
+	 * @review
+	 */
+	public String getServletContextHash(String servletContextName);
 
 }
