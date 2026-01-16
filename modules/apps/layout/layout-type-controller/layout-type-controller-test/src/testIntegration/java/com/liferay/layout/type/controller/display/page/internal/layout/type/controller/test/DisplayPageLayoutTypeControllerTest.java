@@ -192,7 +192,8 @@ public class DisplayPageLayoutTypeControllerTest {
 
 		Assert.assertTrue(layout.isPublished());
 
-		_assertIncludeLayoutContent(false, layout.getPlid(), _guestUser);
+		_assertIncludeLayoutContent(
+			HttpServletResponse.SC_OK, false, layout.getPlid(), _guestUser);
 	}
 
 	@Test
@@ -232,7 +233,8 @@ public class DisplayPageLayoutTypeControllerTest {
 
 			ServiceContextThreadLocal.pushServiceContext(serviceContext);
 
-			_assertIncludeLayoutContent(true, layout.getPlid(), _guestUser);
+			_assertIncludeLayoutContent(
+				HttpServletResponse.SC_OK, true, layout.getPlid(), _guestUser);
 		}
 		finally {
 			ServiceContextThreadLocal.pushServiceContext(_serviceContext);
@@ -372,11 +374,15 @@ public class DisplayPageLayoutTypeControllerTest {
 		Assert.assertTrue(layout.isPublished());
 
 		_assertIncludeLayoutContent(
-			false, draftLayout.getPlid(), TestPropsValues.getUser());
+			HttpServletResponse.SC_OK, false, draftLayout.getPlid(),
+			TestPropsValues.getUser());
 		_assertIncludeLayoutContent(
-			false, layout.getPlid(), TestPropsValues.getUser());
-		_assertIncludeLayoutContent(true, draftLayout.getPlid(), _guestUser);
-		_assertIncludeLayoutContent(true, layout.getPlid(), _guestUser);
+			HttpServletResponse.SC_OK, false, layout.getPlid(),
+			TestPropsValues.getUser());
+		_assertIncludeLayoutContent(
+			HttpServletResponse.SC_OK, true, draftLayout.getPlid(), _guestUser);
+		_assertIncludeLayoutContent(
+			HttpServletResponse.SC_OK, true, layout.getPlid(), _guestUser);
 	}
 
 	private void _addFragmentEntryLink(Layout layout) throws Exception {
@@ -453,7 +459,8 @@ public class DisplayPageLayoutTypeControllerTest {
 	}
 
 	private void _assertIncludeLayoutContent(
-			boolean noSuchLayoutExceptionExpected, long plid, User user)
+			int expectedStatus, boolean noSuchLayoutExceptionExpected,
+			long plid, User user)
 		throws Exception {
 
 		Layout layout = _layoutLocalService.getLayout(plid);
@@ -483,7 +490,7 @@ public class DisplayPageLayoutTypeControllerTest {
 			Assert.assertFalse(noSuchLayoutExceptionExpected);
 
 			Assert.assertEquals(
-				HttpServletResponse.SC_OK, mockHttpServletResponse.getStatus());
+				expectedStatus, mockHttpServletResponse.getStatus());
 		}
 		catch (NoSuchLayoutException noSuchLayoutException) {
 			Assert.assertTrue(noSuchLayoutExceptionExpected);
