@@ -88,7 +88,7 @@ public class DLFileVersionConstraintResolver
 			return;
 		}
 
-		List<DLFileVersion> dlFileVersions;
+		List<DLFileVersion> dlFileVersions = null;
 
 		try (SafeCloseable safeCloseable1 =
 				CTCollectionThreadLocal.setCTCollectionIdWithSafeCloseable(
@@ -103,11 +103,10 @@ public class DLFileVersionConstraintResolver
 
 		dlFileVersions.sort(DLFileVersionVersionComparator.getInstance(true));
 
+		List<DLFileVersion> newDLFileVersions = new ArrayList<>();
+		Map<String, String> versionMap = new HashMap<>();
 		String newFileVersion = null;
 		String previousFileVersion = null;
-
-		Map<String, String> versionMap = new HashMap<>();
-		List<DLFileVersion> newDLFileVersions = new ArrayList<>();
 
 		for (DLFileVersion currentDLFileVersion : dlFileVersions) {
 			if (!constraintResolverContext.isSourceCTModel(
