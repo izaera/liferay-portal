@@ -689,7 +689,6 @@ public class DisplayPageLayoutTypeControllerTest {
 		_assertIncludeLayoutContent(
 			HttpServletResponse.SC_OK, true, draftLayout.getClassPK(),
 			_guestUser);
-
 		_assertIncludeLayoutContent(
 			expectedStatus, false, draftLayout.getClassPK(), user);
 	}
