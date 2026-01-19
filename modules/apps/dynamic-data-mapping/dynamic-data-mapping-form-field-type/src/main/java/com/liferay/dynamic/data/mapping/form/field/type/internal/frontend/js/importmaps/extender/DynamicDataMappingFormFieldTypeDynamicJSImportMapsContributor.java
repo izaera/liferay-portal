@@ -7,6 +7,7 @@ package com.liferay.dynamic.data.mapping.form.field.type.internal.frontend.js.im
 
 import com.liferay.frontend.js.importmaps.extender.DynamicJSImportMapsContributor;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.frontend.hashed.files.HashedFilesRegistry;
 import com.liferay.portal.url.builder.AbsolutePortalURLBuilder;
 import com.liferay.portal.url.builder.AbsolutePortalURLBuilderFactory;
 import com.liferay.portal.url.builder.ESModuleAbsolutePortalURLBuilder;
@@ -42,7 +43,10 @@ public class DynamicDataMappingFormFieldTypeDynamicJSImportMapsContributor
 			absolutePortalURLBuilder.forESModule(
 				"dynamic-data-mapping-form-field-type", "api.js");
 
-		writer.write(esModuleAbsolutePortalURLBuilder.build());
+		writer.write(
+			"/o/js/-/dynamic-data-mapping-form-field-type(" +
+			_hashedFilesRegistry.getServletContextHash("dynamic-data-mapping-form-field-type") +
+			")/__liferay__/api.js");
 
 		writer.write(StringPool.QUOTE);
 	}
@@ -54,5 +58,8 @@ public class DynamicDataMappingFormFieldTypeDynamicJSImportMapsContributor
 
 	@Reference
 	private AbsolutePortalURLBuilderFactory _absolutePortalURLBuilderFactory;
+
+	@Reference
+	private HashedFilesRegistry _hashedFilesRegistry;
 
 }

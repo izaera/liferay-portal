@@ -6,7 +6,7 @@
 import path from 'path';
 
 import fileExists from '../../../util/fileExists.mjs';
-import getImportBridgePath from '../getImportBridgePath.mjs';
+import {getImportBridgePath} from '../util/importBridge.mjs';
 
 const SOURCE_EXTENSIONS = ['.js', '.jsx', '.ts', '.tsx'];
 

@@ -52,43 +52,19 @@ public class FrontendJsWebDynamicJSImportMapsContributor
 			LanguageFrontendResourceRequestHandler.LANGUAGE_URI_PREFIX);
 		writer.write(StringPool.QUOTE);
 
-		PortalURLBuilderConfiguration portalURLBuilderConfiguration =
-			_getPortalURLBuilderConfiguration(httpServletRequest);
-
-		if ((portalURLBuilderConfiguration != null) &&
-			!portalURLBuilderConfiguration.enableESModulesHashing()) {
-
-			return;
-		}
-
-//		_hashedFilesRegistry.forEach(
-//			(unhashedFileURI, hashedFileURI) -> {
-//				if (!unhashedFileURI.endsWith(".js")) {
-//					return;
-//				}
+//		PortalURLBuilderConfiguration portalURLBuilderConfiguration =
+//			_getPortalURLBuilderConfiguration(httpServletRequest);
 //
-//				try {
-//					writer.write(", \"");
-//					writer.write(baseURL);
-//					writer.write(unhashedFileURI);
-//					writer.write("\": \"");
-//					writer.write(baseURL);
-//					writer.write(hashedFileURI);
-//					writer.write(StringPool.QUOTE);
-//				}
-//				catch (Exception exception) {
-//					throw new RuntimeException(exception);
-//				}
-//			});
+//		if ((portalURLBuilderConfiguration != null) &&
+//			!portalURLBuilderConfiguration.enableESModulesHashing()) {
+//
+//			return;
+//		}
 
 		_hashedFilesRegistry.forEachServletContextHash(
 			(servletContextName, hash) -> {
 				try {
 					writer.write(", \"");
-					writer.write(baseURL);
-					writer.write(
-						VirtualModuleFrontendResourceRequestHandler.
-							VIRTUAL_MODULE_URI_PREFIX);
 					writer.write(servletContextName);
 					writer.write(StringPool.SLASH);
 					writer.write("\": \"");

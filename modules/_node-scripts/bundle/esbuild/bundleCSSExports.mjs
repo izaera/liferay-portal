@@ -11,8 +11,7 @@ import {
 	BUNDLE_REPORTS_PATH,
 } from '../../util/constants.mjs';
 import getFlatName from '../../util/getFlatName.mjs';
-import getEntryPoint from './getEntryPoint.mjs';
-import runEsbuild from './runEsbuild.mjs';
+import runEsbuild from './util/runEsbuild.mjs';
 
 export default async function bundleCSSExports(projectExports) {
 	if (!projectExports.length) {
@@ -27,7 +26,10 @@ export default async function bundleCSSExports(projectExports) {
 }
 
 async function bundle(moduleName) {
-	const entryPoint = getEntryPoint(moduleName);
+	const entryPoint = {
+		in: moduleName,
+		out: `css/${getFlatName(moduleName).replace(/\.css$/, '')}`,
+	};
 
 	const esbuildConfig = {
 		entryNames: '[dir]/[name].([hash])',

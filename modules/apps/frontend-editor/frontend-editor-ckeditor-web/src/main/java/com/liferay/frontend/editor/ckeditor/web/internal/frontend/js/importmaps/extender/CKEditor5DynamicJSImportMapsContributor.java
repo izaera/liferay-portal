@@ -8,6 +8,7 @@ package com.liferay.frontend.editor.ckeditor.web.internal.frontend.js.importmaps
 import com.liferay.frontend.js.importmaps.extender.DynamicJSImportMapsContributor;
 import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.frontend.hashed.files.HashedFilesRegistry;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.url.builder.AbsolutePortalURLBuilder;
 import com.liferay.portal.url.builder.AbsolutePortalURLBuilderFactory;
@@ -59,7 +60,12 @@ public class CKEditor5DynamicJSImportMapsContributor
 					"frontend-editor-ckeditor-web",
 					"exports/" + escapedModuleName + ".js");
 
-			writer.write(esModuleAbsolutePortalURLBuilder.build());
+			writer.write(
+				"/o/js/-/frontend-editor-ckeditor-web(" +
+				_hashedFilesRegistry.getServletContextHash("frontend-editor-ckeditor-web") +
+				")/__liferay__/exports/" +
+				escapedModuleName + ".js"
+			);
 
 			writer.write(StringPool.QUOTE);
 		}
@@ -136,5 +142,8 @@ public class CKEditor5DynamicJSImportMapsContributor
 
 	@Reference
 	private AbsolutePortalURLBuilderFactory _absolutePortalURLBuilderFactory;
+
+	@Reference
+	private HashedFilesRegistry _hashedFilesRegistry;
 
 }

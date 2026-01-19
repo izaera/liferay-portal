@@ -8,6 +8,7 @@ package com.liferay.frontend.js.react.web.internal.js.importmaps.extender;
 import com.liferay.frontend.js.importmaps.extender.DynamicJSImportMapsContributor;
 import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.frontend.hashed.files.HashedFilesRegistry;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.url.builder.AbsolutePortalURLBuilder;
 import com.liferay.portal.url.builder.AbsolutePortalURLBuilderFactory;
@@ -54,12 +55,11 @@ public class FrontendJSReactWebDynamicJSImportMapsContributor
 			String escapedModuleName = StringUtil.replace(
 				moduleName, CharPool.FORWARD_SLASH, CharPool.DOLLAR);
 
-			ESModuleAbsolutePortalURLBuilder esModuleAbsolutePortalURLBuilder =
-				absolutePortalURLBuilder.forESModule(
-					"frontend-js-react-web",
-					"exports/" + escapedModuleName + ".js");
-
-			writer.write(esModuleAbsolutePortalURLBuilder.build());
+			writer.write(
+				"/o/js/-/frontend-js-react-web(" +
+				_hashedFilesRegistry.getServletContextHash("frontend-js-react-web") +
+				")/__liferay__/exports/" + escapedModuleName +
+				".js");
 
 			writer.write(StringPool.QUOTE);
 		}
@@ -71,11 +71,25 @@ public class FrontendJSReactWebDynamicJSImportMapsContributor
 	}
 
 	private static final String[] _MODULE_NAMES = {
-		"react", "react-16", "react-18", "react-dom", "react-dom/client",
-		"react-dom-16", "react-dom-18", "react-dom-18/client"
+		"classnames",
+		"formik",
+		"prop-types",
+		"react",
+		"react-16",
+		"react-18",
+		"react-dnd-html5-backend",
+		"react-dnd",
+		"react-dom",
+		"react-dom/client",
+		"react-dom-16",
+		"react-dom-18",
+		"react-dom-18/client",
 	};
 
 	@Reference
 	private AbsolutePortalURLBuilderFactory _absolutePortalURLBuilderFactory;
+
+	@Reference
+	private HashedFilesRegistry _hashedFilesRegistry;
 
 }

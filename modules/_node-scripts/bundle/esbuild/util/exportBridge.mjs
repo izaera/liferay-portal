@@ -6,8 +6,13 @@
 import fs from 'fs/promises';
 import path from 'path';
 
-import getExportedSymbols from '../../util/getExportedSymbols.mjs';
-import getExportBridgePath from './getExportBridgePath.mjs';
+import {WORK_EXPORT_PATH} from '../../../util/constants.mjs';
+import getExportedSymbols from '../../../util/getExportedSymbols.mjs';
+import getFlatName from '../../../util/getFlatName.mjs';
+
+export function getExportBridgePath(moduleName) {
+	return path.resolve(WORK_EXPORT_PATH, `${getFlatName(moduleName)}.js`);
+}
 
 /**
  * Create an export bridge file that can be used by esbuild as an entry point.
@@ -16,16 +21,13 @@ import getExportBridgePath from './getExportBridgePath.mjs';
  * and for that to happen it must be fed an ES module as entry point. If fed a CommonJS one esbuild
  * will refuse to export things as ESM syntax.
  */
-export default async function writeExportBridge(
-	overridenPackageSymbols,
-	moduleName
-) {
+export async function writeExportBridge(overridenPackageSymbols, moduleName) {
 	const symbols = await getExportedSymbols(
 		overridenPackageSymbols,
 		moduleName
 	);
 
-	const exportBridgePath = getExportBridgePath(moduleName);
+	delete symbols.__esModule;
 
 	const namedExportSymbols = Object.keys(symbols)
 		.filter((symbol) => symbol !== 'default')
@@ -44,19 +46,16 @@ export default async function writeExportBridge(
 	// package.json files.
 	//
 
-	const source = `
-import * as __star__ from '${moduleName}';
-
-const {
-${symbols.default ? 'default: __default__,' : ''}
-${namedExportSymbols}
-} = __star__;
-
-export {
-${namedExportSymbols}
-};
-${symbols.default ? 'export default __default__;' : ''}
+	let source = `
+export {${namedExportSymbols}} from '${moduleName}';
 `;
+
+	if (symbols.default) {
+		source += `import __x__ from '${moduleName}';`;
+		source += `export default __x__;`;
+	}
+
+	const exportBridgePath = getExportBridgePath(moduleName);
 
 	await fs.mkdir(path.dirname(exportBridgePath), {recursive: true});
 	await fs.writeFile(exportBridgePath, source, 'utf-8');

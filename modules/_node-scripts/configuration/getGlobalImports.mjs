@@ -48,7 +48,7 @@ export default async function getGlobalImports() {
 			}
 
 			externalImports[packageName] = {
-				external: true,
+				external: !submodule, // true,
 				submodule,
 				webContextPath: getWebContextPath(providerName),
 			};

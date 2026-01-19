@@ -7,6 +7,7 @@ package com.liferay.fragment.internal.js.importmaps.extender;
 
 import com.liferay.frontend.js.importmaps.extender.DynamicJSImportMapsContributor;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.frontend.hashed.files.HashedFilesRegistry;
 import com.liferay.portal.url.builder.AbsolutePortalURLBuilder;
 import com.liferay.portal.url.builder.AbsolutePortalURLBuilderFactory;
 import com.liferay.portal.url.builder.ESModuleAbsolutePortalURLBuilder;
@@ -40,7 +41,10 @@ public class FragmentImplDynamicJSImportMapsContributor
 		ESModuleAbsolutePortalURLBuilder esModuleAbsolutePortalURLBuilder =
 			absolutePortalURLBuilder.forESModule("fragment-impl", "api.js");
 
-		writer.write(esModuleAbsolutePortalURLBuilder.build());
+		writer.write(
+			"/o/js/-/fragment-impl(" +
+			_hashedFilesRegistry.getServletContextHash("fragment-impl") +
+			")/__liferay__/exports/api.js");
 
 		writer.write(StringPool.QUOTE);
 	}
@@ -52,5 +56,8 @@ public class FragmentImplDynamicJSImportMapsContributor
 
 	@Reference
 	private AbsolutePortalURLBuilderFactory _absolutePortalURLBuilderFactory;
+
+	@Reference
+	private HashedFilesRegistry _hashedFilesRegistry;
 
 }

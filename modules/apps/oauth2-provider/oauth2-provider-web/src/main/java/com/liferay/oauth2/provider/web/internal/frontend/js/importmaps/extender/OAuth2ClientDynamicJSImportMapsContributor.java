@@ -7,6 +7,7 @@ package com.liferay.oauth2.provider.web.internal.frontend.js.importmaps.extender
 
 import com.liferay.frontend.js.importmaps.extender.DynamicJSImportMapsContributor;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.frontend.hashed.files.HashedFilesRegistry;
 import com.liferay.portal.url.builder.AbsolutePortalURLBuilder;
 import com.liferay.portal.url.builder.AbsolutePortalURLBuilderFactory;
 import com.liferay.portal.url.builder.ESModuleAbsolutePortalURLBuilder;
@@ -41,7 +42,10 @@ public class OAuth2ClientDynamicJSImportMapsContributor
 			absolutePortalURLBuilder.forESModule(
 				"oauth2-provider-web", "client.js");
 
-		writer.write(esModuleAbsolutePortalURLBuilder.build());
+		writer.write(
+			"/o/js/-/oauth2-provider-web(" +
+			_hashedFilesRegistry.getServletContextHash("oauth2-provider-web") +
+			")/__liferay__/client.js");
 
 		writer.write(StringPool.QUOTE);
 	}
@@ -53,5 +57,8 @@ public class OAuth2ClientDynamicJSImportMapsContributor
 
 	@Reference
 	private AbsolutePortalURLBuilderFactory _absolutePortalURLBuilderFactory;
+
+	@Reference
+	private HashedFilesRegistry _hashedFilesRegistry;
 
 }

@@ -6,7 +6,10 @@
 package com.liferay.frontend.js.dependencies.web.internal.js.importmaps.extender;
 
 import com.liferay.frontend.js.importmaps.extender.DynamicJSImportMapsContributor;
+import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.frontend.hashed.files.HashedFilesRegistry;
+import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.url.builder.AbsolutePortalURLBuilder;
 import com.liferay.portal.url.builder.AbsolutePortalURLBuilderFactory;
 import com.liferay.portal.url.builder.ESModuleAbsolutePortalURLBuilder;
@@ -31,27 +34,54 @@ public class FrontendJSDependenciesWebDynamicJSImportMapsContributor
 			HttpServletRequest httpServletRequest, Writer writer)
 		throws IOException {
 
-		writer.write("\"@liferay/frontend-js-api\": \"");
+//		writer.write("\"@liferay/frontend-js-api\": \"");
+//
+//		AbsolutePortalURLBuilder absolutePortalURLBuilder =
+//			_absolutePortalURLBuilderFactory.getAbsolutePortalURLBuilder(
+//				httpServletRequest);
+//
+//		writer.write(
+//			"/o/js/-/frontend-js-dependencies-web("+
+//			_hashedFilesRegistry.getServletContextHash("frontend-js-dependencies-web") +
+//			")/exports/@liferay$js-api.js"
+//		);
+//
+//		writer.write("\", \"@liferay/frontend-js-api/data-set\": \"");
+//
+//		writer.write(
+//			"/o/js/-/frontend-js-dependencies-web(" +
+//			_hashedFilesRegistry.getServletContextHash("frontend-js-dependencies-web") +
+//			")/__liferay__/exports/@liferay$js-api$data-set.js"
+//		);
+//
+//		writer.write(StringPool.QUOTE);
 
-		AbsolutePortalURLBuilder absolutePortalURLBuilder =
-			_absolutePortalURLBuilderFactory.getAbsolutePortalURLBuilder(
-				httpServletRequest);
+		boolean first = true;
 
-		ESModuleAbsolutePortalURLBuilder esModuleAbsolutePortalURLBuilder =
-			absolutePortalURLBuilder.forESModule(
-				"frontend-js-dependencies-web", "exports/@liferay$js-api.js");
+		for (String moduleName : _MODULE_NAMES) {
+			if (!first) {
+				writer.write(", ");
+			}
+			else {
+				first = false;
+			}
 
-		writer.write(esModuleAbsolutePortalURLBuilder.build());
+			writer.write(StringPool.QUOTE);
+			writer.write(moduleName);
+			writer.write("\": \"");
 
-		writer.write("\", \"@liferay/frontend-js-api/data-set\": \"");
+			String escapedModuleName = StringUtil.replace(
+				moduleName, CharPool.FORWARD_SLASH, CharPool.DOLLAR);
 
-		esModuleAbsolutePortalURLBuilder = absolutePortalURLBuilder.forESModule(
-			"frontend-js-dependencies-web",
-			"exports/@liferay$js-api$data-set.js");
+			writer.write(
+				"/o/js/-/frontend-js-dependencies-web(" +
+				_hashedFilesRegistry.getServletContextHash("frontend-js-dependencies-web") +
+				")/__liferay__/exports/" + escapedModuleName +
+				".js");
 
-		writer.write(esModuleAbsolutePortalURLBuilder.build());
+			writer.write(StringPool.QUOTE);
+		}
 
-		writer.write(StringPool.QUOTE);
 	}
 
 	@Override
@@ -61,5 +91,45 @@ public class FrontendJSDependenciesWebDynamicJSImportMapsContributor
 
 	@Reference
 	private AbsolutePortalURLBuilderFactory _absolutePortalURLBuilderFactory;
+
+	@Reference
+	private HashedFilesRegistry _hashedFilesRegistry;
+
+
+	private static final String[] _MODULE_NAMES = {
+		"cropperjs/dist/cropper.css",
+		"graphql-hooks-memcache",
+		"graphql-hooks",
+		"graphql",
+		"highlight.js/styles/monokai-sublime.css",
+		"qrcode",
+		"react-dropzone",
+		"react-transition-group",
+		"uuid",
+		"react-flow-renderer",
+		"react-helmet",
+		"graphiql",
+		"graphiql/graphiql.css",
+		"axe-core",
+		"clipboard",
+		"cropperjs",
+		"dagre",
+		"dom-align",
+		"fuzzy",
+		"highlight.js",
+		"highlight.js/lib/core",
+		"highlight.js/lib/languages/java",
+		"highlight.js/lib/languages/javascript",
+		"highlight.js/lib/languages/plaintext",
+		"liferay-ckeditor",
+		"moment",
+		"moment/min/moment-with-locales",
+		"numeral",
+		"object-hash",
+		"qs",
+		"react-text-mask",
+		"text-mask-addons",
+		"text-mask-core"
+	};
 
 }

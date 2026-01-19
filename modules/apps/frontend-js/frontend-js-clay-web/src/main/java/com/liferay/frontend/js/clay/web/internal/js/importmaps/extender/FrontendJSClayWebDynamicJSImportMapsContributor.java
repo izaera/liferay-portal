@@ -8,6 +8,7 @@ package com.liferay.frontend.js.clay.web.internal.js.importmaps.extender;
 import com.liferay.frontend.js.importmaps.extender.DynamicJSImportMapsContributor;
 import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.frontend.hashed.files.HashedFilesRegistry;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.url.builder.AbsolutePortalURLBuilder;
 import com.liferay.portal.url.builder.AbsolutePortalURLBuilderFactory;
@@ -54,12 +55,11 @@ public class FrontendJSClayWebDynamicJSImportMapsContributor
 			String escapedModuleName = StringUtil.replace(
 				moduleName, CharPool.FORWARD_SLASH, CharPool.DOLLAR);
 
-			ESModuleAbsolutePortalURLBuilder esModuleAbsolutePortalURLBuilder =
-				absolutePortalURLBuilder.forESModule(
-					"frontend-js-clay-web",
-					"exports/" + escapedModuleName + ".js");
-
-			writer.write(esModuleAbsolutePortalURLBuilder.build());
+			writer.write(
+				"/o/js/-/frontend-js-clay-web(" +
+				_hashedFilesRegistry.getServletContextHash("frontend-js-clay-web") +
+				")/__liferay__/exports/" + escapedModuleName +
+				".js");
 
 			writer.write(StringPool.QUOTE);
 		}
@@ -89,5 +89,8 @@ public class FrontendJSClayWebDynamicJSImportMapsContributor
 
 	@Reference
 	private AbsolutePortalURLBuilderFactory _absolutePortalURLBuilderFactory;
+
+	@Reference
+	private HashedFilesRegistry _hashedFilesRegistry;
 
 }

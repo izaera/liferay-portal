@@ -61,21 +61,23 @@ public class ESModuleAbsolutePortalURLBuilderImpl
 
 	@Override
 	public String build() {
-		StringBundler sb = new StringBundler();
+//		StringBundler sb = new StringBundler();
+//
+//		String prefix = _webContextPath;
+//
+//		if (_webContextHash != null) {
+//			prefix =
+//				"/js/-" + _webContextPath + StringPool.OPEN_PARENTHESIS +
+//				_webContextHash + StringPool.CLOSE_PARENTHESIS;
+//		}
+//
+//		URLUtil.appendURL(
+//			sb, _cdnHost, _ignoreCDNHost, _ignorePathProxy,
+//			_pathModule + prefix, _pathProxy, _resourcePath);
+//
+//		return sb.toString();
 
-		String prefix = _webContextPath;
-
-		if (_webContextHash != null) {
-			prefix =
-				"/js/-" + _webContextPath + StringPool.OPEN_PARENTHESIS +
-				_webContextHash + StringPool.CLOSE_PARENTHESIS;
-		}
-
-		URLUtil.appendURL(
-			sb, _cdnHost, _ignoreCDNHost, _ignorePathProxy,
-			_pathModule + prefix, _pathProxy, _resourcePath);
-
-		return sb.toString();
+		return _webContextPath.substring(1) + _resourcePath;
 	}
 
 	@Override
