@@ -1,3 +1,5 @@
 packageRunBuild {
 	sourceDir = "src"
 }
+
+packageRunBuild.dependsOn " :apps:frontend-js:frontend-js-clay-web:packageRunBuild"
