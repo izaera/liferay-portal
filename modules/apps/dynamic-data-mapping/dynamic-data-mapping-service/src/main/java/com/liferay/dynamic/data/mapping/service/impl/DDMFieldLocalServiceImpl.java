@@ -847,7 +847,7 @@ public class DDMFieldLocalServiceImpl extends DDMFieldLocalServiceBaseImpl {
 			}
 
 			return new String[] {
-				languageId, defaultLanguageId, StringPool.BLANK
+				defaultLanguageId, languageId, StringPool.BLANK
 			};
 		}
 		catch (PortalException portalException) {
