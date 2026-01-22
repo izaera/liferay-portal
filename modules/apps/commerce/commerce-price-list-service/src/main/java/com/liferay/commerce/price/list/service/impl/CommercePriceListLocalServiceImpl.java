@@ -858,10 +858,14 @@ public class CommercePriceListLocalServiceImpl
 
 			BigDecimal originalPrice = fetchedCommercePriceEntry.getPrice();
 
-			BigDecimal lowestPrice = commercePriceEntry.getPrice();
+			BigDecimal lowestPrice = originalPrice;
 
-			if (BigDecimalUtil.eq(lowestPrice, BigDecimal.ZERO)) {
-				lowestPrice = originalPrice;
+			if (commercePriceEntry.getPrice() != null) {
+				BigDecimal priceFromQuery = commercePriceEntry.getPrice();
+
+				if (!BigDecimalUtil.eq(BigDecimal.ZERO, priceFromQuery)) {
+					lowestPrice = priceFromQuery;
+				}
 			}
 
 			CPDefinition cpDefinition =
