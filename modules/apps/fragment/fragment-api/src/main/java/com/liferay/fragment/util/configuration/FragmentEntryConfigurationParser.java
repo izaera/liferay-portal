@@ -49,6 +49,9 @@ public interface FragmentEntryConfigurationParser {
 		String configuration, String editableValues, Locale locale,
 		String name);
 
+	public Object getFieldValue(
+		String configuration, String editableValues, String name);
+
 	public List<FragmentConfigurationField> getFragmentConfigurationFields(
 		String configuration);
 
