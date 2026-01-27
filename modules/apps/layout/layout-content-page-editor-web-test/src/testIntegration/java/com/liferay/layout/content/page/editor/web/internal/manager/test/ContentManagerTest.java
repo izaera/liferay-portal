@@ -181,7 +181,7 @@ public class ContentManagerTest {
 			new MockHttpServletRequest();
 
 		mockHttpServletRequest.setAttribute(
-			JavaConstants.JAKARTA_PORTLET_RESPONSE,
+			JavaConstants.JAVAX_PORTLET_RESPONSE,
 			new MockLiferayResourceResponse());
 		mockHttpServletRequest.setAttribute(
 			WebKeys.THEME_DISPLAY, themeDisplay);
