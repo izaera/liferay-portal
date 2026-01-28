@@ -816,20 +816,20 @@ public class CommercePriceListLocalServiceImpl
 					commercePriceListId);
 			}
 
-			CommercePriceList actualPriceList =
+			CommercePriceList actualCommercePriceList =
 				commercePriceListLocalService.getCatalogBaseCommercePriceList(
 					groupId);
 
 			CommercePriceEntry fetchedCommercePriceEntry = null;
 
-			if (actualPriceList != null) {
+			if (actualCommercePriceList != null) {
 				fetchedCommercePriceEntry =
 					_commercePriceEntryLocalService.fetchCommercePriceEntry(
-						actualPriceList.getCommercePriceListId(),
+						actualCommercePriceList.getCommercePriceListId(),
 						cPInstanceUuid, unitOfMeasureKey, true);
 			}
 
-			if ((actualPriceList == null) ||
+			if ((actualCommercePriceList == null) ||
 				(fetchedCommercePriceEntry == null)) {
 
 				List<CommercePriceList> commercePriceListList =
@@ -843,11 +843,11 @@ public class CommercePriceListLocalServiceImpl
 						commercePriceListId);
 				}
 
-				actualPriceList = commercePriceListList.get(0);
+				actualCommercePriceList = commercePriceListList.get(0);
 
 				fetchedCommercePriceEntry =
 					_commercePriceEntryLocalService.fetchCommercePriceEntry(
-						actualPriceList.getCommercePriceListId(),
+						actualCommercePriceList.getCommercePriceListId(),
 						cPInstanceUuid, unitOfMeasureKey, true);
 			}
 
