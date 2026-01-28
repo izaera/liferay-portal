@@ -11,6 +11,8 @@ import {loginTest} from '../../fixtures/loginTest';
 import {getRandomInt} from '../../utils/getRandomInt';
 import {deleteItems} from './utils/deleteItems';
 
+const baseTest = mergeTests(formsPagesTest, loginTest());
+
 export const xssBypassTest = mergeTests(
 	featureFlagsTest({
 		'LPD-31212': {enabled: true},
@@ -90,6 +92,38 @@ const assertRichTextContent = async (
 
 	await newTabPage.close();
 };
+
+baseTest(
+	'Is focused in form submission when empty and required',
+	{tag: ['@LPD-76497']},
+	async ({formBuilderPage, formBuilderSidePanelPage, page}) => {
+		await formBuilderPage.goToNew();
+
+		await expect(formBuilderPage.newFormHeading).toBeVisible();
+
+		await formBuilderSidePanelPage.addFieldByDoubleClick('Rich Text');
+
+		await formBuilderSidePanelPage.requiredFieldToggleSwitch.click();
+
+		await page.waitForTimeout(1000);
+
+		await formBuilderPage.clickPublishFormButton();
+
+		const formSubmissionURL = await formBuilderPage.getFormSubmissionURL();
+
+		await page.goto(formSubmissionURL);
+
+		await page.getByRole('button', {name: 'Submit'}).click();
+
+		const richTextEditor = page
+			.frameLocator('.cke_wysiwyg_frame')
+			.getByRole('textbox');
+
+		await expect(richTextEditor).toBeFocused();
+
+		await expect(page.getByText('This field is required.')).toBeVisible();
+	}
+);
 
 xssBypassTest(
 	'Can add scripts to the rich text field @LPD-31212',
