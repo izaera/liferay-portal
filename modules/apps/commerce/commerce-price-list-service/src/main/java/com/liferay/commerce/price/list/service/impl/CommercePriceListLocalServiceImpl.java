@@ -807,11 +807,11 @@ public class CommercePriceListLocalServiceImpl
 		long commercePriceListId = commercePriceEntry.getCommercePriceListId();
 
 		if (type.equals(CommercePriceListConstants.TYPE_PROMOTION)) {
-			List<CommercePriceList> commercePriceLists =
+			List<CommercePriceList> commercePromoPriceLists =
 				commercePriceListLocalService.
 					getCommercePriceListsByUnqualified(groupId, type);
 
-			if (commercePriceLists.size() <= 1) {
+			if (commercePromoPriceLists.size() <= 1) {
 				return commercePriceListLocalService.getCommercePriceList(
 					commercePriceListId);
 			}
@@ -829,21 +829,19 @@ public class CommercePriceListLocalServiceImpl
 						cPInstanceUuid, unitOfMeasureKey, true);
 			}
 
-			if ((actualCommercePriceList == null) ||
-				(fetchedCommercePriceEntry == null)) {
-
-				List<CommercePriceList> commercePriceListList =
+			if (commercePriceEntry == null) {
+				List<CommercePriceList> commercePriceLists =
 					commercePriceListLocalService.
 						getCommercePriceListsByUnqualified(
 							groupId, CommercePriceListConstants.TYPE_PRICE_LIST
 						);
 
-				if (commercePriceListList.isEmpty()) {
+				if (commercePriceLists.isEmpty()) {
 					return commercePriceListLocalService.getCommercePriceList(
 						commercePriceListId);
 				}
 
-				actualCommercePriceList = commercePriceListList.get(0);
+				actualCommercePriceList = commercePriceLists.get(0);
 
 				fetchedCommercePriceEntry =
 					_commercePriceEntryLocalService.fetchCommercePriceEntry(
@@ -861,10 +859,10 @@ public class CommercePriceListLocalServiceImpl
 			BigDecimal lowestPrice = originalPrice;
 
 			if (commercePriceEntry.getPrice() != null) {
-				BigDecimal priceFromQuery = commercePriceEntry.getPrice();
+				BigDecimal price = commercePriceEntry.getPrice();
 
-				if (!BigDecimalUtil.eq(BigDecimal.ZERO, priceFromQuery)) {
-					lowestPrice = priceFromQuery;
+				if (!BigDecimalUtil.eq(BigDecimal.ZERO, price)) {
+					lowestPrice = price;
 				}
 			}
 
@@ -872,7 +870,9 @@ public class CommercePriceListLocalServiceImpl
 				_cpDefinitionLocalService.fetchCPDefinitionByCProductId(
 					commercePriceEntry.getCProductId());
 
-			for (CommercePriceList commercePriceList : commercePriceLists) {
+			for (CommercePriceList commercePriceList :
+					commercePromoPriceLists) {
+
 				if (commercePriceList.getCommercePriceListId() ==
 						commercePriceListId) {
 
