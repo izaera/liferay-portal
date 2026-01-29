@@ -7,12 +7,15 @@ package com.liferay.configuration.admin.web.internal.portlet.action;
 
 import com.liferay.configuration.admin.constants.ConfigurationAdminPortletKeys;
 import com.liferay.configuration.admin.display.ConfigurationFormRenderer;
+import com.liferay.configuration.admin.exception.ConfigurationValidationException;
+import com.liferay.configuration.admin.util.ConfigurationPidUtil;
 import com.liferay.configuration.admin.web.internal.display.context.ConfigurationScopeDisplayContext;
 import com.liferay.configuration.admin.web.internal.display.context.ConfigurationScopeDisplayContextFactory;
 import com.liferay.configuration.admin.web.internal.model.ConfigurationModel;
 import com.liferay.configuration.admin.web.internal.util.ConfigurationFormRendererRetriever;
 import com.liferay.configuration.admin.web.internal.util.ConfigurationModelRetriever;
 import com.liferay.configuration.admin.web.internal.util.ConfigurationModelToDDMFormConverter;
+import com.liferay.configuration.admin.web.internal.util.ConfigurationUtil;
 import com.liferay.configuration.admin.web.internal.util.DDMFormValuesToPropertiesConverter;
 import com.liferay.configuration.admin.web.internal.util.ResourceBundleLoaderProviderUtil;
 import com.liferay.dynamic.data.mapping.form.values.factory.DDMFormValuesFactory;
@@ -31,6 +34,7 @@ import com.liferay.portal.kernel.resource.manager.ClassLoaderResourceManager;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.settings.LocationVariableResolver;
 import com.liferay.portal.kernel.settings.SettingsLocatorHelper;
+import com.liferay.portal.kernel.settings.definition.ConfigurationPidMapping;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
@@ -166,6 +170,14 @@ public class BindConfigurationMVCActionCommand implements MVCActionCommand {
 		}
 
 		try {
+			ConfigurationPidMapping configurationPidMapping =
+				_settingsLocatorHelper.getConfigurationPidMapping(
+					ConfigurationPidUtil.getRawPid(pid));
+
+			ConfigurationUtil.validateProperties(
+				configurationPidMapping.getConfigurationBeanClass(),
+				themeDisplay.getLocale(), properties);
+
 			_configureTargetService(
 				configurationModel, properties,
 				configurationScopeDisplayContext.getScope(),
@@ -177,12 +189,10 @@ public class BindConfigurationMVCActionCommand implements MVCActionCommand {
 				actionResponse.sendRedirect(redirect);
 			}
 		}
-		catch (ConfigurationModelListenerException
-					configurationModelListenerException) {
+		catch (ConfigurationModelListenerException |
+			   ConfigurationValidationException exception) {
 
-			SessionErrors.add(
-				actionRequest, ConfigurationModelListenerException.class,
-				configurationModelListenerException);
+			SessionErrors.add(actionRequest, exception.getClass(), exception);
 
 			actionResponse.setRenderParameter(
 				"mvcRenderCommandName",
