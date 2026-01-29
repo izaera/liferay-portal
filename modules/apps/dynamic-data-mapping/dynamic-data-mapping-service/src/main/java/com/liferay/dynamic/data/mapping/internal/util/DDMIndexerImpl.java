@@ -22,6 +22,7 @@ import com.liferay.dynamic.data.mapping.storage.constants.FieldConstants;
 import com.liferay.dynamic.data.mapping.util.DDM;
 import com.liferay.dynamic.data.mapping.util.DDMFormValuesToFieldsConverter;
 import com.liferay.dynamic.data.mapping.util.DDMIndexer;
+import com.liferay.petra.function.transform.TransformUtil;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.metatype.bnd.util.ConfigurableUtil;
@@ -720,8 +721,21 @@ public class DDMIndexerImpl implements DDMIndexer {
 
 			String type = field.getType();
 
-			if (type.equals(DDMFormFieldTypeConstants.DATE) ||
-				type.equals(DDMFormFieldTypeConstants.DATE_TIME)) {
+			if (type.equals(DDMFormFieldTypeConstants.CHECKBOX_MULTIPLE) ||
+				type.equals(DDMFormFieldTypeConstants.SELECT)) {
+
+				String[] sortableValuesString = _toStringArray(sortableValue);
+
+				document.addKeyword(_getFieldName(name), sortableValuesString);
+
+				document.addKeyword(name, valuesString);
+
+				truncatedValuesString = TransformUtil.transform(
+					sortableValuesString, StringUtil::toLowerCase,
+					String.class);
+			}
+			else if (type.equals(DDMFormFieldTypeConstants.DATE) ||
+					 type.equals(DDMFormFieldTypeConstants.DATE_TIME)) {
 
 				Date[] dateValues = _getDateValues(type, valuesString);
 
