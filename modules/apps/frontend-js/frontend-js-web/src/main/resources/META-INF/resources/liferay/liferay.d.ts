@@ -40,6 +40,15 @@ declare module Liferay {
 		export function runTasks(node: any): void;
 	}
 
+	namespace FrontendESM {
+		export const _prefix: string;
+		export function buildURL(
+			callerScriptURL: string,
+			contextPath: string,
+			submodule: string
+		): string;
+	}
+
 	namespace Language {
 		type Direction = 'ltr' | 'rtl';
 

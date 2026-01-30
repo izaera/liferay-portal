@@ -10,7 +10,7 @@
  */
 
 module.exports = {
-	hash: '4890fb315ea9fe7a925543783d5ba6622864497793ebb003059795fa68c1c64d',
+	hash: '257e2ceaf0333218527fbcb5a414d304b1b9caf9612ccc0eef14abc595f70ce0',
 	imports: {
 		'@liferay/accessibility-menu-web': [],
 		'@liferay/accessibility-settings-state-web': [],
@@ -243,6 +243,7 @@ module.exports = {
 		'@liferay/portal-security-script-management-web': [],
 		'@liferay/portal-settings-web': [],
 		'@liferay/portal-tools-rest-builder-test-client-js': [],
+		'@liferay/portal-url-builder-impl': [],
 		'@liferay/portal-workflow-instance-tracker-web': [],
 		'@liferay/portal-workflow-taglib': [],
 		'@liferay/product-analytics-web': [],
