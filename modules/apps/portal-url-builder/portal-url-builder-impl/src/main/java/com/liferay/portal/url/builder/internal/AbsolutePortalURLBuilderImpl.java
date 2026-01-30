@@ -100,30 +100,10 @@ public class AbsolutePortalURLBuilderImpl implements AbsolutePortalURLBuilder {
 	public ESModuleAbsolutePortalURLBuilder forESModule(
 		String webContextPath, String esModulePath) {
 
-		HashedFilesRegistry hashedFilesRegistry = _hashedFilesRegistry;
-
-		try {
-			PortalURLBuilderConfiguration portalURLBuilderConfiguration =
-				_configurationProvider.getCompanyConfiguration(
-					PortalURLBuilderConfiguration.class,
-					_portal.getCompanyId(_httpServletRequest));
-
-			if ((portalURLBuilderConfiguration != null) &&
-				!portalURLBuilderConfiguration.enableESModulesHashing()) {
-
-				hashedFilesRegistry = null;
-			}
-		}
-		catch (ConfigurationException configurationException) {
-			if (_log.isDebugEnabled()) {
-				_log.debug(
-					"Cannot retrieve portal URL builder configuration",
-					configurationException);
-			}
-		}
-
 		return new ESModuleAbsolutePortalURLBuilderImpl(
-			_getCDNHost(_httpServletRequest), esModulePath, hashedFilesRegistry,
+			_getCDNHost(_httpServletRequest), esModulePath,
+			_isEnableESModulesHashing(_httpServletRequest) ?
+				_hashedFilesRegistry : null,
 			_pathModule, _pathProxy, webContextPath);
 	}
 
@@ -165,8 +145,10 @@ public class AbsolutePortalURLBuilderImpl implements AbsolutePortalURLBuilder {
 		String webContextPath, String scriptPath) {
 
 		return new WebContextScriptAbsolutePortalURLBuilderImpl(
-			_getCDNHost(_httpServletRequest), _hashedFilesRegistry, _pathModule,
-			_pathProxy, scriptPath, webContextPath);
+			_getCDNHost(_httpServletRequest),
+			_isEnableESModulesHashing(_httpServletRequest) ?
+				_hashedFilesRegistry : null,
+			_pathModule, _pathProxy, scriptPath, webContextPath);
 	}
 
 	@Override
@@ -228,6 +210,32 @@ public class AbsolutePortalURLBuilderImpl implements AbsolutePortalURLBuilder {
 		}
 
 		return cdnHost;
+	}
+
+	private boolean _isEnableESModulesHashing(
+		HttpServletRequest httpServletRequest) {
+
+		try {
+			PortalURLBuilderConfiguration portalURLBuilderConfiguration =
+				_configurationProvider.getCompanyConfiguration(
+					PortalURLBuilderConfiguration.class,
+					_portal.getCompanyId(_httpServletRequest));
+
+			if ((portalURLBuilderConfiguration != null) &&
+				portalURLBuilderConfiguration.enableESModulesHashing()) {
+
+				return true;
+			}
+		}
+		catch (ConfigurationException configurationException) {
+			if (_log.isDebugEnabled()) {
+				_log.debug(
+					"Cannot retrieve portal URL builder configuration",
+					configurationException);
+			}
+		}
+
+		return false;
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
