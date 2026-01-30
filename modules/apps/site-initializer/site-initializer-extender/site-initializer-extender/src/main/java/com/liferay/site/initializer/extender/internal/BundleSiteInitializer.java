@@ -4594,8 +4594,8 @@ public class BundleSiteInitializer implements SiteInitializer {
 			}
 
 			_configurationProvider.saveGroupConfiguration(
-				serviceContext.getScopeGroupId(), jsonObject.getString("pid"),
-				properties);
+				serviceContext.getCompanyId(), serviceContext.getScopeGroupId(),
+				jsonObject.getString("pid"), properties);
 		}
 	}
 

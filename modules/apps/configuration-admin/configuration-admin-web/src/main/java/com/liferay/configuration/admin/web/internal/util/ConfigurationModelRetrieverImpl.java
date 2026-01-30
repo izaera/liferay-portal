@@ -5,6 +5,7 @@
 
 package com.liferay.configuration.admin.web.internal.util;
 
+import com.liferay.configuration.admin.util.ConfigurationFilterStringUtil;
 import com.liferay.configuration.admin.web.internal.display.context.ConfigurationScopeDisplayContext;
 import com.liferay.configuration.admin.web.internal.model.ConfigurationModel;
 import com.liferay.petra.reflect.ReflectionUtil;
@@ -15,6 +16,7 @@ import com.liferay.portal.configuration.metatype.definitions.ExtendedMetaTypeInf
 import com.liferay.portal.configuration.metatype.definitions.ExtendedMetaTypeService;
 import com.liferay.portal.kernel.model.CompanyConstants;
 import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
 import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.util.StringUtil;
 import com.liferay.portal.kernel.util.Validator;
@@ -35,7 +37,6 @@ import java.util.TreeSet;
 
 import org.osgi.framework.Bundle;
 import org.osgi.framework.BundleContext;
-import org.osgi.framework.Constants;
 import org.osgi.framework.InvalidSyntaxException;
 import org.osgi.framework.wiring.BundleWiring;
 import org.osgi.service.cm.Configuration;
@@ -87,7 +88,9 @@ public class ConfigurationModelRetrieverImpl
 		Serializable scopePK) {
 
 		try {
-			String pidFilter = _getPidFilterString(pid, scope);
+			String pidFilter =
+				ConfigurationFilterStringUtil.getScopedFilterString(
+					CompanyThreadLocal.getCompanyId(), pid, scope, null);
 
 			Configuration[] configurations =
 				_configurationAdmin.listConfigurations(pidFilter);
@@ -388,18 +391,6 @@ public class ConfigurationModelRetrieverImpl
 		return _getLogicalOperatorFilterString(StringPool.PIPE, filterStrings);
 	}
 
-	private String _getPidFilterString(
-		String pid, ExtendedObjectClassDefinition.Scope scope) {
-
-		if (scope.equals(ExtendedObjectClassDefinition.Scope.SYSTEM)) {
-			return _getPropertyFilterString(Constants.SERVICE_PID, pid);
-		}
-
-		return _getPropertyFilterString(
-			ConfigurationAdmin.SERVICE_FACTORYPID,
-			_getUnscopedPid(pid) + ".scoped");
-	}
-
 	private String _getPropertyFilterString(String key, String value) {
 		if (Validator.isNull(key) || Validator.isNull(value)) {
 			return StringPool.BLANK;
@@ -408,10 +399,6 @@ public class ConfigurationModelRetrieverImpl
 		return StringBundler.concat(
 			StringPool.OPEN_PARENTHESIS, key, StringPool.EQUAL, value,
 			StringPool.CLOSE_PARENTHESIS);
-	}
-
-	private String _getUnscopedPid(String pid) {
-		return pid.replaceFirst("\\.scoped.*", StringPool.BLANK);
 	}
 
 	private BundleContext _bundleContext;

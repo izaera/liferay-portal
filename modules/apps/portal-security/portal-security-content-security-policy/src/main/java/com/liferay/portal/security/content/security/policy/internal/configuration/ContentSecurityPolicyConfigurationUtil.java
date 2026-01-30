@@ -46,7 +46,8 @@ public class ContentSecurityPolicyConfigurationUtil {
 				if (groupId > 0) {
 					contentSecurityPolicyConfiguration =
 						configurationProvider.getGroupConfiguration(
-							ContentSecurityPolicyConfiguration.class, groupId);
+							ContentSecurityPolicyConfiguration.class,
+							portal.getCompanyId(httpServletRequest), groupId);
 				}
 				else {
 					contentSecurityPolicyConfiguration =
