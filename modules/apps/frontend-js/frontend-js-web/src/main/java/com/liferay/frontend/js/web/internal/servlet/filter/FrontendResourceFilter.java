@@ -11,6 +11,7 @@ import com.liferay.frontend.js.web.internal.resource.handler.HashedFileFrontendR
 import com.liferay.frontend.js.web.internal.resource.handler.JavaScriptFrontendResourceRequestHandler;
 import com.liferay.frontend.js.web.internal.resource.handler.LanguageFrontendResourceRequestHandler;
 import com.liferay.frontend.js.web.internal.resource.handler.StyleSheetFrontendResourceRequestHandler;
+import com.liferay.frontend.js.web.internal.resource.handler.VirtualModuleFrontendResourceRequestHandler;
 import com.liferay.petra.io.StreamUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.configuration.module.configuration.ConfigurationProvider;
@@ -99,6 +100,9 @@ public class FrontendResourceFilter extends BasePortalFilter {
 			new StyleSheetFrontendResourceRequestHandler(
 				_configurationProvider, _hashedFilesRegistry, _portal,
 				_themeLocalService));
+		frontendResourceRequestHandlers.add(
+			new VirtualModuleFrontendResourceRequestHandler(
+				_configurationProvider, _hashedFilesRegistry, _portal));
 
 		_frontendResourceRequestHandlers.set(frontendResourceRequestHandlers);
 	}
