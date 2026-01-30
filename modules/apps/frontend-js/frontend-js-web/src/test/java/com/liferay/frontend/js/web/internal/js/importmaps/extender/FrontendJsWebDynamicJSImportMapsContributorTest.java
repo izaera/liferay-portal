@@ -92,7 +92,7 @@ public class FrontendJsWebDynamicJSImportMapsContributorTest {
 			}
 		).when(
 			hashedFilesRegistry
-		).forEach(
+		).forEachHashedFileURI(
 			Mockito.any()
 		);
 
