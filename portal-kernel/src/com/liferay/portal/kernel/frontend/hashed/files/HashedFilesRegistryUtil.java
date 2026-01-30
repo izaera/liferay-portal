@@ -16,11 +16,22 @@ import java.util.function.BiConsumer;
  */
 public class HashedFilesRegistryUtil {
 
-	public static void forEach(BiConsumer<String, String> biConsumer) {
+	public static void forEachHashedFileURI(
+		BiConsumer<String, String> biConsumer) {
+
 		HashedFilesRegistry hashedFilesRegistry =
 			_hashedFilesRegistrySnapshot.get();
 
-		hashedFilesRegistry.forEach(biConsumer);
+		hashedFilesRegistry.forEachHashedFileURI(biConsumer);
+	}
+
+	public static void forEachServletContextHash(
+		BiConsumer<String, String> biConsumer) {
+
+		HashedFilesRegistry hashedFilesRegistry =
+			_hashedFilesRegistrySnapshot.get();
+
+		hashedFilesRegistry.forEachServletContextHash(biConsumer);
 	}
 
 	public static String getHashedFileURI(String unhashedFileURI) {

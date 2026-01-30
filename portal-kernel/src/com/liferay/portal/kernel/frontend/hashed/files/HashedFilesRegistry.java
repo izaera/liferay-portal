@@ -14,7 +14,10 @@ import java.util.function.BiConsumer;
  */
 public interface HashedFilesRegistry {
 
-	public void forEach(BiConsumer<String, String> biConsumer);
+	public void forEachHashedFileURI(BiConsumer<String, String> biConsumer);
+
+	public void forEachServletContextHash(
+		BiConsumer<String, String> biConsumer);
 
 	/**
 	 * Get the URI of the hashed file associated to an unhashed file URI.
@@ -41,5 +44,12 @@ public interface HashedFilesRegistry {
 	 * @review
 	 */
 	public URL getResource(String path);
+
+	/**
+	 * Get the hash of hashes of all hashed files associated to a servlet
+	 * context.
+	 * @review
+	 */
+	public String getServletContextHash(String servletContextName);
 
 }
