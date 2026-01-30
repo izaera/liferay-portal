@@ -329,9 +329,11 @@ public class ServicePreActionTest {
 	}
 
 	@Test
-	public void testPortalImpersonationEnable() throws Exception {
-		_testPortalImpersonationEnable(true);
-		_testPortalImpersonationEnable(false);
+	public void testInitThemeDisplayPortalImpersonationEnable()
+		throws Exception {
+
+		_testInitThemeDisplayPortalImpersonationEnable(false);
+		_testInitThemeDisplayPortalImpersonationEnable(true);
 	}
 
 	private Layout _getLayout(Object layoutComposite) {
@@ -471,12 +473,12 @@ public class ServicePreActionTest {
 		}
 	}
 
-	private void _testPortalImpersonationEnable(boolean enabled)
+	private void _testInitThemeDisplayPortalImpersonationEnable(boolean value)
 		throws Exception {
 
 		try (SafeCloseable safeCloseable =
 				PropsValuesTestUtil.swapWithSafeCloseable(
-					"PORTAL_IMPERSONATION_ENABLE", enabled)) {
+					"PORTAL_IMPERSONATION_ENABLE", value)) {
 
 			_mockHttpServletRequest.setParameter("doAsUserId", _DO_AS_USER_ID);
 
@@ -489,7 +491,7 @@ public class ServicePreActionTest {
 
 			Assert.assertNotNull(themeDisplay);
 
-			if (enabled) {
+			if (value) {
 				Assert.assertEquals(
 					_DO_AS_USER_ID, themeDisplay.getDoAsUserId());
 			}
