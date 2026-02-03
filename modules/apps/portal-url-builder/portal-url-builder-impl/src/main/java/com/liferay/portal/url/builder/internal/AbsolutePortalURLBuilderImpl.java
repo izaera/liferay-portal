@@ -6,13 +6,12 @@
 package com.liferay.portal.url.builder.internal;
 
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.configuration.module.configuration.ConfigurationProvider;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.frontend.hashed.files.CachingLevel;
 import com.liferay.portal.kernel.frontend.hashed.files.HashedFilesRegistry;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.portlet.PortletDependency;
-import com.liferay.portal.kernel.module.configuration.ConfigurationException;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.url.builder.AbsolutePortalURLBuilder;
@@ -27,7 +26,6 @@ import com.liferay.portal.url.builder.PortletDependencyAbsolutePortalURLBuilder;
 import com.liferay.portal.url.builder.ServletAbsolutePortalURLBuilder;
 import com.liferay.portal.url.builder.WebContextScriptAbsolutePortalURLBuilder;
 import com.liferay.portal.url.builder.WebContextStylesheetAbsolutePortalURLBuilder;
-import com.liferay.portal.url.builder.configuration.PortalURLBuilderConfiguration;
 import com.liferay.portal.url.builder.internal.util.CacheHelper;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,12 +38,10 @@ import org.osgi.framework.Bundle;
 public class AbsolutePortalURLBuilderImpl implements AbsolutePortalURLBuilder {
 
 	public AbsolutePortalURLBuilderImpl(
-		CacheHelper cacheHelper, ConfigurationProvider configurationProvider,
-		HashedFilesRegistry hashedFilesRegistry, Portal portal,
-		HttpServletRequest httpServletRequest) {
+		CacheHelper cacheHelper, HashedFilesRegistry hashedFilesRegistry,
+		Portal portal, HttpServletRequest httpServletRequest) {
 
 		_cacheHelper = cacheHelper;
-		_configurationProvider = configurationProvider;
 		_hashedFilesRegistry = hashedFilesRegistry;
 		_portal = portal;
 		_httpServletRequest = httpServletRequest;
@@ -101,10 +97,9 @@ public class AbsolutePortalURLBuilderImpl implements AbsolutePortalURLBuilder {
 		String webContextPath, String esModulePath) {
 
 		return new ESModuleAbsolutePortalURLBuilderImpl(
-			_getCDNHost(_httpServletRequest), esModulePath,
-			_isEnableESModulesHashing(_httpServletRequest) ?
-				_hashedFilesRegistry : null,
-			_pathModule, _pathProxy, webContextPath);
+			_getCDNHost(_httpServletRequest), esModulePath, _pathModule,
+			_pathProxy, _getWebContextHash(_httpServletRequest, webContextPath),
+			webContextPath);
 	}
 
 	@Override
@@ -145,10 +140,9 @@ public class AbsolutePortalURLBuilderImpl implements AbsolutePortalURLBuilder {
 		String webContextPath, String scriptPath) {
 
 		return new WebContextScriptAbsolutePortalURLBuilderImpl(
-			_getCDNHost(_httpServletRequest),
-			_isEnableESModulesHashing(_httpServletRequest) ?
-				_hashedFilesRegistry : null,
-			_pathModule, _pathProxy, scriptPath, webContextPath);
+			_getCDNHost(_httpServletRequest), _pathModule, _pathProxy,
+			scriptPath, _getWebContextHash(_httpServletRequest, webContextPath),
+			webContextPath);
 	}
 
 	@Override
@@ -212,37 +206,22 @@ public class AbsolutePortalURLBuilderImpl implements AbsolutePortalURLBuilder {
 		return cdnHost;
 	}
 
-	private boolean _isEnableESModulesHashing(
-		HttpServletRequest httpServletRequest) {
+	private String _getWebContextHash(
+		HttpServletRequest httpServletRequest, String webContextPath) {
 
-		try {
-			PortalURLBuilderConfiguration portalURLBuilderConfiguration =
-				_configurationProvider.getCompanyConfiguration(
-					PortalURLBuilderConfiguration.class,
-					_portal.getCompanyId(_httpServletRequest));
+		if (_hashedFilesRegistry.getCachingLevel(httpServletRequest) ==
+				CachingLevel.USE_ONE_HASH_PER_WEB_CONTEXT) {
 
-			if ((portalURLBuilderConfiguration != null) &&
-				portalURLBuilderConfiguration.enableESModulesHashing()) {
-
-				return true;
-			}
-		}
-		catch (ConfigurationException configurationException) {
-			if (_log.isDebugEnabled()) {
-				_log.debug(
-					"Cannot retrieve portal URL builder configuration",
-					configurationException);
-			}
+			return _hashedFilesRegistry.getServletContextHash(webContextPath);
 		}
 
-		return false;
+		return null;
 	}
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		AbsolutePortalURLBuilderImpl.class);
 
 	private final CacheHelper _cacheHelper;
-	private final ConfigurationProvider _configurationProvider;
 	private final HashedFilesRegistry _hashedFilesRegistry;
 	private final HttpServletRequest _httpServletRequest;
 

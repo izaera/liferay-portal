@@ -7,7 +7,6 @@ package com.liferay.portal.url.builder.internal;
 
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.kernel.frontend.hashed.files.HashedFilesRegistry;
 import com.liferay.portal.url.builder.ESModuleAbsolutePortalURLBuilder;
 import com.liferay.portal.url.builder.internal.util.URLUtil;
 
@@ -18,9 +17,8 @@ public class ESModuleAbsolutePortalURLBuilderImpl
 	implements ESModuleAbsolutePortalURLBuilder {
 
 	public ESModuleAbsolutePortalURLBuilderImpl(
-		String cdnHost, String esModulePath,
-		HashedFilesRegistry hashedFilesRegistry, String pathModule,
-		String pathProxy, String webContextPath) {
+		String cdnHost, String esModulePath, String pathModule,
+		String pathProxy, String webContextHash, String webContextPath) {
 
 		String resourcePath = "/__liferay__/" + esModulePath;
 
@@ -35,17 +33,10 @@ public class ESModuleAbsolutePortalURLBuilderImpl
 		_cdnHost = cdnHost;
 		_pathModule = pathModule;
 		_pathProxy = pathProxy;
+		_webContextHash = webContextHash;
 		_webContextPath = webContextPath;
 
 		_resourcePath = resourcePath;
-
-		if (hashedFilesRegistry != null) {
-			_webContextHash = hashedFilesRegistry.getServletContextHash(
-				webContextPath.substring(1));
-		}
-		else {
-			_webContextHash = null;
-		}
 	}
 
 	@Override
@@ -53,9 +44,9 @@ public class ESModuleAbsolutePortalURLBuilderImpl
 		String pathModuleSuffix = _webContextPath;
 
 		if (_webContextHash != null) {
-			pathModuleSuffix =
-				"/js/-" + _webContextPath + StringPool.OPEN_PARENTHESIS +
-					_webContextHash + StringPool.CLOSE_PARENTHESIS;
+			pathModuleSuffix = StringBundler.concat(
+				"/js/-", _webContextPath, StringPool.OPEN_PARENTHESIS,
+				_webContextHash, StringPool.CLOSE_PARENTHESIS);
 		}
 
 		StringBundler sb = new StringBundler();

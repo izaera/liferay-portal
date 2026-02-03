@@ -7,7 +7,6 @@ package com.liferay.portal.url.builder.internal;
 
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.kernel.frontend.hashed.files.HashedFilesRegistry;
 import com.liferay.portal.url.builder.WebContextScriptAbsolutePortalURLBuilder;
 import com.liferay.portal.url.builder.internal.util.URLUtil;
 
@@ -18,9 +17,8 @@ public class WebContextScriptAbsolutePortalURLBuilderImpl
 	implements WebContextScriptAbsolutePortalURLBuilder {
 
 	public WebContextScriptAbsolutePortalURLBuilderImpl(
-		String cdnHost, HashedFilesRegistry hashedFilesRegistry,
-		String pathModule, String pathProxy, String resourcePath,
-		String webContextPath) {
+		String cdnHost, String pathModule, String pathProxy,
+		String resourcePath, String webContextHash, String webContextPath) {
 
 		if (!resourcePath.startsWith(StringPool.SLASH)) {
 			resourcePath = StringPool.SLASH + resourcePath;
@@ -34,15 +32,8 @@ public class WebContextScriptAbsolutePortalURLBuilderImpl
 		_pathModule = pathModule;
 		_pathProxy = pathProxy;
 		_resourcePath = resourcePath;
+		_webContextHash = webContextHash;
 		_webContextPath = webContextPath;
-
-		if (hashedFilesRegistry != null) {
-			_webContextHash = hashedFilesRegistry.getServletContextHash(
-				webContextPath.substring(1));
-		}
-		else {
-			_webContextHash = null;
-		}
 	}
 
 	@Override
@@ -50,9 +41,9 @@ public class WebContextScriptAbsolutePortalURLBuilderImpl
 		String pathModuleSuffix = _webContextPath;
 
 		if (_webContextHash != null) {
-			pathModuleSuffix =
-				"/js/-" + _webContextPath + StringPool.OPEN_PARENTHESIS +
-					_webContextHash + StringPool.CLOSE_PARENTHESIS;
+			pathModuleSuffix = StringBundler.concat(
+				"/js/-", _webContextPath, StringPool.OPEN_PARENTHESIS,
+				_webContextHash, StringPool.CLOSE_PARENTHESIS);
 		}
 
 		StringBundler sb = new StringBundler();

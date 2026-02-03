@@ -5,6 +5,8 @@
 
 package com.liferay.portal.kernel.frontend.hashed.files;
 
+import jakarta.servlet.http.HttpServletRequest;
+
 import java.net.URL;
 
 import java.util.function.BiConsumer;
@@ -18,6 +20,8 @@ public interface HashedFilesRegistry {
 
 	public void forEachServletContextHash(
 		BiConsumer<String, String> biConsumer);
+
+	public CachingLevel getCachingLevel(HttpServletRequest httpServletRequest);
 
 	/**
 	 * Get the URI of the hashed file associated to an unhashed file URI.

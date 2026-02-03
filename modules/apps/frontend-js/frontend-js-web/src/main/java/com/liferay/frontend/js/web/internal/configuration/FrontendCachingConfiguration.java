@@ -24,6 +24,15 @@ import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClass
 public interface FrontendCachingConfiguration {
 
 	@Meta.AD(
+		deflt = "use-one-hash-per-web-context",
+		description = "caching-level-help", name = "caching-level",
+		optionLabels = {"do-not-use-hashes", "use-one-hash-per-web-context"},
+		optionValues = {"do-not-use-hashes", "use-one-hash-per-web-context"},
+		required = false
+	)
+	public String cachingLevel();
+
+	@Meta.AD(
 		deflt = "86400", description = "css-style-sheets-max-age-help",
 		name = "css-style-sheets-max-age", required = false
 	)

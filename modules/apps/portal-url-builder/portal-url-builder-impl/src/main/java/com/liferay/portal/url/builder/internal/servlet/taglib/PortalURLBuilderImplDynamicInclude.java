@@ -6,20 +6,18 @@
 package com.liferay.portal.url.builder.internal.servlet.taglib;
 
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.configuration.module.configuration.ConfigurationProvider;
 import com.liferay.portal.kernel.content.security.policy.ContentSecurityPolicyNonceProviderUtil;
+import com.liferay.portal.kernel.frontend.hashed.files.CachingLevel;
+import com.liferay.portal.kernel.frontend.hashed.files.HashedFilesRegistry;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
-import com.liferay.portal.kernel.module.configuration.ConfigurationException;
 import com.liferay.portal.kernel.servlet.taglib.BaseDynamicInclude;
 import com.liferay.portal.kernel.servlet.taglib.DynamicInclude;
-import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.url.builder.AbsolutePortalURLBuilder;
 import com.liferay.portal.url.builder.AbsolutePortalURLBuilderFactory;
 import com.liferay.portal.url.builder.WebContextScriptAbsolutePortalURLBuilder;
-import com.liferay.portal.url.builder.configuration.PortalURLBuilderConfiguration;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -60,12 +58,11 @@ public class PortalURLBuilderImplDynamicInclude extends BaseDynamicInclude {
 			null, httpServletRequest, printWriter,
 			webContextScriptAbsolutePortalURLBuilder.build());
 
-		PortalURLBuilderConfiguration portalURLBuilderConfiguration =
-			_getPortalURLBuilderConfiguration(httpServletRequest);
-
 		String prefix = "o";
 
-		if (portalURLBuilderConfiguration.enableESModulesHashing()) {
+		if (_hashedFilesRegistry.getCachingLevel(httpServletRequest) ==
+				CachingLevel.USE_ONE_HASH_PER_WEB_CONTEXT) {
+
 			prefix = "o/js/-";
 		}
 
@@ -78,28 +75,6 @@ public class PortalURLBuilderImplDynamicInclude extends BaseDynamicInclude {
 	public void register(DynamicIncludeRegistry dynamicIncludeRegistry) {
 		dynamicIncludeRegistry.register(
 			"/html/common/themes/top_js.jspf#resources");
-	}
-
-	private PortalURLBuilderConfiguration _getPortalURLBuilderConfiguration(
-		HttpServletRequest httpServletRequest) {
-
-		PortalURLBuilderConfiguration portalURLBuilderConfiguration = null;
-
-		try {
-			portalURLBuilderConfiguration =
-				_configurationProvider.getCompanyConfiguration(
-					PortalURLBuilderConfiguration.class,
-					_portal.getCompanyId(httpServletRequest));
-		}
-		catch (ConfigurationException configurationException) {
-			if (_log.isDebugEnabled()) {
-				_log.debug(
-					"Unable to get portal URL builder configuration",
-					configurationException);
-			}
-		}
-
-		return portalURLBuilderConfiguration;
 	}
 
 	private void _renderScript(
@@ -146,9 +121,6 @@ public class PortalURLBuilderImplDynamicInclude extends BaseDynamicInclude {
 	private AbsolutePortalURLBuilderFactory _absolutePortalURLBuilderFactory;
 
 	@Reference
-	private ConfigurationProvider _configurationProvider;
-
-	@Reference
-	private Portal _portal;
+	private HashedFilesRegistry _hashedFilesRegistry;
 
 }
