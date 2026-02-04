@@ -53,7 +53,7 @@ renderResponse.setTitle(journalEditDDMTemplateDisplayContext.getTitle());
 						<clay:link
 							borderless="<%= true %>"
 							displayType="secondary"
-							href="<%= journalEditDDMTemplateDisplayContext.getRedirect() %>"
+							href="<%= PortalUtil.escapeRedirect(journalEditDDMTemplateDisplayContext.getRedirect()) %>"
 							label="cancel"
 							type="button"
 						/>
