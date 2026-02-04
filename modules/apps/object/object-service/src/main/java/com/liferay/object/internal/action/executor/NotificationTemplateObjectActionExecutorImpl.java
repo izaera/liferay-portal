@@ -59,6 +59,7 @@ public class NotificationTemplateObjectActionExecutorImpl
 				payloadJSONObject.getLong("objectDefinitionId"));
 
 		Map<String, Object> termValues = _getTermValues(
+			payloadJSONObject.getString("preferredLanguageId"),
 			objectDefinition,
 			ObjectEntryVariablesUtil.getVariables(
 				_dtoConverterRegistry, objectDefinition, payloadJSONObject,
@@ -98,7 +99,8 @@ public class NotificationTemplateObjectActionExecutorImpl
 	}
 
 	private Map<String, Object> _getTermValues(
-		ObjectDefinition objectDefinition, Map<String, Object> variables) {
+		String languageId, ObjectDefinition objectDefinition,
+		Map<String, Object> variables) {
 
 		Map<String, Object> termValues = (Map<String, Object>)variables.get(
 			"baseModel");
@@ -133,7 +135,7 @@ public class NotificationTemplateObjectActionExecutorImpl
 			termValues.put(
 				objectField.getName(),
 				ObjectDefinitionNotificationTermEvaluatorUtil.getTermValue(
-					objectField, termValue));
+					languageId, objectField, termValue));
 		}
 
 		return termValues;
