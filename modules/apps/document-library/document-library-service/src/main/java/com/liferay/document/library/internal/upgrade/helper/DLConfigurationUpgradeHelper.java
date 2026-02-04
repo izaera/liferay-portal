@@ -183,6 +183,10 @@ public class DLConfigurationUpgradeHelper {
 			CLASS_NAME_PDF_PREVIEW_CONFIGURATION);
 
 		for (Configuration configuration : configurations) {
+			long companyId = _getAttributeValue(
+				configuration,
+				ExtendedObjectClassDefinition.Scope.COMPANY.getPropertyKey(),
+				0L);
 			Dictionary<String, Object> dictionary =
 				_createDLFileEntryConfigurationDictionary(
 					_getAttributeValue(
@@ -193,12 +197,6 @@ public class DLConfigurationUpgradeHelper {
 						DLFileEntryConfigurationConstants.
 							PREVIEWABLE_PROCESSOR_MAX_SIZE_DEFAULT,
 						systemPreviewableProcessorMaxSize));
-
-			long companyId = _getAttributeValue(
-				configuration,
-				ExtendedObjectClassDefinition.Scope.COMPANY.getPropertyKey(),
-				0L);
-
 			long groupId = _getAttributeValue(
 				configuration,
 				ExtendedObjectClassDefinition.Scope.GROUP.getPropertyKey(), 0L);
