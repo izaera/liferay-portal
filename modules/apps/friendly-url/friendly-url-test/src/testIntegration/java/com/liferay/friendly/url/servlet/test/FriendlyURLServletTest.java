@@ -7,6 +7,9 @@ package com.liferay.friendly.url.servlet.test;
 
 import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.layout.test.util.LayoutTestUtil;
+import com.liferay.layout.utility.page.kernel.constants.LayoutUtilityPageEntryConstants;
+import com.liferay.layout.utility.page.model.LayoutUtilityPageEntry;
+import com.liferay.layout.utility.page.service.LayoutUtilityPageEntryLocalService;
 import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
@@ -258,6 +261,11 @@ public class FriendlyURLServletTest {
 	}
 
 	@Test
+	public void testGetRedirectOnGuestViewableUtilityPage() throws Throwable {
+		_testGetRedirectUtilityPage(true);
+	}
+
+	@Test
 	public void testGetRedirectOnHiddenLayout() throws Throwable {
 		Group group = GroupTestUtil.addGroup();
 
@@ -326,6 +334,13 @@ public class FriendlyURLServletTest {
 		mockHttpServletRequest.setParameter("doAsUserId", encryptedDoAsUserId);
 
 		testGetRedirect(mockHttpServletRequest, path, expectedRedirect);
+	}
+
+	@Test
+	public void testGetRedirectOnNonguestViewableUtilityPage()
+		throws Throwable {
+
+		_testGetRedirectUtilityPage(false);
 	}
 
 	@Test
@@ -988,6 +1003,72 @@ public class FriendlyURLServletTest {
 		}
 	}
 
+	private void _testGetRedirectUtilityPage(boolean guestViewable)
+		throws Throwable {
+
+		Group group = GroupTestUtil.addGroup();
+
+		LayoutUtilityPageEntry layoutUtilityPageEntry =
+			_layoutUtilityPageEntryLocalService.addLayoutUtilityPageEntry(
+				null, TestPropsValues.getUserId(), group.getGroupId(), 0, 0,
+				true, "Create Account",
+				LayoutUtilityPageEntryConstants.TYPE_CREATE_ACCOUNT, null,
+				ServiceContextTestUtil.getServiceContext());
+
+		// Add viewable layout to group to prevent errors
+
+		Layout layout = LayoutTestUtil.addTypePortletLayout(group);
+
+		Layout layoutUtilityPageEntryLayout = _layoutLocalService.getLayout(
+			layoutUtilityPageEntry.getPlid());
+
+		MockHttpServletRequest mockHttpServletRequest =
+			new MockHttpServletRequest();
+
+		mockHttpServletRequest.setPathInfo(StringPool.SLASH);
+
+		MockHttpServletResponse mockHttpServletResponse =
+			new MockHttpServletResponse();
+
+		_user = UserTestUtil.addUser(group.getGroupId());
+
+		PermissionThreadLocal.setPermissionChecker(
+			PermissionCheckerFactoryUtil.create(_user));
+
+		int expectedStatusCode = 200;
+		String expectedUrl = getURL(layoutUtilityPageEntryLayout);
+
+		if (!guestViewable) {
+			Role guestRole = RoleLocalServiceUtil.getRole(
+				group.getCompanyId(), RoleConstants.GUEST);
+
+			ResourcePermission resourcePermission =
+				_resourcePermissionLocalService.fetchResourcePermission(
+					group.getCompanyId(),
+					LayoutUtilityPageEntry.class.getName(),
+					ResourceConstants.SCOPE_INDIVIDUAL,
+					String.valueOf(layoutUtilityPageEntry.getPrimaryKey()),
+					guestRole.getRoleId());
+
+			resourcePermission.setActionIds(0);
+			resourcePermission.setViewActionId(false);
+
+			_resourcePermissionLocalService.updateResourcePermission(
+				resourcePermission);
+
+			expectedStatusCode = 404;
+			expectedUrl = getURL(layout);
+		}
+
+		testGetRedirect(
+			mockHttpServletRequest, mockHttpServletResponse,
+			getPath(group, layoutUtilityPageEntryLayout),
+			_redirectConstructor1.newInstance(expectedUrl));
+
+		Assert.assertEquals(
+			expectedStatusCode, mockHttpServletResponse.getStatus());
+	}
+
 	private void _testServiceRedirectWithRedirectEntry(
 			String sourceURL, boolean permanent, int expectedStatus)
 		throws Exception {
@@ -1054,6 +1135,10 @@ public class FriendlyURLServletTest {
 
 	@Inject
 	private LayoutLocalService _layoutLocalService;
+
+	@Inject
+	private LayoutUtilityPageEntryLocalService
+		_layoutUtilityPageEntryLocalService;
 
 	@Inject
 	private Portal _portal;
