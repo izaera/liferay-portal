@@ -138,6 +138,7 @@ public class LayoutPageTemplateStructureUpgradeProcessTest {
 			layoutPageTemplateEntryClassNameId,
 			layoutPageTemplateEntry2.getLayoutPageTemplateEntryId());
 
+		_createOrphanEntries(layoutPageTemplateEntryClassNameId);
 		_runUpgrade();
 
 		Assert.assertFalse(
@@ -165,6 +166,19 @@ public class LayoutPageTemplateStructureUpgradeProcessTest {
 				columnNames));
 
 		_db.addIndexes(_connection, indexMetadatas);
+	}
+
+	private void _createOrphanEntries(long layoutPageTemplateEntryClassNameId)
+		throws Exception {
+
+		_insertLayoutPageTemplateStructure(
+			layoutPageTemplateEntryClassNameId, RandomTestUtil.randomLong());
+
+		_insertLayoutPageTemplateStructure(
+			layoutPageTemplateEntryClassNameId, RandomTestUtil.randomLong());
+
+		_insertLayoutPageTemplateStructure(
+			layoutPageTemplateEntryClassNameId, RandomTestUtil.randomLong());
 	}
 
 	private boolean _hasLayoutPageTemplateStructure(
