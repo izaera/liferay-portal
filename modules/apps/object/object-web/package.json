@@ -1,9 +1,11 @@
 {
 	"dependencies": {
 		"@clayui/alert": "3.111.0",
+		"@clayui/autocomplete": "3.124.0",
 		"@clayui/button": "3.116.0",
 		"@clayui/card": "3.124.0",
 		"@clayui/core": "3.124.0",
+		"@clayui/data-provider": "3.119.0",
 		"@clayui/drop-down": "3.124.0",
 		"@clayui/empty-state": "3.116.0",
 		"@clayui/form": "3.122.0",
@@ -15,8 +17,10 @@
 		"@clayui/modal": "3.122.0",
 		"@clayui/panel": "3.119.0",
 		"@clayui/popover": "3.119.0",
+		"@clayui/sticker": "3.111.0",
 		"@clayui/tabs": "3.119.0",
 		"@clayui/tooltip": "3.119.0",
+		"@liferay/friendly-url-web": "*",
 		"@liferay/frontend-data-set-web": "*",
 		"@liferay/frontend-js-codemirror-web": "*",
 		"@liferay/object-js-components-web": "*",
