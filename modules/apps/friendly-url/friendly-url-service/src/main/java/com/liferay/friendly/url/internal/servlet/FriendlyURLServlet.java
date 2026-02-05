@@ -7,6 +7,8 @@ package com.liferay.friendly.url.internal.servlet;
 
 import com.liferay.friendly.url.configuration.FriendlyURLRedirectionConfiguration;
 import com.liferay.friendly.url.configuration.FriendlyURLRedirectionConfigurationProvider;
+import com.liferay.layout.utility.page.model.LayoutUtilityPageEntry;
+import com.liferay.layout.utility.page.service.LayoutUtilityPageEntryLocalServiceUtil;
 import com.liferay.petra.lang.HashUtil;
 import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringBundler;
@@ -28,6 +30,7 @@ import com.liferay.portal.kernel.model.GroupConstants;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.model.LayoutConstants;
 import com.liferay.portal.kernel.model.LayoutFriendlyURL;
+import com.liferay.portal.kernel.model.ResourceConstants;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.model.VirtualLayoutConstants;
 import com.liferay.portal.kernel.module.service.Snapshot;
@@ -41,6 +44,7 @@ import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.LayoutFriendlyURLLocalService;
 import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.service.LayoutService;
+import com.liferay.portal.kernel.service.ResourcePermissionLocalServiceUtil;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
@@ -240,8 +244,36 @@ public class FriendlyURLServlet extends HttpServlet {
 						PermissionThreadLocal.getPermissionChecker(
 							user, !user.isGuestUser());
 
-					if (!LayoutPermissionUtil.contains(
-							permissionChecker, layout, ActionKeys.VIEW)) {
+					if (layout.isTypeUtility() && !layout.isDraftLayout()) {
+						LayoutUtilityPageEntry layoutUtilityPageEntry =
+							LayoutUtilityPageEntryLocalServiceUtil.
+								fetchLayoutUtilityPageEntryByPlid(
+									layout.getPlid());
+
+						if (!ResourcePermissionLocalServiceUtil.
+								hasResourcePermission(
+									companyId,
+									LayoutUtilityPageEntry.class.getName(),
+									ResourceConstants.SCOPE_INDIVIDUAL,
+									String.valueOf(
+										layoutUtilityPageEntry.
+											getLayoutUtilityPageEntryId()),
+									user.getRoleIds(), ActionKeys.VIEW)) {
+
+							if (AuthLoginGroupSettingsUtil.isPromptEnabled(
+									group.getGroupId())) {
+
+								String redirect = portal.getLayoutActualURL(
+									layout, Portal.PATH_MAIN);
+
+								return new Redirect(redirect);
+							}
+
+							throw new LayoutPermissionException();
+						}
+					}
+					else if (!LayoutPermissionUtil.contains(
+								permissionChecker, layout, ActionKeys.VIEW)) {
 
 						if (AuthLoginGroupSettingsUtil.isPromptEnabled(
 								group.getGroupId())) {
