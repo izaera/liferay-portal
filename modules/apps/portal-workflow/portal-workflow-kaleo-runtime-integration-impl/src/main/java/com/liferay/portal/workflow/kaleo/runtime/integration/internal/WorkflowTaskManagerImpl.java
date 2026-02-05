@@ -65,6 +65,7 @@ import com.liferay.portal.workflow.kaleo.runtime.util.comparator.KaleoTaskInstan
 import com.liferay.portal.workflow.kaleo.service.KaleoTaskAssignmentInstanceLocalService;
 import com.liferay.portal.workflow.kaleo.service.KaleoTaskAssignmentLocalService;
 import com.liferay.portal.workflow.kaleo.service.KaleoTaskInstanceTokenLocalService;
+import com.liferay.portal.workflow.kaleo.service.KaleoTaskInstanceTokenService;
 
 import java.io.Serializable;
 
@@ -322,7 +323,7 @@ public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
 
 		try {
 			KaleoTaskInstanceToken kaleoTaskInstanceToken =
-				_kaleoTaskInstanceTokenLocalService.getKaleoTaskInstanceToken(
+				_kaleoTaskInstanceTokenService.getKaleoTaskInstanceToken(
 					workflowTaskId);
 
 			return _kaleoWorkflowModelConverter.toWorkflowTask(
@@ -1344,6 +1345,9 @@ public class WorkflowTaskManagerImpl implements WorkflowTaskManager {
 	@Reference
 	private KaleoTaskInstanceTokenLocalService
 		_kaleoTaskInstanceTokenLocalService;
+
+	@Reference
+	private KaleoTaskInstanceTokenService _kaleoTaskInstanceTokenService;
 
 	@Reference
 	private KaleoWorkflowModelConverter _kaleoWorkflowModelConverter;
