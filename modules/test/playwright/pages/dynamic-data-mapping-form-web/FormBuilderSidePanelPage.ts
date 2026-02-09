@@ -16,6 +16,7 @@ export class FormBuilderSidePanelPage {
 	readonly advancedTab: Locator;
 	readonly allowGuestUsersToggle: Locator;
 	readonly backButton: Locator;
+	readonly basicTab: Locator;
 	readonly helpText: Locator;
 	readonly htmlAutocompleteAttributeField: Locator;
 	readonly inputMaskToggle: Locator;
@@ -53,6 +54,9 @@ export class FormBuilderSidePanelPage {
 			'Allow Guest Users to Send Files'
 		);
 		this.backButton = page.getByRole('button', {name: 'Back'});
+		this.basicTab = page.getByRole('tab', {
+			name: 'Basic',
+		});
 		this.helpText = page.getByLabel('Help Text');
 		this.htmlAutocompleteAttributeField = page.getByLabel(
 			'HTML Autocomplete Attribute'
@@ -98,6 +102,10 @@ export class FormBuilderSidePanelPage {
 
 	async clickBackButton() {
 		await this.backButton.click();
+	}
+
+	async clickBasicTab() {
+		await this.basicTab.click();
 	}
 
 	async dragAndDropField(sourceFieldName: string, targetFieldName: string) {
