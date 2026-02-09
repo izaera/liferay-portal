@@ -127,7 +127,7 @@ public class AsyncAntivirusDLStoreTest {
 			new MockAntivirusScanner(() -> calledScan.set(true)), null);
 
 		_withAsyncAntivirusConfiguration(
-			"0 0/1 * * * ?", 1, true,
+			"0 0/1 * * * ?", false, 1, true,
 			() -> {
 				_messageBus.sendMessage(
 					AntivirusAsyncDestinationNames.ANTIVIRUS,
@@ -189,7 +189,7 @@ public class AsyncAntivirusDLStoreTest {
 			null);
 
 		_withAsyncAntivirusConfiguration(
-			"0 0/1 * * * ?", 1, true,
+			"0 0/1 * * * ?", false, 1, true,
 			() -> {
 				DLFolder dlFolder = DLTestUtil.addDLFolder(_group.getGroupId());
 
@@ -232,7 +232,7 @@ public class AsyncAntivirusDLStoreTest {
 			null);
 
 		_withAsyncAntivirusConfiguration(
-			"0 0/1 * * * ?", 1, true,
+			"0 0/1 * * * ?", false, 1, true,
 			() -> {
 				DLFolder dlFolder = DLTestUtil.addDLFolder(_group.getGroupId());
 
@@ -268,7 +268,7 @@ public class AsyncAntivirusDLStoreTest {
 			new MockAntivirusScanner(() -> calledScan.set(true)), null);
 
 		_withAsyncAntivirusConfiguration(
-			"0 0/1 * * * ?", 1, true,
+			"0 0/1 * * * ?", false, 1, true,
 			() -> {
 				DLFolder dlFolder = DLTestUtil.addDLFolder(_group.getGroupId());
 
@@ -312,7 +312,7 @@ public class AsyncAntivirusDLStoreTest {
 			null);
 
 		_withAsyncAntivirusConfiguration(
-			"0 0/1 * * * ?", 1, true,
+			"0 0/1 * * * ?", false, 1, true,
 			() -> {
 				DLFolder dlFolder = DLTestUtil.addDLFolder(_group.getGroupId());
 
@@ -371,7 +371,7 @@ public class AsyncAntivirusDLStoreTest {
 			null);
 
 		_withAsyncAntivirusConfiguration(
-			"0 0/10 * * * ?", 1, false,
+			"0 0/10 * * * ?", false, 1, false,
 			() -> {
 				DLFolder dlFolder = DLTestUtil.addDLFolder(_group.getGroupId());
 
@@ -402,6 +402,44 @@ public class AsyncAntivirusDLStoreTest {
 				Assert.assertTrue(
 					String.valueOf(calledSchedule.get()),
 					calledSchedule.get() > 0);
+				Assert.assertEquals(count, firedEventPrepare.get());
+			});
+
+		calledSchedule.set(0);
+		firedEventPrepare.set(0);
+
+		_withAsyncAntivirusConfiguration(
+			"0 0/10 * * * ?", true, 0, false,
+			() -> {
+				DLFolder dlFolder = DLTestUtil.addDLFolder(_group.getGroupId());
+
+				int count = 10;
+
+				try (LogCapture logCapture =
+						LoggerTestUtil.configureLog4JLogger(
+							"com.liferay.antivirus.async.store.internal." +
+								"messaging.AntivirusAsyncMessageListener",
+							LoggerTestUtil.DEBUG)) {
+
+					for (int i = count; i > 0; i--) {
+						DLTestUtil.addDLFileEntry(dlFolder.getFolderId());
+					}
+
+					List<LogEntry> logEntries = logCapture.getLogEntries();
+
+					for (LogEntry logEntry : logEntries) {
+						String message = logEntry.getMessage();
+
+						Assert.assertTrue(
+							message.contains(
+								"into persistent storage because the async " +
+									"antivirus queue is overflowing"));
+					}
+				}
+
+				Assert.assertTrue(
+					String.valueOf(calledSchedule.get()),
+					calledSchedule.get() == 0);
 				Assert.assertEquals(count, firedEventPrepare.get());
 			});
 	}
@@ -463,7 +501,7 @@ public class AsyncAntivirusDLStoreTest {
 			MapUtil.singletonDictionary(Constants.SERVICE_RANKING, 100));
 
 		_withAsyncAntivirusConfiguration(
-			"0 0/10 * * * ?", 5, true,
+			"0 0/10 * * * ?", false, 5, true,
 			() -> {
 				ServiceReference<?>[] serviceReferences =
 					_bundleContext.getServiceReferences(
@@ -552,9 +590,19 @@ public class AsyncAntivirusDLStoreTest {
 	}
 
 	private void _withAsyncAntivirusConfiguration(
-			String batchScanCronExpression, int maximumQueueSize, boolean sync,
+			String batchScanCronExpression, boolean checkTempFiles,
+			int maximumQueueSize, boolean sync,
 			UnsafeRunnable<Exception> unsafeRunnable)
 		throws Exception {
+
+		long expectedTempFilesCount = 0;
+
+		if (checkTempFiles) {
+			String[] tempFilesArray = FileUtil.listFiles(
+				SystemProperties.get(SystemProperties.TMP_DIR));
+
+			expectedTempFilesCount = tempFilesArray.length;
+		}
 
 		try (ConfigurationTemporarySwapper configurationTemporarySwapper =
 				new ConfigurationTemporarySwapper(
@@ -573,6 +621,15 @@ public class AsyncAntivirusDLStoreTest {
 			else {
 				unsafeRunnable.run();
 			}
+		}
+
+		if (checkTempFiles) {
+			String[] tempFiles = FileUtil.listFiles(
+				SystemProperties.get(SystemProperties.TMP_DIR));
+
+			Assert.assertEquals(
+				Arrays.toString(tempFiles), expectedTempFilesCount,
+				tempFiles.length);
 		}
 	}
 
