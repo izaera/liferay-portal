@@ -240,7 +240,7 @@ public class DisplayPageLayoutTypeControllerTest {
 				HttpServletResponse.SC_OK, true, layout.getPlid(), _guestUser);
 		}
 		finally {
-			ServiceContextThreadLocal.pushServiceContext(_serviceContext);
+			ServiceContextThreadLocal.popServiceContext();
 		}
 	}
 
@@ -309,7 +309,7 @@ public class DisplayPageLayoutTypeControllerTest {
 				Assert.assertTrue(redirectURL.contains("redirect"));
 			}
 			finally {
-				ServiceContextThreadLocal.pushServiceContext(_serviceContext);
+				ServiceContextThreadLocal.popServiceContext();
 			}
 		}
 	}
@@ -383,6 +383,9 @@ public class DisplayPageLayoutTypeControllerTest {
 		_testDisplayPageTypeControllerWithoutContextInfoItem(
 			HttpServletResponse.SC_OK, draftLayout, user);
 
+		_testDisplayPageTypeControllerWithoutContextInfoItemWithLoginRequest(
+			draftLayout);
+
 		RoleTestUtil.removeResourcePermission(
 			RoleConstants.GUEST, LayoutPageTemplateEntry.class.getName(),
 			ResourceConstants.SCOPE_INDIVIDUAL,
@@ -398,6 +401,9 @@ public class DisplayPageLayoutTypeControllerTest {
 
 		_testDisplayPageTypeControllerWithoutContextInfoItem(
 			HttpServletResponse.SC_FORBIDDEN, draftLayout, user);
+
+		_testDisplayPageTypeControllerWithoutContextInfoItemWithLoginRequest(
+			draftLayout);
 	}
 
 	private void _addFragmentEntryLink(Layout layout) throws Exception {
@@ -511,7 +517,7 @@ public class DisplayPageLayoutTypeControllerTest {
 			Assert.assertTrue(noSuchLayoutExceptionExpected);
 		}
 		finally {
-			ServiceContextThreadLocal.pushServiceContext(_serviceContext);
+			ServiceContextThreadLocal.popServiceContext();
 		}
 	}
 
@@ -704,6 +710,58 @@ public class DisplayPageLayoutTypeControllerTest {
 			HttpServletResponse.SC_OK, true, draftLayout.getPlid(), _guestUser);
 		_assertIncludeLayoutContent(
 			expectedStatus, false, draftLayout.getClassPK(), user);
+	}
+
+	private void
+			_testDisplayPageTypeControllerWithoutContextInfoItemWithLoginRequest(
+				Layout draftLayout)
+		throws Exception {
+
+		try (ConfigurationTemporarySwapper configurationTemporarySwapper =
+				new ConfigurationTemporarySwapper(
+					_PID,
+					HashMapDictionaryBuilder.<String, Object>put(
+						"promptEnabled", true
+					).build())) {
+
+			LayoutTypeController layoutTypeController =
+				LayoutTypeControllerTracker.getLayoutTypeController(
+					LayoutConstants.TYPE_ASSET_DISPLAY);
+
+			Layout publishedLayout = _layoutLocalService.getLayout(
+				draftLayout.getClassPK());
+
+			MockHttpServletRequest mockHttpServletRequest =
+				_getMockHttpServletRequest(publishedLayout, _guestUser);
+
+			mockHttpServletRequest.setAttribute(
+				WebKeys.LOGIN_REQUEST, Boolean.TRUE);
+
+			ServiceContext serviceContext =
+				ServiceContextTestUtil.getServiceContext(
+					_group.getGroupId(), _guestUser.getUserId());
+
+			serviceContext.setRequest(mockHttpServletRequest);
+
+			ServiceContextThreadLocal.pushServiceContext(serviceContext);
+
+			try {
+				MockHttpServletResponse mockHttpServletResponse =
+					new MockHttpServletResponse();
+
+				layoutTypeController.includeLayoutContent(
+					mockHttpServletRequest, mockHttpServletResponse,
+					publishedLayout);
+
+				Assert.assertEquals(
+					HttpServletResponse.SC_OK,
+					mockHttpServletResponse.getStatus());
+				Assert.assertNull(mockHttpServletResponse.getRedirectedUrl());
+			}
+			finally {
+				ServiceContextThreadLocal.popServiceContext();
+			}
+		}
 	}
 
 	private static final String _PID =
