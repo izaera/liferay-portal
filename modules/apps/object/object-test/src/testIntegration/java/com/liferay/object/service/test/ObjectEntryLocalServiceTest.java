@@ -766,6 +766,28 @@ public class ObjectEntryLocalServiceTest {
 
 		_assertCount(8);
 
+		_addObjectEntry(
+			HashMapBuilder.<String, Serializable>put(
+				"emailAddress", StringPool.BLANK
+			).put(
+				"emailAddressRequired", "job@liferay.com"
+			).put(
+				"listTypeEntryKeyRequired", "listTypeEntryKey1"
+			).build());
+
+		_assertCount(9);
+
+		_addObjectEntry(
+			HashMapBuilder.<String, Serializable>put(
+				"emailAddress", StringPool.DOUBLE_SPACE
+			).put(
+				"emailAddressRequired", "john@liferay.com"
+			).put(
+				"listTypeEntryKeyRequired", "listTypeEntryKey1"
+			).build());
+
+		_assertCount(10);
+
 		AssertUtils.assertFailure(
 			ObjectEntryValuesException.ExceedsIntegerSize.class,
 			"Object entry value exceeds integer field allowed size",
