@@ -355,7 +355,7 @@ public class DisplayPageLayoutTypeControllerTest {
 	}
 
 	@Test
-	@TestInfo("LPD-75440")
+	@TestInfo({"LPD-75440", "LPD-78223"})
 	public void testDisplayPageTypeControllerWithoutContextInfoItem()
 		throws Exception {
 
@@ -687,6 +687,19 @@ public class DisplayPageLayoutTypeControllerTest {
 		_assertIncludeLayoutContent(
 			HttpServletResponse.SC_OK, true, draftLayout.getClassPK(),
 			_guestUser);
+
+		try (ConfigurationTemporarySwapper configurationTemporarySwapper =
+				new ConfigurationTemporarySwapper(
+					_PID,
+					HashMapDictionaryBuilder.<String, Object>put(
+						"promptEnabled", true
+					).build())) {
+
+			_assertIncludeLayoutContent(
+				HttpServletResponse.SC_FOUND, false, draftLayout.getClassPK(),
+				_guestUser);
+		}
+
 		_assertIncludeLayoutContent(
 			HttpServletResponse.SC_OK, true, draftLayout.getPlid(), _guestUser);
 		_assertIncludeLayoutContent(
