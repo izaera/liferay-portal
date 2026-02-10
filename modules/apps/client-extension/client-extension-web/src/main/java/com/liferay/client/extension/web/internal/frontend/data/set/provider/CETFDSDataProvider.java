@@ -92,7 +92,7 @@ public class CETFDSDataProvider implements FDSDataProvider<CETFDSEntry> {
 	private CETManager _cetManager;
 
 	@Reference(
-		target = "(jakarta.portlet.name=" + ClientExtensionAdminPortletKeys.CLIENT_EXTENSION_ADMIN + ")"
+		target = "(javax.portlet.name=" + ClientExtensionAdminPortletKeys.CLIENT_EXTENSION_ADMIN + ")"
 	)
 	private Portlet _portlet;
 
