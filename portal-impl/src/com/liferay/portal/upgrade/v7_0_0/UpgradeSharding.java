@@ -70,6 +70,20 @@ public class UpgradeSharding extends UpgradeProcess {
 				")");
 	}
 
+	/**
+	 * @deprecated As of Cavanaugh (7.4.x), replaced by {@link #copyControlTable(Connection, Connection, String, Object[][], String, String[])}
+	 */
+	@Deprecated
+	protected void copyControlTable(
+			Connection sourceConnection, Connection targetConnection,
+			String tableName, Object[][] columns, String createSQL)
+		throws Exception {
+
+		copyControlTable(
+			sourceConnection, targetConnection, tableName, columns, createSQL,
+			new String[0]);
+	}
+
 	protected void copyControlTable(
 			Connection sourceConnection, Connection targetConnection,
 			String tableName, Object[][] columns, String createSQL,
