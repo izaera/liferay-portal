@@ -323,6 +323,7 @@ public class FragmentEntryConfigurationParserImpl
 		return null;
 	}
 
+	@Override
 	public Object getFieldValue(
 		String configuration, String editableValues, String name) {
 
