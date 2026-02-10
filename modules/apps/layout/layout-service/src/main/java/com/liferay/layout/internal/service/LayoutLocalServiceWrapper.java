@@ -37,7 +37,7 @@ import com.liferay.portal.kernel.change.tracking.CTCollectionThreadLocal;
 import com.liferay.portal.kernel.comment.CommentManager;
 import com.liferay.portal.kernel.exception.NoSuchLayoutException;
 import com.liferay.portal.kernel.exception.PortalException;
-import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONFactory;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.log.Log;
@@ -480,7 +480,6 @@ public class LayoutLocalServiceWrapper
 					role -> !Objects.equals(
 						RoleConstants.ADMINISTRATOR, role.getName())),
 				Role::getRoleId);
-
 			String targetResourcePrimKey = PortletPermissionUtil.getPrimaryKey(
 				targetLayout.getPlid(), portletId);
 
@@ -981,9 +980,8 @@ public class LayoutLocalServiceWrapper
 
 			String namespace = sourceLayoutfragmentEntryLink.getNamespace();
 
-			JSONObject editableValuesJSONObject =
-				JSONFactoryUtil.createJSONObject(
-					sourceLayoutfragmentEntryLink.getEditableValues());
+			JSONObject editableValuesJSONObject = _jsonFactory.createJSONObject(
+				sourceLayoutfragmentEntryLink.getEditableValues());
 
 			if (masterLayoutCopy &&
 				sourceLayoutfragmentEntryLink.isTypePortlet() &&
@@ -1167,6 +1165,9 @@ public class LayoutLocalServiceWrapper
 
 	@Reference
 	private ImageLocalService _imageLocalService;
+
+	@Reference
+	private JSONFactory _jsonFactory;
 
 	@Reference
 	private LayoutClassedModelUsageLocalService
