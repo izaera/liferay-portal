@@ -300,13 +300,13 @@ public class DisplayPageLayoutTypeControllerTest {
 				layoutTypeController.includeLayoutContent(
 					mockHttpServletRequest, mockHttpServletResponse, layout);
 
-				Assert.assertEquals(
-					HttpServletResponse.SC_FOUND,
-					mockHttpServletResponse.getStatus());
-
 				String redirectURL = mockHttpServletResponse.getRedirectedUrl();
 
 				Assert.assertTrue(redirectURL.contains("redirect"));
+
+				Assert.assertEquals(
+					HttpServletResponse.SC_FOUND,
+					mockHttpServletResponse.getStatus());
 			}
 			finally {
 				ServiceContextThreadLocal.popServiceContext();
@@ -401,7 +401,6 @@ public class DisplayPageLayoutTypeControllerTest {
 
 		_testDisplayPageTypeControllerWithoutContextInfoItem(
 			HttpServletResponse.SC_FORBIDDEN, draftLayout, user);
-
 		_testDisplayPageTypeControllerWithoutContextInfoItemWithLoginRequest(
 			draftLayout);
 	}
@@ -684,16 +683,6 @@ public class DisplayPageLayoutTypeControllerTest {
 			int expectedStatus, Layout draftLayout, User user)
 		throws Exception {
 
-		_assertIncludeLayoutContent(
-			HttpServletResponse.SC_OK, false, draftLayout.getClassPK(),
-			TestPropsValues.getUser());
-		_assertIncludeLayoutContent(
-			HttpServletResponse.SC_OK, false, draftLayout.getPlid(),
-			TestPropsValues.getUser());
-		_assertIncludeLayoutContent(
-			HttpServletResponse.SC_OK, true, draftLayout.getClassPK(),
-			_guestUser);
-
 		try (ConfigurationTemporarySwapper configurationTemporarySwapper =
 				new ConfigurationTemporarySwapper(
 					_PID,
@@ -706,6 +695,15 @@ public class DisplayPageLayoutTypeControllerTest {
 				_guestUser);
 		}
 
+		_assertIncludeLayoutContent(
+			HttpServletResponse.SC_OK, false, draftLayout.getClassPK(),
+			TestPropsValues.getUser());
+		_assertIncludeLayoutContent(
+			HttpServletResponse.SC_OK, false, draftLayout.getPlid(),
+			TestPropsValues.getUser());
+		_assertIncludeLayoutContent(
+			HttpServletResponse.SC_OK, true, draftLayout.getClassPK(),
+			_guestUser);
 		_assertIncludeLayoutContent(
 			HttpServletResponse.SC_OK, true, draftLayout.getPlid(), _guestUser);
 		_assertIncludeLayoutContent(
@@ -753,10 +751,10 @@ public class DisplayPageLayoutTypeControllerTest {
 					mockHttpServletRequest, mockHttpServletResponse,
 					publishedLayout);
 
+				Assert.assertNull(mockHttpServletResponse.getRedirectedUrl());
 				Assert.assertEquals(
 					HttpServletResponse.SC_OK,
 					mockHttpServletResponse.getStatus());
-				Assert.assertNull(mockHttpServletResponse.getRedirectedUrl());
 			}
 			finally {
 				ServiceContextThreadLocal.popServiceContext();
