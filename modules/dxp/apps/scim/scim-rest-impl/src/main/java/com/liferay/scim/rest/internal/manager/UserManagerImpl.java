@@ -204,10 +204,10 @@ public class UserManagerImpl implements UserManager {
 		catch (AbstractCharonException abstractCharonException) {
 			ReflectionUtil.throwException(abstractCharonException);
 		}
-		catch (PortalException portalException) {
+		catch (Exception exception) {
 			throw new CharonException(
 				"Unable to delete user with user ID " + userId,
-				portalException);
+				exception);
 		}
 	}
 
