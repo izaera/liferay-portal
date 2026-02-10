@@ -12,6 +12,7 @@ import com.liferay.portal.kernel.json.JSONFactoryUtil;
 import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
+import com.liferay.portal.kernel.test.TestInfo;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.util.FileUtil;
 import com.liferay.portal.kernel.util.LinkedHashMapBuilder;
@@ -58,6 +59,7 @@ public class FragmentEntryConfigurationParserTest {
 	}
 
 	@Test
+	@TestInfo("LPD-77079")
 	public void testGetFieldValueLocalizableFieldsWithoutLocale()
 		throws Exception {
 
