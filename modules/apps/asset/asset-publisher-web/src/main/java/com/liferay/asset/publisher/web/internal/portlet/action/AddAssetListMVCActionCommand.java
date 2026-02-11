@@ -87,6 +87,10 @@ public class AddAssetListMVCActionCommand extends BaseMVCActionCommand {
 				actionRequest, portletPreferences, themeDisplay);
 
 			if (assetListEntry != null) {
+				portletPreferences.setValue(
+					"assetListEntryExternalReferenceCode",
+					assetListEntry.getExternalReferenceCode());
+
 				if (assetListEntry.getGroupId() !=
 						themeDisplay.getScopeGroupId()) {
 
@@ -98,9 +102,6 @@ public class AddAssetListMVCActionCommand extends BaseMVCActionCommand {
 						group.getExternalReferenceCode());
 				}
 
-				portletPreferences.setValue(
-					"assetListEntryExternalReferenceCode",
-					assetListEntry.getExternalReferenceCode());
 				portletPreferences.setValue(
 					"selectionStyle",
 					AssetPublisherSelectionStyleConstants.TYPE_ASSET_LIST);
