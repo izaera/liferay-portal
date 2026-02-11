@@ -161,6 +161,10 @@ function openToast({
 		rootElement
 	);
 
+	rootElement.setAttribute('role', 'alert');
+	rootElement.setAttribute('tabindex', '-1');
+	rootElement.focus();
+
 	rootsMap.set(id, root);
 }
 
