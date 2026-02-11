@@ -8,7 +8,7 @@ package com.liferay.antivirus.async.store.portlet;
 import com.liferay.antivirus.async.store.constants.AntivirusAsyncPortletKeys;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCPortlet;
 
-import jakarta.portlet.Portlet;
+import javax.portlet.Portlet;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -20,11 +20,11 @@ import org.osgi.service.component.annotations.Component;
 		"com.liferay.portlet.display-category=category.hidden",
 		"com.liferay.portlet.preferences-unique-per-layout=false",
 		"com.liferay.portlet.scopeable=false",
-		"jakarta.portlet.display-name=AntivirusAsyncNotificationPortlet",
-		"jakarta.portlet.name=" + AntivirusAsyncPortletKeys.ANTIVIRUS_ASYNC_NOTIFICATION,
-		"jakarta.portlet.resource-bundle=content.Language",
-		"jakarta.portlet.security-role-ref=power-user,user",
-		"jakarta.portlet.version=4.0"
+		"javax.portlet.display-name=AntivirusAsyncNotificationPortlet",
+		"javax.portlet.name=" + AntivirusAsyncPortletKeys.ANTIVIRUS_ASYNC_NOTIFICATION,
+		"javax.portlet.resource-bundle=content.Language",
+		"javax.portlet.security-role-ref=power-user,user",
+		"javax.portlet.version=3.0"
 	},
 	service = Portlet.class
 )
