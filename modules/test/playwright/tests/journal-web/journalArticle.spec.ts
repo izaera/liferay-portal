@@ -5,26 +5,28 @@
 
 import {APIResponse, expect as baseExpect, mergeTests} from '@playwright/test';
 
-import {createCategories} from '../../helpers/CreateCategories';
-import {apiHelpersTest} from '../../fixtures/apiHelpersTest';
-import {applicationsMenuPageTest} from '../../fixtures/applicationsMenuPageTest';
-import {featureFlagsTest} from '../../fixtures/featureFlagsTest';
-import {isolatedSiteTest} from '../../fixtures/isolatedSiteTest';
-import {loginTest} from '../../fixtures/loginTest';
-import {pageViewModePagesTest} from '../../fixtures/pageViewModePagesTest';
-import {pagesAdminPagesTest} from '../../fixtures/pagesAdminPagesTest';
-import {workflowPagesTest} from '../../fixtures/workflowPagesTest';
-import {SystemSettingsPage} from '../../pages/configuration-admin-web/SystemSettingsPage';
-import {clickAndExpectToBeVisible} from '../../utils/clickAndExpectToBeVisible';
-import fillAndClickOutside from '../../utils/fillAndClickOutside';
-import {getRandomInt} from '../../utils/getRandomInt';
-import getRandomString from '../../utils/getRandomString';
-import {openFieldset} from '../../utils/openFieldset';
-import {nextPage, setItemsPerPage} from '../../utils/pagination';
-import addApprovedStructuredContent from '../../utils/structured-content/addApprovedStructuredContent';
-import getBasicWebContentStructureId from '../../utils/structured-content/getBasicWebContentStructureId';
-import {waitForAlert} from '../../utils/waitForAlert';
-import {checkAccessibility} from '../../utils/checkAccessibility';
+import {apiHelpersTest} from '../../../fixtures/apiHelpersTest';
+import {applicationsMenuPageTest} from '../../../fixtures/applicationsMenuPageTest';
+import {featureFlagsTest} from '../../../fixtures/featureFlagsTest';
+import {isolatedSiteTest} from '../../../fixtures/isolatedSiteTest';
+import {loginTest} from '../../../fixtures/loginTest';
+import {pageViewModePagesTest} from '../../../fixtures/pageViewModePagesTest';
+import {pagesAdminPagesTest} from '../../../fixtures/pagesAdminPagesTest';
+import {systemSettingsPageTest} from '../../../fixtures/systemSettingsPageTest';
+import {workflowPagesTest} from '../../../fixtures/workflowPagesTest';
+import {createCategories} from '../../../helpers/CreateCategories';
+import {SystemSettingsPage} from '../../../pages/configuration-admin-web/SystemSettingsPage';
+import {checkAccessibility} from '../../../utils/checkAccessibility';
+import {clickAndExpectToBeVisible} from '../../../utils/clickAndExpectToBeVisible';
+import fillAndClickOutside from '../../../utils/fillAndClickOutside';
+import {getRandomInt} from '../../../utils/getRandomInt';
+import getRandomString from '../../../utils/getRandomString';
+import {openFieldset} from '../../../utils/openFieldset';
+import {nextPage, setItemsPerPage} from '../../../utils/pagination';
+import addApprovedStructuredContent from '../../../utils/structured-content/addApprovedStructuredContent';
+import getBasicWebContentStructureId from '../../../utils/structured-content/getBasicWebContentStructureId';
+import {waitForAlert} from '../../../utils/waitForAlert';
+import {ClassicPage as CKEditor4ClassicPage} from '../../frontend-editor-ckeditor-sample-web/pages/ckeditor4/ClassicPage';
 import {journalPagesTest} from './fixtures/journalPagesTest';
 import getDataStructureDefinition from './utils/getDataStructureDefinition';
 
@@ -56,6 +58,7 @@ const baseTest = mergeTests(
 	loginTest(),
 	pageViewModePagesTest,
 	pagesAdminPagesTest,
+	systemSettingsPageTest,
 	workflowPagesTest
 );
 
@@ -75,6 +78,15 @@ const assetPublisherDeprecationTest = mergeTests(
 	baseTest,
 	featureFlagsTest({
 		'LPD-39304': {enabled: true},
+	})
+);
+
+const ckeditor4Test = mergeTests(baseTest);
+
+const ckeditor5Test = mergeTests(
+	baseTest,
+	featureFlagsTest({
+		'LPD-11235': {enabled: true},
 	})
 );
 
@@ -127,7 +139,10 @@ baseTest(
 			)
 			.uncheck();
 
-		await page.getByRole('button', {exact: true, name: 'Publish'}).click();
+		await page
+			.getByLabel('Publish With Permissions')
+			.getByRole('button', {name: 'Publish'})
+			.click();
 
 		await journalPage.assertJournalArticlePermissions(title, [
 			{enabled: false, locator: '#guest_ACTION_ADD_DISCUSSION'},
@@ -148,7 +163,7 @@ baseTest(
 			getRandomString()
 		);
 
-		await page.getByRole('button', {name: 'Publish'}).click();
+		await journalEditArticlePage.publishDropdown.click();
 
 		await page
 			.getByRole('menuitem', {name: 'Schedule Publication'})
@@ -216,6 +231,40 @@ baseTest(
 				'Please enter a friendly URL that does not end with a slash'
 			)
 		).toBeVisible();
+	}
+);
+
+baseTest(
+	'Check if Web Content can be saved as draft after changing default language',
+	{
+		tag: '@LPD-60603',
+	},
+	async ({journalEditArticlePage, page, site, systemSettingsPage}) => {
+		await systemSettingsPage.goToSystemSetting(
+			'Web Content',
+			'Administration'
+		);
+
+		await page.getByLabel('Changeable Default Language').check();
+
+		await page.getByRole('button', {name: /save|update/i}).click();
+
+		await waitForAlert(page);
+
+		await journalEditArticlePage.goto({siteUrl: site.friendlyUrlPath});
+
+		await journalEditArticlePage.changeDefaultLanguage('pt_BR');
+
+		const title = getRandomString();
+
+		await page.waitForTimeout(5000);
+
+		await journalEditArticlePage.saveAsDraftWithPermissions(title);
+
+		await waitForAlert(
+			page,
+			`Success:${title} was successfully saved as a draft.`
+		);
 	}
 );
 
@@ -338,17 +387,15 @@ baseTest(
 
 		await journalEditArticlePage.defaultTemplateButton.click();
 
-		await page
-			.locator(
-				'[id="_com_liferay_journal_web_portlet_JournalPortlet_previewWithTemplate"]'
-			)
-			.waitFor();
+		const previewButton = page.locator(
+			'[id="_com_liferay_journal_web_portlet_JournalPortlet_previewWithTemplate"]'
+		);
 
-		await page
-			.locator(
-				'[id="_com_liferay_journal_web_portlet_JournalPortlet_previewWithTemplate"]'
-			)
-			.click();
+		await previewButton.waitFor({state: 'attached'});
+
+		await previewButton.scrollIntoViewIfNeeded();
+
+		await previewButton.click({force: true});
 
 		const dialog = page.getByRole('dialog');
 
@@ -633,7 +680,7 @@ baseTest(
 
 		await expect(page.getByText(`${title}`)).toBeVisible();
 
-		await page.getByLabel(`${title}`).check();
+		await page.getByRole('checkbox', {name: title}).check();
 
 		await journalPage.moveToFolder(folder.name);
 
@@ -652,7 +699,7 @@ baseTest(
 		const contentStructureId =
 			await getBasicWebContentStructureId(apiHelpers);
 
-		for (let i = 0; i < 10; i++) {
+		for (let i = 0; i < 42; i++) {
 			await apiHelpers.jsonWebServicesJournal.addWebContent({
 				ddmStructureId: contentStructureId,
 				groupId: site.id,
@@ -661,7 +708,7 @@ baseTest(
 
 		await journalPage.goto(site.friendlyUrlPath);
 
-		await setItemsPerPage(page, 4);
+		await setItemsPerPage(page, 20);
 
 		await page.getByTestId('row').nth(0).getByRole('checkbox').check();
 		await page.getByTestId('row').nth(1).getByRole('checkbox').check();
@@ -669,7 +716,7 @@ baseTest(
 		await nextPage(page);
 
 		await expect(
-			page.getByText('Showing 5 to 8 of 10 entries.')
+			page.getByText('Showing 21 to 40 of 42 entries.')
 		).toBeVisible();
 
 		await page.getByTestId('row').nth(0).getByRole('checkbox').check();
@@ -678,7 +725,7 @@ baseTest(
 		await nextPage(page);
 
 		await expect(
-			page.getByText('Showing 9 to 10 of 10 entries.')
+			page.getByText('Showing 41 to 42 of 42 entries.')
 		).toBeVisible();
 
 		await page.getByTestId('row').nth(0).getByRole('checkbox').check();
@@ -876,7 +923,7 @@ prefixUrlTest(
 
 		await friendlyUrlInstanceSettingsPage.goto();
 
-		const urlSeparator = 'content';
+		const urlSeparator = 'web-content';
 
 		await friendlyUrlInstanceSettingsPage.modifySeparator(
 			'Web Content URL Separator',
@@ -1100,7 +1147,7 @@ baseTest(
 		await markAsTranslatedButton.click();
 
 		await expect(
-			page.getByRole('heading', {name: 'Mark "ca_ES" as Translated'})
+			page.getByRole('heading', {name: 'Mark ca_ES as Translated'})
 		).toBeVisible();
 
 		await page.getByRole('button', {name: 'Mark as Translated'}).click();
@@ -1945,8 +1992,7 @@ assetPublisherDeprecationTest(
 		await configurationFrame
 			.getByRole('tab', {name: 'Asset Selection'})
 			.click();
-		await configurationFrame.getByText('Dynamic').click();
-		await configurationFrame.getByLabel('close').click();
+		await configurationFrame.getByText('Dynamic', {exact: true}).click();
 		await configurationFrame
 			.getByRole('tab', {name: 'Display Settings'})
 			.click();
@@ -1965,6 +2011,294 @@ assetPublisherDeprecationTest(
 		await page.getByLabel('Go to page, 2').click();
 
 		await expect(page.getByText('page2')).toBeVisible();
+	}
+);
+
+ckeditor4Test(
+	'Change image from context menu, in editor with "adaptivemedia" plugin',
+	{tag: ['@LPD-53880']},
+	async ({journalEditArticlePage, page, site}) => {
+		await ckeditor4Test.step('Open new Basic Web Content', async () => {
+			await journalEditArticlePage.goto({siteUrl: site.friendlyUrlPath});
+		});
+
+		const ckeditor4Page = new CKEditor4ClassicPage(page);
+
+		await ckeditor4Page.page.getByLabel('Image', {exact: true}).click();
+
+		await ckeditor4Page.selectImageWithItemSelector({
+			cardTitle: 'moon.png',
+		});
+
+		const editableFrame = journalEditArticlePage.page
+			.locator('.edit-article-panel')
+			.frameLocator('iframe[title="editor"]');
+
+		const moonImage = editableFrame.locator(
+			'img[src="/documents/d/guest/moon-png"]'
+		);
+
+		await expect(moonImage).toBeVisible();
+		await expect(moonImage).toHaveAttribute('data-fileentryid');
+
+		const moonImageFileEntryId = await moonImage
+
+			// eslint-disable-next-line @liferay/no-get-data-attribute
+			.getAttribute('data-fileentryid');
+
+		await moonImage.dblclick();
+
+		await ckeditor4Page.contextMenu.getByText('Browse Server').click();
+
+		await ckeditor4Page.selectImageWithItemSelector({
+			cardTitle: 'satellite.png',
+		});
+
+		await expect(ckeditor4Page.contextMenu.getByLabel('URL')).toHaveValue(
+			'/documents/d/guest/satellite-png'
+		);
+
+		await ckeditor4Page.contextMenu.getByText('OK').click();
+
+		const satelliteImage = editableFrame.locator(
+			'img[src="/documents/d/guest/satellite-png"]'
+		);
+
+		await expect(satelliteImage).toBeVisible();
+		await expect(satelliteImage).toHaveAttribute('data-fileentryid');
+
+		const satelliteImageFileEntryId = await satelliteImage
+
+			// eslint-disable-next-line @liferay/no-get-data-attribute
+			.getAttribute('data-fileentryid');
+
+		await expect(moonImageFileEntryId).not.toBe(satelliteImageFileEntryId);
+	}
+);
+
+ckeditor5Test(
+	'Web Content is published with multiple translations',
+	{
+		tag: '@LPD-11235',
+	},
+	async ({
+		journalEditArticlePage,
+		journalEditArticleTranslationsPage,
+		page,
+		site,
+	}) => {
+		await ckeditor5Test.step('Open new Basic Web Content', async () => {
+			await journalEditArticlePage.goto({siteUrl: site.friendlyUrlPath});
+		});
+
+		const articleContentAR = getRandomString();
+		const articleContentEN = getRandomString();
+		const articleDescriptionAR = getRandomString();
+		const articleDescriptionEN = getRandomString();
+		const articleTitleAR = getRandomString();
+		const articleTitleEN = getRandomString();
+
+		const contentEditable = journalEditArticlePage.page.locator(
+			'#_com_liferay_journal_web_portlet_JournalPortlet_content .ck-content'
+		);
+		const descriptionEditable = journalEditArticlePage.page.locator(
+			'#_com_liferay_journal_web_portlet_JournalPortlet_metadata .ck-content'
+		);
+
+		await ckeditor5Test.step('Expand fields if collapsed', async () => {
+			const fieldsToggle = journalEditArticlePage.page.locator(
+				'.edit-article-panel .collapse-icon.sheet-subtitle'
+			);
+
+			const classList = await fieldsToggle.getAttribute('class');
+
+			if (classList.match(/collapsed/)) {
+				fieldsToggle.click();
+			}
+
+			await expect(contentEditable).toBeVisible();
+		});
+
+		await ckeditor5Test.step(
+			'Add sample English title, description and content',
+			async () => {
+				await journalEditArticlePage.fillTitle(articleTitleEN);
+
+				await contentEditable.fill(articleContentEN);
+				await descriptionEditable.fill(articleDescriptionEN);
+			}
+		);
+
+		await ckeditor5Test.step(
+			'Switch to Arabic locale, check content direction',
+			async () => {
+				await journalEditArticlePage.changeLanguage('ar_SA');
+
+				await expect(
+					journalEditArticlePage.page.getByLabel(
+						'Select a language, current language: Arabic.'
+					)
+				).toBeVisible();
+
+				expect(await contentEditable.getAttribute('dir')).toEqual(
+					'rtl'
+				);
+			}
+		);
+
+		await ckeditor5Test.step(
+			'Add sample Arabic title, description and content',
+			async () => {
+				await journalEditArticlePage.fillTitle(articleTitleAR);
+
+				await contentEditable.fill(articleContentAR);
+				await descriptionEditable.fill(articleDescriptionAR);
+			}
+		);
+
+		await ckeditor5Test.step('Publish article', async () => {
+			await journalEditArticlePage.publishArticle();
+		});
+
+		await ckeditor5Test.step(
+			'Open saved article and assert content is correct',
+			async () => {
+				await page.getByTitle(articleTitleEN).click();
+
+				await expect(
+					contentEditable.getByText(articleContentEN)
+				).toBeVisible();
+				await expect(
+					descriptionEditable.getByText(articleDescriptionEN)
+				).toBeVisible();
+
+				await journalEditArticlePage.changeLanguage('ar_SA');
+
+				await expect(
+					contentEditable.getByText(articleContentAR)
+				).toBeVisible();
+				await expect(
+					descriptionEditable.getByText(articleDescriptionAR)
+				).toBeVisible();
+			}
+		);
+
+		await ckeditor5Test.step('Reset to English', async () => {
+			await journalEditArticlePage.changeLanguage('en_US');
+		});
+
+		const toolbar =
+			journalEditArticlePage.page.getByLabel('Editor toolbar');
+
+		const sourceButton = toolbar.getByRole('button', {name: 'Source'});
+
+		const sourceTextarea = journalEditArticlePage.page.getByLabel(
+			'Source code editing area'
+		);
+
+		await ckeditor5Test.step(
+			'Change article in source editing',
+			async () => {
+				await sourceButton.click();
+
+				await sourceTextarea.fill(
+					'<a href="#" onclick="alert()">foo</a><script>alert()</script>'
+				);
+			}
+		);
+
+		await ckeditor5Test.step('Publish article again', async () => {
+			await journalEditArticlePage.publishArticle(true);
+
+			await expect(page.locator('.alert-success')).toBeVisible();
+		});
+
+		await ckeditor5Test.step(
+			'Open saved article and assert content is correct',
+			async () => {
+				await page.getByTitle(articleTitleEN).click();
+
+				await sourceButton.click();
+
+				await expect(sourceTextarea).toHaveValue(
+					/<a href="#">foo<\/a>alert\(\)/
+				);
+			}
+		);
+
+		await ckeditor5Test.step('Revert to simple content', async () => {
+			await sourceButton.click();
+
+			await contentEditable.fill(articleContentEN);
+
+			await journalEditArticlePage.publishArticle(true);
+
+			await expect(page.locator('.alert-success')).toBeVisible();
+		});
+
+		await ckeditor5Test.step('Open aricle translation editor', async () => {
+			await journalEditArticleTranslationsPage.goto({
+				title: articleTitleEN,
+			});
+
+			await expect(
+				journalEditArticleTranslationsPage.previewContainers.getByText(
+					articleDescriptionEN
+				)
+			).toBeVisible();
+			await expect(
+				journalEditArticleTranslationsPage.previewContainers.getByText(
+					articleContentEN
+				)
+			).toBeVisible();
+
+			await expect(
+				journalEditArticleTranslationsPage.contentEditor.editable.getByText(
+					articleContentAR
+				)
+			).toBeVisible();
+			await expect(
+				journalEditArticleTranslationsPage.descriptionEditor.editable.getByText(
+					articleDescriptionAR
+				)
+			).toBeVisible();
+		});
+
+		const articleDescriptionAR2 = getRandomString();
+		const articleContentAR2 = getRandomString();
+
+		await ckeditor5Test.step('Change Arabic translation', async () => {
+			await journalEditArticleTranslationsPage.descriptionEditor.editable.fill(
+				articleDescriptionAR2
+			);
+			await journalEditArticleTranslationsPage.contentEditor.editable.fill(
+				articleContentAR2
+			);
+
+			await journalEditArticleTranslationsPage.publishButton.click();
+
+			await expect(page.locator('.alert-success')).toBeVisible();
+		});
+
+		await ckeditor5Test.step(
+			'Open aricle translation editor and assert changes were saved',
+			async () => {
+				await journalEditArticleTranslationsPage.goto({
+					title: articleTitleEN,
+				});
+
+				await expect(
+					journalEditArticleTranslationsPage.descriptionEditor.editable.getByText(
+						articleDescriptionAR2
+					)
+				).toBeVisible();
+				await expect(
+					journalEditArticleTranslationsPage.contentEditor.editable.getByText(
+						articleContentAR2
+					)
+				).toBeVisible();
+			}
+		);
 	}
 );
 
@@ -2068,13 +2402,9 @@ baseTest(
 			getRandomString()
 		);
 
-		await page.waitForTimeout(50000);
+		await page.waitForTimeout(60000);
 
-		await page.getByRole('button', {name: 'Publish'}).click();
-
-		await page.waitForTimeout(50000);
-
-		await page.getByRole('menuitem', {name: 'Publish'}).click();
+		await journalEditArticlePage.publishButton.click();
 
 		await journalPage.changeView('table');
 
@@ -2173,9 +2503,342 @@ baseTest(
 				);
 
 				await expect(
-					journalEditArticlePage.submitArticleForWorkflowButton
+					journalEditArticlePage.publishDropdown
+				).toBeDisabled();
+				await expect(
+					journalEditArticlePage.publishButton
 				).toBeDisabled();
 			}
 		);
+	}
+);
+
+baseTest(
+	'A user can expire a Web Content through its actions',
+	async ({apiHelpers, journalPage, page, site}) => {
+		const basicWebContentStructureId =
+			await getBasicWebContentStructureId(apiHelpers);
+
+		const title = getRandomString();
+
+		await apiHelpers.jsonWebServicesJournal.addWebContent({
+			ddmStructureId: basicWebContentStructureId,
+			groupId: site.id,
+			titleMap: {en_US: title},
+		});
+
+		await journalPage.goto(site.friendlyUrlPath);
+
+		await expect(page.getByText(title)).toBeVisible();
+
+		await journalPage.goToJournalArticleAction('Expire', title);
+
+		await expect(page.locator('.alert-success')).toBeVisible();
+
+		await expect(
+			page.locator('span').filter({hasText: 'Expired'}).nth(1)
+		).toBeVisible();
+	}
+);
+
+baseTest(
+	'A user can expire multiple Web Content though the toolbar',
+	async ({apiHelpers, journalPage, page, site}) => {
+		const basicWebContentStructureId =
+			await getBasicWebContentStructureId(apiHelpers);
+
+		const title1 = getRandomString();
+		const title2 = getRandomString();
+
+		await Promise.all([
+			apiHelpers.jsonWebServicesJournal.addWebContent({
+				ddmStructureId: basicWebContentStructureId,
+				groupId: site.id,
+				titleMap: {en_US: title1},
+			}),
+			apiHelpers.jsonWebServicesJournal.addWebContent({
+				ddmStructureId: basicWebContentStructureId,
+				groupId: site.id,
+				titleMap: {en_US: title2},
+			}),
+		]);
+
+		await journalPage.goto(site.friendlyUrlPath);
+
+		await expect(page.getByText(title1)).toBeVisible();
+		await expect(page.getByText(title2)).toBeVisible();
+
+		await page.getByLabel('Select All Items on the Page').check();
+
+		await page.getByRole('button', {name: 'Expire'}).click();
+
+		await expect(page.locator('.alert-success')).toBeVisible();
+
+		await expect(
+			page.locator('span').filter({hasText: 'Expired'}).nth(1)
+		).toBeVisible();
+
+		await expect(
+			page.locator('span').filter({hasText: 'Expired'}).nth(2)
+		).toBeVisible();
+	}
+);
+
+baseTest(
+	'The user can search for a specific Web Content in Web Content Admin',
+	async ({apiHelpers, journalPage, page, site}) => {
+		const basicWebContentStructureId =
+			await getBasicWebContentStructureId(apiHelpers);
+
+		const title1 = getRandomString();
+		const title2 = getRandomString();
+
+		await Promise.all([
+			apiHelpers.jsonWebServicesJournal.addWebContent({
+				ddmStructureId: basicWebContentStructureId,
+				groupId: site.id,
+				titleMap: {en_US: title1},
+			}),
+			apiHelpers.jsonWebServicesJournal.addWebContent({
+				ddmStructureId: basicWebContentStructureId,
+				groupId: site.id,
+				titleMap: {en_US: title2},
+			}),
+		]);
+
+		await journalPage.goto(site.friendlyUrlPath);
+
+		await expect(page.getByText(title1)).toBeVisible();
+		await expect(page.getByText(title2)).toBeVisible();
+
+		await page.getByPlaceholder('Search for').fill(title1);
+		await page.getByLabel('Search for', {exact: true}).click();
+
+		await expect(page.getByText(title1, {exact: true})).toBeVisible();
+		await expect(page.getByText(title2)).not.toBeVisible();
+
+		await page.getByPlaceholder('Search for').fill(title2);
+		await page.getByLabel('Search for', {exact: true}).click();
+
+		await expect(page.getByText(title1)).not.toBeVisible();
+		await expect(page.getByText(title2, {exact: true})).toBeVisible();
+
+		await page.getByPlaceholder('Search for').fill('Random Text');
+		await page.getByLabel('Search for', {exact: true}).click();
+
+		await expect(page.getByText(title1)).not.toBeVisible();
+		await expect(page.getByText(title2)).not.toBeVisible();
+	}
+);
+
+baseTest(
+	'Publish and Schedule button is not disabled and shows validation error for custom structures required fields',
+	{
+		tag: '@LPD-75537',
+	},
+	async ({apiHelpers, journalEditArticlePage, page, site}) => {
+		const structureName = 'Structure 1';
+		const title = getRandomString();
+
+		const dataDefinition = getDataStructureDefinition({
+			defaultLanguageId: 'en_US',
+			fields: [
+				{name: 'Text'},
+				{
+					name: 'TextRequired',
+					required: true,
+				},
+			],
+			name: structureName,
+		});
+
+		await apiHelpers.dataEngine.createStructure(site.id, dataDefinition);
+
+		await journalEditArticlePage.goto({
+			siteUrl: site.friendlyUrlPath,
+			structureName,
+		});
+
+		await journalEditArticlePage.fillTitle(title);
+
+		baseTest.step(
+			'Publish button is not disabled and shows validation error',
+			async () => {
+				await journalEditArticlePage.publishArticle(true);
+
+				await expect(
+					journalEditArticlePage.publishButton
+				).not.toBeDisabled();
+				await expect(
+					page.getByText('This field is required.')
+				).toBeVisible();
+			}
+		);
+
+		baseTest.step(
+			'Schedule Publication button shows validation error',
+			async () => {
+				await clickAndExpectToBeVisible({
+					autoClick: true,
+					target: page.getByRole('menuitem', {
+						name: 'Schedule Publication',
+					}),
+					trigger: journalEditArticlePage.publishDropdown,
+				});
+
+				await expect(page.locator('.modal-dialog')).not.toBeVisible();
+				await expect(
+					page.getByText('This field is required.')
+				).toBeVisible();
+			}
+		);
+	}
+);
+
+baseTest(
+	'Cannot Publish, Schedule or Save as Draft a web content if title for default language is not set',
+	{
+		tag: '@LPD-76463',
+	},
+	async ({journalEditArticlePage, journalPage, page, site}) => {
+		await journalPage.goto();
+
+		await journalEditArticlePage.goto({siteUrl: site.friendlyUrlPath});
+
+		baseTest.step(
+			'Change language without filling title for default language',
+			async () => {
+				await journalEditArticlePage.fillTitle('');
+
+				const translationButton = page.getByRole('combobox', {
+					name: 'Select a language',
+				});
+
+				await clickAndExpectToBeVisible({
+					autoClick: true,
+					target: page.getByRole('option', {
+						name: 'Catalan Language: Not',
+					}),
+					trigger: translationButton,
+				});
+
+				await expect(
+					page.getByLabel('Translation Options')
+				).toBeVisible();
+
+				await journalEditArticlePage.fillTitle(getRandomString());
+			}
+		);
+
+		baseTest.step('Cannot Publish With Permissions', async () => {
+			await clickAndExpectToBeVisible({
+				autoClick: true,
+				target: page.getByRole('menuitem', {
+					name: 'Publish With Permissions',
+				}),
+				trigger: journalEditArticlePage.publishDropdown,
+			});
+
+			await page
+				.locator('.alert-danger', {
+					hasText:
+						'Please enter a valid title for the default language',
+				})
+				.waitFor();
+
+			await expect(page.locator('.modal-dialog')).not.toBeVisible();
+
+			await page.getByLabel('Close').click();
+		});
+
+		baseTest.step('Cannot Schedule Publication', async () => {
+			await clickAndExpectToBeVisible({
+				autoClick: true,
+				target: page.getByRole('menuitem', {
+					name: 'Schedule Publication',
+				}),
+				trigger: journalEditArticlePage.publishDropdown,
+			});
+
+			await page
+				.locator('.alert-danger', {
+					hasText:
+						'Please enter a valid title for the default language',
+				})
+				.waitFor();
+
+			await expect(page.locator('.modal-dialog')).not.toBeVisible();
+			await page.getByLabel('Close').click();
+		});
+
+		baseTest.step('Cannot Save as Draft', async () => {
+			await page.getByRole('button', {name: 'Save as Draft'}).click();
+
+			await expect(page.locator('.modal-dialog')).not.toBeVisible();
+		});
+
+		baseTest.step(
+			'Can Save as Draft if default language title is filled',
+			async () => {
+				const translationButton = page.getByRole('combobox', {
+					name: 'Select a language',
+				});
+
+				await clickAndExpectToBeVisible({
+					autoClick: true,
+					target: page.getByRole('option', {
+						name: 'English Language: Default',
+					}),
+					trigger: translationButton,
+				});
+
+				await journalEditArticlePage.fillTitle(getRandomString());
+
+				await clickAndExpectToBeVisible({
+					autoClick: true,
+					target: page.getByRole('option', {
+						name: 'Catalan Language: Translating 1/',
+					}),
+					trigger: translationButton,
+				});
+
+				await expect(page.locator('.modal-dialog')).toBeVisible();
+
+				await expect(async () => {
+					page.getByRole('heading', {
+						name: 'Save as Draft With Permissions',
+					});
+				}).toPass();
+			}
+		);
+	}
+);
+
+baseTest(
+	'Display Page Preview button is disabled when draft does not exist',
+	{
+		tag: '@LPD-77694',
+	},
+	async ({journalEditArticlePage, page, site}) => {
+		page.on('dialog', (dialog) => dialog.accept());
+
+		await journalEditArticlePage.goto({siteUrl: site.friendlyUrlPath});
+
+		const title = getRandomString();
+
+		await journalEditArticlePage.content.waitFor();
+
+		await journalEditArticlePage.fillTitle(title);
+
+		await journalEditArticlePage.content.waitFor();
+
+		await journalEditArticlePage.openFieldSet(
+			'Display Page', 'displayPage');
+
+		await journalEditArticlePage.previewButton.waitFor();
+
+		await journalEditArticlePage.previewButton.scrollIntoViewIfNeeded();
+
+		await expect(journalEditArticlePage.previewButton).toBeDisabled();
 	}
 );
