@@ -76,14 +76,14 @@ public class AddAssetListMVCActionCommandTest {
 
 	@Test
 	public void testAddAssetListFromDynamicCollection() throws Exception {
-		_testAddAssetListFromDynamicCollection(_group1, _group1, _group1Layout);
-		_testAddAssetListFromDynamicCollection(_group2, _group1, _group2Layout);
+		_testAddAssetListFromDynamicCollection(_group1, _group1Layout, _group1);
+		_testAddAssetListFromDynamicCollection(_group2, _group2Layout, _group1);
 	}
 
 	@Test
 	public void testAddAssetListFromManualCollection() throws Exception {
-		_testAddAssetListFromManualCollection(_group1, _group1, _group1Layout);
-		_testAddAssetListFromManualCollection(_group2, _group1, _group2Layout);
+		_testAddAssetListFromManualCollection(_group1, _group1Layout, _group1);
+		_testAddAssetListFromManualCollection(_group2, _group2Layout, _group1);
 	}
 
 	private ThemeDisplay _getThemeDisplay(Group group, Layout layout)
@@ -103,7 +103,7 @@ public class AddAssetListMVCActionCommandTest {
 	}
 
 	private void _testAddAssetListFromDynamicCollection(
-			Group expectedGroup, Group themeDisplayGroup, Layout layout)
+			Group expectedGroup, Layout layout, Group themeDisplayGroup)
 		throws Exception {
 
 		String portletId = LayoutTestUtil.addPortletToLayout(
@@ -143,7 +143,7 @@ public class AddAssetListMVCActionCommandTest {
 	}
 
 	private void _testAddAssetListFromManualCollection(
-			Group expectedGroup, Group themeDisplayGroup, Layout layout)
+			Group expectedGroup, Layout layout, Group themeDisplayGroup)
 		throws Exception {
 
 		String portletId = LayoutTestUtil.addPortletToLayout(
