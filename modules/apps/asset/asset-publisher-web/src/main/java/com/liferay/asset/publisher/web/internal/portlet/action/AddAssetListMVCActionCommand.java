@@ -13,6 +13,10 @@ import com.liferay.asset.list.service.AssetListEntryService;
 import com.liferay.asset.publisher.constants.AssetPublisherPortletKeys;
 import com.liferay.asset.publisher.util.AssetPublisherHelper;
 import com.liferay.asset.publisher.web.internal.constants.AssetPublisherSelectionStyleConstants;
+import com.liferay.layout.page.template.constants.LayoutPageTemplateEntryTypeConstants;
+import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
+import com.liferay.layout.page.template.service.LayoutPageTemplateEntryLocalService;
+import com.liferay.petra.function.transform.TransformUtil;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.json.JSONObject;
@@ -20,10 +24,13 @@ import com.liferay.portal.kernel.json.JSONUtil;
 import com.liferay.portal.kernel.language.Language;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.Group;
+import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.portlet.JSONPortletResponseUtil;
 import com.liferay.portal.kernel.portlet.PortletPreferencesFactoryUtil;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
+import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
 import com.liferay.portal.kernel.servlet.MultiSessionMessages;
@@ -80,6 +87,17 @@ public class AddAssetListMVCActionCommand extends BaseMVCActionCommand {
 				actionRequest, portletPreferences, themeDisplay);
 
 			if (assetListEntry != null) {
+				if (assetListEntry.getGroupId() !=
+						themeDisplay.getScopeGroupId()) {
+
+					Group group = _groupLocalService.getGroup(
+						assetListEntry.getGroupId());
+
+					portletPreferences.setValue(
+						"assetListEntryGroupExternalReferenceCode",
+						group.getExternalReferenceCode());
+				}
+
 				portletPreferences.setValue(
 					"assetListEntryExternalReferenceCode",
 					assetListEntry.getExternalReferenceCode());
@@ -120,6 +138,8 @@ public class AddAssetListMVCActionCommand extends BaseMVCActionCommand {
 
 		ServiceContext serviceContext = ServiceContextFactory.getInstance(
 			actionRequest);
+
+		long scopeGroupId = _getScopeGroupId(themeDisplay);
 
 		if (Objects.equals(
 				selectionStyle,
@@ -174,8 +194,8 @@ public class AddAssetListMVCActionCommand extends BaseMVCActionCommand {
 			}
 
 			return _assetListEntryService.addDynamicAssetListEntry(
-				null, themeDisplay.getScopeGroupId(), title,
-				unicodeProperties.toString(), serviceContext);
+				null, scopeGroupId, title, unicodeProperties.toString(),
+				serviceContext);
 		}
 
 		if (!Objects.equals(
@@ -186,17 +206,34 @@ public class AddAssetListMVCActionCommand extends BaseMVCActionCommand {
 		}
 
 		return _assetListEntryService.addManualAssetListEntry(
-			null, themeDisplay.getScopeGroupId(), title,
+			null, scopeGroupId, title,
 			ListUtil.toLongArray(
 				_assetPublisherHelper.getAssetEntries(
 					actionRequest, portletPreferences,
 					themeDisplay.getPermissionChecker(),
 					_assetPublisherHelper.getGroupIds(
-						portletPreferences, themeDisplay.getScopeGroupId(),
+						portletPreferences, scopeGroupId,
 						themeDisplay.getLayout()),
 					true, true),
 				AssetEntry::getEntryId),
 			serviceContext);
+	}
+
+	private long _getScopeGroupId(ThemeDisplay themeDisplay) {
+		Layout layout = themeDisplay.getLayout();
+
+		LayoutPageTemplateEntry layoutPageTemplateEntry =
+			_layoutPageTemplateEntryLocalService.
+				fetchLayoutPageTemplateEntryByPlid(layout.getPlid());
+
+		if ((layoutPageTemplateEntry != null) &&
+			(layoutPageTemplateEntry.getType() ==
+				LayoutPageTemplateEntryTypeConstants.WIDGET_PAGE)) {
+
+			return layoutPageTemplateEntry.getGroupId();
+		}
+
+		return themeDisplay.getScopeGroupId();
 	}
 
 	private void _handlePortalException(
@@ -239,6 +276,13 @@ public class AddAssetListMVCActionCommand extends BaseMVCActionCommand {
 	private AssetPublisherHelper _assetPublisherHelper;
 
 	@Reference
+	private GroupLocalService _groupLocalService;
+
+	@Reference
 	private Language _language;
+
+	@Reference
+	private LayoutPageTemplateEntryLocalService
+		_layoutPageTemplateEntryLocalService;
 
 }
