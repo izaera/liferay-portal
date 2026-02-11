@@ -96,8 +96,7 @@ public class ConfigurationFileInstaller implements FileInstaller {
 
 		try (SafeCloseable safeCloseable =
 				CompanyThreadLocal.setCompanyIdWithSafeCloseable(
-					_getCompanyId(
-						_getScope(dictionary), dictionary, file.getName()))) {
+					_getCompanyId(dictionary, file.getName()))) {
 
 			Configuration configuration = _getConfiguration(
 				file.getName(), pid[0], pid[1]);
@@ -225,7 +224,6 @@ public class ConfigurationFileInstaller implements FileInstaller {
 		try (SafeCloseable safeCloseable =
 				CompanyThreadLocal.setCompanyIdWithSafeCloseable(
 					_getCompanyId(
-						ExtendedObjectClassDefinition.Scope.COMPANY,
 						configuration.getProperties(), file.getName()))) {
 
 			configuration.delete();
@@ -255,11 +253,7 @@ public class ConfigurationFileInstaller implements FileInstaller {
 			}
 		}
 
-		if (oldDictionary.isEmpty()) {
-			return true;
-		}
-
-		return false;
+		return oldDictionary.isEmpty();
 	}
 
 	private String _escapeFilterValue(String string) {
@@ -288,15 +282,23 @@ public class ConfigurationFileInstaller implements FileInstaller {
 	}
 
 	private Long _getCompanyId(
-		ExtendedObjectClassDefinition.Scope scope,
 		Dictionary<String, Object> dictionary, String fileName) {
 
-		if (!DBPartition.isPartitionEnabled() ||
-			(scope != ExtendedObjectClassDefinition.Scope.COMPANY) ||
-			(dictionary == null)) {
-
+		if (!DBPartition.isPartitionEnabled() || (dictionary == null)) {
 			return 0L;
 		}
+
+		ExtendedObjectClassDefinition.Scope scope =
+			ExtendedObjectClassDefinition.Scope.PORTLET_INSTANCE;
+
+		if ((dictionary.get(scope.getPropertyKey()) != null) ||
+			(dictionary.get(scope.getPortablePropertyKey()) != null)) {
+
+			throw new UnsupportedOperationException(
+				"Scope PORTLET_INSTANCE does not support database partition");
+		}
+
+		scope = ExtendedObjectClassDefinition.Scope.COMPANY;
 
 		Long companyId = (Long)dictionary.get(scope.getPropertyKey());
 
@@ -317,7 +319,7 @@ public class ConfigurationFileInstaller implements FileInstaller {
 
 		if (webId != null) {
 			try {
-				companyId = PortalInstancePool.getCompanyId(webId);
+				return PortalInstancePool.getCompanyId(webId);
 			}
 			catch (IllegalArgumentException illegalArgumentException) {
 				throw new IllegalArgumentException(
@@ -325,8 +327,34 @@ public class ConfigurationFileInstaller implements FileInstaller {
 						"Unable to process ", fileName, ": ",
 						illegalArgumentException.getMessage()));
 			}
+		}
 
-			return companyId;
+		scope = ExtendedObjectClassDefinition.Scope.GROUP;
+
+		Long groupId = (Long)dictionary.get(scope.getPropertyKey());
+
+		if (groupId != null) {
+			throw new IllegalArgumentException(
+				StringBundler.concat(
+					"Unable to process group scoped configuration ", fileName,
+					" because required property \"companyId\" is missing"));
+		}
+
+		String groupKey = (String)dictionary.get(
+			scope.getPortablePropertyKey());
+
+		if (groupKey != null) {
+			String[] parts = StringUtil.split(groupKey, _SEPARATOR);
+
+			try {
+				return PortalInstancePool.getCompanyId(parts[0]);
+			}
+			catch (IllegalArgumentException illegalArgumentException) {
+				throw new IllegalArgumentException(
+					StringBundler.concat(
+						"Unable to process ", fileName, ": ",
+						illegalArgumentException.getMessage()));
+			}
 		}
 
 		return 0L;
@@ -348,41 +376,6 @@ public class ConfigurationFileInstaller implements FileInstaller {
 		}
 
 		return _configurationAdmin.getConfiguration(pid, StringPool.QUESTION);
-	}
-
-	private ExtendedObjectClassDefinition.Scope _getScope(
-		Dictionary<String, Object> dictionary) {
-
-		if (!DBPartition.isPartitionEnabled()) {
-			return null;
-		}
-
-		for (ExtendedObjectClassDefinition.Scope scope :
-				ExtendedObjectClassDefinition.Scope.values()) {
-
-			for (String key :
-					new String[] {
-						scope.getPropertyKey(), scope.getPortablePropertyKey()
-					}) {
-
-				if ((key != null) && (dictionary.get(key) != null)) {
-					if (!scope.equals(
-							ExtendedObjectClassDefinition.Scope.COMPANY)) {
-
-						throw new UnsupportedOperationException(
-							StringBundler.concat(
-								StringUtil.upperCaseFirstLetter(
-									scope.getValue()),
-								" scoped configuration files do not support ",
-								"database partitioning"));
-					}
-
-					return scope;
-				}
-			}
-		}
-
-		return ExtendedObjectClassDefinition.Scope.SYSTEM;
 	}
 
 	private String[] _parsePid(String path) {
@@ -408,6 +401,8 @@ public class ConfigurationFileInstaller implements FileInstaller {
 
 		return new String[] {pid, null};
 	}
+
+	private static final String _SEPARATOR = "--";
 
 	private static final Log _log = LogFactoryUtil.getLog(
 		ConfigurationFileInstaller.class);
