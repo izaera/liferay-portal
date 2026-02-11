@@ -59,7 +59,6 @@ public class AddAssetListMVCActionCommandTest {
 	@Before
 	public void setUp() throws Exception {
 		_group1 = GroupTestUtil.addGroup();
-		_group2 = GroupTestUtil.addGroup();
 
 		_group1Layout = LayoutTestUtil.addTypePortletLayout(_group1);
 
@@ -68,6 +67,8 @@ public class AddAssetListMVCActionCommandTest {
 				_group2.getGroupId(),
 				LayoutPageTemplateEntryTypeConstants.WIDGET_PAGE,
 				WorkflowConstants.STATUS_APPROVED);
+
+		_group2 = GroupTestUtil.addGroup();
 
 		_group2Layout = _layoutLocalService.getLayout(
 			layoutPageTemplateEntry.getPlid());
