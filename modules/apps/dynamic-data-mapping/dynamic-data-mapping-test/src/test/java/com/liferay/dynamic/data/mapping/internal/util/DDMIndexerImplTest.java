@@ -326,7 +326,7 @@ public class DDMIndexerImplTest {
 			DDMFormFieldTypeConstants.SELECT, availableLocales, LocaleUtil.US);
 
 		_setDDMFormFieldOptions(
-			ddmForm, availableLocales, LocaleUtil.US,
+			availableLocales, ddmForm, LocaleUtil.US,
 			HashMapBuilder.put(
 				"apple", "Apple"
 			).put(
@@ -535,7 +535,7 @@ public class DDMIndexerImplTest {
 	}
 
 	private void _setDDMFormFieldOptions(
-		DDMForm ddmForm, Locale[] availableLocales, Locale defaultLocale,
+		Locale[] availableLocales, DDMForm ddmForm, Locale defaultLocale,
 		Map<String, String> fieldValues) {
 
 		DDMFormFieldOptions ddmFormFieldOptions = new DDMFormFieldOptions();
@@ -755,7 +755,7 @@ public class DDMIndexerImplTest {
 		String optionValue = RandomTestUtil.randomString();
 
 		_setDDMFormFieldOptions(
-			ddmForm, availableLocales, LocaleUtil.US,
+			availableLocales, ddmForm, LocaleUtil.US,
 			HashMapBuilder.put(
 				optionValue, optionLabel
 			).put(
