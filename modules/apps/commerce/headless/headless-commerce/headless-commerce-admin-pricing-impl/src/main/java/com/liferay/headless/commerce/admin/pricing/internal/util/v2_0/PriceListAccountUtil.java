@@ -56,6 +56,18 @@ public class PriceListAccountUtil {
 			}
 		}
 
+		CommercePriceListAccountRel commercePriceListAccountRel =
+			commercePriceListAccountRelService.fetchCommercePriceListAccountRel(
+				commercePriceList.getCommercePriceListId(),
+				accountEntry.getAccountEntryId());
+
+		if (commercePriceListAccountRel != null) {
+			commercePriceListAccountRelService.
+				deleteCommercePriceListAccountRel(
+					commercePriceListAccountRel.
+						getCommercePriceListAccountRelId());
+		}
+
 		return commercePriceListAccountRelService.
 			addCommercePriceListAccountRel(
 				commercePriceList.getCommercePriceListId(),
