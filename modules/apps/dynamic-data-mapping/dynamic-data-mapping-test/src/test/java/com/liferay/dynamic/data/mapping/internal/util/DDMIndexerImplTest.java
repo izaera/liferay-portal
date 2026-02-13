@@ -744,7 +744,6 @@ public class DDMIndexerImplTest {
 		Document document = _createDocument();
 
 		Locale[] availableLocales = {LocaleUtil.BRAZIL, LocaleUtil.US};
-
 		String indexType = "keyword";
 
 		DDMForm ddmForm = DDMStructureTestUtil.getSampleDDMForm(
