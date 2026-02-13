@@ -538,6 +538,8 @@ public class DDMIndexerImplTest {
 		Locale[] availableLocales, DDMForm ddmForm, Locale defaultLocale,
 		Map<String, String> fieldValues) {
 
+		DDMFormField ddmFormField = ddmForm.getDDMFormField(_FIELD_NAME, false);
+
 		DDMFormFieldOptions ddmFormFieldOptions = new DDMFormFieldOptions();
 
 		for (Map.Entry<String, String> entry : fieldValues.entrySet()) {
@@ -554,8 +556,6 @@ public class DDMIndexerImplTest {
 					entry.getValue() + LocaleUtil.toLanguageId(locale));
 			}
 		}
-
-		DDMFormField ddmFormField = ddmForm.getDDMFormField(_FIELD_NAME, false);
 
 		ddmFormField.setDDMFormFieldOptions(ddmFormFieldOptions);
 	}
