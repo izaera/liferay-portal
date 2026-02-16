@@ -2075,6 +2075,9 @@ public class JournalArticleLocalServiceTest {
 		Assert.assertEquals(
 			journalArticle.getResourcePrimKey(),
 			latestArticle.getResourcePrimKey());
+		Assert.assertEquals(
+			journalArticle.getExternalReferenceCode(),
+			latestArticle.getExternalReferenceCode());
 		Assert.assertTrue(
 			updatedJournalArticle.getVersion() < latestArticle.getVersion());
 		Assert.assertEquals(
