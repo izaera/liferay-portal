@@ -28,8 +28,6 @@ import javax.annotation.Generated;
 
 import javax.validation.Valid;
 import javax.validation.constraints.DecimalMin;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.NotNull;
 
 import javax.xml.bind.annotation.XmlRootElement;
 
@@ -39,9 +37,6 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Generated("")
 @GraphQLName("OptionCategory")
-@io.swagger.v3.oas.annotations.media.Schema(
-	requiredProperties = {"key", "title"}
-)
 @JsonFilter("Liferay.Vulcan")
 @XmlRootElement(name = "OptionCategory")
 public class OptionCategory implements Serializable {
@@ -214,7 +209,6 @@ public class OptionCategory implements Serializable {
 
 	@GraphQLField
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	@NotEmpty
 	protected String key;
 
 	@JsonIgnore
@@ -301,7 +295,6 @@ public class OptionCategory implements Serializable {
 
 	@GraphQLField
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	@NotNull
 	protected Map<String, String> title;
 
 	@JsonIgnore
