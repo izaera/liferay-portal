@@ -72,7 +72,6 @@ import com.liferay.portal.kernel.transaction.TransactionConfig;
 import com.liferay.portal.kernel.transaction.TransactionInvokerUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.CopyLayoutThreadLocal;
-import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.StringUtil;
@@ -967,15 +966,29 @@ public class LayoutLocalServiceWrapper
 					fragmentStyledLayoutStructureItem.getFragmentEntryLinkId(),
 					targetLayout.getPlid());
 
-			int value = -1;
+			boolean unmodified = false;
 
-			if (targetLayoutFragmentEntryLink != null) {
-				value = DateUtil.compareTo(
-					targetLayoutFragmentEntryLink.getModifiedDate(),
-					sourceLayoutFragmentEntryLink.getModifiedDate());
+			if ((targetLayoutFragmentEntryLink != null) &&
+				Objects.equals(
+					targetLayoutFragmentEntryLink.getCss(),
+					sourceLayoutfragmentEntryLink.getCss()) &&
+				Objects.equals(
+					targetLayoutFragmentEntryLink.getConfiguration(),
+					sourceLayoutfragmentEntryLink.getConfiguration()) &&
+				Objects.equals(
+					targetLayoutFragmentEntryLink.getEditableValues(),
+					sourceLayoutfragmentEntryLink.getEditableValues()) &&
+				Objects.equals(
+					targetLayoutFragmentEntryLink.getJs(),
+					sourceLayoutfragmentEntryLink.getJs()) &&
+				Objects.equals(
+					targetLayoutFragmentEntryLink.getHtml(),
+					sourceLayoutfragmentEntryLink.getHtml())) {
+
+				unmodified = true;
 			}
 
-			if ((targetLayoutFragmentEntryLink != null) && (value >= 0)) {
+			if ((targetLayoutFragmentEntryLink != null) && unmodified) {
 				newFragmentEntryLink = targetLayoutFragmentEntryLink;
 			}
 			else if (targetLayoutFragmentEntryLink != null) {
