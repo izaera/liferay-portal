@@ -280,6 +280,8 @@ create table NullConvertibleEntry (
 create table PermissionCheckFinderEntry (
 	permissionCheckFinderEntryId LONG not null primary key,
 	groupId LONG,
+	companyId LONG,
+	userId LONG,
 	integer_ INTEGER,
 	name VARCHAR(75) null,
 	type_ VARCHAR(75) null
