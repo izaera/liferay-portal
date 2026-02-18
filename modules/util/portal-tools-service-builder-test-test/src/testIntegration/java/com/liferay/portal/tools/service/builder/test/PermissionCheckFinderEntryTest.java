@@ -68,7 +68,6 @@ public class PermissionCheckFinderEntryTest {
 
 		_permissionCheckFinderEntry1 = _addPermissionCheckFinderEntry(
 			_adminGroupId, _adminUser.getUserId());
-
 		_permissionedUser = UserTestUtil.addUser(new long[0]);
 
 		_user = UserTestUtil.addUser(new long[0]);
@@ -289,9 +288,9 @@ public class PermissionCheckFinderEntryTest {
 	private List<PermissionCheckFinderEntry> _permissionCheckFinderEntries =
 		new ArrayList<>();
 
+	private PermissionCheckFinderEntry _permissionCheckFinderEntry1;
 	private PermissionCheckFinderEntry _permissionCheckFinderEntry2;
 	private PermissionCheckFinderEntry _permissionCheckFinderEntry3;
-	private PermissionCheckFinderEntry _permissionCheckFinderEntry1;
 
 	@Inject
 	private PermissionCheckFinderEntryLocalService
