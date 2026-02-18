@@ -213,7 +213,7 @@ public class InlineSQLHelperImplTest {
 		String sql = _replacePermissionCheckJoin(
 			_SQL_PLAIN, ArrayUtil.append(_groupIds, _groupThree.getGroupId()));
 
-		int startPos = sql.indexOf(" OR (JournalArticle.groupId IN (");
+		int startPos = sql.indexOf(" OR (" + _GROUP_ID_FIELD + " IN (");
 
 		Assert.assertTrue(startPos > 0);
 
@@ -226,7 +226,8 @@ public class InlineSQLHelperImplTest {
 			ListUtil.sort(
 				TransformUtil.transformToList(
 					StringUtil.split(
-						sql.substring(startPos + 32, endPos),
+						sql.substring(
+							startPos + 10 + _GROUP_ID_FIELD.length(), endPos),
 						StringPool.COMMA_AND_SPACE, 0L),
 					Long::valueOf)));
 	}
@@ -256,7 +257,7 @@ public class InlineSQLHelperImplTest {
 		String sql = _replacePermissionCheckJoin(
 			_SQL_PLAIN, ArrayUtil.append(_groupIds, _groupThree.getGroupId()));
 
-		int startPos = sql.indexOf(" OR (JournalArticle.groupId IN (");
+		int startPos = sql.indexOf(" OR (" + _GROUP_ID_FIELD + " IN (");
 
 		Assert.assertTrue(startPos > 0);
 
@@ -269,7 +270,8 @@ public class InlineSQLHelperImplTest {
 			ListUtil.sort(
 				TransformUtil.transformToList(
 					StringUtil.split(
-						sql.substring(startPos + 32, endPos),
+						sql.substring(
+							startPos + 10 + _GROUP_ID_FIELD.length(), endPos),
 						StringPool.COMMA_AND_SPACE, 0L),
 					Long::valueOf)));
 	}
