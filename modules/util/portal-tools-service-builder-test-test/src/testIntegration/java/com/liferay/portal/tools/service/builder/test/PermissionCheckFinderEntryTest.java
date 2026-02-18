@@ -111,7 +111,7 @@ public class PermissionCheckFinderEntryTest {
 			Arrays.asList(
 				_permissionCheckFinderEntry2, _permissionCheckFinderEntry3),
 			Arrays.asList(
-				_permissionCheckFinderEntry2, _permissionCheckFinderEntry1),
+				_permissionCheckFinderEntry1, _permissionCheckFinderEntry2),
 			_permissionedUser);
 	}
 
@@ -221,7 +221,7 @@ public class PermissionCheckFinderEntryTest {
 			Arrays.asList(
 				_permissionCheckFinderEntry2, _permissionCheckFinderEntry3),
 			Arrays.asList(
-				_permissionCheckFinderEntry2, _permissionCheckFinderEntry1),
+				_permissionCheckFinderEntry1, _permissionCheckFinderEntry2),
 			_adminUser);
 		_assertFilterFindByGroupIdPermissions(
 			Collections.emptyList(),
