@@ -66,16 +66,16 @@ public class PermissionCheckFinderEntryTest {
 		_ownerRole = RoleLocalServiceUtil.getRole(
 			TestPropsValues.getCompanyId(), RoleConstants.OWNER);
 
-		_permissionCheckFinderEntryAdmin = _addPermissionCheckFinderEntry(
+		_permissionCheckFinderEntry1 = _addPermissionCheckFinderEntry(
 			_adminGroupId, _adminUser.getUserId());
 
 		_permissionedUser = UserTestUtil.addUser(new long[0]);
 
 		_user = UserTestUtil.addUser(new long[0]);
 
-		_permissionCheckFinderEntry1 = _addPermissionCheckFinderEntry(
-			_group1.getGroupId(), _user.getUserId());
 		_permissionCheckFinderEntry2 = _addPermissionCheckFinderEntry(
+			_group1.getGroupId(), _user.getUserId());
+		_permissionCheckFinderEntry3 = _addPermissionCheckFinderEntry(
 			_group2.getGroupId(), _user.getUserId());
 	}
 
@@ -106,13 +106,13 @@ public class PermissionCheckFinderEntryTest {
 
 		_assertFilterFindByGroupIdAdminAndOwnerDefaultPermissions();
 		_assertFilterFindByGroupIdPermissions(
-			Collections.singletonList(_permissionCheckFinderEntryAdmin),
 			Collections.singletonList(_permissionCheckFinderEntry1),
 			Collections.singletonList(_permissionCheckFinderEntry2),
+			Collections.singletonList(_permissionCheckFinderEntry3),
 			Arrays.asList(
-				_permissionCheckFinderEntry1, _permissionCheckFinderEntry2),
+				_permissionCheckFinderEntry2, _permissionCheckFinderEntry3),
 			Arrays.asList(
-				_permissionCheckFinderEntry1, _permissionCheckFinderEntryAdmin),
+				_permissionCheckFinderEntry2, _permissionCheckFinderEntry1),
 			_permissionedUser);
 	}
 
@@ -139,11 +139,11 @@ public class PermissionCheckFinderEntryTest {
 		_assertFilterFindByGroupIdAdminAndOwnerDefaultPermissions();
 		_assertFilterFindByGroupIdPermissions(
 			Collections.emptyList(),
-			Collections.singletonList(_permissionCheckFinderEntry1),
 			Collections.singletonList(_permissionCheckFinderEntry2),
+			Collections.singletonList(_permissionCheckFinderEntry3),
 			Arrays.asList(
-				_permissionCheckFinderEntry1, _permissionCheckFinderEntry2),
-			Collections.singletonList(_permissionCheckFinderEntry1),
+				_permissionCheckFinderEntry2, _permissionCheckFinderEntry3),
+			Collections.singletonList(_permissionCheckFinderEntry2),
 			_permissionedUser);
 	}
 
@@ -170,11 +170,11 @@ public class PermissionCheckFinderEntryTest {
 		_assertFilterFindByGroupIdAdminAndOwnerDefaultPermissions();
 		_assertFilterFindByGroupIdPermissions(
 			Collections.emptyList(),
-			Collections.singletonList(_permissionCheckFinderEntry1),
 			Collections.singletonList(_permissionCheckFinderEntry2),
+			Collections.singletonList(_permissionCheckFinderEntry3),
 			Arrays.asList(
-				_permissionCheckFinderEntry1, _permissionCheckFinderEntry2),
-			Collections.singletonList(_permissionCheckFinderEntry1),
+				_permissionCheckFinderEntry2, _permissionCheckFinderEntry3),
+			Collections.singletonList(_permissionCheckFinderEntry2),
 			_permissionedUser);
 	}
 
@@ -216,21 +216,21 @@ public class PermissionCheckFinderEntryTest {
 
 	private void _assertFilterFindByGroupIdAdminAndOwnerDefaultPermissions() {
 		_assertFilterFindByGroupIdPermissions(
-			Collections.singletonList(_permissionCheckFinderEntryAdmin),
 			Collections.singletonList(_permissionCheckFinderEntry1),
 			Collections.singletonList(_permissionCheckFinderEntry2),
+			Collections.singletonList(_permissionCheckFinderEntry3),
 			Arrays.asList(
-				_permissionCheckFinderEntry1, _permissionCheckFinderEntry2),
+				_permissionCheckFinderEntry2, _permissionCheckFinderEntry3),
 			Arrays.asList(
-				_permissionCheckFinderEntry1, _permissionCheckFinderEntryAdmin),
+				_permissionCheckFinderEntry2, _permissionCheckFinderEntry1),
 			_adminUser);
 		_assertFilterFindByGroupIdPermissions(
 			Collections.emptyList(),
-			Collections.singletonList(_permissionCheckFinderEntry1),
 			Collections.singletonList(_permissionCheckFinderEntry2),
+			Collections.singletonList(_permissionCheckFinderEntry3),
 			Arrays.asList(
-				_permissionCheckFinderEntry1, _permissionCheckFinderEntry2),
-			Collections.singletonList(_permissionCheckFinderEntry1), _user);
+				_permissionCheckFinderEntry2, _permissionCheckFinderEntry3),
+			Collections.singletonList(_permissionCheckFinderEntry2), _user);
 	}
 
 	private void _assertFilterFindByGroupIdPermissions(
@@ -289,9 +289,9 @@ public class PermissionCheckFinderEntryTest {
 	private List<PermissionCheckFinderEntry> _permissionCheckFinderEntries =
 		new ArrayList<>();
 
-	private PermissionCheckFinderEntry _permissionCheckFinderEntry1;
 	private PermissionCheckFinderEntry _permissionCheckFinderEntry2;
-	private PermissionCheckFinderEntry _permissionCheckFinderEntryAdmin;
+	private PermissionCheckFinderEntry _permissionCheckFinderEntry3;
+	private PermissionCheckFinderEntry _permissionCheckFinderEntry1;
 
 	@Inject
 	private PermissionCheckFinderEntryLocalService
