@@ -300,7 +300,6 @@ public class InlineSQLHelperImpl implements InlineSQLHelper {
 
 		PermissionChecker permissionChecker =
 			PermissionThreadLocal.getPermissionChecker();
-
 		Set<Long> disabledGroupIds = new HashSet<>();
 
 		if ((sql == null) ||
