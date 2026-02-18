@@ -88,14 +88,14 @@ public class InlineSQLHelperImpl implements InlineSQLHelper {
 		String modelClassName, Column<T, Long> classPKColumn,
 		long... groupIds) {
 
-		PermissionChecker permissionChecker =
-			PermissionThreadLocal.getPermissionChecker();
+		Set<Long> disabledGroupIds = new HashSet<>();
 
 		if (ArrayUtil.isEmpty(groupIds)) {
 			groupIds = new long[] {0};
 		}
 
-		Set<Long> disabledGroupIds = new HashSet<>();
+		PermissionChecker permissionChecker =
+			PermissionThreadLocal.getPermissionChecker();
 
 		if (_skipReplace(
 				modelClassName, classPKColumn, disabledGroupIds, groupIds,
@@ -298,9 +298,9 @@ public class InlineSQLHelperImpl implements InlineSQLHelper {
 		String sql, String className, String classPKField, String userIdField,
 		String groupIdField, long[] groupIds, String bridgeJoin) {
 
+		Set<Long> disabledGroupIds = new HashSet<>();
 		PermissionChecker permissionChecker =
 			PermissionThreadLocal.getPermissionChecker();
-		Set<Long> disabledGroupIds = new HashSet<>();
 
 		if ((sql == null) ||
 			_skipReplace(
