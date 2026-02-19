@@ -896,6 +896,33 @@ public class LayoutLocalServiceWrapper
 		return false;
 	}
 
+	private boolean _isUnmodifiedFragmentEntryLink(
+		FragmentEntryLink sourceLayoutFragmentEntryLink,
+		FragmentEntryLink targetLayoutFragmentEntryLink) {
+
+		if ((targetLayoutFragmentEntryLink != null) &&
+			Objects.equals(
+				sourceLayoutFragmentEntryLink.getCss(),
+				targetLayoutFragmentEntryLink.getCss()) &&
+			Objects.equals(
+				sourceLayoutFragmentEntryLink.getConfiguration(),
+				targetLayoutFragmentEntryLink.getConfiguration()) &&
+			Objects.equals(
+				sourceLayoutFragmentEntryLink.getEditableValues(),
+				targetLayoutFragmentEntryLink.getEditableValues()) &&
+			Objects.equals(
+				sourceLayoutFragmentEntryLink.getJs(),
+				targetLayoutFragmentEntryLink.getJs()) &&
+			Objects.equals(
+				sourceLayoutFragmentEntryLink.getHtml(),
+				targetLayoutFragmentEntryLink.getHtml())) {
+
+			return true;
+		}
+
+		return false;
+	}
+
 	private JSONObject _processDataJSONObject(
 			LayoutStructure layoutStructure, Layout sourceLayout,
 			Layout targetLayout,
@@ -966,29 +993,10 @@ public class LayoutLocalServiceWrapper
 					fragmentStyledLayoutStructureItem.getFragmentEntryLinkId(),
 					targetLayout.getPlid());
 
-			boolean unmodified = false;
+			if (_isUnmodifiedFragmentEntryLink(
+					sourceLayoutfragmentEntryLink,
+					targetLayoutFragmentEntryLink)) {
 
-			if ((targetLayoutFragmentEntryLink != null) &&
-				Objects.equals(
-					targetLayoutFragmentEntryLink.getCss(),
-					sourceLayoutfragmentEntryLink.getCss()) &&
-				Objects.equals(
-					targetLayoutFragmentEntryLink.getConfiguration(),
-					sourceLayoutfragmentEntryLink.getConfiguration()) &&
-				Objects.equals(
-					targetLayoutFragmentEntryLink.getEditableValues(),
-					sourceLayoutfragmentEntryLink.getEditableValues()) &&
-				Objects.equals(
-					targetLayoutFragmentEntryLink.getJs(),
-					sourceLayoutfragmentEntryLink.getJs()) &&
-				Objects.equals(
-					targetLayoutFragmentEntryLink.getHtml(),
-					sourceLayoutfragmentEntryLink.getHtml())) {
-
-				unmodified = true;
-			}
-
-			if ((targetLayoutFragmentEntryLink != null) && unmodified) {
 				newFragmentEntryLink = targetLayoutFragmentEntryLink;
 			}
 			else if (targetLayoutFragmentEntryLink != null) {
