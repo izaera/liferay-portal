@@ -37,6 +37,9 @@
 		"react-router": "7.9.6"
 	},
 	"jest": {
+		"setupFiles": [
+			"<rootDir>/jest-setup.config.js"
+		],
 		"testPathIgnorePatterns": [
 			"<rootDir>/test/helpers.es.js"
 		]
