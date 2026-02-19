@@ -51,6 +51,7 @@ import com.liferay.portal.kernel.service.GroupLocalService;
 import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.service.RepositoryLocalService;
 import com.liferay.portal.kernel.service.ResourceActionLocalService;
+import com.liferay.portal.kernel.service.ResourceLocalService;
 import com.liferay.portal.kernel.service.ResourcePermissionLocalService;
 import com.liferay.portal.kernel.upgrade.BaseExternalReferenceCodeUpgradeProcess;
 import com.liferay.portal.kernel.upgrade.BaseUuidUpgradeProcess;
@@ -669,6 +670,13 @@ public class CommerceProductServiceUpgradeStepRegistrator
 					_resourceActionLocalService,
 					_resourcePermissionLocalService));
 
+		registry.register(
+			"5.27.1", "5.27.2",
+			new com.liferay.commerce.product.internal.upgrade.v5_27_2.
+				CommercePermissionUpgradeProcess(
+					_companyLocalService, _resourceActionLocalService,
+					_resourceLocalService, _resourcePermissionLocalService));
+
 		if (_log.isInfoEnabled()) {
 			_log.info("Commerce product upgrade step registrator finished");
 		}
@@ -721,6 +729,9 @@ public class CommerceProductServiceUpgradeStepRegistrator
 
 	@Reference
 	private ResourceActionLocalService _resourceActionLocalService;
+
+	@Reference
+	private ResourceLocalService _resourceLocalService;
 
 	@Reference
 	private ResourcePermissionLocalService _resourcePermissionLocalService;

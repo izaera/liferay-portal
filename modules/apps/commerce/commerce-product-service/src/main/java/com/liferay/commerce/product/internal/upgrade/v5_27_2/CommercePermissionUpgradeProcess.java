@@ -1,0 +1,169 @@
+/**
+ * SPDX-FileCopyrightText: (c) 2026 Liferay, Inc. https://liferay.com
+ * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
+ */
+
+package com.liferay.commerce.product.internal.upgrade.v5_27_2;
+
+import com.liferay.commerce.product.constants.CPActionKeys;
+import com.liferay.commerce.product.model.CPTaxCategory;
+import com.liferay.portal.kernel.dao.jdbc.AutoBatchPreparedStatementUtil;
+import com.liferay.portal.kernel.model.ResourceAction;
+import com.liferay.portal.kernel.model.ResourceConstants;
+import com.liferay.portal.kernel.model.ResourcePermission;
+import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.security.permission.ActionKeys;
+import com.liferay.portal.kernel.service.CompanyLocalService;
+import com.liferay.portal.kernel.service.ResourceActionLocalService;
+import com.liferay.portal.kernel.service.ResourceLocalService;
+import com.liferay.portal.kernel.service.ResourcePermissionLocalService;
+import com.liferay.portal.kernel.upgrade.UpgradeProcess;
+
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+
+import java.util.Arrays;
+
+/**
+ * @author Tancredi Covioli
+ */
+public class CommercePermissionUpgradeProcess extends UpgradeProcess {
+
+	public CommercePermissionUpgradeProcess(
+		CompanyLocalService companyLocalService,
+		ResourceActionLocalService resourceActionLocalService,
+		ResourceLocalService resourceLocalService,
+		ResourcePermissionLocalService resourcePermissionLocalService) {
+
+		_companyLocalService = companyLocalService;
+		_resourceActionLocalService = resourceActionLocalService;
+		_resourceLocalService = resourceLocalService;
+		_resourcePermissionLocalService = resourcePermissionLocalService;
+	}
+
+	@Override
+	protected void doUpgrade() throws Exception {
+		ResourceAction resourceAction =
+			_resourceActionLocalService.fetchResourceAction(
+				"com.liferay.commerce.tax",
+				"MANAGE_COMMERCE_PRODUCT_TAX_CATEGORIES");
+
+		if (resourceAction == null) {
+			return;
+		}
+
+		_resourceActionLocalService.checkResourceActions(
+			CPTaxCategory.class.getName(),
+			Arrays.asList(
+				ActionKeys.DELETE, ActionKeys.PERMISSIONS, ActionKeys.UPDATE,
+				ActionKeys.VIEW),
+			true);
+		_resourceActionLocalService.checkResourceActions(
+			"com.liferay.commerce.tax",
+			Arrays.asList(
+				CPActionKeys.ADD_COMMERCE_PRODUCT_TAX_CATEGORY,
+				CPActionKeys.VIEW_COMMERCE_PRODUCT_TAX_CATEGORIES),
+			true);
+
+		for (ResourcePermission resourcePermission :
+				_resourcePermissionLocalService.getResourcePermissions(
+					"com.liferay.commerce.tax")) {
+
+			if (!_resourcePermissionLocalService.hasActionId(
+					resourcePermission, resourceAction) ||
+				(resourcePermission.getScope() ==
+					ResourceConstants.SCOPE_INDIVIDUAL)) {
+
+				continue;
+			}
+
+			_addResourcePermission(
+				CPActionKeys.ADD_COMMERCE_PRODUCT_TAX_CATEGORY,
+				"com.liferay.commerce.tax", resourcePermission);
+			_addResourcePermission(
+				CPActionKeys.VIEW_COMMERCE_PRODUCT_TAX_CATEGORIES,
+				"com.liferay.commerce.tax", resourcePermission);
+			_addResourcePermission(
+				ActionKeys.DELETE, CPTaxCategory.class.getName(),
+				resourcePermission);
+			_addResourcePermission(
+				ActionKeys.PERMISSIONS, CPTaxCategory.class.getName(),
+				resourcePermission);
+			_addResourcePermission(
+				ActionKeys.UPDATE, CPTaxCategory.class.getName(),
+				resourcePermission);
+			_addResourcePermission(
+				ActionKeys.VIEW, CPTaxCategory.class.getName(),
+				resourcePermission);
+
+			_resourcePermissionLocalService.removeResourcePermission(
+				resourcePermission.getCompanyId(), resourcePermission.getName(),
+				resourcePermission.getScope(), resourcePermission.getPrimKey(),
+				resourcePermission.getRoleId(),
+				"MANAGE_COMMERCE_PRODUCT_TAX_CATEGORIES");
+		}
+
+		_resourceActionLocalService.deleteResourceAction(resourceAction);
+
+		_companyLocalService.forEachCompany(
+			company -> {
+				User user = company.getGuestUser();
+
+				try (PreparedStatement preparedStatement =
+						AutoBatchPreparedStatementUtil.concurrentAutoBatch(
+							connection,
+							"select CPTaxCategoryId from CPTaxCategory where " +
+								"companyId = ?")) {
+
+					preparedStatement.setLong(1, company.getCompanyId());
+
+					ResultSet resultSet = preparedStatement.executeQuery();
+
+					while (resultSet.next()) {
+						long cpTaxCategoryId = resultSet.getLong(
+							"CPTaxCategoryId");
+
+						long count =
+							_resourcePermissionLocalService.
+								getResourcePermissionsCount(
+									company.getCompanyId(),
+									CPTaxCategory.class.getName(),
+									ResourceConstants.SCOPE_INDIVIDUAL,
+									String.valueOf(cpTaxCategoryId));
+
+						if (count > 0) {
+							continue;
+						}
+
+						_resourceLocalService.addResources(
+							company.getCompanyId(), 0, user.getUserId(),
+							CPTaxCategory.class.getName(), cpTaxCategoryId,
+							false, false, false);
+					}
+				}
+			});
+	}
+
+	private void _addResourcePermission(
+			String actionId, String name, ResourcePermission resourcePermission)
+		throws Exception {
+
+		if (!_resourcePermissionLocalService.hasResourcePermission(
+				resourcePermission.getCompanyId(), name,
+				resourcePermission.getScope(), resourcePermission.getPrimKey(),
+				resourcePermission.getRoleId(), actionId)) {
+
+			_resourcePermissionLocalService.addResourcePermission(
+				resourcePermission.getCompanyId(), name,
+				resourcePermission.getScope(), resourcePermission.getPrimKey(),
+				resourcePermission.getRoleId(), actionId);
+		}
+	}
+
+	private final CompanyLocalService _companyLocalService;
+	private final ResourceActionLocalService _resourceActionLocalService;
+	private final ResourceLocalService _resourceLocalService;
+	private final ResourcePermissionLocalService
+		_resourcePermissionLocalService;
+
+}
