@@ -29,7 +29,7 @@ export class ObjectRelationshipFormPage {
 			.getByLabel('LabelMandatory');
 		this.manyRecordsOfSelect = page
 			.locator(formContainerSelector)
-			.getByLabel('Many Records OfMandatory');
+			.getByPlaceholder('Search for an object definition');
 		this.nameInput = page
 			.locator(formContainerSelector)
 			.getByLabel('NameMandatory');
@@ -51,7 +51,7 @@ export class ObjectRelationshipFormPage {
 	}
 
 	async selectManyRecordsOf(option: string) {
-		await this.manyRecordsOfSelect.click();
+		await this.manyRecordsOfSelect.fill(option);
 
 		await this.page.getByRole('option', {name: option}).click();
 	}
