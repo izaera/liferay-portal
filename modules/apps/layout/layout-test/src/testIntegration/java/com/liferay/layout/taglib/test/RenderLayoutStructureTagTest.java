@@ -1654,7 +1654,11 @@ public class RenderLayoutStructureTagTest {
 					"data-lfr-editable-type=\"image\" src=\"",
 					HtmlUtil.escape(
 						_dlURLHelper.getPreviewURL(
-							fileEntry, fileEntry.getFileVersion(), null,
+							fileEntry, fileEntry.getFileVersion(),
+							ContentLayoutTestUtil.getThemeDisplay(
+								_companyLocalService.getCompany(
+									_group.getCompanyId()),
+								_group, layout),
 							StringPool.BLANK)),
 					"\" data-fileentryid=\"", fileEntry.getFileEntryId(),
 					"\"></a>"),

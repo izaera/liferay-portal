@@ -582,7 +582,11 @@ public class LayoutStagedModelDataHandlerTest
 					HtmlUtil.escape(
 						_dlURLHelper.getPreviewURL(
 							importedFileEntry,
-							importedFileEntry.getFileVersion(), null,
+							importedFileEntry.getFileVersion(),
+							ContentLayoutTestUtil.getThemeDisplay(
+								_companyLocalService.getCompany(
+									liveGroup.getCompanyId()),
+								liveGroup, layout),
 							StringPool.BLANK)),
 					"\" data-fileentryid=\"",
 					importedFileEntry.getFileEntryId(), "\"></a>"),
@@ -626,7 +630,11 @@ public class LayoutStagedModelDataHandlerTest
 					HtmlUtil.escape(
 						_dlURLHelper.getPreviewURL(
 							importedFileEntry,
-							importedFileEntry.getFileVersion(), null,
+							importedFileEntry.getFileVersion(),
+							ContentLayoutTestUtil.getThemeDisplay(
+								_companyLocalService.getCompany(
+									liveGroup.getCompanyId()),
+								liveGroup, layout),
 							StringPool.BLANK)),
 					"\" data-fileentryid=\"",
 					importedFileEntry.getFileEntryId(), "\"></a>"),

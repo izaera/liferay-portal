@@ -1099,7 +1099,8 @@ public class EditableFragmentEntryProcessorTest {
 			"FileEntry_previewImage",
 			"fragment_entry_link_mapped_asset_field_image.json");
 
-		ThemeDisplay themeDisplay = _serviceContext.getThemeDisplay();
+		ThemeDisplay themeDisplay = ServiceContextThreadLocal.getServiceContext(
+		).getThemeDisplay();
 
 		themeDisplay.setDoAsUserId(RandomTestUtil.randomString());
 
@@ -1150,7 +1151,10 @@ public class EditableFragmentEntryProcessorTest {
 		Assert.assertFalse(src.contains("imagePreview=1"));
 		Assert.assertEquals(
 			_dlURLHelper.getPreviewURL(
-				fileEntry, fileEntry.getFileVersion(), null, StringPool.BLANK),
+				fileEntry, fileEntry.getFileVersion(),
+				ServiceContextThreadLocal.getServiceContext(
+				).getThemeDisplay(),
+				StringPool.BLANK),
 			src);
 	}
 
