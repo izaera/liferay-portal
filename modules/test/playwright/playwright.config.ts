@@ -120,6 +120,7 @@ import {config as stableConfig} from './tests/stable/config';
 import {config as stagingConfig} from './tests/staging-configuration-web/config';
 import {config as stylebookWebConfig} from './tests/style-book-web/config';
 import {config as templateWebConfig} from './tests/template-web/config';
+import {config as trashWebConfig} from './tests/trash-web/config';
 import {config as usersAdminWebConfig} from './tests/users-admin-web/config';
 import {config as wikiWebConfig} from './tests/wiki-web/config';
 import {config as customerConfig} from './tests/workspaces/liferay-customer-workspace/config';
@@ -249,6 +250,7 @@ export default defineConfig({
 		stagingConfig,
 		stylebookWebConfig,
 		templateWebConfig,
+		trashWebConfig,
 		usersAdminWebConfig,
 		wikiWebConfig,
 		...setupProjects,
