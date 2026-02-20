@@ -7,7 +7,6 @@ package com.liferay.change.tracking.internal.closure;
 
 import com.liferay.change.tracking.closure.CTClosure;
 import com.liferay.change.tracking.closure.CTClosureFactory;
-import com.liferay.change.tracking.constants.CTConstants;
 import com.liferay.change.tracking.internal.reference.TableJoinHolder;
 import com.liferay.change.tracking.internal.reference.TableReferenceDefinitionManager;
 import com.liferay.change.tracking.internal.reference.TableReferenceInfo;
@@ -43,10 +42,8 @@ import java.sql.SQLException;
 import java.util.AbstractMap;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.Deque;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
@@ -77,17 +74,12 @@ public class CTClosureFactoryImpl implements CTClosureFactory {
 
 	@Override
 	public CTClosure create(long ctCollectionId) {
-		return create(ctCollectionId, Collections.emptySet());
+		return create(ctCollectionId, 0);
 	}
 
 	@Override
 	public CTClosure create(long ctCollectionId, long classNameId) {
-		return create(ctCollectionId, Collections.singleton(classNameId));
-	}
-
-	@Override
-	public CTClosure create(long ctCollectionId, Set<Long> classNameIds) {
-		Map<Set<Long>, CTClosure> ctClosures = _ctClosuresPortalCache.get(
+		Map<Long, CTClosure> ctClosures = _ctClosuresPortalCache.get(
 			ctCollectionId);
 
 		if (ctClosures == null) {
@@ -96,31 +88,31 @@ public class CTClosureFactoryImpl implements CTClosureFactory {
 			_ctClosuresPortalCache.put(ctCollectionId, ctClosures);
 		}
 
-		CTClosure ctClosure = ctClosures.get(classNameIds);
+		CTClosure ctClosure = ctClosures.get(classNameId);
 
 		if (ctClosure != null) {
 			return ctClosure;
 		}
 
-		Map<Long, TableReferenceInfo<?>> combinedTableReferenceInfos = null;
+		Map<Long, TableReferenceInfo<?>> combinedTableReferenceInfos;
 
-		if (classNameIds.isEmpty()) {
+		if (classNameId > 0) {
 			combinedTableReferenceInfos =
-				_tableReferenceDefinitionManager.
-					getCombinedTableReferenceInfos();
+				_tableReferenceDefinitionManager.getCombinedTableReferenceInfos(
+					classNameId);
 		}
 		else {
 			combinedTableReferenceInfos =
-				_tableReferenceDefinitionManager.getCombinedTableReferenceInfos(
-					classNameIds);
+				_tableReferenceDefinitionManager.
+					getCombinedTableReferenceInfos();
 		}
 
 		ctClosure = new CTClosureImpl(
 			ctCollectionId,
 			_buildClosureMap(
-				ctCollectionId, classNameIds, combinedTableReferenceInfos));
+				ctCollectionId, classNameId, combinedTableReferenceInfos));
 
-		ctClosures.put(classNameIds, ctClosure);
+		ctClosures.put(classNameId, ctClosure);
 
 		return ctClosure;
 	}
@@ -132,7 +124,7 @@ public class CTClosureFactoryImpl implements CTClosureFactory {
 	}
 
 	private Map<Node, Collection<Node>> _buildClosureMap(
-		long ctCollectionId, Set<Long> classNameIds,
+		long ctCollectionId, long classNameId,
 		Map<Long, TableReferenceInfo<?>> combinedTableReferenceInfos) {
 
 		CTCollection ctCollection = _ctCollectionPersistence.fetchByPrimaryKey(
@@ -148,7 +140,7 @@ public class CTClosureFactoryImpl implements CTClosureFactory {
 				(int)(ctEntry1.getCtEntryId() - ctEntry2.getCtEntryId()));
 
 		for (CTEntry ctEntry : ctEntries) {
-			if (!classNameIds.isEmpty() &&
+			if ((classNameId > 0) &&
 				!combinedTableReferenceInfos.containsKey(
 					ctEntry.getModelClassNameId())) {
 
@@ -213,9 +205,7 @@ public class CTClosureFactoryImpl implements CTClosureFactory {
 					_tableReferenceDefinitionManager.getClassNameId(
 						entry.getKey());
 
-				if (!classNameIds.isEmpty() &&
-					!map.containsKey(parentClassNameId)) {
-
+				if ((classNameId > 0) && !map.containsKey(parentClassNameId)) {
 					continue;
 				}
 
@@ -239,7 +229,7 @@ public class CTClosureFactoryImpl implements CTClosureFactory {
 
 					List<Long> newParentPrimaryKeys = _collectParentPrimaryKeys(
 						childClassNameId, batchChildPrimaryKeys, ctCollectionId,
-						entry, edgeMap, nodes, parentClassNameId, classNameIds,
+						entry, edgeMap, nodes, parentClassNameId, classNameId,
 						parentTableReferenceInfo);
 
 					if (newParentPrimaryKeys != null) {
@@ -260,7 +250,7 @@ public class CTClosureFactoryImpl implements CTClosureFactory {
 		long childClassNameId, Long[] childPrimaryKeys, long ctCollectionId,
 		Map.Entry<Table<?>, List<TableJoinHolder>> entry,
 		Map<Node, Collection<Edge>> edgeMap, Collection<Node> nodes,
-		long parentClassNameId, Set<Long> classNameIds,
+		long parentClassNameId, long classNameId,
 		TableReferenceInfo<?> parentTableReferenceInfo) {
 
 		List<Long> newParentPrimaryKeys = null;
@@ -292,9 +282,7 @@ public class CTClosureFactoryImpl implements CTClosureFactory {
 					Node parentNode = new Node(
 						parentClassNameId, resultSet.getLong(1));
 
-					if (!classNameIds.isEmpty() &&
-						!nodes.contains(parentNode)) {
-
+					if ((classNameId > 0) && !nodes.contains(parentNode)) {
 						continue;
 					}
 
@@ -447,11 +435,7 @@ public class CTClosureFactoryImpl implements CTClosureFactory {
 							return null;
 						}
 
-						return ctCollectionIdColumn.eq(
-							CTConstants.CT_COLLECTION_ID_PRODUCTION
-						).or(
-							ctCollectionIdColumn.eq(ctCollectionId)
-						).withParentheses();
+						return ctCollectionIdColumn.eq(ctCollectionId);
 					}
 				));
 
@@ -472,8 +456,8 @@ public class CTClosureFactoryImpl implements CTClosureFactory {
 		Map<Node, Collection<Node>> nodeMap = new HashMap<>();
 
 		Deque<Edge> backtraceEdges = new LinkedList<>();
-		Set<Edge> cyclingEdges = new HashSet<>();
-		Set<Edge> resolvedEdges = new HashSet<>();
+		Set<Edge> cyclingEdges = new LinkedHashSet<>();
+		Set<Edge> resolvedEdges = new LinkedHashSet<>();
 
 		for (Collection<Edge> edges : edgeMap.values()) {
 			for (Edge edge : edges) {
@@ -529,7 +513,7 @@ public class CTClosureFactoryImpl implements CTClosureFactory {
 	private static final Log _log = LogFactoryUtil.getLog(
 		CTClosureFactoryImpl.class);
 
-	private PortalCache<Long, Map<Set<Long>, CTClosure>> _ctClosuresPortalCache;
+	private PortalCache<Long, Map<Long, CTClosure>> _ctClosuresPortalCache;
 
 	@Reference
 	private CTCollectionPersistence _ctCollectionPersistence;

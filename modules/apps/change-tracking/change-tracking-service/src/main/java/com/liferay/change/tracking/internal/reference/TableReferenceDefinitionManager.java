@@ -21,7 +21,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Queue;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 import org.osgi.framework.BundleContext;
@@ -88,8 +87,10 @@ public class TableReferenceDefinitionManager {
 	}
 
 	public Map<Long, TableReferenceInfo<?>> getCombinedTableReferenceInfos(
-		long classNameId,
-		Map<Long, TableReferenceInfo<?>> combinedTableReferenceInfos) {
+		long classNameId) {
+
+		Map<Long, TableReferenceInfo<?>> combinedTableReferenceInfos =
+			new HashMap<>();
 
 		Map<Long, TableReferenceInfo<?>> allCombinedTableReferenceInfos =
 			getCombinedTableReferenceInfos();
@@ -126,20 +127,6 @@ public class TableReferenceDefinitionManager {
 					queue.add(childClassNameId);
 				}
 			}
-		}
-
-		return combinedTableReferenceInfos;
-	}
-
-	public Map<Long, TableReferenceInfo<?>> getCombinedTableReferenceInfos(
-		Set<Long> classNameIds) {
-
-		Map<Long, TableReferenceInfo<?>> combinedTableReferenceInfos =
-			new HashMap<>();
-
-		for (long classNameId : classNameIds) {
-			getCombinedTableReferenceInfos(
-				classNameId, combinedTableReferenceInfos);
 		}
 
 		return combinedTableReferenceInfos;
