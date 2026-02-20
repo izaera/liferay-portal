@@ -310,6 +310,7 @@ export function ObjectRelationshipFormBase({
 							<SelectObjectDefinition
 								disabled={readonly}
 								error={errors.objectDefinitionId2}
+								initialValue={values.objectDefinitionName2}
 								label={
 									OBJECT_RELATIONSHIP_TYPES.find(
 										({value}) => value === values.type
@@ -344,6 +345,7 @@ export function ObjectRelationshipFormBase({
 							<SelectObjectDefinition
 								disabled={readonly}
 								error={errors.objectDefinitionId1}
+								initialValue={values.objectDefinitionName2}
 								label={
 									OBJECT_RELATIONSHIP_TYPES.find(
 										({value}) => value === values.type
