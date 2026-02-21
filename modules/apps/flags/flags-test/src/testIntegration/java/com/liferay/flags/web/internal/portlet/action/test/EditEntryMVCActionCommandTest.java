@@ -35,8 +35,8 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 
-import jakarta.portlet.ActionRequest;
-import jakarta.portlet.ActionResponse;
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
 
 import java.util.Collections;
 import java.util.concurrent.atomic.AtomicLong;
@@ -80,10 +80,9 @@ public class EditEntryMVCActionCommandTest {
 			MBMessageConstants.DEFAULT_FORMAT, Collections.emptyList(), false,
 			0, false, serviceContext);
 
-		User reporterUser = TestPropsValues.getUser();
-
 		AtomicReference<String> reporterEmailAddressAtomicReference =
 			new AtomicReference<>();
+		User reporterUser = TestPropsValues.getUser();
 		AtomicLong reporterUserIdAtomicLong = new AtomicLong();
 
 		try (AutoCloseable autoCloseable =
