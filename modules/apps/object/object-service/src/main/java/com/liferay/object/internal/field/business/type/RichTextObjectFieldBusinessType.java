@@ -101,6 +101,11 @@ public class RichTextObjectFieldBusinessType
 		return _getValue(objectField, value);
 	}
 
+	@Override
+	public boolean isLocalizable() {
+		return true;
+	}
+
 	private Object _getValue(ObjectField objectField, Object value)
 		throws PortalException {
 
@@ -131,11 +136,6 @@ public class RichTextObjectFieldBusinessType
 		}
 
 		return value;
-	}
-
-	@Override
-	public boolean isLocalizable() {
-		return true;
 	}
 
 	@Reference
