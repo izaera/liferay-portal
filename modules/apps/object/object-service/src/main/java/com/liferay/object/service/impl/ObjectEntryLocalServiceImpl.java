@@ -2383,12 +2383,11 @@ public class ObjectEntryLocalServiceImpl
 					getObjectFieldObjectFieldSettings(
 						objectField.getObjectFieldId()));
 
-			String value = String.valueOf(
-				ObjectFieldSettingUtil.getDefaultValue(
-					_ddmExpressionFactory, objectField, (Map)values));
+			Object value = ObjectFieldSettingUtil.getDefaultValue(
+				_ddmExpressionFactory, objectField, (Map)values);
 
 			if (value != null) {
-				values.put(objectField.getName(), value);
+				values.put(objectField.getName(), String.valueOf(value));
 			}
 		}
 	}
