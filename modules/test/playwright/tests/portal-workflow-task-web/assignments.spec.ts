@@ -20,6 +20,8 @@ import performLogin, {
 	performUserSwitch,
 	userData,
 } from '../../utils/performLogin';
+import {PORTLET_URLS} from '../../utils/portletUrls';
+import getBasicWebContentStructureId from '../../utils/structured-content/getBasicWebContentStructureId';
 import {blogsPagesTest} from '../blogs-web/fixtures/blogsPagesTest';
 import getPageDefinition from '../layout-content-page-editor-web/utils/getPageDefinition';
 import getWidgetDefinition from '../layout-content-page-editor-web/utils/getWidgetDefinition';
@@ -469,4 +471,82 @@ test('send user back to my workflow tasks page after assign another user to revi
 	await workflowTaskDetailsPage.assigneeDoneButton.click();
 
 	await expect(workflowTasksPage.assignedToMyRolesLink).toBeVisible();
+});
+
+test('verify that the user can order the results inside Assigned to My Roles by Due Date', async ({
+	apiHelpers,
+	page,
+	site,
+	workflowTasksPage,
+}) => {
+	await test.step('assign the "Single Approver" workflow to Web Content Article', async () => {
+		await page.goto(
+			`/group${site.friendlyUrlPath}${PORTLET_URLS.workflow}`
+		);
+
+		await page.waitForLoadState('networkidle');
+
+		await page
+			.getByRole('row', {name: 'Web Content Article'})
+			.getByRole('button', {name: 'Edit'})
+			.click();
+
+		await page
+			.getByRole('combobox')
+			.first()
+			.selectOption('Single Approver@1');
+
+		await page.getByRole('button', {name: 'Save'}).click();
+	});
+
+	let webContent1;
+	let webContent2;
+
+	await test.step('create web contents', async () => {
+		const basicWebContentStructureId =
+			await getBasicWebContentStructureId(apiHelpers);
+
+		webContent1 = await apiHelpers.jsonWebServicesJournal.addWebContent({
+			ddmStructureId: basicWebContentStructureId,
+			groupId: site.id,
+			titleMap: {en_US: 'Web content 1'},
+		});
+
+		webContent2 = await apiHelpers.jsonWebServicesJournal.addWebContent({
+			ddmStructureId: basicWebContentStructureId,
+			groupId: site.id,
+			titleMap: {en_US: 'Web content 2'},
+		});
+	});
+
+	await test.step('update web content due dates and verify that entries are correctly ordered by date', async () => {
+		await workflowTasksPage.goToAssignedToMyRoles();
+
+		await workflowTasksPage.updateDueDate(webContent1.title, '10/02');
+
+		await workflowTasksPage.goToAssignedToMyRoles();
+
+		await workflowTasksPage.updateDueDate(webContent2.title, '09/01');
+
+		await page.getByLabel('Order').click();
+
+		await page.getByRole('menuitem', {name: 'Due Date'}).click();
+
+		await page.waitForLoadState('networkidle');
+
+		await workflowTasksPage.goToAssignedToMyRoles();
+
+		const rowWebContent1 = page.getByRole('row', {name: webContent1.title});
+
+		const rowWebContent2 = page.getByRole('row', {name: webContent2.title});
+
+		const webContent1Index = await rowWebContent1.evaluate((row) =>
+			Array.from(row.parentElement!.children).indexOf(row)
+		);
+		const webContent2Index = await rowWebContent2.evaluate((row) =>
+			Array.from(row.parentElement!.children).indexOf(row)
+		);
+
+		expect(webContent2Index).toBeLessThan(webContent1Index);
+	});
 });
