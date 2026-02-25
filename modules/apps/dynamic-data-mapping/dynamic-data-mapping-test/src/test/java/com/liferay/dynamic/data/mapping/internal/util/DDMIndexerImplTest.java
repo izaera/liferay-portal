@@ -455,6 +455,9 @@ public class DDMIndexerImplTest {
 					() -> enableLegacyDDMIndexFields;
 
 				ReflectionTestUtil.setFieldValue(
+					this, "_ddmFormValuesToFieldsConverter",
+					new DDMFormValuesToFieldsConverterImpl());
+				ReflectionTestUtil.setFieldValue(
 					this, "_ddmIndexerConfiguration", ddmIndexerConfiguration);
 
 				searchEngineInformation = new SearchEngineInformation() {
@@ -538,7 +541,10 @@ public class DDMIndexerImplTest {
 		Locale[] availableLocales, DDMForm ddmForm, Locale defaultLocale,
 		Map<String, String> fieldValues) {
 
-		DDMFormField ddmFormField = ddmForm.getDDMFormField(_FIELD_NAME, false);
+		Map<String, DDMFormField> ddmFormFieldsMap =
+			ddmForm.getDDMFormFieldsMap(true);
+
+		DDMFormField ddmFormField = ddmFormFieldsMap.get(_FIELD_NAME);
 
 		DDMFormFieldOptions ddmFormFieldOptions = new DDMFormFieldOptions();
 
