@@ -953,7 +953,6 @@ components:
                         hr_HR: Hrvatska
                         hu_HU: Horvatorszag
                     type: object
-            required:
             type: object
         OptionValue:
             properties:
