@@ -187,11 +187,11 @@ public class PublishFragmentEntryMVCActionCommandTest {
 		MockLiferayPortletActionRequest mockLiferayPortletActionRequest =
 			new MockLiferayPortletActionRequest();
 
+		mockLiferayPortletActionRequest.setAttribute(
+			WebKeys.THEME_DISPLAY, _getThemeDisplay());
 		mockLiferayPortletActionRequest.setParameter(
 			"fragmentEntryId",
 			String.valueOf(fragmentEntry.getFragmentEntryId()));
-		mockLiferayPortletActionRequest.setAttribute(
-			WebKeys.THEME_DISPLAY, _getThemeDisplay());
 
 		return mockLiferayPortletActionRequest;
 	}
