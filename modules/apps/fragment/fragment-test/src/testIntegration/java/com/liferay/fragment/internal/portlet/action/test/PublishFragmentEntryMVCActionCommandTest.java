@@ -49,6 +49,8 @@ import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 import com.liferay.segments.service.SegmentsExperienceLocalService;
 
+import javax.portlet.ActionRequest;
+
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.ClassRule;
@@ -94,8 +96,7 @@ public class PublishFragmentEntryMVCActionCommandTest {
 			new MockLiferayPortletActionResponse();
 
 		_mvcActionCommand.processAction(
-			_getMockLiferayPortletActionRequest(fragmentEntry),
-			mockLiferayPortletActionResponse);
+			_getActionRequest(fragmentEntry), mockLiferayPortletActionResponse);
 
 		MockHttpServletResponse mockHttpServletResponse =
 			(MockHttpServletResponse)
@@ -154,7 +155,7 @@ public class PublishFragmentEntryMVCActionCommandTest {
 				fragmentEntry);
 
 			_mvcActionCommand.processAction(
-				_getMockLiferayPortletActionRequest(fragmentEntry),
+				_getActionRequest(fragmentEntry),
 				new MockLiferayPortletActionResponse());
 
 			Layout updatedLayout = _layoutLocalService.getLayout(
@@ -163,6 +164,21 @@ public class PublishFragmentEntryMVCActionCommandTest {
 			Assert.assertEquals(
 				WorkflowConstants.STATUS_APPROVED, updatedLayout.getStatus());
 		}
+	}
+
+	private ActionRequest _getActionRequest(FragmentEntry fragmentEntry)
+		throws Exception {
+
+		MockLiferayPortletActionRequest mockLiferayPortletActionRequest =
+			new MockLiferayPortletActionRequest();
+
+		mockLiferayPortletActionRequest.setAttribute(
+			WebKeys.THEME_DISPLAY, _getThemeDisplay());
+		mockLiferayPortletActionRequest.setParameter(
+			"fragmentEntryId",
+			String.valueOf(fragmentEntry.getFragmentEntryId()));
+
+		return mockLiferayPortletActionRequest;
 	}
 
 	private FragmentEntry _getFragmentEntry(String configuration, String html)
@@ -178,22 +194,6 @@ public class PublishFragmentEntryMVCActionCommandTest {
 			WorkflowConstants.STATUS_DRAFT,
 			ServiceContextTestUtil.getServiceContext(
 				_group.getGroupId(), TestPropsValues.getUserId()));
-	}
-
-	private MockLiferayPortletActionRequest _getMockLiferayPortletActionRequest(
-			FragmentEntry fragmentEntry)
-		throws Exception {
-
-		MockLiferayPortletActionRequest mockLiferayPortletActionRequest =
-			new MockLiferayPortletActionRequest();
-
-		mockLiferayPortletActionRequest.setAttribute(
-			WebKeys.THEME_DISPLAY, _getThemeDisplay());
-		mockLiferayPortletActionRequest.setParameter(
-			"fragmentEntryId",
-			String.valueOf(fragmentEntry.getFragmentEntryId()));
-
-		return mockLiferayPortletActionRequest;
 	}
 
 	private ThemeDisplay _getThemeDisplay() throws Exception {
