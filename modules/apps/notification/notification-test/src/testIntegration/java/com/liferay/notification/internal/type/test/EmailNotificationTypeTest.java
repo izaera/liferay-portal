@@ -1245,7 +1245,7 @@ public class EmailNotificationTypeTest extends BaseNotificationTypeTest {
 			ServiceContextTestUtil.getServiceContext();
 
 		_objectEntryLocalService.addObjectEntry(
-			0, TestPropsValues.getUserId(),
+			TestPropsValues.getUserId(), 0,
 			objectDefinition.getObjectDefinitionId(),
 			HashMapBuilder.<String, Serializable>put(
 				"picklist", listTypeEntryKey
@@ -1258,7 +1258,7 @@ public class EmailNotificationTypeTest extends BaseNotificationTypeTest {
 			LanguageUtil.getLanguageId(LocaleUtil.SPAIN));
 
 		_objectEntryLocalService.addObjectEntry(
-			0, TestPropsValues.getUserId(),
+			TestPropsValues.getUserId(), 0,
 			objectDefinition.getObjectDefinitionId(),
 			HashMapBuilder.<String, Serializable>put(
 				"picklist", listTypeEntryKey
