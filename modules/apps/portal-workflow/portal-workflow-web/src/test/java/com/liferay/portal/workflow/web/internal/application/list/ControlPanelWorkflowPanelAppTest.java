@@ -13,10 +13,10 @@ import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.test.rule.LiferayUnitTestRule;
 import com.liferay.portal.workflow.constants.WorkflowPortletKeys;
 
-import jakarta.portlet.PortletRequest;
-import jakarta.portlet.PortletURL;
+import javax.portlet.PortletRequest;
+import javax.portlet.PortletURL;
 
-import jakarta.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletRequest;
 
 import org.junit.Assert;
 import org.junit.ClassRule;
