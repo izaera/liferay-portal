@@ -19,7 +19,7 @@ import com.liferay.application.list.display.context.logic.PersonalMenuEntryHelpe
 import com.liferay.application.list.util.PanelCategoryRegistryUtil;
 import com.liferay.object.model.ObjectDefinition;
 import com.liferay.object.service.ObjectDefinitionLocalServiceUtil;
-import com.liferay.portal.kernel.dao.orm.QueryUtil;
+import com.liferay.petra.function.transform.TransformUtil;
 import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Portlet;
 import com.liferay.portal.kernel.model.PortletCategory;
@@ -45,6 +45,7 @@ import com.liferay.portal.kernel.util.PortletKeys;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.kernel.util.comparator.PortletTitleComparator;
+import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.util.WebAppPool;
 import com.liferay.product.navigation.personal.menu.BasePersonalMenuEntry;
 import com.liferay.roles.admin.constants.RolesAdminWebKeys;
@@ -180,11 +181,10 @@ public class EditRolePermissionsNavigationDisplayContext {
 
 		for (ObjectDefinition objectDefinition :
 				ObjectDefinitionLocalServiceUtil.getObjectDefinitions(
-					QueryUtil.ALL_POS, QueryUtil.ALL_POS)) {
+					_themeDisplay.getCompanyId(),
+					WorkflowConstants.STATUS_APPROVED)) {
 
-			if (objectDefinition.isApproved() &&
-				!objectDefinition.isRootDescendantNode() &&
-				!objectDefinition.isUnmodifiableSystemObject() &&
+			if (!objectDefinition.isUnmodifiableSystemObject() &&
 				Validator.isNull(objectDefinition.getPanelCategoryKey())) {
 
 				NavigationItem navigationItem = NavigationItem.create(
