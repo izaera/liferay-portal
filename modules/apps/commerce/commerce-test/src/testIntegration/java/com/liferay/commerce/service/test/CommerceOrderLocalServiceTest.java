@@ -11,7 +11,13 @@ import com.liferay.commerce.account.test.util.CommerceAccountTestUtil;
 import com.liferay.commerce.currency.model.CommerceCurrency;
 import com.liferay.commerce.currency.test.util.CommerceCurrencyTestUtil;
 import com.liferay.commerce.model.CommerceOrder;
+import com.liferay.commerce.product.model.CPConfigurationEntry;
+import com.liferay.commerce.product.model.CPConfigurationList;
+import com.liferay.commerce.product.model.CPDefinition;
+import com.liferay.commerce.product.model.CPInstance;
 import com.liferay.commerce.product.model.CommerceChannel;
+import com.liferay.commerce.product.service.CPConfigurationEntryLocalService;
+import com.liferay.commerce.product.test.util.CPTestUtil;
 import com.liferay.commerce.service.CommerceOrderLocalService;
 import com.liferay.commerce.test.util.CommerceTestUtil;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
@@ -20,14 +26,18 @@ import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.repository.LocalRepository;
 import com.liferay.portal.kernel.repository.model.FileEntry;
 import com.liferay.portal.kernel.repository.model.Folder;
+import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.UserTestUtil;
+import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
+
+import java.math.BigDecimal;
 
 import java.util.List;
 
@@ -55,20 +65,21 @@ public class CommerceOrderLocalServiceTest {
 
 	@Before
 	public void setUp() throws Exception {
-		Group group = GroupTestUtil.addGroup();
+		_group = GroupTestUtil.addGroup();
 
 		_user = UserTestUtil.addUser();
 
+		_serviceContext = ServiceContextTestUtil.getServiceContext(
+			_group.getGroupId(), _user.getUserId());
+
 		_accountEntry = CommerceAccountTestUtil.addPersonAccountEntry(
-			_user.getUserId(),
-			ServiceContextTestUtil.getServiceContext(
-				group.getGroupId(), _user.getUserId()));
+			_user.getUserId(), _serviceContext);
 
 		_commerceCurrency = CommerceCurrencyTestUtil.addCommerceCurrency(
-			group.getCompanyId());
+			_group.getCompanyId());
 
 		_commerceChannel = CommerceTestUtil.addCommerceChannel(
-			group.getGroupId(), _commerceCurrency.getCode());
+			_group.getGroupId(), _commerceCurrency.getCode());
 	}
 
 	@Test
@@ -121,6 +132,52 @@ public class CommerceOrderLocalServiceTest {
 		Assert.assertEquals(
 			fileEntry1.getFileEntryId(), fileEntry2.getFileEntryId());
 		Assert.assertEquals(folder.getFolderId(), fileEntry2.getFolderId());
+	}
+
+	@Test
+	public void testAddCommerceOrderWithCPConfigurationEntryShippable()
+		throws Exception {
+
+		_accountEntry = CommerceAccountTestUtil.addBusinessAccountEntry(
+			_user.getUserId(), RandomTestUtil.randomString(),
+			RandomTestUtil.randomString() + "@liferay.com",
+			RandomTestUtil.randomString(), new long[] {_user.getUserId()}, null,
+			_serviceContext);
+
+		CommerceOrder commerceOrder = CommerceTestUtil.addB2BCommerceOrder(
+			_group.getGroupId(), _user.getUserId(),
+			_accountEntry.getAccountEntryId(),
+			_commerceCurrency.getCommerceCurrencyId());
+
+		CPInstance cpInstance = CPTestUtil.addCPInstanceWithRandomSku(
+			_group.getGroupId(), BigDecimal.valueOf(34.90));
+
+		CPDefinition cpDefinition = cpInstance.getCPDefinition();
+
+		CPConfigurationList masterCPConfigurationList =
+			cpDefinition.getMasterCPConfigurationList();
+
+		CPConfigurationEntry cpConfigurationEntry =
+			_cpConfigurationEntryLocalService.fetchCPConfigurationEntry(
+				_portal.getClassNameId(CPDefinition.class),
+				cpDefinition.getCPDefinitionId(),
+				masterCPConfigurationList.getCPConfigurationListId());
+
+		cpConfigurationEntry.setShippable(false);
+
+		cpConfigurationEntry =
+			_cpConfigurationEntryLocalService.updateCPConfigurationEntry(
+				cpConfigurationEntry);
+
+		CommerceTestUtil.addCommerceOrderItem(
+			commerceOrder.getCommerceOrderId(), cpInstance.getCPInstanceId(),
+			BigDecimal.ONE);
+
+		commerceOrder = _commerceOrderLocalService.getCommerceOrder(
+			commerceOrder.getCommerceOrderId());
+
+		Assert.assertEquals(
+			cpConfigurationEntry.isShippable(), commerceOrder.isShippable());
 	}
 
 	@Test
@@ -177,6 +234,15 @@ public class CommerceOrderLocalServiceTest {
 	@Inject
 	private CommerceOrderLocalService _commerceOrderLocalService;
 
+	@Inject
+	private CPConfigurationEntryLocalService _cpConfigurationEntryLocalService;
+
+	private Group _group;
+
+	@Inject
+	private Portal _portal;
+
+	private ServiceContext _serviceContext;
 	private User _user;
 
 }
