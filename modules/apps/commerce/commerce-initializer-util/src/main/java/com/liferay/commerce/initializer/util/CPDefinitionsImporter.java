@@ -375,7 +375,7 @@ public class CPDefinitionsImporter {
 		CPDefinition cpDefinition =
 			_cpDefinitionLocalService.
 				fetchCPDefinitionByCProductExternalReferenceCode(
-					externalReferenceCode, company.getCompanyId());
+					externalReferenceCode, company.getCompanyId(), false);
 
 		if (cpDefinition != null) {
 			CommerceChannelRel commerceChannelRel =

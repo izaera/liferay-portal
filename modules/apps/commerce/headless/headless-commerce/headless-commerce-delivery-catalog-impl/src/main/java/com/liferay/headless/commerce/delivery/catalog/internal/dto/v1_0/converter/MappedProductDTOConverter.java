@@ -111,7 +111,8 @@ public class MappedProductDTOConverter
 		}
 
 		CPDefinition cpDefinition =
-			_cpDefinitionLocalService.fetchCPDefinitionByCProductId(cProductId);
+			_cpDefinitionLocalService.fetchCPDefinitionByCProductId(
+				cProductId, true);
 
 		if ((cpDefinition != null) &&
 			!_commerceProductViewPermission.contains(

@@ -871,11 +871,11 @@ public class CPDefinitionLocalServiceTest {
 	private CommercePriceListLocalService _commercePriceListLocalService;
 
 	@Inject
-	private CPDefinitionInventoryLocalService
-		_cpDefinitionInventoryLocalService;
+	private CPDefinitionFinder _cpDefinitionFinder;
 
 	@Inject
-	private CPDefinitionFinder _cpDefinitionFinder;
+	private CPDefinitionInventoryLocalService
+		_cpDefinitionInventoryLocalService;
 
 	@Inject
 	private CPDefinitionLocalService _cpDefinitionLocalService;

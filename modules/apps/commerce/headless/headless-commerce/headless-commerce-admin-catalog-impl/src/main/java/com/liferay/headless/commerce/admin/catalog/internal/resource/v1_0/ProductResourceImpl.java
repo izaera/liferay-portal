@@ -186,7 +186,7 @@ public class ProductResourceImpl extends BaseProductResourceImpl {
 	@Override
 	public void deleteProduct(Long id) throws Exception {
 		CPDefinition cpDefinition =
-			_cpDefinitionService.fetchCPDefinitionByCProductId(id);
+			_cpDefinitionService.fetchCPDefinitionByCProductId(id, false);
 
 		if (cpDefinition == null) {
 			throw new NoSuchCPDefinitionException(
@@ -205,7 +205,8 @@ public class ProductResourceImpl extends BaseProductResourceImpl {
 		CPDefinition cpDefinition =
 			_cpDefinitionService.
 				fetchCPDefinitionByCProductExternalReferenceCode(
-					externalReferenceCode, contextCompany.getCompanyId());
+					externalReferenceCode, contextCompany.getCompanyId(),
+					false);
 
 		if (cpDefinition == null) {
 			throw new NoSuchCPDefinitionException(
@@ -265,7 +266,7 @@ public class ProductResourceImpl extends BaseProductResourceImpl {
 	@Override
 	public Product getProduct(Long id) throws Exception {
 		CPDefinition cpDefinition =
-			_cpDefinitionService.fetchCPDefinitionByCProductId(id);
+			_cpDefinitionService.fetchCPDefinitionByCProductId(id, false);
 
 		if (cpDefinition == null) {
 			throw new NoSuchCPDefinitionException(
@@ -283,7 +284,8 @@ public class ProductResourceImpl extends BaseProductResourceImpl {
 		CPDefinition cpDefinition =
 			_cpDefinitionService.
 				fetchCPDefinitionByCProductExternalReferenceCode(
-					externalReferenceCode, contextCompany.getCompanyId());
+					externalReferenceCode, contextCompany.getCompanyId(),
+					false);
 
 		if (cpDefinition == null) {
 			throw new NoSuchCPDefinitionException(
@@ -341,7 +343,7 @@ public class ProductResourceImpl extends BaseProductResourceImpl {
 	@Override
 	public Response patchProduct(Long id, Product product) throws Exception {
 		CPDefinition cpDefinition =
-			_cpDefinitionService.fetchCPDefinitionByCProductId(id);
+			_cpDefinitionService.fetchCPDefinitionByCProductId(id, false);
 
 		if (cpDefinition == null) {
 			throw new NoSuchCPDefinitionException(
@@ -363,7 +365,8 @@ public class ProductResourceImpl extends BaseProductResourceImpl {
 		CPDefinition cpDefinition =
 			_cpDefinitionService.
 				fetchCPDefinitionByCProductExternalReferenceCode(
-					externalReferenceCode, contextCompany.getCompanyId());
+					externalReferenceCode, contextCompany.getCompanyId(),
+					false);
 
 		if (cpDefinition == null) {
 			throw new NoSuchCPDefinitionException(
@@ -404,7 +407,8 @@ public class ProductResourceImpl extends BaseProductResourceImpl {
 		CPDefinition cpDefinition =
 			_cpDefinitionService.
 				fetchCPDefinitionByCProductExternalReferenceCode(
-					externalReferenceCode, contextCompany.getCompanyId());
+					externalReferenceCode, contextCompany.getCompanyId(),
+					false);
 
 		if (cpDefinition == null) {
 			throw new NoSuchCPDefinitionException();
@@ -434,7 +438,7 @@ public class ProductResourceImpl extends BaseProductResourceImpl {
 	@Override
 	public Product postProductClone(Long id, Long catalogId) throws Exception {
 		CPDefinition cpDefinition =
-			_cpDefinitionService.fetchCPDefinitionByCProductId(id);
+			_cpDefinitionService.fetchCPDefinitionByCProductId(id, false);
 
 		if (cpDefinition == null) {
 			throw new NoSuchCPDefinitionException(
@@ -608,7 +612,8 @@ public class ProductResourceImpl extends BaseProductResourceImpl {
 		CPDefinition cpDefinition =
 			_cpDefinitionService.
 				fetchCPDefinitionByCProductExternalReferenceCode(
-					externalReferenceCode, contextCompany.getCompanyId());
+					externalReferenceCode, contextCompany.getCompanyId(),
+					false);
 
 		Category[] categories = product.getCategories();
 

@@ -1126,7 +1126,7 @@ public class BundleSiteInitializerTest {
 		CPDefinition cpDefinition =
 			_cpDefinitionLocalService.
 				fetchCPDefinitionByCProductExternalReferenceCode(
-					"TESTCOMMERCEPRODUCT1", _group.getCompanyId());
+					"TESTCOMMERCEPRODUCT1", _group.getCompanyId(), false);
 
 		Assert.assertNotNull(cpDefinition);
 		Assert.assertEquals("Test Commerce Product", cpDefinition.getName());
@@ -1160,7 +1160,7 @@ public class BundleSiteInitializerTest {
 		CPDefinition cpDefinition =
 			_cpDefinitionLocalService.
 				fetchCPDefinitionByCProductExternalReferenceCode(
-					"TESTCOMMERCEPRODUCT1", _group.getCompanyId());
+					"TESTCOMMERCEPRODUCT1", _group.getCompanyId(), false);
 
 		CPInstance cpInstance1 = _cpInstanceLocalService.getCPInstance(
 			cpDefinition.getCPDefinitionId(), "TEST VALUE 1");
@@ -1200,7 +1200,7 @@ public class BundleSiteInitializerTest {
 		CPDefinition cpDefinition =
 			_cpDefinitionLocalService.
 				fetchCPDefinitionByCProductExternalReferenceCode(
-					"TESTCOMMERCEPRODUCT1", _group.getCompanyId());
+					"TESTCOMMERCEPRODUCT1", _group.getCompanyId(), false);
 
 		Assert.assertNotNull(cpDefinition);
 
@@ -1712,7 +1712,7 @@ public class BundleSiteInitializerTest {
 		CPDefinition cpDefinition =
 			_cpDefinitionLocalService.
 				fetchCPDefinitionByCProductExternalReferenceCode(
-					"TESTCOMMERCEPRODUCT1", _group.getCompanyId());
+					"TESTCOMMERCEPRODUCT1", _group.getCompanyId(), false);
 
 		ExpandoBridge expandoBridge = cpDefinition.getExpandoBridge();
 
@@ -1726,7 +1726,7 @@ public class BundleSiteInitializerTest {
 		CPDefinition cpDefinition =
 			_cpDefinitionLocalService.
 				fetchCPDefinitionByCProductExternalReferenceCode(
-					"TESTCOMMERCEPRODUCT1", _group.getCompanyId());
+					"TESTCOMMERCEPRODUCT1", _group.getCompanyId(), false);
 
 		ExpandoBridge expandoBridge = cpDefinition.getExpandoBridge();
 
