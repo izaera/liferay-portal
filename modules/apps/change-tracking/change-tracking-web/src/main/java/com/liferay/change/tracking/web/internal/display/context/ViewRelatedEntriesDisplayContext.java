@@ -24,6 +24,8 @@ import com.liferay.portal.kernel.portlet.url.builder.PortletURLBuilder;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.HashMapBuilder;
+import com.liferay.portal.kernel.util.HtmlUtil;
+import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -169,7 +171,7 @@ public class ViewRelatedEntriesDisplayContext {
 			if (ctCollection.getCtCollectionId() != _ctCollectionId) {
 				selectOptions.add(
 					new SelectOption(
-						ctCollection.getName(),
+						HtmlUtil.escape(ctCollection.getName()),
 						String.valueOf(ctCollection.getCtCollectionId())));
 			}
 		}
