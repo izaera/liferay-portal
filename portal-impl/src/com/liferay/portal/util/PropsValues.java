@@ -878,6 +878,10 @@ public class PropsValues {
 					PropsKeys.
 						FIELD_ENABLE_COM_LIFERAY_PORTAL_KERNEL_MODEL_ORGANIZATION_STATUS));
 
+	public static final boolean GLOBAL_OBJECT_DISABLE_GET_REMOTE_METHODS =
+		GetterUtil.getBoolean(
+			PropsUtil.get(PropsKeys.GLOBAL_OBJECT_DISABLE_GET_REMOTE_METHODS));
+
 	public static final String[] GLOBAL_SHUTDOWN_EVENTS = PropsUtil.getArray(
 		PropsKeys.GLOBAL_SHUTDOWN_EVENTS);
 

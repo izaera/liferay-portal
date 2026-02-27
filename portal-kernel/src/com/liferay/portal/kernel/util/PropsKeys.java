@@ -1056,6 +1056,9 @@ public interface PropsKeys {
 
 	public static final String FULL_PAGE_DISPLAYABLE = "full.page.displayable";
 
+	public static final String GLOBAL_OBJECT_DISABLE_GET_REMOTE_METHODS =
+		"global.object.disable.get.remote.methods";
+
 	public static final String GLOBAL_SHUTDOWN_EVENTS =
 		"global.shutdown.events";
 
