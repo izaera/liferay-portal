@@ -93,6 +93,8 @@ const FragmentEditor = ({
 	]);
 
 	const publish = () => {
+		setChangesStatus(CHANGES_STATUS.saving);
+
 		const formData = new FormData();
 
 		formData.append(`${namespace}fragmentEntryId`, fragmentEntryId);
