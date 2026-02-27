@@ -286,14 +286,14 @@
 				return '<%= themeDisplay.getRealUserId() %>';
 			},
 			getRemoteAddr: function () {
-				if ('<%= PropsValues.GLOBAL_OBJECT_DISABLE_GET_REMOTE_METHODS %>') {
+				if (<%= PropsValues.GLOBAL_OBJECT_DISABLE_GET_REMOTE_METHODS %>) {
 					throw new Error('Method getRemoteAddr has been disabled');
 				}
 
 				return '<%= themeDisplay.getRemoteAddr() %>';
 			},
 			getRemoteHost: function () {
-				if ('<%= PropsValues.GLOBAL_OBJECT_DISABLE_GET_REMOTE_METHODS %>') {
+				if (<%= PropsValues.GLOBAL_OBJECT_DISABLE_GET_REMOTE_METHODS %>) {
 					throw new Error('Method getRemoteHost has been disabled');
 				}
 
