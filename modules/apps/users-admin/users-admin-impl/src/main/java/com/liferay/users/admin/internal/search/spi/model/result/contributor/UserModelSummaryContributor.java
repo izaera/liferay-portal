@@ -28,18 +28,12 @@ public class UserModelSummaryContributor implements ModelSummaryContributor {
 	public Summary getSummary(
 		Document document, Locale locale, String snippet) {
 
-		String languageId = LocaleUtil.toLanguageId(locale);
-
 		String prefix = Field.SNIPPET + StringPool.UNDERLINE;
-
 		String fullName = _localization.getLocalizedName(
-			"fullName", languageId);
+			"fullName", LocaleUtil.toLanguageId(locale));
 
-		String title = document.get(prefix + fullName, fullName);
-
-		String content = document.get(prefix);
-
-		return new Summary(title, content);
+		return new Summary(
+			document.get(prefix + fullName, fullName), document.get(prefix));
 	}
 
 	private final Localization _localization;
