@@ -292,13 +292,13 @@ public class CPDefinitionServiceImpl extends CPDefinitionServiceBaseImpl {
 
 	@Override
 	public CPDefinition fetchCPDefinitionByCProductExternalReferenceCode(
-			String externalReferenceCode, long companyId)
+			String externalReferenceCode, long companyId, boolean excludeDraft)
 		throws PortalException {
 
 		CPDefinition cpDefinition =
 			cpDefinitionLocalService.
 				fetchCPDefinitionByCProductExternalReferenceCode(
-					externalReferenceCode, companyId);
+					externalReferenceCode, companyId, excludeDraft);
 
 		if (cpDefinition != null) {
 			_checkCommerceCatalogByCPDefinitionId(
@@ -309,11 +309,13 @@ public class CPDefinitionServiceImpl extends CPDefinitionServiceBaseImpl {
 	}
 
 	@Override
-	public CPDefinition fetchCPDefinitionByCProductId(long cProductId)
+	public CPDefinition fetchCPDefinitionByCProductId(
+			long cProductId, boolean excludeDraft)
 		throws PortalException {
 
 		CPDefinition cpDefinition =
-			cpDefinitionLocalService.fetchCPDefinitionByCProductId(cProductId);
+			cpDefinitionLocalService.fetchCPDefinitionByCProductId(
+				cProductId, excludeDraft);
 
 		if (cpDefinition != null) {
 			_checkCommerceCatalogByCPDefinitionId(
