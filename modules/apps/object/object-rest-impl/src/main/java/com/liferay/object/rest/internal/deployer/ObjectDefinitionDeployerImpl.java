@@ -302,10 +302,10 @@ public class ObjectDefinitionDeployerImpl implements ObjectDefinitionDeployer {
 			}
 
 			configuration.update(
-				HashMapDictionaryBuilder.put(
+				HashMapDictionaryBuilder.<String, Object>put(
 					ExtendedObjectClassDefinition.Scope.COMPANY.
 						getPropertyKey(),
-					String.valueOf(objectDefinition.getCompanyId())
+					objectDefinition.getCompanyId()
 				).put(
 					"excludedOperationIds",
 					StringUtil.merge(excludedOperationIds, ",")
