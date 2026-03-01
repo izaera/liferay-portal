@@ -1074,11 +1074,12 @@ public class LayoutStructureRenderer {
 
 		jspWriter.write("\"><input name=\"redirect\" type=\"hidden\" value=\"");
 		jspWriter.write(
-			_renderLayoutStructureDisplayContext.
-				getFormStyledLayoutStructureItemRedirect(
-					formStyledLayoutStructureItem));
+			HtmlUtil.escape(
+				_renderLayoutStructureDisplayContext.
+					getFormStyledLayoutStructureItemRedirect(
+						formStyledLayoutStructureItem)));
 		jspWriter.write("\"><input name=\"backURL\" type=\"hidden\" value=\"");
-		jspWriter.write(_themeDisplay.getURLCurrent());
+		jspWriter.write(HtmlUtil.escape(_themeDisplay.getURLCurrent()));
 		jspWriter.write(
 			"\"><input name=\"checkboxNames\" type=\"hidden\" value=\"");
 		jspWriter.write(
@@ -1113,7 +1114,9 @@ public class LayoutStructureRenderer {
 				"\"><input name=\"externalReferenceCode\" type=\"hidden\"");
 			jspWriter.write(" value=\"");
 			jspWriter.write(
-				layoutDisplayPageObjectProvider.getExternalReferenceCode());
+				HtmlUtil.escape(
+					layoutDisplayPageObjectProvider.
+						getExternalReferenceCode()));
 
 			if (!_hasUpdatePermission(layoutDisplayPageObjectProvider)) {
 				readOnly = true;
@@ -1141,9 +1144,10 @@ public class LayoutStructureRenderer {
 		jspWriter.write(String.valueOf(_themeDisplay.getPlid()));
 		jspWriter.write("\"><input name=\"p_l_mode\" type=\"hidden\" value=\"");
 		jspWriter.write(
-			ParamUtil.getString(
-				PortalUtil.getOriginalServletRequest(_httpServletRequest),
-				"p_l_mode", Constants.VIEW));
+			HtmlUtil.escape(
+				ParamUtil.getString(
+					PortalUtil.getOriginalServletRequest(_httpServletRequest),
+					"p_l_mode", Constants.VIEW)));
 		jspWriter.write("\"><input name=\"plid\" type=\"hidden\" value=\"");
 		jspWriter.write(String.valueOf(_themeDisplay.getPlid()));
 		jspWriter.write(
@@ -1160,8 +1164,9 @@ public class LayoutStructureRenderer {
 
 			jspWriter.write("<div class=\"alert alert-danger\">");
 			jspWriter.write(
-				_renderLayoutStructureDisplayContext.getErrorMessage(
-					formStyledLayoutStructureItem, infoForm));
+				HtmlUtil.escape(
+					_renderLayoutStructureDisplayContext.getErrorMessage(
+						formStyledLayoutStructureItem, infoForm)));
 			jspWriter.write("</div>");
 
 			SessionErrors.remove(
