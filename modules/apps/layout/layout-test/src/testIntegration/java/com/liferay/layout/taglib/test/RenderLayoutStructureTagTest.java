@@ -420,6 +420,62 @@ public class RenderLayoutStructureTagTest {
 	}
 
 	@Test
+	@TestInfo("LPD-80845")
+	public void testEscapeFormPlModeParameter() throws Exception {
+		ObjectDefinition objectDefinition =
+			ObjectDefinitionTestUtil.publishObjectDefinition(
+				ListUtil.fromArray(
+					ObjectFieldUtil.createObjectField(
+						ObjectFieldConstants.BUSINESS_TYPE_TEXT,
+						ObjectFieldConstants.DB_TYPE_STRING,
+						RandomTestUtil.randomString(), "text")),
+				ObjectDefinitionConstants.SCOPE_SITE);
+
+		Layout layout = LayoutTestUtil.addTypeContentLayout(_group);
+
+		Layout draftLayout = layout.fetchDraftLayout();
+
+		List<InfoField<?>> editableInfoFields = _getEditableInfoFields(
+			objectDefinition.getClassName());
+
+		ContentLayoutTestUtil.addFormToLayout(
+			false,
+			String.valueOf(
+				_portal.getClassNameId(objectDefinition.getClassName())),
+			"0", draftLayout, _layoutStructureProvider,
+			_segmentsExperienceLocalService.fetchDefaultSegmentsExperienceId(
+				draftLayout.getPlid()),
+			editableInfoFields.toArray(new InfoField<?>[0]));
+
+		ContentLayoutTestUtil.publishLayout(draftLayout, layout);
+
+		String xssScript = "\"><script>alert('xss')</script><input value=\"";
+
+		MockHttpServletRequest mockHttpServletRequest =
+			_getMockHttpServletRequest(
+				layout, null,
+				HashMapBuilder.put(
+					"p_l_mode", xssScript
+				).build());
+
+		_serviceContext.setRequest(mockHttpServletRequest);
+
+		ServiceContextThreadLocal.pushServiceContext(_serviceContext);
+
+		try {
+			MockHttpServletResponse mockHttpServletResponse = _renderLayout(
+				layout, mockHttpServletRequest);
+
+			String content = mockHttpServletResponse.getContentAsString();
+
+			Assert.assertFalse(content.contains(xssScript));
+		}
+		finally {
+			ServiceContextThreadLocal.popServiceContext();
+		}
+	}
+
+	@Test
 	public void testRemovedLayoutTemplateId() throws Exception {
 		Layout layout = _layoutLocalService.addLayout(
 			null, TestPropsValues.getUserId(), _group.getGroupId(), false,
@@ -2395,6 +2451,24 @@ public class RenderLayoutStructureTagTest {
 			rootLayoutStructureItem.getItemId(), 0);
 
 		return layoutStructure;
+	}
+
+	private List<InfoField<?>> _getEditableInfoFields(String className)
+		throws Exception {
+
+		InfoItemFormProvider<?> infoItemFormProvider =
+			_infoItemServiceRegistry.getFirstInfoItemService(
+				InfoItemFormProvider.class, className);
+
+		InfoForm infoForm = infoItemFormProvider.getInfoForm(
+			StringPool.BLANK, _group.getGroupId());
+
+		return ListUtil.filter(
+			infoForm.getAllInfoFields(),
+			infoField ->
+				infoField.isEditable() &&
+				!StringUtil.equals(
+					infoField.getName(), "externalReferenceCode"));
 	}
 
 	private InfoField<TextInfoFieldType> _getInfoField(boolean readOnly) {
