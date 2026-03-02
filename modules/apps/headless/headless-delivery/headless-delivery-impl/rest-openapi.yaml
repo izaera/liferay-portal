@@ -2058,13 +2058,13 @@ components:
                     description:
                         The fragment field's date.
                     oneOf:
-                        -   $ref: "#/components/schemas/FragmentMappedValue"
+                        - $ref: "#/components/schemas/FragmentMappedValue"
                 dateFormat:
                     # @review
                     description:
                         The fragment editable element's date format.
                     oneOf:
-                        -   $ref: "#/components/schemas/FragmentInlineValue"
+                        - $ref: "#/components/schemas/FragmentInlineValue"
             type: object
         FragmentFieldHTML:
             # @review
