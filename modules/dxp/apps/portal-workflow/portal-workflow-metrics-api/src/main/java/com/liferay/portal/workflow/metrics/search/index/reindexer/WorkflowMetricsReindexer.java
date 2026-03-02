@@ -5,6 +5,7 @@
 
 package com.liferay.portal.workflow.metrics.search.index.reindexer;
 
+import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.exception.PortalException;
 
 /**
@@ -12,7 +13,9 @@ import com.liferay.portal.kernel.exception.PortalException;
  */
 public interface WorkflowMetricsReindexer {
 
-	public String getKey();
+	public default String getKey() {
+		return StringPool.BLANK;
+	}
 
 	public void reindex(long companyId) throws PortalException;
 
