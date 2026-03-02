@@ -2518,7 +2518,7 @@ public class CPDefinitionLocalServiceImpl
 				}
 			}
 
-			// CProduct
+			// Commerce product
 
 			_cProductLocalService.updatePublishedCPDefinitionId(
 				cpDefinition.getCProductId(), cpDefinition.getCPDefinitionId());
@@ -2530,7 +2530,7 @@ public class CPDefinitionLocalServiceImpl
 			_assetEntryLocalService.updateVisible(
 				CPDefinition.class.getName(), cpDefinitionId, false);
 
-			// CProduct
+			// Commerce product
 
 			long publishedCPDefinitionId = 0;
 
