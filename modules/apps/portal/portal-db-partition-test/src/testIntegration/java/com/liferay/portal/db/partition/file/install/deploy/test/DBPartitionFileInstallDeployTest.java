@@ -172,9 +172,9 @@ public class DBPartitionFileInstallDeployTest extends BaseDBPartitionTestCase {
 			illegalArgumentException -> Assert.fail(), true);
 	}
 
-	private String _addConfigContent(
-		String testValue, String dictionaryKey, Object dictionaryValue,
-		boolean supportedConfiguration) {
+	private String _getContent(
+		String dictionaryKey, Object dictionaryValue,
+		boolean supportedConfiguration, String testValue) {
 
 		StringBundler sb = new StringBundler(13);
 
@@ -317,9 +317,9 @@ public class DBPartitionFileInstallDeployTest extends BaseDBPartitionTestCase {
 
 		try {
 			try {
-				String content = _addConfigContent(
-					_TEST_VALUE_1, dictionaryKey, dictionaryValue,
-					supportedConfiguration);
+				String content = _getContent(
+					dictionaryKey, dictionaryValue, supportedConfiguration,
+					_TEST_VALUE_1);
 
 				Files.write(path, content.getBytes());
 
@@ -338,9 +338,9 @@ public class DBPartitionFileInstallDeployTest extends BaseDBPartitionTestCase {
 			addValidatorRunnable.run();
 
 			try {
-				String content = _addConfigContent(
-					_TEST_VALUE_2, dictionaryKey, dictionaryValue,
-					supportedConfiguration);
+				String content = _getContent(
+					dictionaryKey, dictionaryValue, supportedConfiguration,
+					_TEST_VALUE_2);
 
 				Files.write(path, content.getBytes());
 
