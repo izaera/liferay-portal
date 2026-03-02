@@ -1,11 +1,11 @@
 /**
- * SPDX-FileCopyrightText: (c) 2000 Liferay, Inc. https://liferay.com
+ * SPDX-FileCopyrightText: (c) 2026 Liferay, Inc. https://liferay.com
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
 package com.liferay.headless.delivery.client.serdes.v1_0;
 
-import com.liferay.headless.delivery.client.dto.v1_0.SitePageFormSubmissionResult;
+import com.liferay.headless.delivery.client.dto.v1_0.DisplayPageFormSubmissionResult;
 import com.liferay.headless.delivery.client.json.BaseJSONParser;
 
 import java.util.Iterator;
@@ -21,28 +21,28 @@ import javax.annotation.Generated;
  * @generated
  */
 @Generated("")
-public class SitePageFormSubmissionResultSerDes {
+public class DisplayPageFormSubmissionResultSerDes {
 
-	public static SitePageFormSubmissionResult toDTO(String json) {
-		SitePageFormSubmissionResultJSONParser
-			sitePageFormSubmissionResultJSONParser =
-				new SitePageFormSubmissionResultJSONParser();
+	public static DisplayPageFormSubmissionResult toDTO(String json) {
+		DisplayPageFormSubmissionResultJSONParser
+			displayPageFormSubmissionResultJSONParser =
+				new DisplayPageFormSubmissionResultJSONParser();
 
-		return sitePageFormSubmissionResultJSONParser.parseToDTO(json);
+		return displayPageFormSubmissionResultJSONParser.parseToDTO(json);
 	}
 
-	public static SitePageFormSubmissionResult[] toDTOs(String json) {
-		SitePageFormSubmissionResultJSONParser
-			sitePageFormSubmissionResultJSONParser =
-				new SitePageFormSubmissionResultJSONParser();
+	public static DisplayPageFormSubmissionResult[] toDTOs(String json) {
+		DisplayPageFormSubmissionResultJSONParser
+			displayPageFormSubmissionResultJSONParser =
+				new DisplayPageFormSubmissionResultJSONParser();
 
-		return sitePageFormSubmissionResultJSONParser.parseToDTOs(json);
+		return displayPageFormSubmissionResultJSONParser.parseToDTOs(json);
 	}
 
 	public static String toJSON(
-		SitePageFormSubmissionResult sitePageFormSubmissionResult) {
+		DisplayPageFormSubmissionResult displayPageFormSubmissionResult) {
 
-		if (sitePageFormSubmissionResult == null) {
+		if (displayPageFormSubmissionResult == null) {
 			return "null";
 		}
 
@@ -50,19 +50,18 @@ public class SitePageFormSubmissionResultSerDes {
 
 		sb.append("{");
 
-		if (sitePageFormSubmissionResult.getItemReference() != null) {
+		if (displayPageFormSubmissionResult.getMapping() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
 			}
 
-			sb.append("\"itemReference\": ");
+			sb.append("\"mapping\": ");
 
 			sb.append(
-				String.valueOf(
-					sitePageFormSubmissionResult.getItemReference()));
+				String.valueOf(displayPageFormSubmissionResult.getMapping()));
 		}
 
-		if (sitePageFormSubmissionResult.getNotificationText() != null) {
+		if (displayPageFormSubmissionResult.getNotificationText() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
 			}
@@ -71,17 +70,17 @@ public class SitePageFormSubmissionResultSerDes {
 
 			sb.append(
 				String.valueOf(
-					sitePageFormSubmissionResult.getNotificationText()));
+					displayPageFormSubmissionResult.getNotificationText()));
 		}
 
-		if (sitePageFormSubmissionResult.getShowNotification() != null) {
+		if (displayPageFormSubmissionResult.getShowNotification() != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
 			}
 
 			sb.append("\"showNotification\": ");
 
-			sb.append(sitePageFormSubmissionResult.getShowNotification());
+			sb.append(displayPageFormSubmissionResult.getShowNotification());
 		}
 
 		sb.append("}");
@@ -90,71 +89,70 @@ public class SitePageFormSubmissionResultSerDes {
 	}
 
 	public static Map<String, Object> toMap(String json) {
-		SitePageFormSubmissionResultJSONParser
-			sitePageFormSubmissionResultJSONParser =
-				new SitePageFormSubmissionResultJSONParser();
+		DisplayPageFormSubmissionResultJSONParser
+			displayPageFormSubmissionResultJSONParser =
+				new DisplayPageFormSubmissionResultJSONParser();
 
-		return sitePageFormSubmissionResultJSONParser.parseToMap(json);
+		return displayPageFormSubmissionResultJSONParser.parseToMap(json);
 	}
 
 	public static Map<String, String> toMap(
-		SitePageFormSubmissionResult sitePageFormSubmissionResult) {
+		DisplayPageFormSubmissionResult displayPageFormSubmissionResult) {
 
-		if (sitePageFormSubmissionResult == null) {
+		if (displayPageFormSubmissionResult == null) {
 			return null;
 		}
 
 		Map<String, String> map = new TreeMap<>();
 
-		if (sitePageFormSubmissionResult.getItemReference() == null) {
-			map.put("itemReference", null);
+		if (displayPageFormSubmissionResult.getMapping() == null) {
+			map.put("mapping", null);
 		}
 		else {
 			map.put(
-				"itemReference",
-				String.valueOf(
-					sitePageFormSubmissionResult.getItemReference()));
+				"mapping",
+				String.valueOf(displayPageFormSubmissionResult.getMapping()));
 		}
 
-		if (sitePageFormSubmissionResult.getNotificationText() == null) {
+		if (displayPageFormSubmissionResult.getNotificationText() == null) {
 			map.put("notificationText", null);
 		}
 		else {
 			map.put(
 				"notificationText",
 				String.valueOf(
-					sitePageFormSubmissionResult.getNotificationText()));
+					displayPageFormSubmissionResult.getNotificationText()));
 		}
 
-		if (sitePageFormSubmissionResult.getShowNotification() == null) {
+		if (displayPageFormSubmissionResult.getShowNotification() == null) {
 			map.put("showNotification", null);
 		}
 		else {
 			map.put(
 				"showNotification",
 				String.valueOf(
-					sitePageFormSubmissionResult.getShowNotification()));
+					displayPageFormSubmissionResult.getShowNotification()));
 		}
 
 		return map;
 	}
 
-	public static class SitePageFormSubmissionResultJSONParser
-		extends BaseJSONParser<SitePageFormSubmissionResult> {
+	public static class DisplayPageFormSubmissionResultJSONParser
+		extends BaseJSONParser<DisplayPageFormSubmissionResult> {
 
 		@Override
-		protected SitePageFormSubmissionResult createDTO() {
-			return new SitePageFormSubmissionResult();
+		protected DisplayPageFormSubmissionResult createDTO() {
+			return new DisplayPageFormSubmissionResult();
 		}
 
 		@Override
-		protected SitePageFormSubmissionResult[] createDTOArray(int size) {
-			return new SitePageFormSubmissionResult[size];
+		protected DisplayPageFormSubmissionResult[] createDTOArray(int size) {
+			return new DisplayPageFormSubmissionResult[size];
 		}
 
 		@Override
 		protected boolean parseMaps(String jsonParserFieldName) {
-			if (Objects.equals(jsonParserFieldName, "itemReference")) {
+			if (Objects.equals(jsonParserFieldName, "mapping")) {
 				return false;
 			}
 			else if (Objects.equals(jsonParserFieldName, "notificationText")) {
@@ -169,26 +167,25 @@ public class SitePageFormSubmissionResultSerDes {
 
 		@Override
 		protected void setField(
-			SitePageFormSubmissionResult sitePageFormSubmissionResult,
+			DisplayPageFormSubmissionResult displayPageFormSubmissionResult,
 			String jsonParserFieldName, Object jsonParserFieldValue) {
 
-			if (Objects.equals(jsonParserFieldName, "itemReference")) {
+			if (Objects.equals(jsonParserFieldName, "mapping")) {
 				if (jsonParserFieldValue != null) {
-					sitePageFormSubmissionResult.setItemReference(
-						ClassFieldsReferenceSerDes.toDTO(
-							(String)jsonParserFieldValue));
+					displayPageFormSubmissionResult.setMapping(
+						MappingSerDes.toDTO((String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "notificationText")) {
 				if (jsonParserFieldValue != null) {
-					sitePageFormSubmissionResult.setNotificationText(
+					displayPageFormSubmissionResult.setNotificationText(
 						FragmentInlineValueSerDes.toDTO(
 							(String)jsonParserFieldValue));
 				}
 			}
 			else if (Objects.equals(jsonParserFieldName, "showNotification")) {
 				if (jsonParserFieldValue != null) {
-					sitePageFormSubmissionResult.setShowNotification(
+					displayPageFormSubmissionResult.setShowNotification(
 						(Boolean)jsonParserFieldValue);
 				}
 			}

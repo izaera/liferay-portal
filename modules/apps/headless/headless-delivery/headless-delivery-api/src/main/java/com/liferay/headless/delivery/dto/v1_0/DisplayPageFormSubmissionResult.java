@@ -1,16 +1,13 @@
 /**
- * SPDX-FileCopyrightText: (c) 2000 Liferay, Inc. https://liferay.com
+ * SPDX-FileCopyrightText: (c) 2026 Liferay, Inc. https://liferay.com
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
 package com.liferay.headless.delivery.dto.v1_0;
 
-import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonFilter;
-import com.fasterxml.jackson.annotation.JsonGetter;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.fasterxml.jackson.annotation.JsonValue;
 
 import com.liferay.petra.function.UnsafeSupplier;
 import com.liferay.petra.string.StringBundler;
@@ -41,102 +38,50 @@ import javax.xml.bind.annotation.XmlRootElement;
  */
 @Generated("")
 @GraphQLName(
-	description = "Represents a definition of a submission result of type message.",
-	value = "MessageFormSubmissionResult"
+	description = "Represents a definition of a submission result of type display page template.",
+	value = "DisplayPageFormSubmissionResult"
 )
 @JsonFilter("Liferay.Vulcan")
-@XmlRootElement(name = "MessageFormSubmissionResult")
-public class MessageFormSubmissionResult implements Serializable {
+@XmlRootElement(name = "DisplayPageFormSubmissionResult")
+public class DisplayPageFormSubmissionResult implements Serializable {
 
-	public static MessageFormSubmissionResult toDTO(String json) {
+	public static DisplayPageFormSubmissionResult toDTO(String json) {
 		return ObjectMapperUtil.readValue(
-			MessageFormSubmissionResult.class, json);
+			DisplayPageFormSubmissionResult.class, json);
 	}
 
-	public static MessageFormSubmissionResult unsafeToDTO(String json) {
+	public static DisplayPageFormSubmissionResult unsafeToDTO(String json) {
 		return ObjectMapperUtil.unsafeReadValue(
-			MessageFormSubmissionResult.class, json);
+			DisplayPageFormSubmissionResult.class, json);
 	}
 
-	@Schema(description = "The localized submission of message type.")
+	@Schema(
+		description = "The mapping of the display page template submission result."
+	)
 	@Valid
-	public FragmentInlineValue getMessage() {
-		if (_messageSupplier != null) {
-			message = _messageSupplier.get();
+	public Mapping getMapping() {
+		if (_mappingSupplier != null) {
+			mapping = _mappingSupplier.get();
 
-			_messageSupplier = null;
+			_mappingSupplier = null;
 		}
 
-		return message;
+		return mapping;
 	}
 
-	public void setMessage(FragmentInlineValue message) {
-		this.message = message;
+	public void setMapping(Mapping mapping) {
+		this.mapping = mapping;
 
-		_messageSupplier = null;
+		_mappingSupplier = null;
 	}
 
 	@JsonIgnore
-	public void setMessage(
-		UnsafeSupplier<FragmentInlineValue, Exception> messageUnsafeSupplier) {
+	public void setMapping(
+		UnsafeSupplier<Mapping, Exception> mappingUnsafeSupplier) {
 
-		_messageSupplier = () -> {
+		_mappingSupplier = () -> {
 			try {
-				return messageUnsafeSupplier.get();
-			}
-			catch (RuntimeException runtimeException) {
-				throw runtimeException;
-			}
-			catch (Exception exception) {
-				throw new RuntimeException(exception);
-			}
-		};
-	}
-
-	@GraphQLField(description = "The localized submission of message type.")
-	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected FragmentInlineValue message;
-
-	@JsonIgnore
-	private Supplier<FragmentInlineValue> _messageSupplier;
-
-	@JsonGetter("messageType")
-	@Schema(description = "The message form submission type (embedded, none).")
-	@Valid
-	public MessageType getMessageType() {
-		if (_messageTypeSupplier != null) {
-			messageType = _messageTypeSupplier.get();
-
-			_messageTypeSupplier = null;
-		}
-
-		return messageType;
-	}
-
-	@JsonIgnore
-	public String getMessageTypeAsString() {
-		MessageType messageType = getMessageType();
-
-		if (messageType == null) {
-			return null;
-		}
-
-		return messageType.toString();
-	}
-
-	public void setMessageType(MessageType messageType) {
-		this.messageType = messageType;
-
-		_messageTypeSupplier = null;
-	}
-
-	@JsonIgnore
-	public void setMessageType(
-		UnsafeSupplier<MessageType, Exception> messageTypeUnsafeSupplier) {
-
-		_messageTypeSupplier = () -> {
-			try {
-				return messageTypeUnsafeSupplier.get();
+				return mappingUnsafeSupplier.get();
 			}
 			catch (RuntimeException runtimeException) {
 				throw runtimeException;
@@ -148,16 +93,16 @@ public class MessageFormSubmissionResult implements Serializable {
 	}
 
 	@GraphQLField(
-		description = "The message form submission type (embedded, none)."
+		description = "The mapping of the display page template submission result."
 	)
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
-	protected MessageType messageType;
+	protected Mapping mapping;
 
 	@JsonIgnore
-	private Supplier<MessageType> _messageTypeSupplier;
+	private Supplier<Mapping> _mappingSupplier;
 
 	@Schema(
-		description = "The localized message form submission result's notification text."
+		description = "The localized display page template form submission result's notification text."
 	)
 	@Valid
 	public FragmentInlineValue getNotificationText() {
@@ -195,7 +140,7 @@ public class MessageFormSubmissionResult implements Serializable {
 	}
 
 	@GraphQLField(
-		description = "The localized message form submission result's notification text."
+		description = "The localized display page template form submission result's notification text."
 	)
 	@JsonProperty(access = JsonProperty.Access.READ_WRITE)
 	protected FragmentInlineValue notificationText;
@@ -250,15 +195,15 @@ public class MessageFormSubmissionResult implements Serializable {
 			return true;
 		}
 
-		if (!(object instanceof MessageFormSubmissionResult)) {
+		if (!(object instanceof DisplayPageFormSubmissionResult)) {
 			return false;
 		}
 
-		MessageFormSubmissionResult messageFormSubmissionResult =
-			(MessageFormSubmissionResult)object;
+		DisplayPageFormSubmissionResult displayPageFormSubmissionResult =
+			(DisplayPageFormSubmissionResult)object;
 
 		return Objects.equals(
-			toString(), messageFormSubmissionResult.toString());
+			toString(), displayPageFormSubmissionResult.toString());
 	}
 
 	@Override
@@ -273,32 +218,16 @@ public class MessageFormSubmissionResult implements Serializable {
 
 		sb.append("{");
 
-		FragmentInlineValue message = getMessage();
+		Mapping mapping = getMapping();
 
-		if (message != null) {
+		if (mapping != null) {
 			if (sb.length() > 1) {
 				sb.append(", ");
 			}
 
-			sb.append("\"message\": ");
+			sb.append("\"mapping\": ");
 
-			sb.append(String.valueOf(message));
-		}
-
-		MessageType messageType = getMessageType();
-
-		if (messageType != null) {
-			if (sb.length() > 1) {
-				sb.append(", ");
-			}
-
-			sb.append("\"messageType\": ");
-
-			sb.append("\"");
-
-			sb.append(messageType);
-
-			sb.append("\"");
+			sb.append(String.valueOf(mapping));
 		}
 
 		FragmentInlineValue notificationText = getNotificationText();
@@ -332,48 +261,10 @@ public class MessageFormSubmissionResult implements Serializable {
 
 	@Schema(
 		accessMode = Schema.AccessMode.READ_ONLY,
-		defaultValue = "com.liferay.headless.delivery.dto.v1_0.MessageFormSubmissionResult",
+		defaultValue = "com.liferay.headless.delivery.dto.v1_0.DisplayPageFormSubmissionResult",
 		name = "x-class-name"
 	)
 	public String xClassName;
-
-	@GraphQLName("MessageType")
-	public static enum MessageType {
-
-		EMBEDDED("Embedded"), NONE("None");
-
-		@JsonCreator
-		public static MessageType create(String value) {
-			if ((value == null) || value.equals("")) {
-				return null;
-			}
-
-			for (MessageType messageType : values()) {
-				if (Objects.equals(messageType.getValue(), value)) {
-					return messageType;
-				}
-			}
-
-			throw new IllegalArgumentException("Invalid enum value: " + value);
-		}
-
-		@JsonValue
-		public String getValue() {
-			return _value;
-		}
-
-		@Override
-		public String toString() {
-			return _value;
-		}
-
-		private MessageType(String value) {
-			_value = value;
-		}
-
-		private final String _value;
-
-	}
 
 	private static String _escape(Object object) {
 		return StringUtil.replace(
