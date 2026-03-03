@@ -84,8 +84,12 @@ public class FragmentEntryLinkCTEventListenerTest {
 					_segmentsExperienceLocalService.
 						fetchDefaultSegmentsExperienceId(_layout.getPlid()),
 					_layout.getPlid(), fragmentEntry.getCss(),
-					fragmentEntry.getHtml(), fragmentEntry.getJs(),
-					fragmentEntry.getConfiguration(),
+					StringBundler.concat(
+						fragmentEntry.getHtml(),
+						"<div class=\"fragment-html-test\">",
+						"?previewCTCollectionId=",
+						_ctCollection.getCtCollectionId(), "</div>"),
+					fragmentEntry.getJs(), fragmentEntry.getConfiguration(),
 					JSONUtil.put(
 						FragmentEntryProcessorConstants.
 							KEY_EDITABLE_FRAGMENT_ENTRY_PROCESSOR,
@@ -95,7 +99,7 @@ public class FragmentEntryLinkCTEventListenerTest {
 								"defaultValue",
 								StringBundler.concat(
 									"<div class=\"fragment-html-test\">",
-									"previewCTCollectionId=",
+									"?previewCTCollectionId=",
 									_ctCollection.getCtCollectionId(),
 									"</div>")))
 					).toString(),
@@ -112,9 +116,12 @@ public class FragmentEntryLinkCTEventListenerTest {
 			_fragmentEntryLinkLocalService.fetchFragmentEntryLink(
 				fragmentEntryLink.getFragmentEntryLinkId());
 
+		String html = fragmentEntryLink.getHtml();
+
 		String editableValues = fragmentEntryLink.getEditableValues();
 
-		Assert.assertFalse(editableValues.contains("previewCTCollectionId="));
+		Assert.assertFalse(html.contains("?previewCTCollectionId="));
+		Assert.assertFalse(editableValues.contains("?previewCTCollectionId="));
 	}
 
 	private CTCollection _ctCollection;
