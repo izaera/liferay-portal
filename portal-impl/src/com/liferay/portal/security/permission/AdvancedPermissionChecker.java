@@ -823,7 +823,7 @@ public class AdvancedPermissionChecker extends BasePermissionChecker {
 		}
 
 		if (group.isCompany()) {
-			if (isCompanyAdmin()) {
+			if (isCompanyAdmin(group.getCompanyId())) {
 				return true;
 			}
 
