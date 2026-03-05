@@ -51,12 +51,12 @@ public class CountryResourcePermissionUpgradeProcess extends UpgradeProcess {
 		}
 
 		_resourceActionLocalService.checkResourceActions(
-			PortletKeys.PORTAL, Arrays.asList(ActionKeys.ADD_COUNTRY), true);
-		_resourceActionLocalService.checkResourceActions(
 			Country.class.getName(),
 			Arrays.asList(
 				ActionKeys.DELETE, ActionKeys.PERMISSIONS, ActionKeys.UPDATE),
 			true);
+		_resourceActionLocalService.checkResourceActions(
+			PortletKeys.PORTAL, Arrays.asList(ActionKeys.ADD_COUNTRY), true);
 
 		for (ResourcePermission resourcePermission :
 				_resourcePermissionLocalService.getResourcePermissions(
