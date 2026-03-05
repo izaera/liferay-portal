@@ -15,14 +15,12 @@ import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.TestInfo;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.util.FileUtil;
-import com.liferay.portal.kernel.util.LinkedHashMapBuilder;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.portal.kernel.util.ResourceBundleUtil;
 import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 
 import java.util.Locale;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 import org.junit.Assert;
@@ -60,73 +58,17 @@ public class FragmentEntryConfigurationParserTest {
 
 	@Test
 	@TestInfo("LPD-77079")
-	public void testGetFieldValueLocalizableFieldsWithoutLocale()
-		throws Exception {
-
-		Map<String, Object[]> fieldTypeValues =
-			LinkedHashMapBuilder.<String, Object[]>put(
-				"text",
-				new Object[] {
-					RandomTestUtil.randomString(), RandomTestUtil.randomString()
-				}
-			).put(
-				"colorPicker", new Object[] {"#0F0303", "#35CC58"}
-			).put(
-				"length", new Object[] {"300px", "320px"}
-			).put(
-				"checkbox", new Object[] {Boolean.FALSE, Boolean.TRUE}
-			).build();
-
-		for (Map.Entry<String, Object[]> entry : fieldTypeValues.entrySet()) {
-			String fieldType = entry.getKey();
-			Object englishValue = entry.getValue()[0];
-			Object spanishValue = entry.getValue()[1];
-
-			String fieldName = RandomTestUtil.randomString();
-
-			JSONObject configurationJSONObject = JSONUtil.put(
-				"fieldSets",
-				JSONUtil.put(
-					JSONUtil.put(
-						"fields",
-						JSONUtil.put(
-							JSONUtil.put(
-								"defaultValue", englishValue
-							).put(
-								"label", fieldName
-							).put(
-								"localizable", true
-							).put(
-								"name", fieldName
-							).put(
-								"type", fieldType
-							)))));
-
-			JSONObject editableValuesJSONObject = JSONUtil.put(
-				FragmentEntryProcessorConstants.
-					KEY_FREEMARKER_FRAGMENT_ENTRY_PROCESSOR,
-				JSONUtil.put(
-					fieldName,
-					JSONUtil.put(
-						LocaleUtil.toLanguageId(LocaleUtil.US), englishValue
-					).put(
-						LocaleUtil.toLanguageId(LocaleUtil.SPAIN), spanishValue
-					)));
-
-			Object value = _fragmentEntryConfigurationParser.getFieldValue(
-				configurationJSONObject.toString(),
-				editableValuesJSONObject.toString(), fieldName);
-
-			if (englishValue instanceof Boolean) {
-				_assertLocalizableValue(
-					value, englishValue, spanishValue, true);
-			}
-			else {
-				_assertLocalizableValue(
-					value, englishValue, spanishValue, false);
-			}
-		}
+	public void testGetFieldValueWithLocalizableFields() {
+		_testGetFieldValueWithLocalizableField(
+			"checkbox", Boolean.FALSE, Boolean.TRUE);
+		_testGetFieldValueWithLocalizableField(
+			"colorPicker", "#0F0303", "#35CC58");
+		_testGetFieldValueWithLocalizableField("length", "300px", "320px");
+		_testGetFieldValueWithLocalizableField(
+			"text", RandomTestUtil.randomString(),
+			RandomTestUtil.randomString());
 	}
+
 
 	@Test
 	public void testTranslateConfigurationEn() throws Exception {
@@ -138,27 +80,60 @@ public class FragmentEntryConfigurationParserTest {
 		_testTranslateConfiguration("es");
 	}
 
-	private void _assertLocalizableValue(
-		Object value, Object englishValue, Object spanishValue,
-		boolean booleanValue) {
+	private void _testGetFieldValueWithLocalizableField(
+		String fieldType, Object expectedEnglishValue,
+		Object expectedSpanishValue) {
 
-		Assert.assertTrue(value instanceof JSONObject);
+		String fieldName = RandomTestUtil.randomString();
 
-		JSONObject valueJSONObject = (JSONObject)value;
+		JSONObject configurationJSONObject = JSONUtil.put(
+			"fieldSets",
+			JSONUtil.put(
+				JSONUtil.put(
+					"fields",
+					JSONUtil.put(
+						JSONUtil.put(
+							"defaultValue", expectedEnglishValue
+						).put(
+							"label", fieldName
+						).put(
+							"localizable", true
+						).put(
+							"name", fieldName
+						).put(
+							"type", fieldType
+						)))));
 
-		Object expectedEnglishValue;
-		Object expectedSpanishValue;
+		JSONObject valueJSONObject =
+			(JSONObject)_fragmentEntryConfigurationParser.getFieldValue(
+				configurationJSONObject.toString(),
+				JSONUtil.put(
+					FragmentEntryProcessorConstants.
+						KEY_FREEMARKER_FRAGMENT_ENTRY_PROCESSOR,
+					JSONUtil.put(
+						fieldName,
+						JSONUtil.put(
+							LocaleUtil.toLanguageId(LocaleUtil.US),
+							expectedEnglishValue
+						).put(
+							LocaleUtil.toLanguageId(LocaleUtil.SPAIN),
+							expectedSpanishValue
+						))).toString(),
+				fieldName);
 
-		if (booleanValue) {
-			expectedEnglishValue = valueJSONObject.getBoolean(
+		Object englishValue = null;
+		Object spanishValue = null;
+
+		if (expectedEnglishValue instanceof Boolean) {
+			englishValue = valueJSONObject.getBoolean(
 				LocaleUtil.toLanguageId(LocaleUtil.US));
-			expectedSpanishValue = valueJSONObject.getBoolean(
+			spanishValue = valueJSONObject.getBoolean(
 				LocaleUtil.toLanguageId(LocaleUtil.SPAIN));
 		}
 		else {
-			expectedEnglishValue = valueJSONObject.getString(
+			englishValue = valueJSONObject.getString(
 				LocaleUtil.toLanguageId(LocaleUtil.US));
-			expectedSpanishValue = valueJSONObject.getString(
+			spanishValue = valueJSONObject.getString(
 				LocaleUtil.toLanguageId(LocaleUtil.SPAIN));
 		}
 
