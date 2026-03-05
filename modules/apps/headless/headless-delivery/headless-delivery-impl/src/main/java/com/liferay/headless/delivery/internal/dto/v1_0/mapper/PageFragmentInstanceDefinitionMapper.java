@@ -284,8 +284,7 @@ public class PageFragmentInstanceDefinitionMapper {
 			else {
 				value = _fragmentEntryConfigurationParser.getFieldValue(
 					fragmentEntryLink.getConfiguration(),
-					fragmentEntryLink.getEditableValues(),
-					null, key);
+					fragmentEntryLink.getEditableValues(), key);
 			}
 
 			if (value == null) {
