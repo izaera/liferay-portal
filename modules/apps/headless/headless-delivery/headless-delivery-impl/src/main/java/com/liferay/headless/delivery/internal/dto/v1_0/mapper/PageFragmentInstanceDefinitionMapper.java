@@ -285,7 +285,7 @@ public class PageFragmentInstanceDefinitionMapper {
 				value = _fragmentEntryConfigurationParser.getFieldValue(
 					fragmentEntryLink.getConfiguration(),
 					fragmentEntryLink.getEditableValues(),
-					LocaleUtil.getMostRelevantLocale(), key);
+					null, key);
 			}
 
 			if (value == null) {
