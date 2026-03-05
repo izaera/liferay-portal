@@ -23,7 +23,9 @@ export function LocalizationSelect({
 	size,
 }) {
 	const [active, setActive] = useState(false);
-	const [selectedLocaleId, setSelectedLocaleId] = useState(defaultLanguageId);
+	const [selectedLocaleId, setSelectedLocaleId] = useState(
+		Liferay.ThemeDisplay.getLanguageId()
+	);
 	const [translatedInputs, setTranslatedInputs] = useState({});
 
 	const localizableInputs = useMemo(
