@@ -80,9 +80,11 @@ import com.liferay.layout.util.structure.ContainerStyledLayoutStructureItem;
 import com.liferay.layout.util.structure.LayoutStructure;
 import com.liferay.layout.util.structure.LayoutStructureItem;
 import com.liferay.object.constants.ObjectDefinitionConstants;
+import com.liferay.object.constants.ObjectFieldConstants;
 import com.liferay.object.field.builder.LongTextObjectFieldBuilder;
 import com.liferay.object.field.builder.RichTextObjectFieldBuilder;
 import com.liferay.object.field.builder.TextObjectFieldBuilder;
+import com.liferay.object.field.util.ObjectFieldUtil;
 import com.liferay.object.model.ObjectDefinition;
 import com.liferay.object.model.ObjectEntry;
 import com.liferay.object.service.ObjectEntryLocalService;
@@ -414,7 +416,7 @@ public class RenderLayoutStructureTagTest {
 
 	@Test
 	@TestInfo("LPD-80845")
-	public void testEscapeFormPlModeParameter() throws Exception {
+	public void testEscapeFormPortalLayoutModeParameter() throws Exception {
 		ObjectDefinition objectDefinition =
 			ObjectDefinitionTestUtil.publishObjectDefinition(
 				ListUtil.fromArray(
