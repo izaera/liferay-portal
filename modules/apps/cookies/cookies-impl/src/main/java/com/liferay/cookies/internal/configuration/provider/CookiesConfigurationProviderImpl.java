@@ -312,6 +312,18 @@ public class CookiesConfigurationProviderImpl
 		).build();
 	}
 
+	private long _getCompanyId(long groupId) {
+		Group group = _groupLocalService.fetchGroup(groupId);
+
+		long companyId = CompanyThreadLocal.getCompanyId();
+
+		if (group != null) {
+			companyId = group.getCompanyId();
+		}
+
+		return companyId;
+	}
+
 	private <T> T _getCookiesConfiguration(
 			Class<T> clazz, ThemeDisplay themeDisplay)
 		throws Exception {
@@ -443,7 +455,7 @@ public class CookiesConfigurationProviderImpl
 		}
 
 		return _cookiesPreferenceHandlingManagedServiceFactory.getGroupEnabled(
-			groupId);
+			_getCompanyId(groupId), groupId);
 	}
 
 	private boolean _isGroupCookiesPreferenceHandlingExplicitConsentMode(
@@ -456,7 +468,7 @@ public class CookiesConfigurationProviderImpl
 		}
 
 		return _cookiesPreferenceHandlingManagedServiceFactory.
-			getGroupExplicitConsentMode(groupId);
+			getGroupExplicitConsentMode(_getCompanyId(groupId), groupId);
 	}
 
 	private boolean _isSystemCookiesPreferenceHandlingEnabled() {
