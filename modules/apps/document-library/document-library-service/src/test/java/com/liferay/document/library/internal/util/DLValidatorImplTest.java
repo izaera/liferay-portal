@@ -64,7 +64,7 @@ public class DLValidatorImplTest {
 
 		Mockito.when(
 			_dlSizeLimitConfigurationHelper.getGroupMimeTypeSizeLimit(
-				Mockito.anyLong(), Mockito.anyString())
+				Mockito.anyLong(), Mockito.anyLong(), Mockito.anyString())
 		).thenReturn(
 			15L
 		);
