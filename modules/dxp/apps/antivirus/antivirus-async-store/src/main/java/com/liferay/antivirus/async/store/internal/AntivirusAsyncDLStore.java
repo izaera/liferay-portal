@@ -152,24 +152,24 @@ public class AntivirusAsyncDLStore implements DLStore {
 			inputStream = new UnsyncByteArrayInputStream(new byte[0]);
 		}
 
-		DLStoreRequest dlStoreRequest1 = DLStoreRequest.builder(
-			dlStoreRequest.getCompanyId(), dlStoreRequest.getRepositoryId(),
-			dlStoreRequest.getFileName()
-		).className(
-			dlStoreRequest.getClassName()
-		).classPK(
-			dlStoreRequest.getClassPK()
-		).fileExtension(
-			dlStoreRequest.getFileExtension()
-		).sourceFileName(
-			dlStoreRequest.getSourceFileName()
-		).validateFileExtension(
-			false
-		).versionLabel(
-			toVersionLabel
-		).build();
-
-		addFile(dlStoreRequest1, inputStream);
+		addFile(
+			DLStoreRequest.builder(
+				dlStoreRequest.getCompanyId(), dlStoreRequest.getRepositoryId(),
+				dlStoreRequest.getFileName()
+			).className(
+				dlStoreRequest.getClassName()
+			).classPK(
+				dlStoreRequest.getClassPK()
+			).fileExtension(
+				dlStoreRequest.getFileExtension()
+			).sourceFileName(
+				dlStoreRequest.getSourceFileName()
+			).validateFileExtension(
+				false
+			).versionLabel(
+				toVersionLabel
+			).build(),
+			inputStream);
 	}
 
 	@Override

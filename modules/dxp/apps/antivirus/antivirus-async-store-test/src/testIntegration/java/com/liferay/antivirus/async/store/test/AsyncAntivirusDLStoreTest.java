@@ -747,7 +747,6 @@ public class AsyncAntivirusDLStoreTest {
 							dlFileEntry.getFileEntryId());
 
 					Assert.assertNotNull(updatedFileEntry);
-
 					Assert.assertEquals("1.0", updatedFileEntry.getVersion());
 
 					Assert.assertFalse(
