@@ -38,8 +38,9 @@ import com.liferay.portal.test.rule.Inject;
 import com.liferay.portal.test.rule.LiferayIntegrationTestRule;
 import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 
-import jakarta.portlet.ActionRequest;
-import jakarta.portlet.Portlet;
+import javax.portlet.ActionRequest;
+import javax.portlet.ActionResponse;
+import javax.portlet.Portlet;
 
 import org.junit.Assert;
 import org.junit.ClassRule;
@@ -205,7 +206,7 @@ public class ContactsCenterPortletTest {
 	private JSONFactory _jsonFactory;
 
 	@Inject(
-		filter = "jakarta.portlet.name=" + ContactsPortletKeys.CONTACTS_CENTER
+		filter = "javax.portlet.name=" + ContactsPortletKeys.CONTACTS_CENTER
 	)
 	private Portlet _portlet;
 
