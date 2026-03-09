@@ -266,7 +266,7 @@ public class CommerceChannelDisplayContext
 	public CreationMenu getCreationMenu() throws Exception {
 		CreationMenu creationMenu = new CreationMenu();
 
-		if (hasAddChannelPermission()) {
+		if (hasAddCommerceChannelPermission()) {
 			creationMenu.addDropdownItem(
 				dropdownItem -> {
 					dropdownItem.setHref(getAddChannelURL());
@@ -418,14 +418,14 @@ public class CommerceChannelDisplayContext
 		return workflowDefinitionLink;
 	}
 
-	public boolean hasAddChannelPermission() {
-		ThemeDisplay themeDisplay =
-			(ThemeDisplay)httpServletRequest.getAttribute(
-				WebKeys.THEME_DISPLAY);
-
+	public boolean hasAddCommerceChannelPermission() {
 		PortletResourcePermission portletResourcePermission =
 			_commerceChannelModelResourcePermission.
 				getPortletResourcePermission();
+
+		ThemeDisplay themeDisplay =
+			(ThemeDisplay)httpServletRequest.getAttribute(
+				WebKeys.THEME_DISPLAY);
 
 		return portletResourcePermission.contains(
 			themeDisplay.getPermissionChecker(), null,
