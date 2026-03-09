@@ -88,6 +88,7 @@ import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.test.util.UserTestUtil;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.ArrayUtil;
+import com.liferay.portal.kernel.util.DateUtil;
 import com.liferay.portal.kernel.util.HashMapDictionaryBuilder;
 import com.liferay.portal.kernel.util.ListUtil;
 import com.liferay.portal.kernel.util.LocaleUtil;
@@ -614,7 +615,13 @@ public class LayoutLocalServiceCopyLayoutContentTest {
 
 		_layoutLocalService.copyLayoutContent(draftLayout, layout);
 
-		FragmentEntryLink fragmentEntryLink =
+		FragmentEntryLink fragmentEntryLink1 =
+			_fragmentEntryLinkLocalService.getFragmentEntryLink(
+				_group.getGroupId(),
+				draftFragmentEntryLink1.getExternalReferenceCode(),
+				layout.getPlid());
+
+		FragmentEntryLink fragmentEntryLink2 =
 			_fragmentEntryLinkLocalService.getFragmentEntryLink(
 				_group.getGroupId(),
 				draftFragmentEntryLink2.getExternalReferenceCode(),
@@ -638,7 +645,7 @@ public class LayoutLocalServiceCopyLayoutContentTest {
 		Thread.sleep(1000);
 
 		_fragmentEntryLinkLocalService.updateFragmentEntryLink(
-			fragmentEntryLink);
+			fragmentEntryLink2);
 
 		_layoutLocalService.copyLayoutContent(draftLayout, layout);
 
@@ -657,6 +664,10 @@ public class LayoutLocalServiceCopyLayoutContentTest {
 		Assert.assertEquals(
 			draftFragmentEntryLink1.getEditableValues(),
 			updatedFragmentEntryLink1.getEditableValues());
+		Assert.assertTrue(
+			DateUtil.equals(
+				fragmentEntryLink1.getModifiedDate(),
+				updatedFragmentEntryLink1.getModifiedDate()));
 
 		Assert.assertEquals(
 			draftFragmentEntryLink2.getEditableValues(),
