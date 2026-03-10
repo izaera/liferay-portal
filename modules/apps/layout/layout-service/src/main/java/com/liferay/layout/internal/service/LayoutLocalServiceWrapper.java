@@ -915,7 +915,10 @@ public class LayoutLocalServiceWrapper
 				targetLayoutFragmentEntryLink.getHtml()) &&
 			Objects.equals(
 				sourceLayoutFragmentEntryLink.getJs(),
-				targetLayoutFragmentEntryLink.getJs())) {
+				targetLayoutFragmentEntryLink.getJs()) &&
+			Objects.equals(
+				sourceLayoutFragmentEntryLink.getLastPropagationDate(),
+				targetLayoutFragmentEntryLink.getLastPropagationDate())) {
 
 			return true;
 		}
