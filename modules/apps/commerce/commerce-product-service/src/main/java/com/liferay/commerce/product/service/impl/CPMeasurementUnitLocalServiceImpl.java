@@ -13,8 +13,10 @@ import com.liferay.commerce.product.service.base.CPMeasurementUnitLocalServiceBa
 import com.liferay.commerce.product.util.comparator.CPMeasurementUnitPriorityComparator;
 import com.liferay.portal.aop.AopService;
 import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.portal.kernel.model.ResourceConstants;
 import com.liferay.portal.kernel.model.SystemEventConstants;
 import com.liferay.portal.kernel.model.User;
+import com.liferay.portal.kernel.service.ResourceLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.systemevent.SystemEvent;
@@ -75,15 +77,25 @@ public class CPMeasurementUnitLocalServiceImpl
 		cpMeasurementUnit.setPriority(priority);
 		cpMeasurementUnit.setType(type);
 
+		_resourceLocalService.addModelResources(
+			cpMeasurementUnit, serviceContext);
+
 		return cpMeasurementUnitPersistence.update(cpMeasurementUnit);
 	}
 
 	@Override
 	@SystemEvent(type = SystemEventConstants.TYPE_DELETE)
 	public CPMeasurementUnit deleteCPMeasurementUnit(
-		CPMeasurementUnit cpMeasurementUnit) {
+			CPMeasurementUnit cpMeasurementUnit)
+		throws PortalException {
 
-		return cpMeasurementUnitPersistence.remove(cpMeasurementUnit);
+		cpMeasurementUnit = cpMeasurementUnitPersistence.remove(
+			cpMeasurementUnit);
+
+		_resourceLocalService.deleteResource(
+			cpMeasurementUnit, ResourceConstants.SCOPE_INDIVIDUAL);
+
+		return cpMeasurementUnit;
 	}
 
 	@Override
@@ -384,6 +396,9 @@ public class CPMeasurementUnitLocalServiceImpl
 			}
 		}
 	}
+
+	@Reference
+	private ResourceLocalService _resourceLocalService;
 
 	@Reference
 	private UserLocalService _userLocalService;
