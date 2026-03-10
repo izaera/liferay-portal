@@ -34,6 +34,8 @@ import com.liferay.notification.constants.NotificationRecipientSettingConstants;
 import com.liferay.notification.constants.NotificationTemplateConstants;
 import com.liferay.notification.context.NotificationContext;
 import com.liferay.notification.model.NotificationQueueEntry;
+import com.liferay.notification.model.NotificationRecipient;
+import com.liferay.notification.model.NotificationRecipientSetting;
 import com.liferay.notification.model.NotificationTemplate;
 import com.liferay.notification.service.NotificationQueueEntryLocalService;
 import com.liferay.notification.service.NotificationRecipientLocalServiceUtil;
@@ -374,15 +376,60 @@ public class ObjectActionLocalServiceTest {
 			notificationQueueEntries.toString(), 3,
 			notificationQueueEntries.size());
 
+		// User system object definition
+
+		ObjectDefinition userObjectDefinition =
+			_objectDefinitionLocalService.fetchObjectDefinitionByClassName(
+				TestPropsValues.getCompanyId(), User.class.getName());
+
+		// Add object action to send an email notification after adding a user
+
+		ObjectAction objectAction3 = _addNotificationTemplateObjectAction(
+			ObjectActionTriggerConstants.KEY_ON_AFTER_ADD, userObjectDefinition,
+			"[%USER_EMAILADDRESS%]");
+
+		User user = UserTestUtil.addUser();
+
+		notificationQueueEntries =
+			_notificationQueueEntryLocalService.getNotificationEntries(
+				NotificationConstants.TYPE_EMAIL,
+				NotificationQueueEntryConstants.STATUS_SENT);
+
+		Assert.assertEquals(
+			notificationQueueEntries.toString(), 4,
+			notificationQueueEntries.size());
+
+		NotificationQueueEntry notificationQueueEntry =
+			notificationQueueEntries.get(3);
+
+		NotificationRecipient notificationRecipient =
+			notificationQueueEntry.getNotificationRecipient();
+
+		for (NotificationRecipientSetting notificationRecipientSetting :
+				notificationRecipient.getNotificationRecipientSettings()) {
+
+			if (Objects.equals(
+					notificationRecipientSetting.getName(),
+					NotificationRecipientSettingConstants.NAME_TO)) {
+
+				Assert.assertEquals(
+					user.getEmailAddress(),
+					notificationRecipientSetting.getValue());
+			}
+		}
+
 		_notificationQueueEntryLocalService.deleteNotificationQueueEntry(
 			notificationQueueEntries.get(0));
 		_notificationQueueEntryLocalService.deleteNotificationQueueEntry(
 			notificationQueueEntries.get(1));
 		_notificationQueueEntryLocalService.deleteNotificationQueueEntry(
 			notificationQueueEntries.get(2));
+		_notificationQueueEntryLocalService.deleteNotificationQueueEntry(
+			notificationQueueEntries.get(3));
 
 		_objectActionLocalService.deleteObjectAction(objectAction1);
 		_objectActionLocalService.deleteObjectAction(objectAction2);
+		_objectActionLocalService.deleteObjectAction(objectAction3);
 	}
 
 	@Test
@@ -2935,8 +2982,9 @@ public class ObjectActionLocalServiceTest {
 				_objectDefinition.getClassName()));
 	}
 
-	private ObjectAction _addNotificationTemplateObjectAction(
-			String objectActionTriggerKey, ObjectDefinition objectDefinition)
+	private NotificationTemplate _addNotificationTemplate(
+			long userId, long objectDefinitionId, String body,
+			String description, String name, String subject, String to)
 		throws Exception {
 
 		NotificationTemplate notificationTemplate =
@@ -2944,8 +2992,7 @@ public class ObjectActionLocalServiceTest {
 				RandomTestUtil.randomInt());
 
 		notificationTemplate.setUserId(_user.getUserId());
-		notificationTemplate.setObjectDefinitionId(
-			objectDefinition.getObjectDefinitionId());
+		notificationTemplate.setObjectDefinitionId(objectDefinitionId);
 		notificationTemplate.setBody(RandomTestUtil.randomString());
 		notificationTemplate.setDescription(RandomTestUtil.randomString());
 		notificationTemplate.setEditorType(
@@ -2978,14 +3025,33 @@ public class ObjectActionLocalServiceTest {
 						Collections.singletonMap(
 							LocaleUtil.US, "[%CURRENT_USER_FIRST_NAME%]")),
 				NotificationRecipientSettingUtil.
-					createNotificationRecipientSetting(
-						"to", "[%CURRENT_USER_EMAIL_ADDRESS%]")));
+					createNotificationRecipientSetting("to", to)));
 		notificationContext.setNotificationTemplate(notificationTemplate);
 		notificationContext.setType(NotificationConstants.TYPE_EMAIL);
 
-		notificationTemplate =
-			_notificationTemplateLocalService.addNotificationTemplate(
-				notificationContext);
+		return _notificationTemplateLocalService.addNotificationTemplate(
+			notificationContext);
+	}
+
+	private ObjectAction _addNotificationTemplateObjectAction(
+			String objectActionTriggerKey, ObjectDefinition objectDefinition)
+		throws Exception {
+
+		return _addNotificationTemplateObjectAction(
+			objectActionTriggerKey, objectDefinition,
+			"[%CURRENT_USER_EMAIL_ADDRESS%]");
+	}
+
+	private ObjectAction _addNotificationTemplateObjectAction(
+			String objectActionTriggerKey, ObjectDefinition objectDefinition,
+			String to)
+		throws Exception {
+
+		NotificationTemplate notificationTemplate = _addNotificationTemplate(
+			TestPropsValues.getUserId(),
+			objectDefinition.getObjectDefinitionId(),
+			RandomTestUtil.randomString(), RandomTestUtil.randomString(),
+			RandomTestUtil.randomString(), RandomTestUtil.randomString(), to);
 
 		return _addObjectAction(
 			objectDefinition.getObjectDefinitionId(),
