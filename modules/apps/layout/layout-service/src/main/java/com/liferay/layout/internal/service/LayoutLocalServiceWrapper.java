@@ -902,20 +902,20 @@ public class LayoutLocalServiceWrapper
 
 		if ((targetLayoutFragmentEntryLink != null) &&
 			Objects.equals(
-				sourceLayoutFragmentEntryLink.getCss(),
-				targetLayoutFragmentEntryLink.getCss()) &&
-			Objects.equals(
 				sourceLayoutFragmentEntryLink.getConfiguration(),
 				targetLayoutFragmentEntryLink.getConfiguration()) &&
+			Objects.equals(
+				sourceLayoutFragmentEntryLink.getCss(),
+				targetLayoutFragmentEntryLink.getCss()) &&
 			Objects.equals(
 				sourceLayoutFragmentEntryLink.getEditableValues(),
 				targetLayoutFragmentEntryLink.getEditableValues()) &&
 			Objects.equals(
-				sourceLayoutFragmentEntryLink.getJs(),
-				targetLayoutFragmentEntryLink.getJs()) &&
-			Objects.equals(
 				sourceLayoutFragmentEntryLink.getHtml(),
-				targetLayoutFragmentEntryLink.getHtml())) {
+				targetLayoutFragmentEntryLink.getHtml()) &&
+			Objects.equals(
+				sourceLayoutFragmentEntryLink.getJs(),
+				targetLayoutFragmentEntryLink.getJs())) {
 
 			return true;
 		}
