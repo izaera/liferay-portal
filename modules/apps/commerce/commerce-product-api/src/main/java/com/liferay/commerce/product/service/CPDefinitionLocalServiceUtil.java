@@ -440,8 +440,22 @@ public class CPDefinitionLocalServiceUtil {
 			externalReferenceCode, companyId);
 	}
 
+	public static CPDefinition fetchCPDefinitionByCProductExternalReferenceCode(
+		String externalReferenceCode, long companyId, boolean excludeDraft) {
+
+		return getService().fetchCPDefinitionByCProductExternalReferenceCode(
+			externalReferenceCode, companyId, excludeDraft);
+	}
+
 	public static CPDefinition fetchCPDefinitionByCProductId(long cProductId) {
 		return getService().fetchCPDefinitionByCProductId(cProductId);
+	}
+
+	public static CPDefinition fetchCPDefinitionByCProductId(
+		long cProductId, boolean excludeDraft) {
+
+		return getService().fetchCPDefinitionByCProductId(
+			cProductId, excludeDraft);
 	}
 
 	/**

@@ -474,9 +474,26 @@ public class CPDefinitionLocalServiceWrapper
 	}
 
 	@Override
+	public CPDefinition fetchCPDefinitionByCProductExternalReferenceCode(
+		String externalReferenceCode, long companyId, boolean excludeDraft) {
+
+		return _cpDefinitionLocalService.
+			fetchCPDefinitionByCProductExternalReferenceCode(
+				externalReferenceCode, companyId, excludeDraft);
+	}
+
+	@Override
 	public CPDefinition fetchCPDefinitionByCProductId(long cProductId) {
 		return _cpDefinitionLocalService.fetchCPDefinitionByCProductId(
 			cProductId);
+	}
+
+	@Override
+	public CPDefinition fetchCPDefinitionByCProductId(
+		long cProductId, boolean excludeDraft) {
+
+		return _cpDefinitionLocalService.fetchCPDefinitionByCProductId(
+			cProductId, excludeDraft);
 	}
 
 	/**

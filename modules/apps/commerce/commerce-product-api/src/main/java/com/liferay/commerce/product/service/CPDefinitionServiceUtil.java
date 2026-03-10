@@ -262,10 +262,26 @@ public class CPDefinitionServiceUtil {
 			externalReferenceCode, companyId);
 	}
 
+	public static CPDefinition fetchCPDefinitionByCProductExternalReferenceCode(
+			String externalReferenceCode, long companyId, boolean excludeDraft)
+		throws PortalException {
+
+		return getService().fetchCPDefinitionByCProductExternalReferenceCode(
+			externalReferenceCode, companyId, excludeDraft);
+	}
+
 	public static CPDefinition fetchCPDefinitionByCProductId(long cProductId)
 		throws PortalException {
 
 		return getService().fetchCPDefinitionByCProductId(cProductId);
+	}
+
+	public static CPDefinition fetchCPDefinitionByCProductId(
+			long cProductId, boolean excludeDraft)
+		throws PortalException {
+
+		return getService().fetchCPDefinitionByCProductId(
+			cProductId, excludeDraft);
 	}
 
 	public static CPDefinition getCPDefinition(long cpDefinitionId)
