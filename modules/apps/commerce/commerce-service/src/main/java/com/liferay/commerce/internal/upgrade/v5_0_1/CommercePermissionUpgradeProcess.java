@@ -5,10 +5,13 @@
 
 package com.liferay.commerce.internal.upgrade.v5_0_1;
 
+import com.liferay.commerce.product.model.CPMeasurementUnit;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.model.ResourceAction;
+import com.liferay.portal.kernel.model.ResourceConstants;
 import com.liferay.portal.kernel.model.ResourcePermission;
+import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.ResourceActionLocalService;
 import com.liferay.portal.kernel.service.ResourcePermissionLocalService;
 import com.liferay.portal.kernel.upgrade.UpgradeProcess;
@@ -87,6 +90,20 @@ public class CommercePermissionUpgradeProcess extends UpgradeProcess {
 		_deleteResourceActions(_PORTLET_NAME_COMMERCE_DISCOUNT);
 		_deleteResourceActions(_PORTLET_NAME_COMMERCE_PRICE_LIST);
 		_deleteResourceActions();
+	}
+
+	private void _addResourcePermission(
+			String actionId, long companyId, String name, long roleId)
+		throws Exception {
+
+		if (!_resourcePermissionLocalService.hasResourcePermission(
+				companyId, name, ResourceConstants.SCOPE_COMPANY,
+				String.valueOf(companyId), roleId, actionId)) {
+
+			_resourcePermissionLocalService.addResourcePermission(
+				companyId, name, ResourceConstants.SCOPE_COMPANY,
+				String.valueOf(companyId), roleId, actionId);
+		}
 	}
 
 	private void _deleteResourceActions() {
@@ -188,6 +205,27 @@ public class CommercePermissionUpgradeProcess extends UpgradeProcess {
 				resourcePermission.getCompanyId(), resourceActionName,
 				resourcePermission.getScope(), resourcePermission.getPrimKey(),
 				resourcePermission.getRoleId(), new String[] {actionId});
+
+			if (Objects.equals(
+					actionId, "ADD_COMMERCE_PRODUCT_MEASUREMENT_UNIT")) {
+
+				_addResourcePermission(
+					ActionKeys.DELETE, resourcePermission.getCompanyId(),
+					CPMeasurementUnit.class.getName(),
+					resourcePermission.getRoleId());
+				_addResourcePermission(
+					ActionKeys.PERMISSIONS, resourcePermission.getCompanyId(),
+					CPMeasurementUnit.class.getName(),
+					resourcePermission.getRoleId());
+				_addResourcePermission(
+					ActionKeys.UPDATE, resourcePermission.getCompanyId(),
+					CPMeasurementUnit.class.getName(),
+					resourcePermission.getRoleId());
+				_addResourcePermission(
+					ActionKeys.VIEW, resourcePermission.getCompanyId(),
+					CPMeasurementUnit.class.getName(),
+					resourcePermission.getRoleId());
+			}
 		}
 	}
 
@@ -221,17 +259,17 @@ public class CommercePermissionUpgradeProcess extends UpgradeProcess {
 		"ADD_COMMERCE_CATALOG", "ADD_COMMERCE_CHANNEL",
 		"ADD_COMMERCE_DATA_INTEGRATION_PROCESS", "ADD_COMMERCE_DISCOUNT",
 		"ADD_COMMERCE_MODEL", "ADD_COMMERCE_PRICE_LIST",
-		"ADD_COMMERCE_PRICING_CLASS", "ADD_COMMERCE_PRODUCT_OPTION",
-		"ADD_COMMERCE_PRODUCT_OPTION_CATEGORY",
+		"ADD_COMMERCE_PRICING_CLASS", "ADD_COMMERCE_PRODUCT_MEASUREMENT_UNIT",
+		"ADD_COMMERCE_PRODUCT_OPTION", "ADD_COMMERCE_PRODUCT_OPTION_CATEGORY",
 		"ADD_COMMERCE_PRODUCT_SPECIFICATION_OPTION", "ADD_WAREHOUSE",
 		"MANAGE_ALL_ACCOUNTS", "MANAGE_AVAILABLE_ACCOUNTS",
 		"MANAGE_COMMERCE_AVAILABILITY_ESTIMATES", "MANAGE_COMMERCE_CURRENCIES",
 		"MANAGE_COMMERCE_HEALTH_STATUS", "MANAGE_COMMERCE_ORDER_PRICES",
-		"MANAGE_COMMERCE_PRODUCT_MEASUREMENT_UNITS",
 		"MANAGE_COMMERCE_PRODUCT_TAX_CATEGORIES", "MANAGE_COMMERCE_SHIPMENTS",
 		"MANAGE_COMMERCE_SUBSCRIPTIONS", "MANAGE_INVENTORY",
 		"VIEW_COMMERCE_ACCOUNT_GROUPS", "VIEW_COMMERCE_CATALOGS",
-		"VIEW_COMMERCE_CHANNELS", "VIEW_COMMERCE_DISCOUNTS"
+		"VIEW_COMMERCE_CHANNELS", "VIEW_COMMERCE_DISCOUNTS",
+		"VIEW_COMMERCE_PRODUCT_MEASUREMENT_UNITS"
 	};
 
 	private static final String _PORTLET_NAME_COMMERCE_DISCOUNT =

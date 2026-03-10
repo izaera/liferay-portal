@@ -365,11 +365,12 @@ public class CommerceUserRoleHelperImpl implements CommerceUserRoleHelper {
 			companyResourceActionIds.put(
 				"com.liferay.commerce.product",
 				new String[] {
+					CPActionKeys.ADD_COMMERCE_PRODUCT_MEASUREMENT_UNIT,
 					CPActionKeys.ADD_COMMERCE_PRODUCT_OPTION,
 					CPActionKeys.ADD_COMMERCE_PRODUCT_SPECIFICATION_OPTION,
 					CPActionKeys.MANAGE_COMMERCE_PRODUCT_ATTACHMENTS,
 					CPActionKeys.MANAGE_COMMERCE_PRODUCT_IMAGES,
-					CPActionKeys.MANAGE_COMMERCE_PRODUCT_MEASUREMENT_UNITS,
+					CPActionKeys.VIEW_COMMERCE_PRODUCT_MEASUREMENT_UNITS,
 					CPActionKeys.VIEW_COMMERCE_PRODUCT_ATTACHMENTS,
 					CPActionKeys.VIEW_COMMERCE_PRODUCT_IMAGES
 				});

@@ -6,9 +6,12 @@
 package com.liferay.commerce.internal.upgrade.v11_4_2;
 
 import com.liferay.commerce.product.constants.CPActionKeys;
+import com.liferay.commerce.product.constants.CPConstants;
+import com.liferay.commerce.product.model.CPMeasurementUnit;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
+import com.liferay.portal.kernel.model.ResourceConstants;
 import com.liferay.portal.kernel.model.Role;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.CompanyLocalService;
@@ -44,22 +47,50 @@ public class OperationsManagerRoleUpgradeProcess extends UpgradeProcess {
 			});
 	}
 
+	private void _addResourcePermission(
+			String actionId, long companyId, String name, long roleId)
+		throws PortalException {
+
+		if (!_resourcePermissionLocalService.hasResourcePermission(
+				companyId, name, ResourceConstants.SCOPE_COMPANY,
+				String.valueOf(companyId), roleId, actionId)) {
+
+			_resourcePermissionLocalService.addResourcePermission(
+				companyId, name, ResourceConstants.SCOPE_COMPANY,
+				String.valueOf(companyId), roleId, actionId);
+		}
+	}
+
 	private void _updateOperationsManagerPermissions(long companyId)
 		throws PortalException {
 
-		Role operationsManagerRole = _roleLocalService.fetchRole(
+		Role role = _roleLocalService.fetchRole(
 			companyId, "Operations Manager");
 
-		if ((operationsManagerRole != null) &&
+		if ((role != null) &&
 			!_resourcePermissionLocalService.hasResourcePermission(
-				companyId, "com.liferay.commerce.product", 1,
-				String.valueOf(companyId), operationsManagerRole.getRoleId(),
-				ActionKeys.ADD_DOCUMENT)) {
+				companyId, CPConstants.RESOURCE_NAME_PRODUCT,
+				ResourceConstants.SCOPE_COMPANY, String.valueOf(companyId),
+				role.getRoleId(), ActionKeys.ADD_DOCUMENT)) {
 
-			_resourcePermissionLocalService.addResourcePermission(
-				companyId, "com.liferay.commerce.product", 1,
-				String.valueOf(companyId), operationsManagerRole.getRoleId(),
-				CPActionKeys.MANAGE_COMMERCE_PRODUCT_MEASUREMENT_UNITS);
+			_addResourcePermission(
+				ActionKeys.DELETE, companyId, CPMeasurementUnit.class.getName(),
+				role.getRoleId());
+			_addResourcePermission(
+				ActionKeys.PERMISSIONS, companyId,
+				CPMeasurementUnit.class.getName(), role.getRoleId());
+			_addResourcePermission(
+				ActionKeys.UPDATE, companyId, CPMeasurementUnit.class.getName(),
+				role.getRoleId());
+			_addResourcePermission(
+				ActionKeys.VIEW, companyId, CPMeasurementUnit.class.getName(),
+				role.getRoleId());
+			_addResourcePermission(
+				CPActionKeys.ADD_COMMERCE_PRODUCT_MEASUREMENT_UNIT, companyId,
+				CPConstants.RESOURCE_NAME_PRODUCT, role.getRoleId());
+			_addResourcePermission(
+				CPActionKeys.VIEW_COMMERCE_PRODUCT_MEASUREMENT_UNITS, companyId,
+				CPConstants.RESOURCE_NAME_PRODUCT, role.getRoleId());
 		}
 	}
 
