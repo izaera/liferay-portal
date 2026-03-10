@@ -96,9 +96,11 @@ public class CPMeasurementUnitLocalServiceUtil {
 	 *
 	 * @param cpMeasurementUnit the cp measurement unit
 	 * @return the cp measurement unit that was removed
+	 * @throws PortalException
 	 */
 	public static CPMeasurementUnit deleteCPMeasurementUnit(
-		CPMeasurementUnit cpMeasurementUnit) {
+			CPMeasurementUnit cpMeasurementUnit)
+		throws PortalException {
 
 		return getService().deleteCPMeasurementUnit(cpMeasurementUnit);
 	}

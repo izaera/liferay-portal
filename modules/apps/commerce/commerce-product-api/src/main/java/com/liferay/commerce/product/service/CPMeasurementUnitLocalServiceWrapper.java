@@ -96,10 +96,12 @@ public class CPMeasurementUnitLocalServiceWrapper
 	 *
 	 * @param cpMeasurementUnit the cp measurement unit
 	 * @return the cp measurement unit that was removed
+	 * @throws PortalException
 	 */
 	@Override
 	public CPMeasurementUnit deleteCPMeasurementUnit(
-		CPMeasurementUnit cpMeasurementUnit) {
+			CPMeasurementUnit cpMeasurementUnit)
+		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _cpMeasurementUnitLocalService.deleteCPMeasurementUnit(
 			cpMeasurementUnit);

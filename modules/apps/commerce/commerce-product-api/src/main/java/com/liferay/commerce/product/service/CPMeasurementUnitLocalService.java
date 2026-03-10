@@ -110,11 +110,13 @@ public interface CPMeasurementUnitLocalService
 	 *
 	 * @param cpMeasurementUnit the cp measurement unit
 	 * @return the cp measurement unit that was removed
+	 * @throws PortalException
 	 */
 	@Indexable(type = IndexableType.DELETE)
 	@SystemEvent(type = SystemEventConstants.TYPE_DELETE)
 	public CPMeasurementUnit deleteCPMeasurementUnit(
-		CPMeasurementUnit cpMeasurementUnit);
+			CPMeasurementUnit cpMeasurementUnit)
+		throws PortalException;
 
 	/**
 	 * Deletes the cp measurement unit with the primary key from the database. Also notifies the appropriate model listeners.
