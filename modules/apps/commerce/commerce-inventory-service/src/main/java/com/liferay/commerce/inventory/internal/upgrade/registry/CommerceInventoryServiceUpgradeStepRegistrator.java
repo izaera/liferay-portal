@@ -203,6 +203,13 @@ public class CommerceInventoryServiceUpgradeStepRegistrator
 					_resourceActionLocalService,
 					_resourcePermissionLocalService));
 
+		registry.register(
+			"2.11.2", "2.11.3",
+			new com.liferay.commerce.inventory.internal.upgrade.v2_11_3.
+				CommercePermissionUpgradeProcess(
+					_resourceActionLocalService,
+					_resourcePermissionLocalService));
+
 		if (_log.isInfoEnabled()) {
 			_log.info("Commerce inventory upgrade step registrator finished");
 		}
