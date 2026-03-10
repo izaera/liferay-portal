@@ -112,6 +112,7 @@ import java.io.ByteArrayOutputStream;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
@@ -591,10 +592,7 @@ public class LayoutLocalServiceCopyLayoutContentTest {
 							LocaleUtil.toLanguageId(locale),
 							RandomTestUtil.randomString()))
 				).toString(),
-				StringPool.BLANK, StringPool.BLANK,
-				RandomTestUtil.randomString(), null,
-				RandomTestUtil.randomString(), StringPool.BLANK, draftLayout,
-				RandomTestUtil.randomString(), 0, null, 0,
+				draftLayout,
 				_segmentsExperienceLocalService.
 					fetchDefaultSegmentsExperienceId(draftLayout.getPlid()));
 
@@ -618,13 +616,13 @@ public class LayoutLocalServiceCopyLayoutContentTest {
 		FragmentEntryLink fragmentEntryLink1 =
 			_fragmentEntryLinkLocalService.getFragmentEntryLink(
 				_group.getGroupId(),
-				draftFragmentEntryLink1.getExternalReferenceCode(),
+				draftFragmentEntryLink1.getFragmentEntryLinkId(),
 				layout.getPlid());
 
 		FragmentEntryLink fragmentEntryLink2 =
 			_fragmentEntryLinkLocalService.getFragmentEntryLink(
 				_group.getGroupId(),
-				draftFragmentEntryLink2.getExternalReferenceCode(),
+				draftFragmentEntryLink2.getFragmentEntryLinkId(),
 				layout.getPlid());
 
 		draftFragmentEntryLink2.setEditableValues(
@@ -642,33 +640,39 @@ public class LayoutLocalServiceCopyLayoutContentTest {
 			_fragmentEntryLinkLocalService.updateFragmentEntryLink(
 				draftFragmentEntryLink2);
 
-		Thread.sleep(1000);
+		fragmentEntryLink2.setModifiedDate(
+			new Date(System.currentTimeMillis() + 10000));
 
-		_fragmentEntryLinkLocalService.updateFragmentEntryLink(
-			fragmentEntryLink2);
+		fragmentEntryLink2 =
+			_fragmentEntryLinkLocalService.updateFragmentEntryLink(
+				fragmentEntryLink2);
 
 		_layoutLocalService.copyLayoutContent(draftLayout, layout);
 
 		FragmentEntryLink updatedFragmentEntryLink1 =
 			_fragmentEntryLinkLocalService.getFragmentEntryLink(
 				_group.getGroupId(),
-				draftFragmentEntryLink1.getExternalReferenceCode(),
+				draftFragmentEntryLink1.getFragmentEntryLinkId(),
 				layout.getPlid());
 
 		FragmentEntryLink updatedFragmentEntryLink2 =
 			_fragmentEntryLinkLocalService.getFragmentEntryLink(
 				_group.getGroupId(),
-				draftFragmentEntryLink2.getExternalReferenceCode(),
+				draftFragmentEntryLink2.getFragmentEntryLinkId(),
 				layout.getPlid());
 
-		Assert.assertEquals(
-			draftFragmentEntryLink1.getEditableValues(),
-			updatedFragmentEntryLink1.getEditableValues());
 		Assert.assertTrue(
 			DateUtil.equals(
 				fragmentEntryLink1.getModifiedDate(),
 				updatedFragmentEntryLink1.getModifiedDate()));
+		Assert.assertEquals(
+			draftFragmentEntryLink1.getEditableValues(),
+			updatedFragmentEntryLink1.getEditableValues());
 
+		Assert.assertFalse(
+			DateUtil.equals(
+				fragmentEntryLink2.getModifiedDate(),
+				updatedFragmentEntryLink2.getModifiedDate()));
 		Assert.assertEquals(
 			draftFragmentEntryLink2.getEditableValues(),
 			updatedFragmentEntryLink2.getEditableValues());
