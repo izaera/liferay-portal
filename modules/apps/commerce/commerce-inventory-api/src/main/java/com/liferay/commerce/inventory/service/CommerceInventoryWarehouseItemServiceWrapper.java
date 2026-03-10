@@ -151,10 +151,9 @@ public class CommerceInventoryWarehouseItemServiceWrapper
 	@Override
 	public java.util.List
 		<com.liferay.commerce.inventory.model.CommerceInventoryWarehouseItem>
-				getCommerceInventoryWarehouseItemsByCompanyIdSkuAndUnitOfMeasureKey(
-					long companyId, String sku, String unitOfMeasureKey,
-					int start, int end)
-			throws com.liferay.portal.kernel.security.auth.PrincipalException {
+			getCommerceInventoryWarehouseItemsByCompanyIdSkuAndUnitOfMeasureKey(
+				long companyId, String sku, String unitOfMeasureKey, int start,
+				int end) {
 
 		return _commerceInventoryWarehouseItemService.
 			getCommerceInventoryWarehouseItemsByCompanyIdSkuAndUnitOfMeasureKey(
@@ -204,7 +203,7 @@ public class CommerceInventoryWarehouseItemServiceWrapper
 	@Override
 	public int getCommerceInventoryWarehouseItemsCountByModifiedDate(
 			long companyId, java.util.Date startDate, java.util.Date endDate)
-		throws com.liferay.portal.kernel.security.auth.PrincipalException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _commerceInventoryWarehouseItemService.
 			getCommerceInventoryWarehouseItemsCountByModifiedDate(
@@ -217,7 +216,7 @@ public class CommerceInventoryWarehouseItemServiceWrapper
 				getCommerceInventoryWarehouseItemsCountByModifiedDate(
 					long companyId, java.util.Date startDate,
 					java.util.Date endDate, int start, int end)
-			throws com.liferay.portal.kernel.security.auth.PrincipalException {
+			throws com.liferay.portal.kernel.exception.PortalException {
 
 		return _commerceInventoryWarehouseItemService.
 			getCommerceInventoryWarehouseItemsCountByModifiedDate(

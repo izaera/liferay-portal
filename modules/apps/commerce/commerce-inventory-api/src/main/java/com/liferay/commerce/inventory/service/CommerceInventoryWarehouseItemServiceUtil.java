@@ -129,10 +129,9 @@ public class CommerceInventoryWarehouseItemServiceUtil {
 	}
 
 	public static List<CommerceInventoryWarehouseItem>
-			getCommerceInventoryWarehouseItemsByCompanyIdSkuAndUnitOfMeasureKey(
-				long companyId, String sku, String unitOfMeasureKey, int start,
-				int end)
-		throws com.liferay.portal.kernel.security.auth.PrincipalException {
+		getCommerceInventoryWarehouseItemsByCompanyIdSkuAndUnitOfMeasureKey(
+			long companyId, String sku, String unitOfMeasureKey, int start,
+			int end) {
 
 		return getService().
 			getCommerceInventoryWarehouseItemsByCompanyIdSkuAndUnitOfMeasureKey(
@@ -174,7 +173,7 @@ public class CommerceInventoryWarehouseItemServiceUtil {
 
 	public static int getCommerceInventoryWarehouseItemsCountByModifiedDate(
 			long companyId, java.util.Date startDate, java.util.Date endDate)
-		throws com.liferay.portal.kernel.security.auth.PrincipalException {
+		throws PortalException {
 
 		return getService().
 			getCommerceInventoryWarehouseItemsCountByModifiedDate(
@@ -185,7 +184,7 @@ public class CommerceInventoryWarehouseItemServiceUtil {
 			getCommerceInventoryWarehouseItemsCountByModifiedDate(
 				long companyId, java.util.Date startDate,
 				java.util.Date endDate, int start, int end)
-		throws com.liferay.portal.kernel.security.auth.PrincipalException {
+		throws PortalException {
 
 		return getService().
 			getCommerceInventoryWarehouseItemsCountByModifiedDate(

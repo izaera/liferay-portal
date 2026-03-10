@@ -488,10 +488,9 @@ public class CommerceInventoryWarehouseItemServiceHttp {
 
 	public static java.util.List
 		<com.liferay.commerce.inventory.model.CommerceInventoryWarehouseItem>
-				getCommerceInventoryWarehouseItemsByCompanyIdSkuAndUnitOfMeasureKey(
-					HttpPrincipal httpPrincipal, long companyId, String sku,
-					String unitOfMeasureKey, int start, int end)
-			throws com.liferay.portal.kernel.security.auth.PrincipalException {
+			getCommerceInventoryWarehouseItemsByCompanyIdSkuAndUnitOfMeasureKey(
+				HttpPrincipal httpPrincipal, long companyId, String sku,
+				String unitOfMeasureKey, int start, int end) {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -508,14 +507,6 @@ public class CommerceInventoryWarehouseItemServiceHttp {
 				returnObj = TunnelUtil.invoke(httpPrincipal, methodHandler);
 			}
 			catch (Exception exception) {
-				if (exception instanceof
-						com.liferay.portal.kernel.security.auth.
-							PrincipalException) {
-
-					throw (com.liferay.portal.kernel.security.auth.
-						PrincipalException)exception;
-				}
-
 				throw new com.liferay.portal.kernel.exception.SystemException(
 					exception);
 			}
@@ -703,7 +694,7 @@ public class CommerceInventoryWarehouseItemServiceHttp {
 	public static int getCommerceInventoryWarehouseItemsCountByModifiedDate(
 			HttpPrincipal httpPrincipal, long companyId,
 			java.util.Date startDate, java.util.Date endDate)
-		throws com.liferay.portal.kernel.security.auth.PrincipalException {
+		throws com.liferay.portal.kernel.exception.PortalException {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -721,11 +712,10 @@ public class CommerceInventoryWarehouseItemServiceHttp {
 			}
 			catch (Exception exception) {
 				if (exception instanceof
-						com.liferay.portal.kernel.security.auth.
-							PrincipalException) {
+						com.liferay.portal.kernel.exception.PortalException) {
 
-					throw (com.liferay.portal.kernel.security.auth.
-						PrincipalException)exception;
+					throw (com.liferay.portal.kernel.exception.PortalException)
+						exception;
 				}
 
 				throw new com.liferay.portal.kernel.exception.SystemException(
@@ -749,7 +739,7 @@ public class CommerceInventoryWarehouseItemServiceHttp {
 					HttpPrincipal httpPrincipal, long companyId,
 					java.util.Date startDate, java.util.Date endDate, int start,
 					int end)
-			throws com.liferay.portal.kernel.security.auth.PrincipalException {
+			throws com.liferay.portal.kernel.exception.PortalException {
 
 		try {
 			MethodKey methodKey = new MethodKey(
@@ -767,11 +757,10 @@ public class CommerceInventoryWarehouseItemServiceHttp {
 			}
 			catch (Exception exception) {
 				if (exception instanceof
-						com.liferay.portal.kernel.security.auth.
-							PrincipalException) {
+						com.liferay.portal.kernel.exception.PortalException) {
 
-					throw (com.liferay.portal.kernel.security.auth.
-						PrincipalException)exception;
+					throw (com.liferay.portal.kernel.exception.PortalException)
+						exception;
 				}
 
 				throw new com.liferay.portal.kernel.exception.SystemException(
