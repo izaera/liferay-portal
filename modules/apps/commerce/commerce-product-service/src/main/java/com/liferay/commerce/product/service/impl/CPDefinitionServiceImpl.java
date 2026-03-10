@@ -292,6 +292,15 @@ public class CPDefinitionServiceImpl extends CPDefinitionServiceBaseImpl {
 
 	@Override
 	public CPDefinition fetchCPDefinitionByCProductExternalReferenceCode(
+			String externalReferenceCode, long companyId)
+		throws PortalException {
+
+		return fetchCPDefinitionByCProductExternalReferenceCode(
+			externalReferenceCode, companyId, false);
+	}
+
+	@Override
+	public CPDefinition fetchCPDefinitionByCProductExternalReferenceCode(
 			String externalReferenceCode, long companyId, boolean excludeDraft)
 		throws PortalException {
 
@@ -306,6 +315,13 @@ public class CPDefinitionServiceImpl extends CPDefinitionServiceBaseImpl {
 		}
 
 		return cpDefinition;
+	}
+
+	@Override
+	public CPDefinition fetchCPDefinitionByCProductId(long cProductId)
+		throws PortalException {
+
+		return fetchCPDefinitionByCProductId(cProductId, false);
 	}
 
 	@Override
