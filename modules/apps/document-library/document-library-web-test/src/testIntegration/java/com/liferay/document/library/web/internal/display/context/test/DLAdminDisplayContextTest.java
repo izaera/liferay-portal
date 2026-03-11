@@ -105,7 +105,9 @@ public class DLAdminDisplayContextTest {
 	}
 
 	@Test
-	public void testGetSearchContainerWithFilterByAssetCategoryId() throws Exception {
+	public void testGetSearchContainerWithFilterByAssetCategoryId()
+		throws Exception {
+
 		Folder parentFolder1 = DLAppTestUtil.addFolder(_group.getGroupId());
 		Folder parentFolder2 = DLAppTestUtil.addFolder(_group.getGroupId());
 
@@ -137,7 +139,9 @@ public class DLAdminDisplayContextTest {
 	}
 
 	@Test
-	public void testGetSearchContainerWithFilterByAssetTagName() throws Exception {
+	public void testGetSearchContainerWithFilterByAssetTagName()
+		throws Exception {
+
 		Folder parentFolder1 = DLAppTestUtil.addFolder(_group.getGroupId());
 		Folder parentFolder2 = DLAppTestUtil.addFolder(_group.getGroupId());
 
