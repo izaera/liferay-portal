@@ -33,11 +33,15 @@ import com.liferay.object.service.ObjectRelationshipLocalService;
 import com.liferay.object.web.internal.model.ProxyObjectEntry;
 import com.liferay.petra.reflect.ReflectionUtil;
 import com.liferay.petra.string.StringPool;
+import com.liferay.portal.kernel.cache.thread.local.Lifecycle;
+import com.liferay.portal.kernel.cache.thread.local.ThreadLocalCache;
+import com.liferay.portal.kernel.cache.thread.local.ThreadLocalCacheManager;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.template.info.item.provider.TemplateInfoItemFieldSetProvider;
 
@@ -92,6 +96,24 @@ public class ObjectEntryInfoItemFieldValuesProvider
 
 	@Override
 	public InfoItemFieldValues getInfoItemFieldValues(ObjectEntry objectEntry) {
+		ThreadLocalCache<InfoItemFieldValues> threadLocalCache =
+			ThreadLocalCacheManager.getThreadLocalCache(
+				Lifecycle.REQUEST,
+				ObjectEntryInfoItemFieldValuesProvider.class.getName());
+
+		String key = String.valueOf(objectEntry.getObjectEntryId());
+
+		InfoItemFieldValues infoItemFieldValues = threadLocalCache.get(key);
+
+		ThemeDisplay themeDisplay = _getThemeDisplay();
+
+		if ((infoItemFieldValues != null) &&
+			((themeDisplay == null) ||
+			 Validator.isNull(themeDisplay.getDoAsUserId()))) {
+
+			return infoItemFieldValues;
+		}
+
 		try {
 			return InfoItemFieldValues.builder(
 			).infoFieldValues(
