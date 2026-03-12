@@ -6,6 +6,7 @@
 package com.liferay.portal.configuration.persistence;
 
 import com.liferay.petra.lang.CentralizedThreadLocal;
+import com.liferay.petra.lang.SafeCloseable;
 
 /**
  * @author Raymond Augé
@@ -16,11 +17,13 @@ public class InMemoryOnlyConfigurationThreadLocal {
 		return _inMemoryOnly.get();
 	}
 
-	public static void setInMemoryOnly(boolean inMemoryOnly) {
-		_inMemoryOnly.set(inMemoryOnly);
+	public static SafeCloseable setInMemoryOnlyWithSafeCloseable(
+		boolean inMemoryOnly) {
+
+		return _inMemoryOnly.setWithSafeCloseable(inMemoryOnly);
 	}
 
-	private static final ThreadLocal<Boolean> _inMemoryOnly =
+	private static final CentralizedThreadLocal<Boolean> _inMemoryOnly =
 		new CentralizedThreadLocal<>(
 			InMemoryOnlyConfigurationThreadLocal.class + "._inMemoryOnly",
 			() -> Boolean.FALSE, false);
