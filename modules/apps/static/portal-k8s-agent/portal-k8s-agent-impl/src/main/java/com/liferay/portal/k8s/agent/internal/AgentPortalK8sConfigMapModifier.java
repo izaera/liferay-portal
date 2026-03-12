@@ -6,6 +6,7 @@
 package com.liferay.portal.k8s.agent.internal;
 
 import com.liferay.osgi.util.configuration.ConfigurationFactoryUtil;
+import com.liferay.petra.lang.SafeCloseable;
 import com.liferay.petra.string.CharPool;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
@@ -546,8 +547,9 @@ public class AgentPortalK8sConfigMapModifier
 		String virtualInstancePid = _getVirtualInstancePid(
 			config, virtualInstanceId);
 
-		try {
-			InMemoryOnlyConfigurationThreadLocal.setInMemoryOnly(true);
+		try (SafeCloseable safeCloseable =
+				InMemoryOnlyConfigurationThreadLocal.
+					setInMemoryOnlyWithSafeCloseable(true)) {
 
 			Configuration configuration = null;
 
@@ -616,9 +618,6 @@ public class AgentPortalK8sConfigMapModifier
 
 			configuration.addAttributes(
 				Configuration.ConfigurationAttribute.READ_ONLY);
-		}
-		finally {
-			InMemoryOnlyConfigurationThreadLocal.setInMemoryOnly(false);
 		}
 	}
 
