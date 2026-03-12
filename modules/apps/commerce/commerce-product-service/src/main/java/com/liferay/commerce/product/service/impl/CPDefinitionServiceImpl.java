@@ -296,7 +296,7 @@ public class CPDefinitionServiceImpl extends CPDefinitionServiceBaseImpl {
 		throws PortalException {
 
 		return fetchCPDefinitionByCProductExternalReferenceCode(
-			externalReferenceCode, companyId, false);
+			externalReferenceCode, companyId, true);
 	}
 
 	@Override
@@ -321,7 +321,7 @@ public class CPDefinitionServiceImpl extends CPDefinitionServiceBaseImpl {
 	public CPDefinition fetchCPDefinitionByCProductId(long cProductId)
 		throws PortalException {
 
-		return fetchCPDefinitionByCProductId(cProductId, false);
+		return fetchCPDefinitionByCProductId(cProductId, true);
 	}
 
 	@Override
