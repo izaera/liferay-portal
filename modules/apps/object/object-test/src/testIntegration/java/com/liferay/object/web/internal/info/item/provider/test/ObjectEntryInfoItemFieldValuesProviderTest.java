@@ -327,13 +327,12 @@ public class ObjectEntryInfoItemFieldValuesProviderTest {
 		themeDisplay.setLocale(LocaleUtil.getDefault());
 		themeDisplay.setScopeGroupId(_group.getGroupId());
 		themeDisplay.setSiteGroupId(_group.getGroupId());
+		themeDisplay.setTimeZone(TimeZoneUtil.getTimeZone(timeZoneId));
 
 		User user = UserTestUtil.addUser();
 
 		user.setTimeZoneId(timeZoneId);
 
-		themeDisplay.setTimeZone(
-			TimeZoneUtil.getTimeZone(user.getTimeZoneId()));
 		themeDisplay.setUser(user);
 
 		return themeDisplay;
