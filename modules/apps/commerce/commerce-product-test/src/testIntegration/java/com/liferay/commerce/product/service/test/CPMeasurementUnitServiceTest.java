@@ -174,7 +174,7 @@ public class CPMeasurementUnitServiceTest {
 				_user, PermissionCheckerFactoryUtil.create(_user))) {
 
 			try {
-				_cpMeasurementUnitService.fetchCPMeasurementUnit(
+				_cpMeasurementUnitService.fetchCPMeasurementUnitByKey(
 					_cpMeasurementUnit.getCompanyId(),
 					_cpMeasurementUnit.getKey());
 
@@ -196,7 +196,7 @@ public class CPMeasurementUnitServiceTest {
 		try (ContextUserReplace contextUserReplace = new ContextUserReplace(
 				_user, PermissionCheckerFactoryUtil.create(_user))) {
 
-			_cpMeasurementUnitService.fetchCPMeasurementUnit(
+			_cpMeasurementUnitService.fetchCPMeasurementUnitByKey(
 				_cpMeasurementUnit.getCompanyId(), _cpMeasurementUnit.getKey());
 		}
 	}
@@ -210,8 +210,8 @@ public class CPMeasurementUnitServiceTest {
 
 			_cpMeasurementUnitService.
 				fetchCPMeasurementUnitByExternalReferenceCode(
-					_cpMeasurementUnit.getExternalReferenceCode(),
-					_cpMeasurementUnit.getCompanyId());
+					_cpMeasurementUnit.getCompanyId(),
+					_cpMeasurementUnit.getExternalReferenceCode());
 
 			Assert.fail();
 		}
@@ -232,8 +232,8 @@ public class CPMeasurementUnitServiceTest {
 
 			_cpMeasurementUnitService.
 				fetchCPMeasurementUnitByExternalReferenceCode(
-					_cpMeasurementUnit.getExternalReferenceCode(),
-					_cpMeasurementUnit.getCompanyId());
+					_cpMeasurementUnit.getCompanyId(),
+					_cpMeasurementUnit.getExternalReferenceCode());
 		}
 	}
 
