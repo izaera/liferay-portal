@@ -61,7 +61,6 @@ public class CommerceAvailabilityEstimateServiceTest {
 				addCommerceAvailabilityEstimate(
 					RandomTestUtil.randomLocaleStringMap(),
 					RandomTestUtil.nextDouble(), _serviceContext);
-
 		_role = _roleLocalService.addRole(
 			RandomTestUtil.randomString(), TestPropsValues.getUserId(), null, 0,
 			RandomTestUtil.randomString(), null, null,
