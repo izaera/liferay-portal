@@ -31,7 +31,7 @@ import com.liferay.commerce.product.test.util.CPTestUtil;
 import com.liferay.commerce.product.type.simple.constants.SimpleCPTypeConstants;
 import com.liferay.commerce.service.CPDefinitionInventoryLocalService;
 import com.liferay.petra.string.StringPool;
-import com.liferay.portal.configuration.test.util.CompanyConfigurationTemporarySwapper;
+import com.liferay.portal.configuration.test.util.ConfigurationTemporarySwapper;
 import com.liferay.portal.kernel.dao.orm.QueryDefinition;
 import com.liferay.portal.kernel.dao.orm.QueryUtil;
 import com.liferay.portal.kernel.exception.PortalException;
@@ -43,7 +43,6 @@ import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.util.CompanyTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
 import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
-import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.test.util.UserTestUtil;
 import com.liferay.portal.kernel.util.CalendarFactoryUtil;
 import com.liferay.portal.kernel.util.HashMapDictionaryBuilder;
@@ -815,16 +814,14 @@ public class CPDefinitionLocalServiceTest {
 			cpDefinition1.getCPDefinitionId(),
 			cProduct.getPublishedCPDefinitionId());
 
-		try (CompanyConfigurationTemporarySwapper
-				companyConfigurationTemporarySwapper =
-					new CompanyConfigurationTemporarySwapper(
-						TestPropsValues.getCompanyId(),
-						CProductVersionConfiguration.class.getName(),
-						HashMapDictionaryBuilder.<String, Object>put(
-							"enabled", true
-						).put(
-							"versionThreshold", 2
-						).build())) {
+		try (ConfigurationTemporarySwapper configurationTemporarySwapper =
+				new ConfigurationTemporarySwapper(
+					CProductVersionConfiguration.class.getName(),
+					HashMapDictionaryBuilder.<String, Object>put(
+						"enabled", true
+					).put(
+						"versionThreshold", 2
+					).build())) {
 
 			CPDefinition cpDefinition2 =
 				_cpDefinitionLocalService.copyCPDefinition(
