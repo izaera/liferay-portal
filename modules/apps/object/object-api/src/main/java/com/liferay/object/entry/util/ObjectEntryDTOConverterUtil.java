@@ -5,18 +5,26 @@
 
 package com.liferay.object.entry.util;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.ObjectWriter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleBeanPropertyFilter;
+import com.fasterxml.jackson.databind.ser.impl.SimpleFilterProvider;
+
 import com.liferay.object.system.JaxRsApplicationDescriptor;
 import com.liferay.object.system.SystemObjectDefinitionManager;
 import com.liferay.object.system.SystemObjectDefinitionManagerRegistry;
+import com.liferay.portal.kernel.json.JSONException;
 import com.liferay.portal.kernel.json.JSONFactoryUtil;
+import com.liferay.portal.kernel.json.JSONObject;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.BaseModel;
 import com.liferay.portal.kernel.model.User;
-import com.liferay.portal.kernel.util.Validator;
+import com.liferay.portal.kernel.util.HashMapBuilder;
 import com.liferay.portal.vulcan.dto.converter.DTOConverter;
 import com.liferay.portal.vulcan.dto.converter.DTOConverterRegistry;
 import com.liferay.portal.vulcan.dto.converter.DefaultDTOConverterContext;
+import com.liferay.portal.vulcan.jackson.databind.ObjectMapperProviderUtil;
 import com.liferay.portal.vulcan.util.ObjectMapperUtil;
 
 import java.util.Collections;
@@ -94,20 +102,21 @@ public class ObjectEntryDTOConverterUtil {
 				return Collections.emptyMap();
 			}
 
-			String dtoString = JSONFactoryUtil.serialize(dto);
+			ObjectMapper objectMapper =
+				ObjectMapperProviderUtil.getObjectMapper();
 
-			if (Validator.isNull(dtoString)) {
-				return Collections.emptyMap();
-			}
+			SimpleFilterProvider simpleFilterProvider =
+				new SimpleFilterProvider();
 
-			Map<String, Object> values = ObjectMapperUtil.readValue(
-				Map.class, dtoString);
+			simpleFilterProvider.addFilter(
+				"Liferay.Vulcan",
+				SimpleBeanPropertyFilter.serializeAll());
 
-			if (values == null) {
-				return Collections.emptyMap();
-			}
+			ObjectWriter objectWriter = objectMapper.writer(
+				simpleFilterProvider);
 
-			return values;
+			return ObjectMapperUtil.readValue(
+				Map.class, objectWriter.writeValueAsString(dto));
 		}
 		catch (Exception exception) {
 			_log.error(exception);
