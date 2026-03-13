@@ -27,10 +27,17 @@ function getAvailableListItemRenderers({
 	});
 }
 
-function getAvailableListRenderers({className}: {className: string}) {
+function getAvailableListRenderers({
+	className,
+	key,
+}: {
+	className: string;
+	key: string;
+}) {
 	return serviceFetch(config.getAvailableListRenderersURL, {
 		body: {
 			className,
+			key,
 		},
 	});
 }

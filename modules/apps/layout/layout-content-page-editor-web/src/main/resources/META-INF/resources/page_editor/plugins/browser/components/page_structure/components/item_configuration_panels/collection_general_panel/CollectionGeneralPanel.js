@@ -323,6 +323,7 @@ export function CollectionGeneralPanel({item}) {
 									VIEWPORT_SIZES.desktop && (
 									<StyleDisplaySelector
 										collectionItemType={collectionItemType}
+										collectionKey={collection.key}
 										handleConfigurationChanged={
 											handleConfigurationChanged
 										}
