@@ -595,20 +595,32 @@ public class LayoutStagedModelDataHandler
 				existingLayout = _layoutLocalService.fetchLayoutByFriendlyURL(
 					groupId, privateLayout, friendlyURL);
 
-				if ((existingLayout != null) &&
-					!Objects.equals(
-						existingLayout.getType(), layout.getType())) {
+				if (existingLayout != null) {
+					if (!Objects.equals(
+							existingLayout.getType(), layout.getType())) {
 
-					_log.warn(
-						StringBundler.concat(
-							"The layout with friendly URL ", friendlyURL,
-							" and type ", layout.getType(),
-							" has the same friendly URL as an existing layout ",
-							"of type ", existingLayout.getType(),
-							". It will be imported as a new layout modifying ",
-							"its URL to ensure uniqueness."));
+						_log.warn(
+							StringBundler.concat(
+								"The layout with friendly URL ", friendlyURL,
+								" and type ", layout.getType(),
+								" has the same friendly URL as an existing ",
+								"layout of type ", existingLayout.getType(),
+								". It will be imported as a new layout ",
+								"modifying its URL to ensure uniqueness."));
 
-					existingLayout = null;
+						existingLayout = null;
+					}
+					else {
+						Layout sourceGroupLayout =
+							_layoutLocalService.fetchLayoutByUuidAndGroupId(
+								existingLayout.getUuid(),
+								portletDataContext.getSourceGroupId(),
+								privateLayout);
+
+						if (sourceGroupLayout != null) {
+							existingLayout = null;
+						}
+					}
 				}
 			}
 
