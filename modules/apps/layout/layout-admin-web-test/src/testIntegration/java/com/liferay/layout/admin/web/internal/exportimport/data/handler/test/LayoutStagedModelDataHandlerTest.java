@@ -58,6 +58,7 @@ import com.liferay.fragment.service.FragmentCollectionLocalService;
 import com.liferay.fragment.service.FragmentEntryLinkLocalService;
 import com.liferay.fragment.service.FragmentEntryLocalService;
 import com.liferay.friendly.url.model.FriendlyURLEntry;
+import com.liferay.friendly.url.model.FriendlyURLEntryLocalization;
 import com.liferay.friendly.url.service.FriendlyURLEntryLocalService;
 import com.liferay.info.field.InfoField;
 import com.liferay.info.form.InfoForm;
@@ -70,6 +71,7 @@ import com.liferay.journal.constants.JournalFolderConstants;
 import com.liferay.journal.model.JournalArticle;
 import com.liferay.journal.service.JournalArticleLocalService;
 import com.liferay.journal.test.util.JournalTestUtil;
+import com.liferay.layout.friendly.url.LayoutFriendlyURLEntryHelper;
 import com.liferay.layout.page.template.constants.LayoutPageTemplateEntryTypeConstants;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
 import com.liferay.layout.page.template.model.LayoutPageTemplateStructure;
@@ -960,6 +962,79 @@ public class LayoutStagedModelDataHandlerTest
 		_publishLayouts(group, stagingGroup);
 
 		_assertRenderLayoutHTML(updatedContent, layout, segmentsExperienceId);
+	}
+
+	@Test
+	@TestInfo("LPD-82868")
+	public void testLocalStagingWithCopiedLayoutFriendlyURL() throws Exception {
+		Group group = GroupTestUtil.addGroup();
+
+		_stagingLocalService.enableLocalStaging(
+			TestPropsValues.getUserId(), group, false, false,
+			ServiceContextTestUtil.getServiceContext(
+				group, TestPropsValues.getUserId()));
+
+		Group stagingGroup = group.getStagingGroup();
+
+		Layout stagingLayout1 = LayoutTestUtil.addTypeContentLayout(
+			stagingGroup);
+
+		Layout stagingDraftLayout1 = stagingLayout1.fetchDraftLayout();
+
+		ContentLayoutTestUtil.publishLayout(
+			stagingDraftLayout1, stagingLayout1);
+
+		_publishLayouts(group, stagingGroup);
+
+		Layout stagingLayout2 = LayoutTestUtil.addTypeContentLayout(
+			stagingGroup);
+
+		Assert.assertNotEquals(
+			stagingLayout1.getUuid(), stagingLayout2.getUuid());
+
+		String friendlyURL = stagingLayout1.getFriendlyURL();
+
+		stagingLayout1 = _layoutLocalService.updateFriendlyURL(
+			TestPropsValues.getUserId(), stagingLayout1.getPlid(),
+			StringPool.FORWARD_SLASH + RandomTestUtil.randomString(),
+			stagingLayout1.getDefaultLanguageId());
+
+		FriendlyURLEntryLocalization friendlyURLEntryLocalization =
+			_friendlyURLEntryLocalService.fetchFriendlyURLEntryLocalization(
+				stagingGroup.getGroupId(),
+				_layoutFriendlyURLEntryHelper.getClassNameId(
+					stagingLayout1.isPrivateLayout()),
+				friendlyURL);
+
+		Assert.assertNotNull(friendlyURLEntryLocalization);
+
+		_friendlyURLEntryLocalService.deleteFriendlyURLLocalizationEntry(
+			friendlyURLEntryLocalization.getFriendlyURLEntryId(),
+			friendlyURLEntryLocalization.getLanguageId());
+
+		stagingLayout2 = _layoutLocalService.updateFriendlyURL(
+			TestPropsValues.getUserId(), stagingLayout2.getPlid(), friendlyURL,
+			stagingLayout2.getDefaultLanguageId());
+
+		stagingLayout1 = _layoutLocalService.updateParentLayoutId(
+			stagingLayout1.getPlid(), stagingLayout2.getPlid());
+
+		_publishLayouts(group, stagingGroup);
+
+		Layout liveLayout1 = _layoutLocalService.getLayoutByUuidAndGroupId(
+			stagingLayout1.getUuid(), group.getGroupId(), false);
+
+		Assert.assertEquals(
+			stagingLayout1.getFriendlyURL(), liveLayout1.getFriendlyURL());
+
+		Layout liveLayout2 = _layoutLocalService.getLayoutByUuidAndGroupId(
+			stagingLayout2.getUuid(), group.getGroupId(), false);
+
+		Assert.assertEquals(
+			stagingLayout2.getFriendlyURL() + "1",
+			liveLayout2.getFriendlyURL());
+		Assert.assertEquals(
+			liveLayout2.getLayoutId(), liveLayout1.getParentLayoutId());
 	}
 
 	@Test
@@ -2454,6 +2529,9 @@ public class LayoutStagedModelDataHandlerTest
 
 	@Inject
 	private JSONFactory _jsonFactory;
+
+	@Inject
+	private LayoutFriendlyURLEntryHelper _layoutFriendlyURLEntryHelper;
 
 	@Inject
 	private LayoutFriendlyURLLocalService _layoutFriendlyURLLocalService;
