@@ -9,7 +9,6 @@ import com.liferay.fragment.service.FragmentEntryLinkLocalService;
 import com.liferay.layout.admin.web.internal.info.item.helper.LayoutInfoItemLanguagesProviderHelper;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.language.Language;
-import com.liferay.portal.kernel.language.LanguageUtil;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.util.LocaleUtil;
 import com.liferay.segments.service.SegmentsExperienceLocalService;
@@ -58,7 +57,7 @@ public class LayoutInfoItemLanguagesProvider
 		Set<String> siteAvailableLanguageIds = new HashSet<>();
 
 		for (Locale locale :
-				LanguageUtil.getAvailableLocales(layout.getGroupId())) {
+				_language.getAvailableLocales(layout.getGroupId())) {
 
 			siteAvailableLanguageIds.add(LocaleUtil.toLanguageId(locale));
 		}
