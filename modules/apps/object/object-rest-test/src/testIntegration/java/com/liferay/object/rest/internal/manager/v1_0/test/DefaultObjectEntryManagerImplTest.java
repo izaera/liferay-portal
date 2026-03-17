@@ -3875,6 +3875,8 @@ public class DefaultObjectEntryManagerImplTest
 			adminUser.getUserId(), 0,
 			_objectDefinition1.getObjectDefinitionId(),
 			HashMapBuilder.<String, Serializable>put(
+				"richTextObjectFieldName", "<i>richTextObjectFieldNameValue</i>"
+			).put(
 				"textObjectFieldName", StringUtil.randomId()
 			).put(
 				"textObjectFieldNameExtension", StringUtil.randomId()
