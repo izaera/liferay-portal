@@ -54,11 +54,11 @@ public class EditCTCollectionTemplateMVCRenderCommandTest {
 	public void testRender() throws Exception {
 		Company company = CompanyTestUtil.addCompany();
 
-		User companyUser = company.getGuestUser();
+		User user = company.getGuestUser();
 
 		CTCollectionTemplate ctCollectionTemplate =
 			_ctCollectionTemplateLocalService.addCTCollectionTemplate(
-				companyUser.getUserId(), RandomTestUtil.randomString(),
+				user.getUserId(), RandomTestUtil.randomString(),
 				RandomTestUtil.randomString(),
 				JSONUtil.put(
 					"description", RandomTestUtil.randomString()
