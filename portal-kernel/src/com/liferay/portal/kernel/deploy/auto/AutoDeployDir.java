@@ -24,6 +24,7 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.jar.Attributes;
 import java.util.jar.JarFile;
 import java.util.jar.Manifest;
@@ -327,7 +328,8 @@ public class AutoDeployDir {
 	private static final Pattern _versionPattern = Pattern.compile(
 		"-[\\d]+((\\.[\\d]+)+(-.+)*)\\.war$");
 
-	private final Map<String, Long> _blacklistFileTimestamps = new HashMap<>();
+	private final Map<String, Long> _blacklistFileTimestamps =
+		new ConcurrentHashMap<>();
 	private final File _deployDir;
 	private final long _interval;
 	private final String _name;
