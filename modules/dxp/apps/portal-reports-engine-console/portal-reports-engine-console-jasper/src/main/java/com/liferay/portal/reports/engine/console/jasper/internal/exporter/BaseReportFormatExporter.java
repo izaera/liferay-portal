@@ -10,8 +10,10 @@ import com.liferay.portal.reports.engine.ReportFormatExporter;
 import com.liferay.portal.reports.engine.ReportRequest;
 import com.liferay.portal.reports.engine.ReportResultContainer;
 
-import net.sf.jasperreports.engine.JRExporter;
-import net.sf.jasperreports.engine.JRExporterParameter;
+import net.sf.jasperreports.engine.JasperPrint;
+import net.sf.jasperreports.export.Exporter;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleOutputStreamExporterOutput;
 
 /**
  * @author Michael C. Han
@@ -25,22 +27,24 @@ public abstract class BaseReportFormatExporter implements ReportFormatExporter {
 			ReportResultContainer container)
 		throws ReportExportException {
 
-		JRExporter jrExporter = getJRExporter();
+		Exporter exporter = getExporter();
 
 		try {
-			jrExporter.setParameter(JRExporterParameter.JASPER_PRINT, report);
-			jrExporter.setParameter(
-				JRExporterParameter.OUTPUT_STREAM, container.getOutputStream());
+			exporter.setExporterInput(
+				new SimpleExporterInput((JasperPrint)report));
+			exporter.setExporterOutput(
+				new SimpleOutputStreamExporterOutput(
+					container.getOutputStream()));
 
-			jrExporter.exportReport();
+			exporter.exportReport();
 		}
 		catch (Exception exception) {
 			throw new ReportExportException(
-				"Unable to export report using " + jrExporter.getClass(),
+				"Unable to export report using " + exporter.getClass(),
 				exception);
 		}
 	}
 
-	protected abstract JRExporter getJRExporter();
+	protected abstract Exporter getExporter();
 
 }

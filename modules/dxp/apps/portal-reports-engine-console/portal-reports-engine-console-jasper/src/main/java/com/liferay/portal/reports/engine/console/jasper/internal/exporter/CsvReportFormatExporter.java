@@ -5,10 +5,16 @@
 
 package com.liferay.portal.reports.engine.console.jasper.internal.exporter;
 
+import com.liferay.portal.reports.engine.ReportExportException;
 import com.liferay.portal.reports.engine.ReportFormatExporter;
+import com.liferay.portal.reports.engine.ReportRequest;
+import com.liferay.portal.reports.engine.ReportResultContainer;
 
-import net.sf.jasperreports.engine.JRExporter;
+import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.export.JRCsvExporter;
+import net.sf.jasperreports.export.Exporter;
+import net.sf.jasperreports.export.SimpleExporterInput;
+import net.sf.jasperreports.export.SimpleWriterExporterOutput;
 
 import org.osgi.service.component.annotations.Component;
 
@@ -17,11 +23,30 @@ import org.osgi.service.component.annotations.Component;
  * @author Brian Wing Shun Chan
  */
 @Component(property = "reportFormat=csv", service = ReportFormatExporter.class)
-public class CsvReportFormatExporter extends BaseReportFormatExporter {
+public class CsvReportFormatExporter implements ReportFormatExporter {
 
 	@Override
-	protected JRExporter getJRExporter() {
-		return new JRCsvExporter();
+	public void format(
+			Object report, ReportRequest reportRequest,
+			ReportResultContainer reportResultContainer)
+		throws ReportExportException {
+
+		Exporter exporter = new JRCsvExporter();
+
+		try {
+			exporter.setExporterInput(
+				new SimpleExporterInput((JasperPrint)report));
+			exporter.setExporterOutput(
+				new SimpleWriterExporterOutput(
+					reportResultContainer.getOutputStream()));
+
+			exporter.exportReport();
+		}
+		catch (Exception exception) {
+			throw new ReportExportException(
+				"Unable to export report using " + exporter.getClass(),
+				exception);
+		}
 	}
 
 }
