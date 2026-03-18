@@ -58,15 +58,12 @@ public class CTCollectionModelResourcePermissionTest {
 		PermissionChecker permissionChecker =
 			PermissionCheckerFactoryUtil.create(TestPropsValues.getUser());
 
-		_assertCheckPermissionThrowsNoSuchResourcePermissionException(
-			permissionChecker, ctCollection, ActionKeys.DELETE);
-		_assertCheckPermissionThrowsNoSuchResourcePermissionException(
-			permissionChecker, ctCollection, ActionKeys.UPDATE);
-		_assertCheckPermissionThrowsNoSuchResourcePermissionException(
-			permissionChecker, ctCollection, ActionKeys.VIEW);
+		_testCheck(permissionChecker, ctCollection, ActionKeys.DELETE);
+		_testCheck(permissionChecker, ctCollection, ActionKeys.UPDATE);
+		_testCheck(permissionChecker, ctCollection, ActionKeys.VIEW);
 	}
 
-	private void _assertCheckPermissionThrowsNoSuchResourcePermissionException(
+	private void _testCheck(
 			PermissionChecker permissionChecker, CTCollection ctCollection,
 			String action)
 		throws Exception {
