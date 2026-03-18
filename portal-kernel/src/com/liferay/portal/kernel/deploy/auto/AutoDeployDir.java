@@ -12,15 +12,14 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.FileUtil;
+import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.PropsUtil;
-import com.liferay.portal.kernel.util.PropsValues;
 import com.liferay.portal.kernel.util.StringUtil;
 
 import java.io.File;
 import java.io.IOException;
 
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -323,8 +322,10 @@ public class AutoDeployDir {
 	private static AutoDeployScanner _autoDeployScanner;
 	private static final AutoDeployDir _defaultAutoDeployDir =
 		new AutoDeployDir(
-			DEFAULT_NAME, new File(PropsValues.AUTO_DEPLOY_DEPLOY_DIR),
-			PropsValues.AUTO_DEPLOY_INTERVAL);
+			DEFAULT_NAME,
+			new File(PropsUtil.get(PropsKeys.AUTO_DEPLOY_DEPLOY_DIR)),
+			GetterUtil.getInteger(
+				PropsUtil.get(PropsKeys.AUTO_DEPLOY_INTERVAL)));
 	private static final Pattern _versionPattern = Pattern.compile(
 		"-[\\d]+((\\.[\\d]+)+(-.+)*)\\.war$");
 
