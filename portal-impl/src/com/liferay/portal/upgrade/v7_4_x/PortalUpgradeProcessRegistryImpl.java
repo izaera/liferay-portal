@@ -573,7 +573,8 @@ public class PortalUpgradeProcessRegistryImpl
 				StringBundler.concat(
 					"update Release_ set verified = [$FALSE$] where ",
 					"servletContextName = '",
-					ReleaseConstants.DEFAULT_SERVLET_CONTEXT_NAME, "'")));
+					ReleaseConstants.DEFAULT_SERVLET_CONTEXT_NAME, "'")),
+			new ClassNameUpgradeProcess());
 	}
 
 }
