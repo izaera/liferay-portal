@@ -22,7 +22,7 @@ public class OpenSSOTest {
 		LiferayUnitTestRule.INSTANCE;
 
 	@Test
-	public void testIsValidServiceUrlWithLocalAddress() throws Exception {
+	public void testIsValidServiceUrl() throws Exception {
 		Assert.assertFalse(
 			_openSSO.isValidServiceUrl("http://localhost:8008/redirect"));
 	}
