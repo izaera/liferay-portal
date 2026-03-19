@@ -836,6 +836,13 @@ public class CommerceServiceUpgradeStepRegistrator
 
 		registry.register("13.0.3", "13.0.4", new DummyUpgradeProcess());
 
+		registry.register(
+			"13.0.4", "13.0.5",
+			new com.liferay.commerce.internal.upgrade.v13_0_5.
+				CommercePermissionUpgradeProcess(
+					_resourceActionLocalService,
+					_resourcePermissionLocalService));
+
 		if (_log.isInfoEnabled()) {
 			_log.info("Commerce upgrade step registrator finished");
 		}
