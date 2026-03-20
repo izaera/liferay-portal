@@ -16,7 +16,7 @@ public class CommerceActionKeys {
 	public static final String MANAGE_ALL_ACCOUNTS = "MANAGE_ALL_ACCOUNTS";
 
 	public static final String MANAGE_COMMERCE_AVAILABILITY_ESTIMATES =
-		"MANAGE_COMMERCE_AVAILABILITY_ESTIMATES";	
+		"MANAGE_COMMERCE_AVAILABILITY_ESTIMATES";
 
 	/**
 	 * @deprecated As of Cavanaugh (7.4.x), with no direct replacement

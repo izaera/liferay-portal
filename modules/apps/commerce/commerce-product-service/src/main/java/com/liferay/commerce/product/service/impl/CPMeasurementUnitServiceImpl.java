@@ -183,7 +183,7 @@ public class CPMeasurementUnitServiceImpl
 	public List<CPMeasurementUnit> getCPMeasurementUnits(long companyId)
 		throws PortalException {
 
-		_hasPortletResourcePermission(
+		_checkPortletResourcePermission(
 			CPActionKeys.VIEW_COMMERCE_PRODUCT_MEASUREMENT_UNITS);
 
 		return cpMeasurementUnitLocalService.getCPMeasurementUnits(companyId);
@@ -220,7 +220,7 @@ public class CPMeasurementUnitServiceImpl
 			long companyId, int type)
 		throws PortalException {
 
-		_hasPortletResourcePermission(
+		_checkPortletResourcePermission(
 			CPActionKeys.VIEW_COMMERCE_PRODUCT_MEASUREMENT_UNITS);
 
 		return cpMeasurementUnitLocalService.getCPMeasurementUnitsByType(
@@ -233,7 +233,7 @@ public class CPMeasurementUnitServiceImpl
 			OrderByComparator<CPMeasurementUnit> orderByComparator)
 		throws PortalException {
 
-		_hasPortletResourcePermission(
+		_checkPortletResourcePermission(
 			CPActionKeys.VIEW_COMMERCE_PRODUCT_MEASUREMENT_UNITS);
 
 		return cpMeasurementUnitLocalService.getCPMeasurementUnitsByType(
