@@ -5,15 +5,11 @@
 
 package com.liferay.site.teams.web.internal.search;
 
-import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.dao.search.EmptyOnClickRowChecker;
 import com.liferay.portal.kernel.model.User;
 import com.liferay.portal.kernel.service.TeamLocalServiceUtil;
-import com.liferay.portal.kernel.service.UserLocalServiceUtil;
 
-import jakarta.portlet.PortletResponse;
-
-import jakarta.servlet.http.HttpServletRequest;
+import javax.portlet.PortletResponse;
 
 /**
  * @author Lianne Louie
@@ -27,21 +23,6 @@ public class EditSiteTeamAssignmentsUserRowChecker
 		super(portletResponse);
 
 		_teamId = teamId;
-	}
-
-	@Override
-	public String getRowCheckBox(
-		HttpServletRequest httpServletRequest, boolean checked,
-		boolean disabled, String primaryKey) {
-
-		User user = UserLocalServiceUtil.fetchUser(Long.valueOf(primaryKey));
-
-		if ((user == null) || isDisabled(user)) {
-			return StringPool.BLANK;
-		}
-
-		return super.getRowCheckBox(
-			httpServletRequest, checked, disabled, primaryKey);
 	}
 
 	@Override
