@@ -2,10 +2,12 @@
 
 <suppressions>
 	<source-check>
+		<suppress checks="GradleDependencyArtifactsCheck" files="portal-reports-engine-console-jasper/build\.gradle" />
 		<suppress checks="PoshiPauseUsageCheck" files="portal-reports-engine-console-test/src/testFunctional/macros/ReportsAdmin\.macro" />
 		<suppress checks="PoshiPauseUsageCheck" files="portal-reports-engine-console-test/src/testFunctional/macros/ReportsDisplayPortlet\.macro" />
 		<suppress checks="PoshiPauseUsageCheck" files="portal-reports-engine-console-test/src/testFunctional/tests/CPReportsadmin\.testcase" />
 		<suppress checks="PoshiPauseUsageCheck" files="portal-reports-engine-console-test/src/testFunctional/tests/ReportsUsecase\.testcase" />
 		<suppress checks="XMLServiceReferenceCheck" files="portal-reports-engine-console-service/service\.xml" />
+		<suppress checks="XMLTagAttributesCheck" files="portal-reports-engine-console-test/src/testIntegration/resources/com/liferay/portal/reports/engine/console/service/test/dependencies/reports_admin_template_source_sample_list_type\.jrxml" />
 	</source-check>
 </suppressions>
