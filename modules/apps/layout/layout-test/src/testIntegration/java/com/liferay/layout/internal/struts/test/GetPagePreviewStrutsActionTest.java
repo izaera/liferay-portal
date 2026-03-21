@@ -29,9 +29,9 @@ import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.service.LayoutService;
 import com.liferay.portal.kernel.service.LayoutSetLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
-import com.liferay.portal.kernel.servlet.ServletContextPool;
 import com.liferay.portal.kernel.service.ServiceContextThreadLocal;
 import com.liferay.portal.kernel.servlet.HttpMethods;
+import com.liferay.portal.kernel.servlet.ServletContextPool;
 import com.liferay.portal.kernel.struts.StrutsAction;
 import com.liferay.portal.kernel.test.TestInfo;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
@@ -52,10 +52,10 @@ import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.segments.service.SegmentsExperienceLocalService;
 
-import javax.servlet.http.HttpServletResponse;
-
 import java.util.Collections;
 import java.util.Objects;
+
+import javax.servlet.http.HttpServletResponse;
 
 import org.hamcrest.CoreMatchers;
 
@@ -310,8 +310,7 @@ public class GetPagePreviewStrutsActionTest {
 
 		MockHttpServletRequest mockHttpServletRequest =
 			new MockHttpServletRequest(
-				ServletContextPool.get(StringPool.BLANK)
-			);
+				ServletContextPool.get(StringPool.BLANK));
 
 		mockHttpServletRequest.addParameter(
 			"segmentsExperienceId",
