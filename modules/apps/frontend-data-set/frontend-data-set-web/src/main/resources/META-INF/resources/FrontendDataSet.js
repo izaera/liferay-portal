@@ -585,11 +585,11 @@ const FrontendDataSet = ({
 		!dataLoading && !componentLoading ? (
 			<div className="data-set-content-wrapper">
 				<input
-					hidden
 					name={`${namespace || id + '_'}${
 						actionParameterName || selectedItemsKey
 					}`}
 					readOnly
+					type="hidden"
 					value={selectedItemsValue.join(',')}
 				/>
 
