@@ -41,7 +41,7 @@ module.exports = {
 			'react-helmet',
 			'react-router-dom',
 			'graphiql',
-			'graphiql/graphiql.css',
+			'graphiql/style.css',
 			'axe-core',
 			'clipboard',
 			'cropperjs',
