@@ -1128,21 +1128,6 @@ public class ObjectEntryLocalServiceImpl
 			start, end
 		);
 
-		if (sorts != null) {
-			SortDSLQueryVisitor sortDSLQueryVisitor = new SortDSLQueryVisitor(
-				_objectFieldLocalService,
-				_objectRelationshipLocalServiceSnapshot.get());
-
-			for (Sort sort : sorts) {
-				dslQuery = sortDSLQueryVisitor.visit(
-					dslQuery,
-					new com.liferay.object.internal.sort.Sort(
-						_objectDefinitionPersistence.findByPrimaryKey(
-							objectDefinitionId),
-						sort));
-			}
-		}
-
 		ObjectDefinition objectDefinition =
 			_objectDefinitionPersistence.findByPrimaryKey(objectDefinitionId);
 
