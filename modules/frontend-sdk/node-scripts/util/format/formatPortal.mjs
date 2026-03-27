@@ -4,7 +4,6 @@
  */
 
 import getProjectDirs from '../getProjectDirs.mjs';
-import getTypeScriptProjectDirs from '../getTypeScriptProjectDirs.mjs';
 import {PLAYWRIGHT_DIR} from '../locations.mjs';
 import formatAPISubmodules from './formatters/formatAPISubmodules.mjs';
 import formatConfigFileNames from './formatters/formatConfigFileNames.mjs';
@@ -86,20 +85,17 @@ export default async function formatPortal(check, files) {
 				file.endsWith('.tsx')
 		)
 	) {
-		let projectDirs;
-
-		if (files) {
-			projectDirs = await getTypeScriptProjectDirs(files);
-		}
-		else {
-			projectDirs = await getProjectDirs();
-		}
 
 		// We check all projects no matter if formatting current branch, local
 		// changes or everything because a change in one project may break
 		// others
 
-		if (!(await formatTypeScript([...projectDirs, PLAYWRIGHT_DIR]))) {
+		if (
+			!(await formatTypeScript([
+				...(await getProjectDirs()),
+				PLAYWRIGHT_DIR,
+			]))
+		) {
 			checksPassed = false;
 		}
 	}
