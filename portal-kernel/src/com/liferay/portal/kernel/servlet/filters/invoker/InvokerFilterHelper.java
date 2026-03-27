@@ -122,6 +122,37 @@ public class InvokerFilterHelper {
 		}
 	}
 
+	/**
+	 * @deprecated As of Cavanaugh (7.4.x), replaced by {@link #registerFilterMapping(FilterMapping, String, String)}
+	 */
+	@Deprecated
+	public void registerFilterMapping(
+		FilterMapping filterMapping, String positionFilterName, boolean after) {
+
+		if (after) {
+			_registerFilterMapping(filterMapping, positionFilterName, null);
+		}
+		else {
+			_registerFilterMapping(filterMapping, null, positionFilterName);
+		}
+	}
+
+	/**
+	 * @deprecated As of Cavanaugh (7.4.x), replaced by {@link #_unregisterFilterMappings(String)}
+	 */
+	@Deprecated
+	public void unregisterFilterMappings(String filterName) {
+		_unregisterFilterMappings(filterName);
+	}
+
+	/**
+	 * @deprecated As of Cavanaugh (7.4.x), replaced by {@link #_updateFilterMappings(String, Filter)}
+	 */
+	@Deprecated
+	public void updateFilterMappings(String filterName, Filter filter) {
+		_updateFilterMappings(filterName, filter);
+	}
+
 	protected void addInvokerFilter(InvokerFilter invokerFilter) {
 		_invokerFilters.add(invokerFilter);
 	}
@@ -160,6 +191,28 @@ public class InvokerFilterHelper {
 		}
 
 		return invokerFilterChain;
+	}
+
+	/**
+	 * @deprecated As of Cavanaugh (7.4.x), replaced by {@link #_initFilter(ServletContext, String, FilterConfig)}
+	 */
+	@Deprecated
+	protected Filter initFilter(
+		ServletContext servletContext, String filterClassName,
+		FilterConfig filterConfig) {
+
+		return _initFilter(servletContext, filterClassName, filterConfig);
+	}
+
+	/**
+	 * @deprecated As of Cavanaugh (7.4.x), replaced by {@link #_readLiferayFilterWebXML(ServletContext, String)}
+	 */
+	@Deprecated
+	protected void readLiferayFilterWebXML(
+			ServletContext servletContext, String path)
+		throws Exception {
+
+		_readLiferayFilterWebXML(servletContext, path);
 	}
 
 	private List<String> _getFilterNames() {
