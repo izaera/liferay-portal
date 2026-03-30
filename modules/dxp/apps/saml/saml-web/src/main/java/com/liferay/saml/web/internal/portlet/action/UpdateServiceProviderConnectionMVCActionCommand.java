@@ -15,6 +15,7 @@ import com.liferay.portal.kernel.util.Portal;
 import com.liferay.saml.constants.SamlPortletKeys;
 import com.liferay.saml.persistence.model.SamlIdpSpConnection;
 import com.liferay.saml.persistence.service.SamlIdpSpConnectionLocalService;
+import com.liferay.saml.web.internal.util.SamlPermissionUtil;
 
 import java.io.InputStream;
 
@@ -98,6 +99,11 @@ public class UpdateServiceProviderConnectionMVCActionCommand
 				nameIdFormat, samlSpEntityId, serviceContext);
 		}
 		else {
+			SamlPermissionUtil.checkPermission(
+				_portal.getCompanyId(actionRequest),
+				_samlIdpSpConnectionLocalService.getSamlIdpSpConnection(
+					samlIdpSpConnectionId));
+
 			_samlIdpSpConnectionLocalService.updateSamlIdpSpConnection(
 				samlIdpSpConnectionId, assertionLifetime, attributeNames,
 				attributesEnabled, attributesNamespaceEnabled, enabled,
