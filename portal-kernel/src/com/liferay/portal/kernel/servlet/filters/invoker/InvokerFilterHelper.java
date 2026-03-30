@@ -16,7 +16,6 @@ import com.liferay.portal.kernel.servlet.LiferayFilter;
 import com.liferay.portal.kernel.servlet.PluginContextListener;
 import com.liferay.portal.kernel.servlet.ServletContextPool;
 import com.liferay.portal.kernel.util.AggregateClassLoader;
-import com.liferay.portal.kernel.util.ArrayUtil;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.InstanceFactory;
 import com.liferay.portal.kernel.util.ObjectValuePair;
@@ -130,12 +129,15 @@ public class InvokerFilterHelper {
 	public void registerFilterMapping(
 		FilterMapping filterMapping, String positionFilterName, boolean after) {
 
-		if (after) {
-			_registerFilterMapping(filterMapping, positionFilterName, null);
-		}
-		else {
-			_registerFilterMapping(filterMapping, null, positionFilterName);
-		}
+		throw new UnsupportedOperationException();
+	}
+
+	/**
+	 * @deprecated As of Cavanaugh (7.4.x), with no direct replacement
+	 */
+	@Deprecated
+	public void unregisterFilterMapping(FilterMapping filterMapping) {
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -143,7 +145,7 @@ public class InvokerFilterHelper {
 	 */
 	@Deprecated
 	public void unregisterFilterMappings(String filterName) {
-		_unregisterFilterMappings(filterName);
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -151,7 +153,7 @@ public class InvokerFilterHelper {
 	 */
 	@Deprecated
 	public void updateFilterMappings(String filterName, Filter filter) {
-		_updateFilterMappings(filterName, filter);
+		throw new UnsupportedOperationException();
 	}
 
 	protected void addInvokerFilter(InvokerFilter invokerFilter) {
@@ -202,7 +204,7 @@ public class InvokerFilterHelper {
 		ServletContext servletContext, String filterClassName,
 		FilterConfig filterConfig) {
 
-		return _initFilter(servletContext, filterClassName, filterConfig);
+		throw new UnsupportedOperationException();
 	}
 
 	/**
@@ -213,7 +215,7 @@ public class InvokerFilterHelper {
 			ServletContext servletContext, String path)
 		throws Exception {
 
-		_readLiferayFilterWebXML(servletContext, path);
+		throw new UnsupportedOperationException();
 	}
 
 	private List<String> _getFilterNames() {
@@ -438,35 +440,6 @@ public class InvokerFilterHelper {
 							new AbstractMap.SimpleEntry(
 								afterFilterName, beforeFilterName));
 					}
-
-					break;
-				}
-			}
-			else if (_filterMappingsMap.replace(
-						filterName, oldFilterMappings, newFilterMappings)) {
-
-				break;
-			}
-		}
-	}
-
-	/**
-	 * @deprecated As of Cavanaugh (7.4.x), with no direct replacement
-	 */
-	@Deprecated
-	public void unregisterFilterMapping(FilterMapping filterMapping) {
-		String filterName = filterMapping.getFilterName();
-
-		while (true) {
-			FilterMapping[] oldFilterMappings = _filterMappingsMap.get(
-				filterName);
-
-			FilterMapping[] newFilterMappings = ArrayUtil.remove(
-				oldFilterMappings, filterMapping);
-
-			if (newFilterMappings.length == 0) {
-				if (_filterMappingsMap.remove(filterName, oldFilterMappings)) {
-					_filterNames.remove(filterName);
 
 					break;
 				}
