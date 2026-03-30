@@ -16,6 +16,7 @@ import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
 import com.liferay.portal.kernel.service.LayoutLocalService;
+import com.liferay.portal.kernel.service.LayoutService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
 import com.liferay.portal.kernel.servlet.SessionErrors;
@@ -96,10 +97,10 @@ public class CopyLayoutUtilityPageEntryMVCActionCommand
 			_layoutUtilityPageEntryLocalService.getLayoutUtilityPageEntry(
 				layoutUtilityPageEntryId);
 
-		Layout sourceLayout = _layoutLocalService.getLayout(
+		Layout sourceLayout = _layoutService.getLayout(
 			sourceLayoutUtilityPageEntry.getPlid());
 
-		Layout targetLayout = _layoutLocalService.getLayout(
+		Layout targetLayout = _layoutService.getLayout(
 			layoutUtilityPageEntry.getPlid());
 
 		_layoutLocalService.copyLayoutContent(sourceLayout, targetLayout);
@@ -118,6 +119,9 @@ public class CopyLayoutUtilityPageEntryMVCActionCommand
 
 	@Reference
 	private LayoutLocalService _layoutLocalService;
+
+	@Reference
+	private LayoutService _layoutService;
 
 	@Reference
 	private LayoutUtilityPageEntryLocalService

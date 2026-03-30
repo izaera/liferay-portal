@@ -16,9 +16,11 @@ import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Layout;
 import com.liferay.portal.kernel.portlet.bridges.mvc.BaseMVCActionCommand;
 import com.liferay.portal.kernel.portlet.bridges.mvc.MVCActionCommand;
+import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.service.LayoutLocalService;
 import com.liferay.portal.kernel.service.ServiceContext;
 import com.liferay.portal.kernel.service.ServiceContextFactory;
+import com.liferay.portal.kernel.service.permission.LayoutPermissionUtil;
 import com.liferay.portal.kernel.servlet.SessionErrors;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.transaction.Propagation;
@@ -131,6 +133,13 @@ public class
 
 			Layout targetLayout = _layoutLocalService.getLayout(
 				layoutPageTemplateEntry.getPlid());
+
+			LayoutPermissionUtil.check(
+				themeDisplay.getPermissionChecker(), sourceLayout,
+				ActionKeys.VIEW);
+
+			LayoutPermissionUtil.checkLayoutUpdatePermission(
+				themeDisplay.getPermissionChecker(), targetLayout);
 
 			_layoutLocalService.copyLayoutContent(sourceLayout, targetLayout);
 			_layoutLocalService.copyLayoutContent(

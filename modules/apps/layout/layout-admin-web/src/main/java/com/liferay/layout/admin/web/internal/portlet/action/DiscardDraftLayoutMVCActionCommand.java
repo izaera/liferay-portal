@@ -96,7 +96,7 @@ public class DiscardDraftLayoutMVCActionCommand
 
 		LayoutPermissionUtil.check(
 			themeDisplay.getPermissionChecker(), layout.getPlid(),
-			ActionKeys.VIEW);
+			ActionKeys.UPDATE);
 
 		try {
 			boolean published = layout.isPublished();
