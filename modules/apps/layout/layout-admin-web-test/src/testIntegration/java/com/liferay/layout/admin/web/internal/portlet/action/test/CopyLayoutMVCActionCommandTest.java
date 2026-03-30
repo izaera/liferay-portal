@@ -202,7 +202,6 @@ public class CopyLayoutMVCActionCommandTest {
 
 		_assertLayoutClassedModelUsages(
 			2, journalArticle.getResourcePrimKey(), draftLayout.getPlid());
-
 		_assertLayoutClassedModelUsages(
 			2, journalArticle.getResourcePrimKey(), layout.getPlid());
 	}
@@ -306,11 +305,12 @@ public class CopyLayoutMVCActionCommandTest {
 			editableValues, fragmentEntry.getCss(),
 			fragmentEntry.getConfiguration(),
 			fragmentEntry.getFragmentEntryId(), fragmentEntry.getHtml(),
-			fragmentEntry.getJs(), _draftLayout,
+			fragmentEntry.getJs(),_draftLayout,
 			fragmentEntry.getFragmentEntryKey(), _segmentsExperienceId,
 			fragmentEntry.getType());
 
-		ContentLayoutTestUtil.publishLayout(_draftLayout, _layout);
+		ContentLayoutTestUtil.publishLayout(
+			_draftLayout, _layout);
 	}
 
 	private void _addModelResources(Role role) throws Exception {
@@ -606,9 +606,6 @@ public class CopyLayoutMVCActionCommandTest {
 	@Inject
 	private CompanyLocalService _companyLocalService;
 
-	@DeleteAfterTestRun
-	private Layout _draftLayout;
-
 	@Inject
 	private FragmentCollectionLocalService _fragmentCollectionLocalService;
 
@@ -620,7 +617,11 @@ public class CopyLayoutMVCActionCommandTest {
 	@Inject
 	private FragmentEntryLocalService _fragmentEntryLocalService;
 
+	@DeleteAfterTestRun
+	private Layout _draftLayout;
+
 	private Group _group;
+
 	private Layout _layout;
 
 	@Inject
