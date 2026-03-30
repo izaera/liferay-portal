@@ -262,9 +262,26 @@ class RequestScreen extends Screen {
 				.then((resp) => {
 					this.assertValidResponseStatusCode(resp.status);
 
-					this.setResponse(resp);
+					const forceReload = resp.headers.get('X-Liferay-SPA-Force-Reload');
 
-					return resp.clone().text();
+					console.log('>>> forcing reload', forceReload);
+
+					if (forceReload === "true") {
+						document.location.reload();
+					}
+					else if (!!forceReload) {
+						// TODO: this is kicking a SPA navigation in the middle of another
+						// navigation, which creates problems.
+						// We should probably control this scenario (in the SPA infra) and ignore
+						// everything else until the new page is loaded.
+						this.forcingReload = true;
+						document.location.href = forceReload;
+					}
+					else {
+						this.setResponse(resp);
+
+						return resp.clone().text();
+					}
 				})
 				.then((text) => {
 					if (

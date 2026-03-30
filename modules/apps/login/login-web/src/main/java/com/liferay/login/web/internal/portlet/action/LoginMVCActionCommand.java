@@ -21,6 +21,7 @@ import com.liferay.portal.kernel.exception.UserIdException;
 import com.liferay.portal.kernel.exception.UserLockoutException;
 import com.liferay.portal.kernel.exception.UserPasswordException;
 import com.liferay.portal.kernel.exception.UserScreenNameException;
+import com.liferay.portal.kernel.frontend.spa.FrontendSPAUtil;
 import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.log.LogFactoryUtil;
 import com.liferay.portal.kernel.model.Company;
@@ -36,6 +37,7 @@ import com.liferay.portal.kernel.portlet.url.builder.PortletURLBuilder;
 import com.liferay.portal.kernel.security.auth.AuthException;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.servlet.SessionErrors;
+import com.liferay.portal.kernel.servlet.SessionMessages;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.Http;
@@ -255,11 +257,24 @@ public class LoginMVCActionCommand extends BaseMVCActionCommand {
 
 		if (Validator.isNotNull(redirect)) {
 			if (!themeDisplay.isSignedIn()) {
-				actionRequest.setAttribute(
-					WebKeys.REDIRECT,
-					HttpComponentsUtil.addParameter(
-						_portal.getPathMain() + "/portal/login", "redirect",
-						redirect));
+				if (FrontendSPAUtil.isEnabled(
+						_portal.getCompanyId(actionRequest))) {
+
+					FrontendSPAUtil.forceReload(
+						_portal.getHttpServletResponse(actionResponse),
+						HttpComponentsUtil.addParameter(
+							_portal.getPathMain() + "/portal/login", "redirect",
+							redirect));
+
+					SessionMessages.add(actionRequest, "loginSucceeded");
+				}
+				else {
+					actionRequest.setAttribute(
+						WebKeys.REDIRECT,
+						HttpComponentsUtil.addParameter(
+							_portal.getPathMain() + "/portal/login", "redirect",
+							redirect));
+				}
 
 				return;
 			}

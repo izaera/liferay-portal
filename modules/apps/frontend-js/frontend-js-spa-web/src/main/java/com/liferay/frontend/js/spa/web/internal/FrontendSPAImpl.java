@@ -15,6 +15,7 @@ import com.liferay.portal.kernel.module.configuration.ConfigurationException;
 
 import java.util.Collections;
 
+import jakarta.servlet.http.HttpServletResponse;
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
 
@@ -32,6 +33,15 @@ public class FrontendSPAImpl implements FrontendSPA {
 		SPAConfiguration spaConfiguration = _getSPAConfiguration(companyId);
 
 		return spaConfiguration.enabled();
+	}
+
+	@Override
+	public void forceReload(
+		HttpServletResponse httpServletResponse, String url) {
+
+		httpServletResponse.setHeader(
+			"X-Liferay-SPA-Force-Reload",
+			url == null ? "true" : url);
 	}
 
 	private SPAConfiguration _getSPAConfiguration(long companyId) {

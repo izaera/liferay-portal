@@ -5,11 +5,16 @@
 
 package com.liferay.portal.kernel.frontend.spa;
 
+import jakarta.servlet.http.HttpServletResponse;
+
 /**
  * @author Bryce Osterhaus
  */
 public interface FrontendSPA {
 
 	public boolean isEnabled(long companyId);
+
+	public void forceReload(
+		HttpServletResponse httpServletResponse, String url);
 
 }

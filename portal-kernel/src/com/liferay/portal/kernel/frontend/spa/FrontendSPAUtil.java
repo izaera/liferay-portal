@@ -6,6 +6,7 @@
 package com.liferay.portal.kernel.frontend.spa;
 
 import com.liferay.portal.kernel.module.service.Snapshot;
+import jakarta.servlet.http.HttpServletResponse;
 
 /**
  * @author Bryce Osterhaus
@@ -16,6 +17,14 @@ public class FrontendSPAUtil {
 		FrontendSPA frontendSPA = _frontendSPASnapshot.get();
 
 		return frontendSPA.isEnabled(companyId);
+	}
+
+	public static void forceReload(
+		HttpServletResponse httpServletResponse, String url) {
+
+		FrontendSPA frontendSPA = _frontendSPASnapshot.get();
+
+		frontendSPA.forceReload(httpServletResponse, url);
 	}
 
 	private static final Snapshot<FrontendSPA> _frontendSPASnapshot =
