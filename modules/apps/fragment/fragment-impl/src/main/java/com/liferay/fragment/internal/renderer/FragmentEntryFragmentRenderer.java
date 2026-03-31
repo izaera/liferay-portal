@@ -352,7 +352,7 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 				sb.append("; input.value = Liferay.Util.unescapeHTML(input.value");
 				sb.append("); Object.keys(input.valueI18n).forEach(function(key)");
 				sb.append("{ input.valueI18n[key] = Liferay.Util.unescapeHTML(");
-				sb.append("input.valueI18n[key]); })");
+				sb.append("input.valueI18n[key]);})");
 			}
 
 			sb.append("; const layoutMode = '");
