@@ -251,7 +251,7 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 		FragmentRendererContext fragmentRendererContext, String html,
 		HttpServletRequest httpServletRequest, String nonce) {
 
-		StringBundler sb = new StringBundler(29);
+		StringBundler sb = new StringBundler(33);
 
 		sb.append("<div id=\"");
 
@@ -349,6 +349,10 @@ public class FragmentEntryFragmentRenderer implements FragmentRenderer {
 							fragmentEntryLink, httpServletRequest,
 							fragmentRendererContext.getInfoForm(),
 							fragmentRendererContext.getLocale())));
+				sb.append("; input.value = Liferay.Util.unescapeHTML(input.value");
+				sb.append("); Object.keys(input.valueI18n).forEach(function(key)");
+				sb.append("{ input.valueI18n[key] = Liferay.Util.unescapeHTML(");
+				sb.append("input.valueI18n[key]); })");
 			}
 
 			sb.append("; const layoutMode = '");
