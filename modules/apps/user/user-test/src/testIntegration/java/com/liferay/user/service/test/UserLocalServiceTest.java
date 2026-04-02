@@ -1788,8 +1788,12 @@ public class UserLocalServiceTest {
 		ServiceWrapper<UserLocalService> serviceWrapper =
 			(ServiceWrapper<UserLocalService>)aopInvocationHandler.getTarget();
 
+        ClassLoaderBeanHandler classLoaderBeanHandler =
+			(ClassLoaderBeanHandler)ProxyUtil.getInvocationHandler(
+				serviceWrapper.getWrappedService());
+
 		UserLocalServiceImpl userLocalServiceImpl =
-			(UserLocalServiceImpl)serviceWrapper.getWrappedService();
+			(UserLocalServiceImpl)classLoaderBeanHandler.getBean();
 
 		user.setLoginDate(new Date());
 		user.setLastLoginDate(new Date());
