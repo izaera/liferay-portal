@@ -1,10 +1,6 @@
 Bundle-Name: Liferay Calendar API
 Bundle-SymbolicName: com.liferay.calendar.api
-<<<<<<< HEAD
-Bundle-Version: 13.0.2
-=======
 Bundle-Version: 13.1.0
->>>>>>> bda509a (LPD-58325 Baseline)
 Export-Package:\
 	com.liferay.calendar.configuration,\
 	com.liferay.calendar.constants,\
