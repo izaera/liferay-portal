@@ -23,6 +23,7 @@ import com.liferay.depot.model.DepotEntry;
 import com.liferay.depot.service.DepotEntryLocalService;
 import com.liferay.document.library.kernel.exception.NoSuchFileEntryException;
 import com.liferay.document.library.kernel.model.DLFileEntry;
+import com.liferay.document.library.kernel.model.DLFolder;
 import com.liferay.document.library.kernel.service.DLAppLocalService;
 import com.liferay.document.library.kernel.service.DLFileEntryLocalService;
 import com.liferay.expando.kernel.model.ExpandoColumn;
@@ -49,6 +50,7 @@ import com.liferay.object.exception.ObjectDefinitionScopeException;
 import com.liferay.object.exception.ObjectEntryStatusException;
 import com.liferay.object.exception.ObjectEntryValuesException;
 import com.liferay.object.exception.ObjectValidationRuleEngineException;
+import com.liferay.object.field.attachment.AttachmentManager;
 import com.liferay.object.field.builder.AggregationObjectFieldBuilder;
 import com.liferay.object.field.builder.AttachmentObjectFieldBuilder;
 import com.liferay.object.field.builder.AutoIncrementObjectFieldBuilder;
@@ -188,6 +190,7 @@ import com.liferay.portal.test.rule.PermissionCheckerMethodTestRule;
 import com.liferay.portal.vulcan.util.LocalDateTimeUtil;
 import com.liferay.portal.vulcan.util.LocalizedMapUtil;
 
+import java.io.ByteArrayInputStream;
 import java.io.Closeable;
 import java.io.Serializable;
 
@@ -1161,6 +1164,39 @@ public class ObjectEntryLocalServiceTest {
 				"No FileEntry exists with the key {fileEntryId=",
 				persistedFileEntryId1, "}"),
 			() -> _dlAppLocalService.getFileEntry(persistedFileEntryId1));
+
+		ObjectField uploadObjectField =
+			_objectFieldLocalService.fetchObjectField(
+				_objectDefinition.getObjectDefinitionId(), "upload");
+
+		DLFolder dlFolder = _attachmentManager.getDLFolder(
+			_objectDefinition.getCompanyId(), TestPropsValues.getGroupId(),
+			uploadObjectField.getObjectFieldId(),
+			ServiceContextTestUtil.getServiceContext(),
+			TestPropsValues.getUserId());
+
+		FileEntry fileEntry = _dlAppLocalService.addFileEntry(
+			null, TestPropsValues.getUserId(), dlFolder.getRepositoryId(),
+			dlFolder.getFolderId(), "test.txt", ContentTypes.TEXT_PLAIN,
+			StringUtil.randomString(), StringPool.BLANK, StringPool.BLANK,
+			StringPool.BLANK,
+			new ByteArrayInputStream(
+				RandomTestUtil.randomString(
+				).getBytes()),
+			0, null, null, null, ServiceContextTestUtil.getServiceContext());
+
+		objectEntry = _addObjectEntry(
+			HashMapBuilder.<String, Serializable>put(
+				"emailAddressRequired", "james@liferay.com"
+			).put(
+				"listTypeEntryKeyRequired", "listTypeEntryKey1"
+			).put(
+				"upload", fileEntry.getFileEntryId()
+			).build());
+
+		_assertDLFileEntry(
+			MapUtil.getLong(objectEntry.getValues(), "upload"),
+			_objectDefinition.getClassName(), objectEntry.getObjectEntryId());
 
 		// Delete object entry should delete existing files
 
@@ -5302,6 +5338,17 @@ public class ObjectEntryLocalServiceTest {
 		Assert.assertEquals(count, _count());
 	}
 
+	private void _assertDLFileEntry(
+			long dlFileEntryId, String expectedClassName, long expectedClassPK)
+		throws Exception {
+
+		DLFileEntry dlFileEntry = _dlFileEntryLocalService.getFileEntry(
+			dlFileEntryId);
+
+		Assert.assertEquals(expectedClassName, dlFileEntry.getClassName());
+		Assert.assertEquals(expectedClassPK, dlFileEntry.getClassPK());
+	}
+
 	private void _assertFailureObjectValidationRule(
 		ModelListenerException modelListenerException,
 		ObjectValidationRule objectValidationRule) {
@@ -6809,6 +6856,9 @@ public class ObjectEntryLocalServiceTest {
 
 	@Inject
 	private AssetEntryLocalService _assetEntryLocalService;
+
+	@Inject
+	private AttachmentManager _attachmentManager;
 
 	@Inject
 	private CounterLocalService _counterLocalService;
