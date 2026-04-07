@@ -32,7 +32,12 @@ import com.liferay.commerce.price.list.service.CommercePriceListOrderTypeRelLoca
 import com.liferay.commerce.price.list.service.base.CommercePriceListLocalServiceBaseImpl;
 import com.liferay.commerce.price.list.service.persistence.CommercePriceEntryPersistence;
 import com.liferay.commerce.pricing.exception.CommerceUndefinedBasePriceListException;
+import com.liferay.commerce.pricing.model.CommercePriceModifier;
 import com.liferay.commerce.pricing.service.CommercePriceModifierLocalService;
+import com.liferay.commerce.pricing.type.CommercePriceModifierType;
+import com.liferay.commerce.pricing.type.CommercePriceModifierTypeRegistry;
+import com.liferay.commerce.product.model.CPDefinition;
+import com.liferay.commerce.product.service.CPDefinitionLocalService;
 import com.liferay.commerce.product.service.CommerceChannelAccountEntryRelLocalService;
 import com.liferay.expando.kernel.service.ExpandoRowLocalService;
 import com.liferay.petra.sql.dsl.DSLQueryFactoryUtil;
@@ -88,6 +93,8 @@ import com.liferay.portal.kernel.workflow.WorkflowConstants;
 import com.liferay.portal.kernel.workflow.WorkflowHandlerRegistryUtil;
 
 import java.io.Serializable;
+
+import java.math.BigDecimal;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -796,7 +803,105 @@ public class CommercePriceListLocalServiceImpl
 
 		CommercePriceEntry commercePriceEntry = commercePriceEntries.get(0);
 
-		return commercePriceEntry.getCommercePriceList();
+		long commercePriceListId = commercePriceEntry.getCommercePriceListId();
+
+		if (type.equals(CommercePriceListConstants.TYPE_PROMOTION)) {
+			List<CommercePriceList> commercePriceLists =
+				commercePriceListLocalService.
+					getCommercePriceListsByUnqualified(groupId, type);
+
+			if (commercePriceLists.size() <= 1) {
+				return commercePriceListLocalService.getCommercePriceList(
+					commercePriceListId);
+			}
+
+			CommercePriceList actualPriceList =
+				commercePriceListLocalService.getCatalogBaseCommercePriceList(
+					groupId);
+
+			CommercePriceEntry fetchedCommercePriceEntry = null;
+
+			if (actualPriceList != null) {
+				fetchedCommercePriceEntry =
+					_commercePriceEntryLocalService.fetchCommercePriceEntry(
+						actualPriceList.getCommercePriceListId(),
+						cPInstanceUuid, unitOfMeasureKey, true);
+			}
+
+			if ((actualPriceList == null) ||
+				(fetchedCommercePriceEntry == null)) {
+
+				actualPriceList =
+					commercePriceListLocalService.
+						getCommercePriceListsByUnqualified(
+							groupId, CommercePriceListConstants.TYPE_PRICE_LIST
+						).get(
+							0
+						);
+
+				if (actualPriceList == null) {
+					return commercePriceListLocalService.getCommercePriceList(
+						commercePriceListId);
+				}
+
+				fetchedCommercePriceEntry =
+					_commercePriceEntryLocalService.fetchCommercePriceEntry(
+						actualPriceList.getCommercePriceListId(),
+						cPInstanceUuid, unitOfMeasureKey, true);
+			}
+
+			if (fetchedCommercePriceEntry == null) {
+				return commercePriceListLocalService.getCommercePriceList(
+					commercePriceListId);
+			}
+
+			BigDecimal originalPrice = fetchedCommercePriceEntry.getPrice();
+
+			BigDecimal lowestPrice = commercePriceEntry.getPrice();
+
+			if (lowestPrice.compareTo(BigDecimal.ZERO) == 0) {
+				lowestPrice = originalPrice;
+			}
+
+			CPDefinition cpDefinition =
+				_cpDefinitionLocalService.fetchCPDefinitionByCProductId(
+					commercePriceEntry.getCProductId());
+
+			for (CommercePriceList commercePriceList : commercePriceLists) {
+				if (commercePriceList.getCommercePriceListId() ==
+						commercePriceListId) {
+
+					continue;
+				}
+
+				List<CommercePriceModifier> commercePriceModifiers =
+					_commercePriceModifierLocalService.
+						getQualifiedCommercePriceModifiers(
+							commercePriceList.getCommercePriceListId(),
+							cpDefinition.getCPDefinitionId());
+
+				for (CommercePriceModifier commercePriceModifier :
+						commercePriceModifiers) {
+
+					CommercePriceModifierType commercePriceModifierType =
+						_commercePriceModifierTypeRegistry.
+							getCommercePriceModifierType(
+								commercePriceModifier.getModifierType());
+
+					BigDecimal actualPrice = commercePriceModifierType.evaluate(
+						originalPrice, commercePriceModifier);
+
+					if (actualPrice.compareTo(lowestPrice) < 0) {
+						lowestPrice = actualPrice;
+						commercePriceListId =
+							commercePriceList.getCommercePriceListId();
+					}
+				}
+			}
+		}
+
+		return commercePriceListLocalService.getCommercePriceList(
+			commercePriceListId);
 	}
 
 	/**
@@ -1848,6 +1953,13 @@ public class CommercePriceListLocalServiceImpl
 	@Reference
 	private CommercePriceModifierLocalService
 		_commercePriceModifierLocalService;
+
+	@Reference
+	private CommercePriceModifierTypeRegistry
+		_commercePriceModifierTypeRegistry;
+
+	@Reference
+	private CPDefinitionLocalService _cpDefinitionLocalService;
 
 	@Reference
 	private ExpandoRowLocalService _expandoRowLocalService;
