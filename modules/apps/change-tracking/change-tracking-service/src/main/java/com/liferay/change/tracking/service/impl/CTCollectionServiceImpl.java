@@ -24,6 +24,8 @@ import com.liferay.portal.kernel.dao.orm.WildcardMode;
 import com.liferay.portal.kernel.exception.PortalException;
 import com.liferay.portal.kernel.model.GroupTable;
 import com.liferay.portal.kernel.model.UserGroupRoleTable;
+import com.liferay.portal.kernel.security.auth.CompanyThreadLocal;
+import com.liferay.portal.kernel.security.auth.PrincipalThreadLocal;
 import com.liferay.portal.kernel.security.permission.ActionKeys;
 import com.liferay.portal.kernel.security.permission.InlineSQLHelper;
 import com.liferay.portal.kernel.security.permission.PermissionChecker;
@@ -62,8 +64,8 @@ public class CTCollectionServiceImpl extends CTCollectionServiceBaseImpl {
 			getPermissionChecker(), null, CTActionKeys.ADD_PUBLICATION);
 
 		return ctCollectionLocalService.addCTCollection(
-			externalReferenceCode, companyId, userId, ctRemoteId, name,
-			description);
+			externalReferenceCode, CompanyThreadLocal.getCompanyId(),
+			PrincipalThreadLocal.getUserId(), ctRemoteId, name, description);
 	}
 
 	@Override
@@ -116,13 +118,15 @@ public class CTCollectionServiceImpl extends CTCollectionServiceBaseImpl {
 		long companyId, int[] statuses, int start, int end,
 		OrderByComparator<CTCollection> orderByComparator) {
 
+		long contextCompanyId = CompanyThreadLocal.getCompanyId();
+
 		if (statuses == null) {
 			return ctCollectionPersistence.filterFindByCompanyId(
-				companyId, start, end, orderByComparator);
+				contextCompanyId, start, end, orderByComparator);
 		}
 
 		return ctCollectionPersistence.filterFindByC_S(
-			companyId, statuses, start, end, orderByComparator);
+			contextCompanyId, statuses, start, end, orderByComparator);
 	}
 
 	@Override
@@ -135,7 +139,7 @@ public class CTCollectionServiceImpl extends CTCollectionServiceBaseImpl {
 		).from(
 			CTCollectionTable.INSTANCE
 		).where(
-			_getPredicate(companyId, statuses, keywords)
+			_getPredicate(CompanyThreadLocal.getCompanyId(), statuses, keywords)
 		).orderBy(
 			CTCollectionTable.INSTANCE, orderByComparator
 		).limit(
@@ -153,7 +157,7 @@ public class CTCollectionServiceImpl extends CTCollectionServiceBaseImpl {
 		).from(
 			CTCollectionTable.INSTANCE
 		).where(
-			_getPredicate(companyId, statuses, keywords)
+			_getPredicate(CompanyThreadLocal.getCompanyId(), statuses, keywords)
 		);
 
 		return ctCollectionPersistence.dslQueryCount(dslQuery);
@@ -195,7 +199,8 @@ public class CTCollectionServiceImpl extends CTCollectionServiceBaseImpl {
 				"Change tracking collection is not a draft");
 		}
 
-		_ctProcessLocalService.addCTProcess(userId, ctCollectionId);
+		_ctProcessLocalService.addCTProcess(
+			PrincipalThreadLocal.getUserId(), ctCollectionId);
 	}
 
 	@Override
@@ -212,7 +217,8 @@ public class CTCollectionServiceImpl extends CTCollectionServiceBaseImpl {
 			permissionChecker, null, CTActionKeys.ADD_PUBLICATION);
 
 		return ctCollectionLocalService.undoCTCollection(
-			ctCollectionId, userId, name, description);
+			ctCollectionId, PrincipalThreadLocal.getUserId(), name,
+			description);
 	}
 
 	@Override
@@ -224,7 +230,8 @@ public class CTCollectionServiceImpl extends CTCollectionServiceBaseImpl {
 			getPermissionChecker(), ctCollectionId, ActionKeys.UPDATE);
 
 		return ctCollectionLocalService.updateCTCollection(
-			userId, ctCollectionId, name, description);
+			PrincipalThreadLocal.getUserId(), ctCollectionId, name,
+			description);
 	}
 
 	private Predicate _getPredicate(
