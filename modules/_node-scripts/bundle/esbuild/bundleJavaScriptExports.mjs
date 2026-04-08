@@ -50,6 +50,9 @@ async function bundle(
 		entryPoints: [getEntryPoint(moduleName)],
 		external: getExternals(globalImports, projectWebContextPath, 'exports'),
 		format: 'esm',
+		loader: {
+			'.ttf': 'file',
+		},
 		outdir: BUILD_MAIN_EXPORTS_PATH,
 		plugins: [
 			getExactAliasPlugin(globalImports, 'exports', [moduleName]),
