@@ -9,8 +9,6 @@ Import-Package:\
 	\
 	!io.netty.*,\
 	\
-	!jline.*,\
-	\
 	!org.apache.commons.cli.*,\
 	!org.apache.commons.math3.*,\
 	!org.apache.log4j.jmx,\
@@ -30,6 +28,8 @@ Import-Package:\
 	!org.eclipse.jetty.util.*,\
 	\
 	!org.jboss.netty.*,\
+	\
+	!org.jline.*,\
 	\
 	!org.relaxng.datatype.*,\
 	\
