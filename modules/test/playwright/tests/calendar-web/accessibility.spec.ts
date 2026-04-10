@@ -186,11 +186,15 @@ test('assert that the screen reader reads the event date', async ({
 });
 
 test.describe('Accessibility check', () => {
-	test('Check accessibility of calendar list', async ({
-		calendarWidgetPage,
-		page,
-	}) => {
-		await calendarWidgetPage.unhideSidebar();
+	test('Check accessibility of calendar list', async ({page}) => {
+		const unhideSidebarIcon = page.locator(
+			'.calendar-portlet-column-toggler .lexicon-icon-caret-right'
+		);
+
+		if (await unhideSidebarIcon.isVisible()) {
+			await page.waitForLoadState('networkidle');
+			await unhideSidebarIcon.click();
+		}
 
 		await checkAccessibility({
 			bestPractices: true,
