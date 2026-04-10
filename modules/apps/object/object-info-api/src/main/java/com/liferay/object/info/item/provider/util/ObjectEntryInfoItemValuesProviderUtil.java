@@ -275,7 +275,7 @@ public class ObjectEntryInfoItemValuesProviderUtil {
 								ObjectEntryInfoItemFields.class, "download-url")
 						).build(),
 						dlURLHelper.getDownloadURL(
-							fileEntry, fileEntry.getFileVersion(), null,
+							fileEntry, fileEntry.getFileVersion(), themeDisplay,
 							StringPool.BLANK)));
 				infoFieldValues.add(
 					new InfoFieldValue<>(
@@ -319,7 +319,7 @@ public class ObjectEntryInfoItemValuesProviderUtil {
 								ObjectEntryInfoItemFields.class, "preview-url")
 						).build(),
 						dlURLHelper.getPreviewURL(
-							fileEntry, fileEntry.getFileVersion(), null,
+							fileEntry, fileEntry.getFileVersion(), themeDisplay,
 							StringPool.BLANK)));
 				infoFieldValues.add(
 					new InfoFieldValue<>(
