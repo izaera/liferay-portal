@@ -129,8 +129,7 @@ public class ObjectDDMStorageAdapterTest {
 						).name(
 							ObjectFieldSettingConstants.NAME_FILE_SOURCE
 						).value(
-							ObjectFieldSettingConstants.
-								VALUE_USER_COMPUTER_TO_DOCS_AND_MEDIA
+							ObjectFieldSettingConstants.VALUE_USER_COMPUTER
 						).build(),
 						new ObjectFieldSettingBuilder(
 						).name(
@@ -157,8 +156,7 @@ public class ObjectDDMStorageAdapterTest {
 						).name(
 							ObjectFieldSettingConstants.NAME_FILE_SOURCE
 						).value(
-							ObjectFieldSettingConstants.
-								VALUE_USER_COMPUTER_TO_DOCS_AND_MEDIA
+							ObjectFieldSettingConstants.VALUE_USER_COMPUTER
 						).build(),
 						new ObjectFieldSettingBuilder(
 						).name(
