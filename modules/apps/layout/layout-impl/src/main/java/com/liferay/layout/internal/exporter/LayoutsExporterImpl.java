@@ -166,7 +166,7 @@ public class LayoutsExporterImpl implements LayoutsExporter {
 
 		for (long layoutPageTemplateEntryId : layoutPageTemplateEntryIds) {
 			LayoutPageTemplateEntry layoutPageTemplateEntry =
-				_layoutPageTemplateEntryLocalService.getLayoutPageTemplateEntry(
+				_layoutPageTemplateEntryService.getLayoutPageTemplateEntry(
 					layoutPageTemplateEntryId);
 
 			if (layoutPageTemplateEntry.isDraft() ||
@@ -185,7 +185,7 @@ public class LayoutsExporterImpl implements LayoutsExporter {
 			TransformUtil.transformToList(
 				layoutPageTemplateCollectionIds,
 				layoutPageTemplateCollectionId ->
-					_layoutPageTemplateCollectionLocalService.
+					_layoutPageTemplateCollectionService.
 						fetchLayoutPageTemplateCollection(
 							layoutPageTemplateCollectionId)),
 			_getPageDefinitionDTOConverter(), StringPool.BLANK, zipWriter);
