@@ -345,14 +345,14 @@ public class OpenSearchSearchEngineInformation
 			OpenSearchClient openSearchClient)
 		throws Exception {
 
+		List<NodeInformation> nodeInformationList = new ArrayList<>();
+
 		JsonObject jsonObject = _getNodesInfoJsonObject(openSearchClient);
 
 		String clusterName = jsonObject.getString(
 			"cluster_name", StringPool.BLANK);
 
 		connectionInformationBuilder.clusterName(clusterName);
-
-		List<NodeInformation> nodeInformationList = new ArrayList<>();
 
 		JsonObject nodesJsonObject = jsonObject.getJsonObject("nodes");
 
