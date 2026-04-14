@@ -78,7 +78,7 @@ public class LayoutsExporterImpl implements LayoutsExporter {
 			TransformUtil.transformToList(
 				layoutPageTemplateCollectionIds,
 				layoutPageTemplateCollectionId ->
-					_layoutPageTemplateCollectionLocalService.
+					_layoutPageTemplateCollectionService.
 						fetchLayoutPageTemplateCollection(
 							layoutPageTemplateCollectionId)),
 			_getPageDefinitionDTOConverter(), StringPool.BLANK, zipWriter);
