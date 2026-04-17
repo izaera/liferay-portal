@@ -14,6 +14,10 @@ import {
 } from '../../locations.mjs';
 import print from '../../print.mjs';
 
+const VALID_REGISTRIES = process.env.CI
+	? ['https://registry.yarnpkg.com/', 'http://mirrors.lax.liferay.com:4873/']
+	: ['https://registry.yarnpkg.com/'];
+
 export default async function formatYarnLock(check) {
 	let checksPassed = true;
 
@@ -131,7 +135,11 @@ async function checkInvalidReferences() {
 			continue;
 		}
 
-		if (!line.startsWith('resolved "https://registry.yarnpkg.com/')) {
+		if (
+			!VALID_REGISTRIES.some((validRegistry) =>
+				line.startsWith(`resolved "${validRegistry}`)
+			)
+		) {
 			errorLines[i + 1] = line.substring(9);
 
 			checksPassed = false;
