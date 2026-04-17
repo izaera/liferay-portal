@@ -53,6 +53,15 @@ export const GLOBAL_NODE_SCRIPTS_CONFIG_FILE = path.resolve(
 	'node-scripts.config.js'
 );
 export const YARN_LOCK_FILE = path.resolve(MODULES_DIR, 'yarn.lock');
+export const YARN_SCRIPT_FILE = path.resolve(
+	PORTAL_DIR,
+	'build',
+	'node',
+	'lib',
+	'node_modules',
+	'yarn',
+	'yarn-1.22.22.js'
+);
 
 //
 // Paths to source code

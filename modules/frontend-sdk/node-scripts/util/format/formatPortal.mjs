@@ -20,6 +20,10 @@ import formatYarnLock from './formatters/formatYarnLock.mjs';
 export default async function formatPortal(check, files) {
 	let checksPassed = true;
 
+	if (!(await formatYarnLock(check))) {
+		checksPassed = false;
+	}
+
 	if (!(await formatConfigFileNames())) {
 		checksPassed = false;
 	}
@@ -65,13 +69,6 @@ export default async function formatPortal(check, files) {
 	if (
 		(!files || !!files.find((file) => file.endsWith('/package.json'))) &&
 		!(await formatPackageJSONFiles())
-	) {
-		checksPassed = false;
-	}
-
-	if (
-		(!files || !!files.find((file) => file.endsWith('/yarn.lock'))) &&
-		!(await formatYarnLock())
 	) {
 		checksPassed = false;
 	}
