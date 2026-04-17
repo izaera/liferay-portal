@@ -4,6 +4,7 @@
  */
 
 import childProcess from 'child_process';
+import {execa} from 'execa';
 import fs from 'fs/promises';
 
 import {
@@ -40,6 +41,15 @@ async function updateYarnLock(check) {
 	const originalYarnLock = await fs.readFile(YARN_LOCK_FILE, 'utf-8');
 
 	try {
+		if (process.env.CI) {
+			try {
+				await execa('git', ['checkout', YARN_LOCK_FILE]);
+			}
+			catch (error) {
+				throw new Error(`Git execution failed: ${error.stderr}`);
+			}
+		}
+
 		await new Promise((resolve, reject) => {
 			const child = childProcess.fork(YARN_SCRIPT_FILE, {
 				cwd: MODULES_DIR,
