@@ -289,9 +289,14 @@ public class OpenSearchQueryTranslator
 		SetterUtil.setNotNullFloatAsDouble(
 			builder::cutoffFrequency, multiMatchQuery.getCutOffFrequency());
 
-		builder.fields(
-			QueryUtil.fieldsBoostsToFieldsWithBoosts(
-				multiMatchQuery.getFieldsBoosts()));
+		List<String> fields = QueryUtil.fieldsBoostsToFieldsWithBoosts(
+			multiMatchQuery.getFieldsBoosts());
+
+		if (fields.isEmpty()) {
+			fields = ListUtil.fromCollection(multiMatchQuery.getFields());
+		}
+
+		builder.fields(fields);
 
 		SetterUtil.setNotBlankString(
 			builder::fuzziness, multiMatchQuery.getFuzziness());
