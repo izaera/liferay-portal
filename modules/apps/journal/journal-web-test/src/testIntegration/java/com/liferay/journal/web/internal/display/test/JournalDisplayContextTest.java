@@ -223,8 +223,8 @@ public class JournalDisplayContextTest {
 		Assert.assertTrue(_isShowComments(journalFolder, "test"));
 	}
 
-	private void _addJournalArticle(String title) throws Exception {
-		JournalTestUtil.addArticle(
+	private JournalArticle _addJournalArticle(String title) throws Exception {
+		return JournalTestUtil.addArticle(
 			_group.getGroupId(),
 			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID,
 			JournalArticleConstants.CLASS_NAME_ID_DEFAULT, StringPool.BLANK,
