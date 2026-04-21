@@ -54,11 +54,17 @@ async function updateYarnLock(check) {
 			}
 		}
 
+		const baseYarnLock = await fs.readFile(YARN_LOCK_FILE, 'utf-8');
+
 		await new Promise((resolve, reject) => {
-			const child = childProcess.fork(YARN_SCRIPT_FILE, {
-				cwd: MODULES_DIR,
-				stdio: 'ignore',
-			});
+			const child = childProcess.fork(
+				YARN_SCRIPT_FILE,
+				['--frozen-lockfile', '--offline'],
+				{
+					cwd: MODULES_DIR,
+					stdio: 'ignore',
+				}
+			);
 
 			child.on('exit', (code) => {
 				if (code === 0) {
@@ -78,7 +84,7 @@ async function updateYarnLock(check) {
 
 		const newYarnLock = await fs.readFile(YARN_LOCK_FILE, 'utf-8');
 
-		const modified = newYarnLock !== originalYarnLock;
+		const modified = newYarnLock !== baseYarnLock;
 
 		if (check) {
 			await fs.writeFile(YARN_LOCK_FILE, originalYarnLock, 'utf-8');
