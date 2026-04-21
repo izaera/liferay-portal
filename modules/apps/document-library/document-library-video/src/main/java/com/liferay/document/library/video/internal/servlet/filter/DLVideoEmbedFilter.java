@@ -40,7 +40,6 @@ import com.liferay.portal.kernel.util.GetterUtil;
 import com.liferay.portal.kernel.util.HttpComponentsUtil;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
-import com.liferay.portal.kernel.util.PortalUtil;
 import com.liferay.portal.kernel.util.PropsKeys;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.workflow.WorkflowConstants;
@@ -80,7 +79,7 @@ public class DLVideoEmbedFilter extends BasePortalFilter {
 			HttpServletResponse httpServletResponse, FilterChain filterChain)
 		throws Exception {
 
-		User user = PortalUtil.getUser(httpServletRequest);
+		User user = _portal.getUser(httpServletRequest);
 
 		if (user != null) {
 			PrincipalThreadLocal.setName(user.getUserId());
