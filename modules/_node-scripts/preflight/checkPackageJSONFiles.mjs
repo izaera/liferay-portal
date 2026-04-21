@@ -464,6 +464,8 @@ const ALLOWED_NON_GLOBAL_DEPENDENCIES = [
 	'esbuild',
 	'fetch-mock',
 	'fs',
+	'graphiql',
+	'graphql',
 	'gulp',
 	'hash.js',
 	'history',
