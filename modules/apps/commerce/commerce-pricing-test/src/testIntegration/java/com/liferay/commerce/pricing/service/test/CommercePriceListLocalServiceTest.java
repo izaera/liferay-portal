@@ -66,8 +66,8 @@ public class CommercePriceListLocalServiceTest {
 	public void testAddCommercePriceList() throws Exception {
 		try {
 			_commercePriceListLocalService.addCommercePriceList(
-				RandomTestUtil.randomString(), TestPropsValues.getUserId(),
-				_commerceCatalog.getGroupId(), _commerceCurrency.getCode(),
+				RandomTestUtil.randomString(), _commerceCatalog.getGroupId(),
+				TestPropsValues.getUserId(), _commerceCurrency.getCode(),
 				RandomTestUtil.randomBoolean(),
 				CommercePriceListConstants.TYPE_PRICE_LIST, 0, true,
 				RandomTestUtil.randomString(), RandomTestUtil.randomDouble(), 1,
@@ -83,8 +83,8 @@ public class CommercePriceListLocalServiceTest {
 
 		CommercePriceList commercePriceList =
 			_commercePriceListLocalService.addCommercePriceList(
-				RandomTestUtil.randomString(), TestPropsValues.getUserId(),
-				_commerceCatalog.getGroupId(), _commerceCurrency.getCode(),
+				RandomTestUtil.randomString(), _commerceCatalog.getGroupId(),
+				TestPropsValues.getUserId(), _commerceCurrency.getCode(),
 				RandomTestUtil.randomBoolean(),
 				CommercePriceListConstants.TYPE_PRICE_LIST, 0, false,
 				RandomTestUtil.randomString(), RandomTestUtil.randomDouble(), 1,
@@ -93,8 +93,8 @@ public class CommercePriceListLocalServiceTest {
 		Assert.assertNotNull(commercePriceList.getExpirationDate());
 
 		commercePriceList = _commercePriceListLocalService.addCommercePriceList(
-			RandomTestUtil.randomString(), TestPropsValues.getUserId(),
-			_commerceCatalog.getGroupId(), _commerceCurrency.getCode(),
+			RandomTestUtil.randomString(), _commerceCatalog.getGroupId(),
+			TestPropsValues.getUserId(), _commerceCurrency.getCode(),
 			RandomTestUtil.randomBoolean(),
 			CommercePriceListConstants.TYPE_PROMOTION, 0, false,
 			RandomTestUtil.randomString(), RandomTestUtil.randomDouble(), 1, 1,
@@ -142,8 +142,8 @@ public class CommercePriceListLocalServiceTest {
 		Assert.assertNull(commercePriceList.getExpirationDate());
 
 		commercePriceList = _commercePriceListLocalService.addCommercePriceList(
-			RandomTestUtil.randomString(), TestPropsValues.getUserId(),
-			_commerceCatalog.getGroupId(), _commerceCurrency.getCode(),
+			RandomTestUtil.randomString(), _commerceCatalog.getGroupId(),
+			TestPropsValues.getUserId(), _commerceCurrency.getCode(),
 			RandomTestUtil.randomBoolean(),
 			CommercePriceListConstants.TYPE_PRICE_LIST, 0, false,
 			RandomTestUtil.randomString(), RandomTestUtil.randomDouble(), 1, 1,
@@ -180,8 +180,8 @@ public class CommercePriceListLocalServiceTest {
 		Assert.assertNotNull(commercePriceList.getExpirationDate());
 
 		commercePriceList = _commercePriceListLocalService.addCommercePriceList(
-			RandomTestUtil.randomString(), TestPropsValues.getUserId(),
-			_commerceCatalog.getGroupId(), _commerceCurrency.getCode(),
+			RandomTestUtil.randomString(), _commerceCatalog.getGroupId(),
+			TestPropsValues.getUserId(), _commerceCurrency.getCode(),
 			RandomTestUtil.randomBoolean(),
 			CommercePriceListConstants.TYPE_PROMOTION, 0, false,
 			RandomTestUtil.randomString(), RandomTestUtil.randomDouble(), 1, 1,
