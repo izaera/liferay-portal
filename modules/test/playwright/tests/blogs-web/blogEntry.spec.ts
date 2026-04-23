@@ -11,7 +11,9 @@ import {apiHelpersTest} from '../../fixtures/apiHelpersTest';
 import {featureFlagsTest} from '../../fixtures/featureFlagsTest';
 import {isolatedSiteTest} from '../../fixtures/isolatedSiteTest';
 import {loginTest} from '../../fixtures/loginTest';
+import {liferayConfig} from '../../liferay.config';
 import getRandomString from '../../utils/getRandomString';
+import {watchForDialog} from '../../utils/watchForDialog';
 import {blogsPagesTest} from './fixtures/blogsPagesTest';
 import {blogsCategorizedFriendlyUrlSetup} from './utils/blogsCategorizedFriendlyUrlSetup';
 
@@ -498,5 +500,273 @@ test(
 		const links = await page.locator('a[href]');
 
 		await expect(links).toHaveCount(0);
+	}
+);
+
+test(
+	'Can add a blog entry with title, subtitle and content',
+	{
+		tag: '@LPS-136760',
+	},
+	async ({blogsEditBlogEntryPage, blogsPage, site}) => {
+		await blogsEditBlogEntryPage.goto(site.friendlyUrlPath);
+
+		const title = getRandomString();
+		const subtitle = getRandomString();
+		const content = getRandomString();
+
+		await blogsEditBlogEntryPage.editBlogEntry({
+			content,
+			subtitle,
+			title,
+		});
+
+		await blogsPage.goto(site.friendlyUrlPath);
+		await blogsPage.goToBlogEntryAction('Edit', title);
+
+		await expect(blogsEditBlogEntryPage.titleInput).toHaveValue(title);
+		await expect(blogsEditBlogEntryPage.subtitleInput).toHaveValue(
+			subtitle
+		);
+		await expect(blogsEditBlogEntryPage.contentEditor).toContainText(
+			content
+		);
+	}
+);
+
+test(
+	'Can add a 400-character description',
+	{
+		tag: '@LPS-136763',
+	},
+	async ({apiHelpers, blogsEditBlogEntryPage, blogsPage, site}) => {
+		const content = Array.from({length: 40}, (_, i) => {
+			const n = String(i + 1);
+
+			return '|'.repeat(10 - n.length) + n;
+		}).join('');
+
+		const title = getRandomString();
+
+		await apiHelpers.headlessDelivery.postBlog(site.id, {
+			articleBody: content,
+			headline: title,
+		});
+
+		await blogsPage.goto(site.friendlyUrlPath);
+		await blogsPage.goToBlogEntryAction('Edit', title);
+
+		await expect(blogsEditBlogEntryPage.contentEditor).toContainText(
+			content
+		);
+	}
+);
+
+test(
+	'Trims the title to 255 characters when over',
+	{
+		tag: '@LPD-86549',
+	},
+	async ({blogsEditBlogEntryPage, blogsPage, site}) => {
+		await blogsEditBlogEntryPage.goto(site.friendlyUrlPath);
+
+		const longTitle =
+			Array.from({length: 26}, (_, i) => {
+				const n = String(i + 1);
+
+				return '|'.repeat(10 - n.length) + n;
+			}).join('') + 'XX';
+		const trimmedTitle = longTitle.slice(0, 255);
+
+		await blogsEditBlogEntryPage.editBlogEntry({
+			content: 'Blogs Entry Content',
+			title: longTitle,
+		});
+
+		await blogsPage.goto(site.friendlyUrlPath);
+		await blogsPage.goToBlogEntryAction('Edit', trimmedTitle);
+
+		await expect(blogsEditBlogEntryPage.titleInput).toHaveValue(
+			trimmedTitle
+		);
+	}
+);
+
+test(
+	'Can add titles with escape characters without escaping them',
+	{
+		tag: '@LPS-130537',
+	},
+	async ({blogsEditBlogEntryPage, blogsPage, page, site}) => {
+		await blogsEditBlogEntryPage.goto(site.friendlyUrlPath);
+
+		const title = '&amp; &lt; &gt; &quot; > <';
+		const content = 'Blogs Entry Content';
+
+		await blogsEditBlogEntryPage.editBlogEntry({
+			content,
+			title,
+		});
+
+		await blogsPage.goto(site.friendlyUrlPath);
+		await blogsPage.goToBlogEntryAction('Edit', title);
+
+		await expect(page.getByPlaceholder('Title *')).toHaveValue(title);
+	}
+);
+
+test(
+	'Cannot add a blog entry with an empty title',
+	{
+		tag: '@LPD-86549',
+	},
+	async ({blogsEditBlogEntryPage, site}) => {
+		await blogsEditBlogEntryPage.goto(site.friendlyUrlPath);
+
+		await blogsEditBlogEntryPage.fillContent('Blogs Entry Content');
+
+		await blogsEditBlogEntryPage.publishBlogEntryExpectError(
+			'Title field is required'
+		);
+	}
+);
+
+test(
+	'Title does not execute XSS',
+	{
+		tag: '@LPS-128451',
+	},
+	async ({blogsEditBlogEntryPage, blogsPage, page, site}) => {
+		const watcher = watchForDialog(page);
+
+		try {
+			await blogsEditBlogEntryPage.goto(site.friendlyUrlPath);
+
+			const title = '"><img src=xss onerror=alert(1)>';
+
+			await blogsEditBlogEntryPage.editBlogEntry({
+				content: 'Blogs Entry Content',
+				subtitle: title,
+				title,
+			});
+
+			await blogsPage.goto(site.friendlyUrlPath);
+
+			watcher.assertNoDialog();
+
+			await expect(blogsPage.blogName(title).first()).toBeVisible();
+		}
+		finally {
+			watcher.dispose();
+		}
+	}
+);
+
+test(
+	'Can delete multiple blog entries sequentially',
+	{
+		tag: '@LPD-86549',
+	},
+	async ({apiHelpers, blogsPage, site}) => {
+		const titles = [getRandomString(), getRandomString()];
+
+		for (const headline of titles) {
+			await apiHelpers.headlessDelivery.postBlog(site.id, {
+				articleBody: 'Blogs Entry Content',
+				headline,
+			});
+		}
+
+		for (const title of titles) {
+			await blogsPage.goto(site.friendlyUrlPath);
+			await blogsPage.moveEntryToRecycleBin(title);
+		}
+
+		await blogsPage.goto(site.friendlyUrlPath);
+
+		for (const title of titles) {
+			await blogsPage.assertEntryPresent(title, false);
+		}
+	}
+);
+
+test(
+	'Prevents attribute injection via coverImageCaption',
+	{
+		tag: '@LPD-86554',
+	},
+	async ({page}) => {
+		const payload = `" onmouseover=alert(1) x="`;
+
+		await page.goto(
+			`${liferayConfig.environment.baseUrl}/o/blogs-web/blogs/entry_cover_image_caption.jsp?coverImageCaption=${encodeURIComponent(payload)}&coverImageURL=https://example.com/image.png`
+		);
+
+		await expect(page.locator('.cover-image')).not.toHaveAttribute('onmouseover', /.+/);
+		await expect(page.locator('.cover-image')).toHaveAttribute('aria-label', /onmouseover=alert\(1\)/);
+	}
+);
+
+test(
+	'Prevents HTML injection via coverImageCaption',
+	{
+		tag: '@LPD-86554',
+	},
+	async ({page}) => {
+		const payload = `"><img src=x onerror=alert(1)>`;
+
+		await page.goto(
+			`${liferayConfig.environment.baseUrl}/o/blogs-web/blogs/entry_cover_image_caption.jsp?coverImageCaption=${encodeURIComponent(payload)}&coverImageURL=https://example.com/image.png`
+		);
+
+		await expect(page.getByRole('img')).toHaveCount(0);
+	}
+);
+
+test(
+	'Does not allow javascript URL in coverImageURL',
+	{
+		tag: '@LPD-86554',
+	},
+	async ({page}) => {
+		const payload = `javascript:alert(1)`;
+
+		await page.goto(
+			`${liferayConfig.environment.baseUrl}/o/blogs-web/blogs/entry_cover_image_caption.jsp?coverImageCaption=safe&coverImageURL=${encodeURIComponent(payload)}`
+		);
+
+		await expect(page.locator('.cover-image')).toHaveCount(0);
+	}
+);
+
+test(
+	'Only valid URLs are applied to background-image',
+	{
+		tag: '@LPD-86554',
+	},
+	async ({page}) => {
+		const validUrl = 'https://example.com/image.png';
+
+		await page.goto(
+			`${liferayConfig.environment.baseUrl}/o/blogs-web/blogs/entry_cover_image_caption.jsp?coverImageCaption=safe&coverImageURL=${encodeURIComponent(validUrl)}`
+		);
+
+		await expect(page.locator('.cover-image')).toHaveAttribute('style', new RegExp(validUrl));
+	}
+);
+
+test(
+	'Invalid URL prevents background-image rendering',
+	{
+		tag: '@LPD-86554',
+	},
+	async ({page}) => {
+		const invalidUrl = `not-a-valid-url`;
+
+		await page.goto(
+			`${liferayConfig.environment.baseUrl}/o/blogs-web/blogs/entry_cover_image_caption.jsp?coverImageCaption=safe&coverImageURL=${encodeURIComponent(invalidUrl)}`
+		);
+
+		await expect(page.locator('.cover-image')).toHaveCount(0);
 	}
 );
