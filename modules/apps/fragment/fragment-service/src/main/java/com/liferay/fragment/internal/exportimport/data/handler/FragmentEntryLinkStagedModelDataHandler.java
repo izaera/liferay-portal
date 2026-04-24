@@ -57,6 +57,18 @@ public class FragmentEntryLinkStagedModelDataHandler
 		Element fragmentEntryLinkElement =
 			portletDataContext.getExportDataElement(fragmentEntryLink);
 
+		String editableValues = fragmentEntryLink.getEditableValues();
+
+		if (Validator.isNotNull(editableValues)) {
+			editableValues =
+				_fragmentEntryLinkExportImportContentProcessor.
+					replaceExportContentReferences(
+						portletDataContext, fragmentEntryLink, editableValues,
+						true, false);
+		}
+
+		fragmentEntryLink.setEditableValues(editableValues);
+
 		if (!MapUtil.getBoolean(
 				portletDataContext.getParameterMap(),
 				PortletDataHandlerKeys.PORTLET_DATA) &&
@@ -81,18 +93,6 @@ public class FragmentEntryLinkStagedModelDataHandler
 		}
 
 		fragmentEntryLink.setHtml(html);
-
-		String editableValues = fragmentEntryLink.getEditableValues();
-
-		if (Validator.isNotNull(editableValues)) {
-			editableValues =
-				_fragmentEntryLinkExportImportContentProcessor.
-					replaceExportContentReferences(
-						portletDataContext, fragmentEntryLink, editableValues,
-						true, false);
-		}
-
-		fragmentEntryLink.setEditableValues(editableValues);
 
 		FragmentEntry fragmentEntry =
 			_fragmentEntryLocalService.fetchFragmentEntry(
