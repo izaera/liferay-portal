@@ -31,26 +31,24 @@
 			SELECT
 				FragmentEntryLink.*
 			FROM
-			(
-				SELECT
-					Layout.plid
-				FROM
-					Layout
-				LEFT JOIN
-					LayoutPageTemplateEntry ON
-						(Layout.plid = LayoutPageTemplateEntry.plid) OR
-						(Layout.classPK = LayoutPageTemplateEntry.plid)
-				WHERE
-					LayoutPageTemplateEntry.plid IS NULL
-			)
-			TEMP_TABLE
-				INNER JOIN
-					FragmentEntryLink ON
-						TEMP_TABLE.plid = FragmentEntryLink.plid
+				FragmentEntryLink
 			WHERE
-				(groupId = ?) AND
-				(fragmentEntryId = ?) AND
-				(deleted = [$FALSE$]) AND
+				(FragmentEntryLink.groupId = ?) AND
+				(FragmentEntryLink.fragmentEntryId = ?) AND
+				(FragmentEntryLink.deleted = [$FALSE$]) AND
+				NOT EXISTS
+					(
+						SELECT
+							1
+						FROM
+							Layout
+						INNER JOIN
+							LayoutPageTemplateEntry ON
+								(Layout.plid = LayoutPageTemplateEntry.plid) OR
+								(Layout.classPK = LayoutPageTemplateEntry.plid)
+						WHERE
+							Layout.plid = FragmentEntryLink.plid
+					) AND
 				(
 					FragmentEntryLink.createDate =
 						(
@@ -71,24 +69,22 @@
 			SELECT
 				FragmentEntryLink.*
 			FROM
-			(
-				SELECT
-					Layout.plid
-				FROM
-					LayoutPageTemplateEntry
-				INNER JOIN
-					Layout ON
-						(Layout.plid = LayoutPageTemplateEntry.plid) OR
-						(Layout.classPK = LayoutPageTemplateEntry.plid)
-				WHERE
-					LayoutPageTemplateEntry.type_ = ?
-			)
-			TEMP_TABLE
-				INNER JOIN
-					FragmentEntryLink ON
-						TEMP_TABLE.plid = FragmentEntryLink.plid
-
+				FragmentEntryLink
 			WHERE
+				EXISTS
+					(
+						SELECT
+							1
+						FROM
+							LayoutPageTemplateEntry
+						INNER JOIN
+							Layout ON
+								(Layout.plid = LayoutPageTemplateEntry.plid) OR
+								(Layout.classPK = LayoutPageTemplateEntry.plid)
+						WHERE
+							(LayoutPageTemplateEntry.type_ = ?) AND
+							(Layout.plid = FragmentEntryLink.plid)
+					) AND
 				(FragmentEntryLink.groupId = ?) AND
 				(FragmentEntryLink.fragmentEntryId = ?) AND
 				(FragmentEntryLink.deleted = [$FALSE$]) AND
