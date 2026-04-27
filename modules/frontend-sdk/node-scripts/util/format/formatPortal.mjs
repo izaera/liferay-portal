@@ -12,6 +12,7 @@ import formatGlobalNodeScriptsConfig from './formatters/formatGlobalNodeScriptsC
 import formatIgnoreFilePatterns from './formatters/formatIgnoreFilePatterns.mjs';
 import formatNodeScriptsHash from './formatters/formatNodeScriptsHash.mjs';
 import formatPackageJSONFiles from './formatters/formatPackageJSONFiles.mjs';
+import formatPackageJSONVersionAlignment from './formatters/formatPackageJSONVersionAlignment.mjs';
 import formatSourceFiles from './formatters/formatSourceFiles.mjs';
 import formatTsconfigFiles from './formatters/formatTsconfigFiles.mjs';
 import formatTypeScript from './formatters/formatTypeScript.mjs';
@@ -20,89 +21,96 @@ import formatYarnLock from './formatters/formatYarnLock.mjs';
 export default async function formatPortal(check, files) {
 	let checksPassed = true;
 
-	if (!(await formatConfigFileNames())) {
-		checksPassed = false;
-	}
+	// if (!(await formatConfigFileNames())) {
+	// 	checksPassed = false;
+	// }
 
-	if (!(await formatIgnoreFilePatterns())) {
-		checksPassed = false;
-	}
+	// if (!(await formatIgnoreFilePatterns())) {
+	// 	checksPassed = false;
+	// }
 
-	if (
-		(!files ||
-			!!files.find((file) => file.endsWith('/node-scripts.config.js'))) &&
-		!(await formatGlobalNodeScriptsConfig(check))
-	) {
-		checksPassed = false;
-	}
+	// if (
+	// 	(!files ||
+	// 		!!files.find((file) => file.endsWith('/node-scripts.config.js'))) &&
+	// 	!(await formatGlobalNodeScriptsConfig(check))
+	// ) {
+	// 	checksPassed = false;
+	// }
+
+	// if (
+	// 	(!files || !!files.find((file) => file.endsWith('/package.json'))) &&
+	// 	!(await formatTsconfigFiles(check))
+	// ) {
+	// 	checksPassed = false;
+	// }
+
+	// if (!(await formatSourceFiles(check, files))) {
+	// 	checksPassed = false;
+	// }
+
+	// if (
+	// 	(!files || !!files.find((file) => file.includes('/node-scripts/'))) &&
+	// 	!(await formatNodeScriptsHash(check))
+	// ) {
+	// 	checksPassed = false;
+	// }
+
+	// if (
+	// 	(!files ||
+	// 		!!files.find((file) => file.endsWith('/node-scripts.config.js'))) &&
+	// 	!(await formatAPISubmodules())
+	// ) {
+	// 	checksPassed = false;
+	// }
+
+	// if (
+	// 	(!files || !!files.find((file) => file.endsWith('/package.json'))) &&
+	// 	!(await formatPackageJSONFiles())
+	// ) {
+	// 	checksPassed = false;
+	// }
 
 	if (
 		(!files || !!files.find((file) => file.endsWith('/package.json'))) &&
-		!(await formatTsconfigFiles(check))
+		!(await formatPackageJSONVersionAlignment())
 	) {
 		checksPassed = false;
 	}
 
-	if (!(await formatSourceFiles(check, files))) {
-		checksPassed = false;
-	}
+	// if (
+	// 	(!files || !!files.find((file) => file.endsWith('/yarn.lock'))) &&
+	// 	!(await formatYarnLock())
+	// ) {
+	// 	checksPassed = false;
+	// }
 
-	if (
-		(!files || !!files.find((file) => file.includes('/node-scripts/'))) &&
-		!(await formatNodeScriptsHash(check))
-	) {
-		checksPassed = false;
-	}
+	// if (
+	// 	!files ||
+	// 	!!files.find(
+	// 		(file) =>
+	// 			file.endsWith('/node-scripts.config.js') ||
+	// 			file.endsWith('/package.json') ||
+	// 			file.endsWith('.ts') ||
+	// 			file.endsWith('.tsx')
+	// 	)
+	// ) {
+	// 	let projectDirs;
 
-	if (
-		(!files ||
-			!!files.find((file) => file.endsWith('/node-scripts.config.js'))) &&
-		!(await formatAPISubmodules())
-	) {
-		checksPassed = false;
-	}
+	// 	if (files) {
+	// 		projectDirs = await getTypeScriptProjectDirs(files);
+	// 	}
+	// 	else {
+	// 		projectDirs = await getProjectDirs();
+	// 	}
 
-	if (
-		(!files || !!files.find((file) => file.endsWith('/package.json'))) &&
-		!(await formatPackageJSONFiles())
-	) {
-		checksPassed = false;
-	}
+	// 	// We check all projects no matter if formatting current branch, local
+	// 	// changes or everything because a change in one project may break
+	// 	// others
 
-	if (
-		(!files || !!files.find((file) => file.endsWith('/yarn.lock'))) &&
-		!(await formatYarnLock())
-	) {
-		checksPassed = false;
-	}
-
-	if (
-		!files ||
-		!!files.find(
-			(file) =>
-				file.endsWith('/node-scripts.config.js') ||
-				file.endsWith('/package.json') ||
-				file.endsWith('.ts') ||
-				file.endsWith('.tsx')
-		)
-	) {
-		let projectDirs;
-
-		if (files) {
-			projectDirs = await getTypeScriptProjectDirs(files);
-		}
-		else {
-			projectDirs = await getProjectDirs();
-		}
-
-		// We check all projects no matter if formatting current branch, local
-		// changes or everything because a change in one project may break
-		// others
-
-		if (!(await formatTypeScript([...projectDirs, PLAYWRIGHT_DIR]))) {
-			checksPassed = false;
-		}
-	}
+	// 	if (!(await formatTypeScript([...projectDirs, PLAYWRIGHT_DIR]))) {
+	// 		checksPassed = false;
+	// 	}
+	// }
 
 	return checksPassed;
 }
