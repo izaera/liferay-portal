@@ -31,36 +31,35 @@
 				FragmentEntryLink.*
 			FROM
 				FragmentEntryLink
-			WHERE
-				(FragmentEntryLink.groupId = ?) AND
-				(FragmentEntryLink.fragmentEntryId = ?) AND
-				(FragmentEntryLink.deleted = [$FALSE$]) AND
-				NOT EXISTS
-					(
-						SELECT
-							1
-						FROM
-							Layout
-						INNER JOIN
-							LayoutPageTemplateEntry ON
-								(Layout.plid = LayoutPageTemplateEntry.plid) OR
-								(Layout.classPK = LayoutPageTemplateEntry.plid)
-						WHERE
-							Layout.plid = FragmentEntryLink.plid
-					) AND
+			INNER JOIN
 				(
-					FragmentEntryLink.createDate =
-						(
-							SELECT
-								MAX(tempFragmentEntryLink.createDate)
-							FROM
-								FragmentEntryLink tempFragmentEntryLink
-							WHERE
-								(tempFragmentEntryLink.groupId = FragmentEntryLink.groupId) AND
-								(tempFragmentEntryLink.plid = FragmentEntryLink.plid) AND
-								(tempFragmentEntryLink.fragmentEntryId = FragmentEntryLink.fragmentEntryId)
-						)
-				)
+					SELECT
+						MAX(latestFragmentEntryLink.fragmentEntryLinkId) AS latestFragmentEntryLinkId
+					FROM
+						FragmentEntryLink latestFragmentEntryLink
+					WHERE
+						(latestFragmentEntryLink.groupId = ?) AND
+						(latestFragmentEntryLink.fragmentEntryId = ?) AND
+						(latestFragmentEntryLink.deleted = [$FALSE$]) AND
+						NOT EXISTS
+							(
+								SELECT
+									1
+								FROM
+									Layout
+								INNER JOIN
+									LayoutPageTemplateEntry ON
+										(Layout.plid = LayoutPageTemplateEntry.plid) OR
+										(Layout.classPK = LayoutPageTemplateEntry.plid)
+								WHERE
+									Layout.plid = latestFragmentEntryLink.plid
+							)
+					GROUP BY
+						latestFragmentEntryLink.plid
+				) latestFragmentEntryLinkTable ON
+					FragmentEntryLink.fragmentEntryLinkId = latestFragmentEntryLinkTable.latestFragmentEntryLinkId
+			WHERE
+				FragmentEntryLink.deleted = [$FALSE$]
 		]]>
 	</sql>
 	<sql id="com.liferay.fragment.service.persistence.FragmentEntryLinkFinder.findByG_F_P_L">
@@ -69,37 +68,36 @@
 				FragmentEntryLink.*
 			FROM
 				FragmentEntryLink
-			WHERE
-				EXISTS
-					(
-						SELECT
-							1
-						FROM
-							LayoutPageTemplateEntry
-						INNER JOIN
-							Layout ON
-								(Layout.plid = LayoutPageTemplateEntry.plid) OR
-								(Layout.classPK = LayoutPageTemplateEntry.plid)
-						WHERE
-							(LayoutPageTemplateEntry.type_ = ?) AND
-							(Layout.plid = FragmentEntryLink.plid)
-					) AND
-				(FragmentEntryLink.groupId = ?) AND
-				(FragmentEntryLink.fragmentEntryId = ?) AND
-				(FragmentEntryLink.deleted = [$FALSE$]) AND
+			INNER JOIN
 				(
-					FragmentEntryLink.createDate =
-						(
-							SELECT
-								MAX(tempFragmentEntryLink.createDate)
-							FROM
-								FragmentEntryLink tempFragmentEntryLink
-							WHERE
-								(tempFragmentEntryLink.groupId = FragmentEntryLink.groupId) AND
-								(tempFragmentEntryLink.plid = FragmentEntryLink.plid) AND
-								(tempFragmentEntryLink.fragmentEntryId = FragmentEntryLink.fragmentEntryId)
-						)
-				)
+					SELECT
+						MAX(latestFragmentEntryLink.fragmentEntryLinkId) AS latestFragmentEntryLinkId
+					FROM
+						FragmentEntryLink latestFragmentEntryLink
+					WHERE
+						EXISTS
+							(
+								SELECT
+									1
+								FROM
+									LayoutPageTemplateEntry
+								INNER JOIN
+									Layout ON
+										(Layout.plid = LayoutPageTemplateEntry.plid) OR
+										(Layout.classPK = LayoutPageTemplateEntry.plid)
+								WHERE
+									(LayoutPageTemplateEntry.type_ = ?) AND
+									(Layout.plid = latestFragmentEntryLink.plid)
+							) AND
+						(latestFragmentEntryLink.groupId = ?) AND
+						(latestFragmentEntryLink.fragmentEntryId = ?) AND
+						(latestFragmentEntryLink.deleted = [$FALSE$])
+					GROUP BY
+						latestFragmentEntryLink.plid
+				) latestFragmentEntryLinkTable ON
+					FragmentEntryLink.fragmentEntryLinkId = latestFragmentEntryLinkTable.latestFragmentEntryLinkId
+			WHERE
+				FragmentEntryLink.deleted = [$FALSE$]
 		]]>
 	</sql>
 </custom-sql>
