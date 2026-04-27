@@ -10,6 +10,8 @@ import {MODULES_DIR} from './locations.mjs';
 
 const IGNORED_PROJECT_DIRS = ['modules'];
 
+// TODO: can we change this by honoring yarn workspaces fields instead?
+
 export const NO_RECURSE_PROJECT_DIRS = [
 	'clay',
 	'frontend-sdk',
