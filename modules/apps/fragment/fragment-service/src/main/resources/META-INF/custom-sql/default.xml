@@ -7,23 +7,22 @@
 				FragmentEntryLink.*
 			FROM
 				FragmentEntryLink
-			WHERE
-				(FragmentEntryLink.groupId = ?) AND
-				(FragmentEntryLink.fragmentEntryId = ?) AND
-				(FragmentEntryLink.deleted = [$FALSE$]) AND
+			INNER JOIN
 				(
-					FragmentEntryLink.createDate =
-						(
-							SELECT
-								MAX(tempFragmentEntryLink.createDate)
-							FROM
-								FragmentEntryLink tempFragmentEntryLink
-							WHERE
-								(tempFragmentEntryLink.groupId = FragmentEntryLink.groupId) AND
-								(tempFragmentEntryLink.classPK = FragmentEntryLink.classPK) AND
-								(tempFragmentEntryLink.fragmentEntryId = FragmentEntryLink.fragmentEntryId)
-						)
-				)
+					SELECT
+						MAX(latestFragmentEntryLink.fragmentEntryLinkId) AS latestFragmentEntryLinkId
+					FROM
+						FragmentEntryLink latestFragmentEntryLink
+					WHERE
+						(latestFragmentEntryLink.groupId = ?) AND
+						(latestFragmentEntryLink.fragmentEntryId = ?) AND
+						(latestFragmentEntryLink.deleted = [$FALSE$])
+					GROUP BY
+						latestFragmentEntryLink.classPK
+				) latestFragmentEntryLinkTable ON
+					FragmentEntryLink.fragmentEntryLinkId = latestFragmentEntryLinkTable.latestFragmentEntryLinkId
+			WHERE
+				FragmentEntryLink.deleted = [$FALSE$]
 		]]>
 	</sql>
 	<sql id="com.liferay.fragment.service.persistence.FragmentEntryLinkFinder.findByG_F_P">
