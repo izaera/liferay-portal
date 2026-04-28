@@ -69,6 +69,18 @@ public class FragmentEntryLinkStagedModelDataHandler
 
 		fragmentEntryLink.setEditableValues(editableValues);
 
+		String html = fragmentEntryLink.getHtml();
+
+		if (Validator.isNotNull(html)) {
+			html =
+				_dlReferencesExportImportContentProcessor.
+					replaceExportContentReferences(
+						portletDataContext, fragmentEntryLink, html, true,
+						false);
+		}
+
+		fragmentEntryLink.setHtml(html);
+
 		if (!MapUtil.getBoolean(
 				portletDataContext.getParameterMap(),
 				PortletDataHandlerKeys.PORTLET_DATA) &&
@@ -81,18 +93,6 @@ public class FragmentEntryLinkStagedModelDataHandler
 
 			return;
 		}
-
-		String html = fragmentEntryLink.getHtml();
-
-		if (Validator.isNotNull(html)) {
-			html =
-				_dlReferencesExportImportContentProcessor.
-					replaceExportContentReferences(
-						portletDataContext, fragmentEntryLink, html, true,
-						false);
-		}
-
-		fragmentEntryLink.setHtml(html);
 
 		FragmentEntry fragmentEntry =
 			_fragmentEntryLocalService.fetchFragmentEntry(
