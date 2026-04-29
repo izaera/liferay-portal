@@ -5,13 +5,13 @@
 
 import {expect, mergeTests} from '@playwright/test';
 
-import {dataApiHelpersTest} from '../../../fixtures/dataApiHelpersTest';
-import {loginTest} from '../../../fixtures/loginTest';
-import getRandomString from '../../../utils/getRandomString';
-import {performUserSwitch, userData} from '../../../utils/performLogin';
-import {PORTLET_URLS} from '../../../utils/portletUrls';
-import {waitForAlert} from '../../../utils/waitForAlert';
-import {blogsPagesTest} from '../../blogs-web/main/fixtures/blogsPagesTest';
+import {dataApiHelpersTest} from '../../fixtures/dataApiHelpersTest';
+import {loginTest} from '../../fixtures/loginTest';
+import getRandomString from '../../utils/getRandomString';
+import {performUserSwitch, userData} from '../../utils/performLogin';
+import {PORTLET_URLS} from '../../utils/portletUrls';
+import {waitForAlert} from '../../utils/waitForAlert';
+import {blogsPagesTest} from '../blogs-web/fixtures/blogsPagesTest';
 
 const test = mergeTests(dataApiHelpersTest, blogsPagesTest, loginTest());
 
