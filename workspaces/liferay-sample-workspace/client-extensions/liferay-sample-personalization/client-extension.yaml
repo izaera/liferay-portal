@@ -1,0 +1,44 @@
+liferay-sample-personalization:
+    javaScript: |
+        personalization.on(
+        	'spanish_language',
+        	function showSpanishLanguageHint() {
+        		const HINT_ID = 'spanish_language_hint';
+
+        		// If the hint is already present, don't do anything (to avoid multiple personalizations
+        		// due to SPA navigations).
+        		const currentHint = document.getElementById(HINT_ID);
+
+        		if (currentHint) return;
+
+                // If DXP is already in Spanish, don't personalize, either
+                if (Liferay.ThemeDisplay.getLanguageId().startsWith('es')) {
+                    return;
+                }
+
+        		// Look for the banner where we will add the language hint
+        		const div = document.getElementById('banner');
+
+        		if (!div) return;
+
+        		// Add the hint
+        		const hint = document.createElement('div');
+
+        		hint.id = HINT_ID;
+        		hint.style.color = 'white';
+        		hint.style.backgroundColor = '#0000C0';
+        		hint.style.paddingBottom = '1em';
+        		hint.style.paddingTop = '1em';
+        		hint.style.textAlign = 'center';
+
+        		hint.innerHTML = `
+                    ¡Vemos que habla español! ¿Desea <a href="/es/web/guest/home">ver la web en su
+                    idioma</a>?
+        		`;
+
+        		div.appendChild(hint);
+        	}
+        );
+    name: Liferay Sample Personalization
+    rulesURL: https://raw.githubusercontent.com/izaera/audiences-poc/refs/heads/master/rules/src/rules.json
+    type: personalization
