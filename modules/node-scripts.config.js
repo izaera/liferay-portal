@@ -10,7 +10,7 @@
  */
 
 module.exports = {
-	hash: '5fa062d41a6b1b034a7f3c4311b7f4bc285eebba4fd95a0dbd33736a920d78b1',
+	hash: 'f61b4561baca4929dbe8ea02b1c56591c8782ac93cda1ef39b3213f8c10e7947',
 	imports: {
 		'@liferay/accessibility-menu-web': [],
 		'@liferay/accessibility-settings-state-web': [],
@@ -181,10 +181,12 @@ module.exports = {
 			'react-text-mask',
 			'text-mask-addons',
 			'text-mask-core',
+			'ua-parser-js',
 		],
 		'@liferay/frontend-js-importmaps-extender': [],
 		'@liferay/frontend-js-item-selector-sample-web': [],
 		'@liferay/frontend-js-item-selector-web': [],
+		'@liferay/frontend-js-personalization-web': [],
 		'@liferay/frontend-js-react-web': [
 			'classnames',
 			'formik',

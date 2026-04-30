@@ -39,6 +39,7 @@ module.exports = {
 		'react-text-mask',
 		'text-mask-addons',
 		'text-mask-core',
+		'ua-parser-js',
 	],
 	symbols: {
 		'axe-core': ['*', 'default'],
