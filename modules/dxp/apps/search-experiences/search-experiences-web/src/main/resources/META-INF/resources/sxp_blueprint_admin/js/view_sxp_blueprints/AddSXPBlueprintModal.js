@@ -129,7 +129,9 @@ const AddModal = ({
 			observer={observer}
 			size="md"
 		>
-			<ClayModal.Header>
+			<ClayModal.Header
+				closeButtonAriaLabel={Liferay.Language.get('close')}
+			>
 				{Liferay.Language.get('new-search-blueprint')}
 			</ClayModal.Header>
 

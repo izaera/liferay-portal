@@ -267,7 +267,9 @@ const EditTableSectionModalContent = ({
 
 	return (
 		<>
-			<ClayModal.Header>
+			<ClayModal.Header
+				closeButtonAriaLabel={Liferay.Language.get('close')}
+			>
 				{Liferay.Util.sub(
 					Liferay.Language.get('edit-x'),
 					tableSection.label_i18n[defaultLanguageId] ??

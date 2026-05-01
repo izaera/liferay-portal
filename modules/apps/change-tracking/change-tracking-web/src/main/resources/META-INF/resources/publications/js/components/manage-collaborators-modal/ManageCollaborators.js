@@ -719,7 +719,9 @@ const ManageCollaborators = ({
 				size="lg"
 				spritemap={spritemap}
 			>
-				<ClayModal.Header>
+				<ClayModal.Header
+					closeButtonAriaLabel={Liferay.Language.get('close')}
+				>
 					<div className="autofit-row">{headers}</div>
 				</ClayModal.Header>
 

@@ -685,7 +685,9 @@ const ConflictsTable = ({conflicts, spritemap}) => {
 				size="full-screen"
 				spritemap={spritemap}
 			>
-				<ClayModal.Header>
+				<ClayModal.Header
+					closeButtonAriaLabel={Liferay.Language.get('close')}
+				>
 					<div className="autofit-row">
 						<div className="autofit-col">
 							<div className="modal-title">
@@ -701,6 +703,7 @@ const ConflictsTable = ({conflicts, spritemap}) => {
 
 				<ClayModal.Header
 					className="publications-conflicts-header"
+					closeButtonAriaLabel={Liferay.Language.get('close')}
 					withTitle={false}
 				>
 					<ClayAlert

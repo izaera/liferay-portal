@@ -121,7 +121,9 @@ export function ModalAddObjectRelationship({
 	return (
 		<ClayModalProvider>
 			<ClayModal center observer={observer}>
-				<ClayModal.Header>
+				<ClayModal.Header
+					closeButtonAriaLabel={Liferay.Language.get('close')}
+				>
 					{Liferay.Language.get('new-relationship')}
 				</ClayModal.Header>
 

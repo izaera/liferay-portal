@@ -70,7 +70,9 @@ const SelectSystemDataSetModalContent = ({
 
 	return (
 		<div className="select-system-data-set-modal-content">
-			<ClayModal.Header>
+			<ClayModal.Header
+				closeButtonAriaLabel={Liferay.Language.get('close')}
+			>
 				{Liferay.Language.get('create-system-data-set-customization')}
 			</ClayModal.Header>
 

@@ -52,7 +52,9 @@ export function DeleteAPISchemaModalContent({
 
 	return (
 		<>
-			<ClayModal.Header>
+			<ClayModal.Header
+				closeButtonAriaLabel={Liferay.Language.get('close')}
+			>
 				{Liferay.Language.get('delete-api-schema')}
 			</ClayModal.Header>
 

@@ -45,7 +45,9 @@ export function ModalContent({
 }: ModalProps) {
 	return (
 		<>
-			<ClayModal.Header>
+			<ClayModal.Header
+				closeButtonAriaLabel={Liferay.Language.get('close')}
+			>
 				{Liferay.Language.get('import-options')}
 			</ClayModal.Header>
 
