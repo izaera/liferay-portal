@@ -1064,22 +1064,16 @@ test(
 		tag: ['@LPD-71053'],
 	},
 
-	async ({
-		documentLibraryEditFilePage,
-		documentLibraryEditFolderPage,
-		documentLibraryPage,
-		page,
-		site,
-	}) => {
+	async ({apiHelpers, documentLibraryPage, page, site}) => {
 		const folderTitle = 'Folder' + getRandomString();
 
-		await documentLibraryPage.goto(site.friendlyUrlPath);
-
 		for (let i = 0; i < 21; i++) {
-			await documentLibraryPage.goToCreateNewFolder();
-			await documentLibraryEditFolderPage.fillTitle(folderTitle + i);
-			await documentLibraryEditFilePage.saveButton.click();
+			await apiHelpers.headlessDelivery.postDocumentFolder(site.id, {
+				name: folderTitle + i,
+			});
 		}
+
+		await documentLibraryPage.goto(site.friendlyUrlPath);
 
 		await documentLibraryPage.searchInDL('Folder');
 
