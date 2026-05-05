@@ -32,6 +32,7 @@ import com.liferay.portal.kernel.util.OrderByComparator;
 import com.liferay.portal.kernel.util.ParamUtil;
 import com.liferay.portal.kernel.util.Portal;
 import com.liferay.portal.kernel.util.ProgressTracker;
+import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.users.admin.constants.UsersAdminPortletKeys;
@@ -200,6 +201,12 @@ public class ExportUsersMVCResourceCommand extends BaseMVCResourceCommand {
 
 		if (userGroupId > 0) {
 			params.put("usersUserGroups", Long.valueOf(userGroupId));
+		}
+
+		if (params.isEmpty() && Validator.isNull(searchTerms.getKeywords())) {
+			return _userLocalService.getUsers(
+				themeDisplay.getCompanyId(), searchTerms.getStatus(),
+				QueryUtil.ALL_POS, QueryUtil.ALL_POS, null);
 		}
 
 		if (searchTerms.isAdvancedSearch()) {
