@@ -9,6 +9,9 @@ import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.data.engine.rest.dto.v2_0.DataDefinition;
 import com.liferay.data.engine.rest.dto.v2_0.DataDefinitionField;
 import com.liferay.data.engine.rest.resource.v2_0.DataDefinitionResource;
+import com.liferay.dynamic.data.mapping.model.DDMFormField;
+import com.liferay.dynamic.data.mapping.model.DDMStructure;
+import com.liferay.dynamic.data.mapping.service.DDMStructureLocalService;
 import com.liferay.petra.string.StringBundler;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.model.Group;
@@ -104,8 +107,17 @@ public class ImportDataDefinitionMVCActionCommandTest {
 
 		String previousTextFieldName = "Text1";
 
-		Assert.assertNotEquals(
+		Assert.assertEquals(
 			previousTextFieldName, dataDefinitionFields[0].getName());
+
+		DDMStructure ddmStructure = _ddmStructureLocalService.getStructure(
+			dataDefinition.getId());
+
+		DDMFormField ddmFormField = ddmStructure.getDDMFormField(
+			dataDefinitionFields[0].getName());
+
+		Assert.assertEquals(
+			previousTextFieldName, ddmFormField.getFieldReference());
 	}
 
 	@Test
@@ -372,6 +384,9 @@ public class ImportDataDefinitionMVCActionCommandTest {
 
 	@Inject
 	private DataDefinitionResource.Factory _dataDefinitionResourceFactory;
+
+	@Inject
+	private DDMStructureLocalService _ddmStructureLocalService;
 
 	@Inject
 	private File _file;
