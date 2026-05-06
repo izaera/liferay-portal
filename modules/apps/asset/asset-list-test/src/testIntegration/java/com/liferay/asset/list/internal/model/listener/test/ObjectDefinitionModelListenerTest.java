@@ -243,7 +243,6 @@ public class ObjectDefinitionModelListenerTest {
 
 	private ObjectDefinition _addObjectDefinition() throws Exception {
 		return ObjectDefinitionTestUtil.publishObjectDefinition(
-			false, RandomTestUtil.randomString(), false,
 			ListUtil.fromArray(
 				ObjectFieldUtil.createObjectField(
 					ObjectFieldConstants.BUSINESS_TYPE_TEXT,

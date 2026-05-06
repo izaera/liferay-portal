@@ -10,7 +10,7 @@ import com.liferay.asset.list.service.AssetListEntryLocalService;
 import com.liferay.asset.publisher.constants.AssetPublisherPortletKeys;
 import com.liferay.layout.page.template.constants.LayoutPageTemplateEntryTypeConstants;
 import com.liferay.layout.page.template.model.LayoutPageTemplateEntry;
-import com.liferay.layout.page.template.test.util.LayoutPageTemplateTestUtil;
+import com.liferay.layout.page.template.service.LayoutPageTemplateEntryService;
 import com.liferay.layout.test.util.LayoutTestUtil;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.model.Layout;
@@ -24,6 +24,7 @@ import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
 import com.liferay.portal.kernel.test.util.RandomTestUtil;
+import com.liferay.portal.kernel.test.util.ServiceContextTestUtil;
 import com.liferay.portal.kernel.test.util.TestPropsValues;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.WebKeys;
@@ -62,13 +63,15 @@ public class AddAssetListMVCActionCommandTest {
 
 		_group1Layout = LayoutTestUtil.addTypePortletLayout(_group1);
 
-		LayoutPageTemplateEntry layoutPageTemplateEntry =
-			LayoutPageTemplateTestUtil.addLayoutPageTemplateEntry(
-				_group2.getGroupId(),
-				LayoutPageTemplateEntryTypeConstants.WIDGET_PAGE,
-				WorkflowConstants.STATUS_APPROVED);
-
 		_group2 = GroupTestUtil.addGroup();
+
+		LayoutPageTemplateEntry layoutPageTemplateEntry =
+			_layoutPageTemplateEntryService.addLayoutPageTemplateEntry(
+				null, _group2.getGroupId(), 0, RandomTestUtil.randomString(),
+				LayoutPageTemplateEntryTypeConstants.WIDGET_PAGE, 0,
+				WorkflowConstants.STATUS_APPROVED,
+				ServiceContextTestUtil.getServiceContext(
+					_group2.getGroupId(), TestPropsValues.getUserId()));
 
 		_group2Layout = _layoutLocalService.getLayout(
 			layoutPageTemplateEntry.getPlid());
@@ -199,6 +202,9 @@ public class AddAssetListMVCActionCommandTest {
 
 	@Inject
 	private LayoutLocalService _layoutLocalService;
+
+	@Inject
+	private LayoutPageTemplateEntryService _layoutPageTemplateEntryService;
 
 	@Inject(filter = "mvc.command.name=/asset_publisher/add_asset_list")
 	private MVCActionCommand _mvcActionCommand;
