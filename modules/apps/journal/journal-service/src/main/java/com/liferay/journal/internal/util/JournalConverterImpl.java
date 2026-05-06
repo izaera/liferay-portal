@@ -177,7 +177,7 @@ public class JournalConverterImpl implements JournalConverter {
 			// root again. See LPD-69008.
 
 			dynamicElementElements = _getDynamicElementElements(
-				rootElement, ddmFormFieldName);
+				rootElement, fieldName);
 		}
 
 		if (dynamicElementElements == null) {
