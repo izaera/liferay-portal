@@ -175,7 +175,7 @@ public class DLValidatorImplTest {
 
 		Mockito.when(
 			_dlSizeLimitConfigurationHelper.getGroupMimeTypeSizeLimit(
-				groupId, "image/png")
+				Mockito.anyLong(), Mockito.eq(groupId), Mockito.eq("image/png"))
 		).thenReturn(
 			10L
 		);
