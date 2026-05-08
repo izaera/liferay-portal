@@ -111,9 +111,17 @@ public class CommerceInventoryWarehouseItemServiceImpl
 				continue;
 			}
 
-			commerceInventoryWarehouseItemLocalService.
-				deleteCommerceInventoryWarehouseItems(
-					commerceInventoryWarehouseId);
+			CommerceInventoryWarehouseItem commerceInventoryWarehouseItem =
+				commerceInventoryWarehouseItemLocalService.
+					fetchCommerceInventoryWarehouseItem(
+						commerceInventoryWarehouseId, sku, unitOfMeasureKey);
+
+			if (commerceInventoryWarehouseItem != null) {
+				commerceInventoryWarehouseItemLocalService.
+					deleteCommerceInventoryWarehouseItem(
+						commerceInventoryWarehouseItem.
+							getCommerceInventoryWarehouseItemId());
+			}
 		}
 	}
 
