@@ -53,12 +53,12 @@ public class AssetLinkLocalServiceWrapper
 	 * @param entryId1 the primary key of the first asset entry
 	 * @param entryId2 the primary key of the second asset entry
 	 * @param type the link type. Acceptable values include {@link
-	 AssetLinkConstants#TYPE_RELATED} which is a bidirectional
-	 relationship and {@link AssetLinkConstants#TYPE_CHILD} which is a
-	 unidirectional relationship. For more information see {@link
-	 AssetLinkConstants}
+	 * AssetLinkConstants#TYPE_RELATED} which is a bidirectional
+	 * relationship and {@link AssetLinkConstants#TYPE_CHILD} which is a
+	 * unidirectional relationship. For more information see {@link
+	 * AssetLinkConstants}
 	 * @param weight the weight of the relationship, allowing precedence
-	 ordering of links
+	 * ordering of links
 	 * @return the asset link
 	 */
 	@Override
@@ -363,12 +363,12 @@ public class AssetLinkLocalServiceWrapper
 	 *
 	 * @param entryId the primary key of the asset entry
 	 * @param typeId the link type. Acceptable values include {@link
-	 AssetLinkConstants#TYPE_RELATED} which is a bidirectional
-	 relationship and {@link AssetLinkConstants#TYPE_CHILD} which is a
-	 unidirectional relationship. For more information see {@link
-	 AssetLinkConstants}
+	 * AssetLinkConstants#TYPE_RELATED} which is a bidirectional
+	 * relationship and {@link AssetLinkConstants#TYPE_CHILD} which is a
+	 * unidirectional relationship. For more information see {@link
+	 * AssetLinkConstants}
 	 * @return the asset links of the given link type whose first entry ID is
-	 the given entry ID
+	 * the given entry ID
 	 */
 	@Override
 	public java.util.List<AssetLink> getDirectLinks(long entryId, int typeId) {
@@ -396,7 +396,7 @@ public class AssetLinkLocalServiceWrapper
 	 *
 	 * @param entryId the primary key of the asset entry
 	 * @return the asset links whose first or second entry ID is the given entry
-	 ID
+	 * ID
 	 */
 	@Override
 	public java.util.List<AssetLink> getLinks(long entryId) {
@@ -418,12 +418,12 @@ public class AssetLinkLocalServiceWrapper
 	 *
 	 * @param entryId the primary key of the asset entry
 	 * @param typeId the link type. Acceptable values include {@link
-	 AssetLinkConstants#TYPE_RELATED} which is a bidirectional
-	 relationship and {@link AssetLinkConstants#TYPE_CHILD} which is a
-	 unidirectional relationship. For more information see {@link
-	 AssetLinkConstants}
+	 * AssetLinkConstants#TYPE_RELATED} which is a bidirectional
+	 * relationship and {@link AssetLinkConstants#TYPE_CHILD} which is a
+	 * unidirectional relationship. For more information see {@link
+	 * AssetLinkConstants}
 	 * @return the asset links of the given link type whose first or second
-	 entry ID is the given entry ID
+	 * entry ID is the given entry ID
 	 */
 	@Override
 	public java.util.List<AssetLink> getLinks(long entryId, int typeId) {
@@ -469,12 +469,12 @@ public class AssetLinkLocalServiceWrapper
 	 *
 	 * @param entryId the primary key of the asset entry
 	 * @param typeId the link type. Acceptable values include {@link
-	 AssetLinkConstants#TYPE_RELATED} which is a bidirectional
-	 relationship and {@link AssetLinkConstants#TYPE_CHILD} which is a
-	 unidirectional relationship. For more information see {@link
-	 AssetLinkConstants}
+	 * AssetLinkConstants#TYPE_RELATED} which is a bidirectional
+	 * relationship and {@link AssetLinkConstants#TYPE_CHILD} which is a
+	 * unidirectional relationship. For more information see {@link
+	 * AssetLinkConstants}
 	 * @return the asset links of the given link type whose second entry ID is
-	 the given entry ID
+	 * the given entry ID
 	 */
 	@Override
 	public java.util.List<AssetLink> getReverseLinks(long entryId, int typeId) {
@@ -520,12 +520,12 @@ public class AssetLinkLocalServiceWrapper
 	 * @param userId the primary key of the user updating the links
 	 * @param entryId the primary key of the asset entry to be managed
 	 * @param linkEntryIds the primary keys of the asset entries to be linked
-	 with the asset entry to be managed
+	 * with the asset entry to be managed
 	 * @param typeId the type of the asset links to be created. Acceptable
-	 values include {@link AssetLinkConstants#TYPE_RELATED} which is a
-	 bidirectional relationship and {@link
-	 AssetLinkConstants#TYPE_CHILD} which is a unidirectional
-	 relationship. For more information see {@link AssetLinkConstants}
+	 * values include {@link AssetLinkConstants#TYPE_RELATED} which is a
+	 * bidirectional relationship and {@link
+	 * AssetLinkConstants#TYPE_CHILD} which is a unidirectional
+	 * relationship. For more information see {@link AssetLinkConstants}
 	 */
 	@Override
 	public void updateLinks(
