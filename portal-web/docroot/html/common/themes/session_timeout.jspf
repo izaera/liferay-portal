@@ -11,7 +11,7 @@ String rememberMe = CookiesManagerUtil.getCookieValue(CookiesConstants.NAME_REME
 
 <c:if test="<%= !themeDisplay.isSignedIn() || Validator.isNull(rememberMe) %>">
 	<aui:script sandbox="<%= true %>">
-		import(Liferay.ThemeDisplay.getPathContext() + '/o/frontend-js-web/__liferay__/index.js').then(
+		import(Liferay.ThemeDisplay.getCDNHost() + Liferay.ThemeDisplay.getPathContext() + '/o/frontend-js-web/__liferay__/index.js').then(
 			({openToast}) => {
 				AUI().use(
 					'liferay-session',

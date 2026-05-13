@@ -102,6 +102,7 @@ import toggleRadio from './util/toggle_radio';
 import toggleSelectBox from './util/toggle_select_box';
 import zIndex from './zIndex';
 
+const CDN_HOST = Liferay.ThemeDisplay.getCDNHost();
 const PATH_CONTEXT = Liferay.ThemeDisplay.getPathContext();
 
 Liferay = window.Liferay || {};
@@ -162,15 +163,15 @@ Liferay.Portlet = Liferay.Portlet || {};
 Liferay.Portlet.minimize = minimizePortlet;
 
 Liferay.Portlet.openModal = (...args) => {
-	import(PATH_CONTEXT + '/o/frontend-js-web/__liferay__/index.js').then(
-		({openPortletModal}) => openPortletModal(...args)
-	);
+	import(
+		CDN_HOST + PATH_CONTEXT + '/o/frontend-js-web/__liferay__/index.js'
+	).then(({openPortletModal}) => openPortletModal(...args));
 };
 
 Liferay.Portlet.openWindow = (...args) => {
-	import(PATH_CONTEXT + '/o/frontend-js-web/__liferay__/index.js').then(
-		({openPortletWindow}) => openPortletWindow(...args)
-	);
+	import(
+		CDN_HOST + PATH_CONTEXT + '/o/frontend-js-web/__liferay__/index.js'
+	).then(({openPortletWindow}) => openPortletWindow(...args));
 };
 
 Liferay.SideNavigation = SideNavigation;
@@ -185,15 +186,15 @@ Liferay.Util.MAP_HTML_CHARS_ESCAPED = MAP_HTML_CHARS_ESCAPED;
 Liferay.Util.addParams = addParams;
 
 Liferay.Util.openAlertModal = (...args) => {
-	import(PATH_CONTEXT + '/o/frontend-js-web/__liferay__/index.js').then(
-		({openAlertModal}) => openAlertModal(...args)
-	);
+	import(
+		CDN_HOST + PATH_CONTEXT + '/o/frontend-js-web/__liferay__/index.js'
+	).then(({openAlertModal}) => openAlertModal(...args));
 };
 
 Liferay.Util.openSimpleInputModal = (...args) => {
-	import(PATH_CONTEXT + '/o/frontend-js-web/__liferay__/index.js').then(
-		({openSimpleInputModal}) => openSimpleInputModal(...args)
-	);
+	import(
+		CDN_HOST + PATH_CONTEXT + '/o/frontend-js-web/__liferay__/index.js'
+	).then(({openSimpleInputModal}) => openSimpleInputModal(...args));
 };
 
 /**
@@ -327,27 +328,27 @@ Liferay.Util.toCharCode = toCharCode;
 Liferay.Util.toggleDisabled = toggleDisabled;
 
 Liferay.Util.openConfirmModal = (...args) => {
-	import(PATH_CONTEXT + '/o/frontend-js-web/__liferay__/index.js').then(
-		({openConfirmModal}) => openConfirmModal(...args)
-	);
+	import(
+		CDN_HOST + PATH_CONTEXT + '/o/frontend-js-web/__liferay__/index.js'
+	).then(({openConfirmModal}) => openConfirmModal(...args));
 };
 
 Liferay.Util.openModal = (...args) => {
-	import(PATH_CONTEXT + '/o/frontend-js-web/__liferay__/index.js').then(
-		({openModal}) => openModal(...args)
-	);
+	import(
+		CDN_HOST + PATH_CONTEXT + '/o/frontend-js-web/__liferay__/index.js'
+	).then(({openModal}) => openModal(...args));
 };
 
 Liferay.Util.openSelectionModal = (...args) => {
-	import(PATH_CONTEXT + '/o/frontend-js-web/__liferay__/index.js').then(
-		({openSelectionModal}) => openSelectionModal(...args)
-	);
+	import(
+		CDN_HOST + PATH_CONTEXT + '/o/frontend-js-web/__liferay__/index.js'
+	).then(({openSelectionModal}) => openSelectionModal(...args));
 };
 
 Liferay.Util.openToast = (...args) => {
-	import(PATH_CONTEXT + '/o/frontend-js-web/__liferay__/index.js').then(
-		({openToast}) => openToast(...args)
-	);
+	import(
+		CDN_HOST + PATH_CONTEXT + '/o/frontend-js-web/__liferay__/index.js'
+	).then(({openToast}) => openToast(...args));
 };
 
 Liferay.Util.openWindow = openWindow;
