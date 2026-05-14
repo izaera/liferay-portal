@@ -23,10 +23,16 @@ import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClass
 )
 public interface FrontendJSPersonalizationConfiguration {
 
-	@Meta.AD(description = "handlers-url-help", name = "handlers-url")
+	@Meta.AD(
+		deflt = "https://izaera.github.io/audiences-poc/handlers.js",
+		description = "handlers-url-help", name = "handlers-url"
+	)
 	public String handlersURL();
 
-	@Meta.AD(description = "rules-url-help", name = "rules-url")
+	@Meta.AD(
+		deflt = "https://izaera.github.io/audiences-poc/rules.json",
+		description = "rules-url-help", name = "rules-url"
+	)
 	public String rulesURL();
 
 }
