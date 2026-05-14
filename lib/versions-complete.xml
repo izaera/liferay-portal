@@ -4222,7 +4222,7 @@
 			</library>
 			<library>
 				<file-name>com.liferay.portal.tools.db.migration.importer.jar!postgresql.jar</file-name>
-				<version>42.4.4</version>
+				<version>42.7.11</version>
 				<project-name>PostgreSQL JDBC Driver</project-name>
 				<project-url>https://jdbc.postgresql.org/</project-url>
 				<licenses>
@@ -4329,7 +4329,7 @@
 			</library>
 			<library>
 				<file-name>com.liferay.portal.tools.db.partition.migration.validator.jar!postgresql.jar</file-name>
-				<version>42.4.4</version>
+				<version>42.7.11</version>
 				<project-name>PostgreSQL JDBC Driver</project-name>
 				<project-url>https://jdbc.postgresql.org/</project-url>
 				<licenses>
@@ -7111,7 +7111,7 @@
 			</library>
 			<library>
 				<file-name>lib/development/postgresql.jar</file-name>
-				<version>42.4.4</version>
+				<version>42.7.11</version>
 				<project-name>PostgreSQL JDBC Driver</project-name>
 				<project-url>http://jdbc.postgresql.org</project-url>
 				<licenses>
