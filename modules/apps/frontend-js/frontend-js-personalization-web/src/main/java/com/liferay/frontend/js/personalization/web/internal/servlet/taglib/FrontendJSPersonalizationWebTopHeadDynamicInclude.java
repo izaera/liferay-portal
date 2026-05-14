@@ -5,25 +5,19 @@
 
 package com.liferay.frontend.js.personalization.web.internal.servlet.taglib;
 
-import com.liferay.client.extension.constants.ClientExtensionEntryConstants;
-import com.liferay.client.extension.type.CET;
-import com.liferay.client.extension.type.PersonalizationCET;
-import com.liferay.client.extension.type.manager.CETManager;
-import com.liferay.portal.kernel.dao.orm.QueryUtil;
-import com.liferay.portal.kernel.exception.PortalException;
+import com.liferay.frontend.js.personalization.web.internal.configuration.FrontendJSPersonalizationConfiguration;
+import com.liferay.portal.configuration.module.configuration.ConfigurationProvider;
+import com.liferay.portal.kernel.module.configuration.ConfigurationException;
 import com.liferay.portal.kernel.servlet.taglib.DynamicInclude;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
 import com.liferay.portal.kernel.util.Validator;
 import com.liferay.portal.kernel.util.WebKeys;
-import com.liferay.portal.vulcan.pagination.Pagination;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-
-import java.util.List;
 
 import org.osgi.service.component.annotations.Component;
 import org.osgi.service.component.annotations.Reference;
@@ -45,25 +39,24 @@ public class FrontendJSPersonalizationWebTopHeadDynamicInclude
 			(ThemeDisplay)httpServletRequest.getAttribute(
 				WebKeys.THEME_DISPLAY);
 
-		List<CET> cets;
+		FrontendJSPersonalizationConfiguration
+			frontendJSPersonalizationConfiguration;
 
 		try {
-			cets = _cetManager.getCETs(
-				themeDisplay.getCompanyId(), null,
-				ClientExtensionEntryConstants.TYPE_PERSONALIZATION,
-				Pagination.of(QueryUtil.ALL_POS, QueryUtil.ALL_POS), null);
+			frontendJSPersonalizationConfiguration =
+				_configurationProvider.getCompanyConfiguration(
+					FrontendJSPersonalizationConfiguration.class,
+					themeDisplay.getCompanyId());
 		}
-		catch (PortalException portalException) {
-			throw new IOException(portalException);
-		}
-
-		if (cets.isEmpty()) {
-			return;
+		catch (ConfigurationException configurationException) {
+			throw new IOException(configurationException);
 		}
 
-		PersonalizationCET personalizationCET = (PersonalizationCET)cets.get(0);
+		String handlersURL =
+			frontendJSPersonalizationConfiguration.handlersURL();
+		String rulesURL = frontendJSPersonalizationConfiguration.rulesURL();
 
-		if (Validator.isBlank(personalizationCET.getRulesURL())) {
+		if (Validator.isBlank(handlersURL) || Validator.isBlank(rulesURL)) {
 			return;
 		}
 
@@ -75,9 +68,11 @@ public class FrontendJSPersonalizationWebTopHeadDynamicInclude
 			"import {personalization} from '@liferay/personalization';");
 		printWriter.println("personalization.clear('PAGE');");
 		printWriter.print("await personalization.runDetection('");
-		printWriter.print(personalizationCET.getRulesURL());
+		printWriter.print(rulesURL);
 		printWriter.println("');");
-		printWriter.println(personalizationCET.getJavaScript());
+		printWriter.print("await import('");
+		printWriter.print(handlersURL);
+		printWriter.println("');");
 		printWriter.println("await personalization.runHandlers();");
 		printWriter.print("</script>");
 	}
@@ -89,6 +84,6 @@ public class FrontendJSPersonalizationWebTopHeadDynamicInclude
 	}
 
 	@Reference
-	private CETManager _cetManager;
+	private ConfigurationProvider _configurationProvider;
 
 }
