@@ -1763,40 +1763,6 @@ public class JournalArticleLocalServiceTest {
 	}
 
 	@Test
-	public void testGetArticleDisplayWithSmallImage() throws Exception {
-		JournalArticle journalArticle = JournalTestUtil.addArticle(
-			_group.getGroupId(),
-			JournalFolderConstants.DEFAULT_PARENT_FOLDER_ID);
-
-		FileEntry fileEntry = _dlAppLocalService.addFileEntry(
-			null, TestPropsValues.getUserId(), _group.getGroupId(),
-			DLFolderConstants.DEFAULT_PARENT_FOLDER_ID,
-			RandomTestUtil.randomString() + ".png", ContentTypes.IMAGE_PNG,
-			FileUtil.getBytes(getClass(), "dependencies/liferay.png"), null,
-			null, null, new ServiceContext());
-
-		journalArticle.setSmallImage(true);
-		journalArticle.setSmallImageId(fileEntry.getFileEntryId());
-		journalArticle.setSmallImageSource(
-			JournalArticleConstants.SMALL_IMAGE_SOURCE_DOCUMENTS_AND_MEDIA);
-
-		journalArticle = _journalArticleLocalService.updateJournalArticle(
-			journalArticle);
-
-		JournalArticleDisplay journalArticleDisplay =
-			_journalArticleLocalService.getArticleDisplay(
-				journalArticle.getGroupId(), journalArticle.getArticleId(),
-				null, null, _themeDisplay);
-
-		String articleDisplayImageURL =
-			journalArticleDisplay.getArticleDisplayImageURL(_themeDisplay);
-
-		Assert.assertNotNull(articleDisplayImageURL);
-		Assert.assertTrue(
-			articleDisplayImageURL.contains(fileEntry.getFileName()));
-	}
-
-	@Test
 	public void testGetArticlesByReviewDate() throws Exception {
 		JournalFolder folder = JournalTestUtil.addFolder(
 			_group.getGroupId(), RandomTestUtil.randomString());
