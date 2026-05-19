@@ -13,7 +13,7 @@ import com.liferay.portal.configuration.metatype.annotations.ExtendedObjectClass
  * @author Iván Zaera Avellón
  */
 @ExtendedObjectClassDefinition(
-	category = "infrastructure",
+	category = "infrastructure", featureFlagKey = "LPD-83647",
 	scope = ExtendedObjectClassDefinition.Scope.COMPANY, strictScope = true
 )
 @Meta.OCD(

@@ -7,6 +7,7 @@ package com.liferay.frontend.js.personalization.web.internal.servlet.taglib;
 
 import com.liferay.frontend.js.personalization.web.internal.configuration.FrontendJSPersonalizationConfiguration;
 import com.liferay.portal.configuration.module.configuration.ConfigurationProvider;
+import com.liferay.portal.kernel.feature.flag.FeatureFlagManagerUtil;
 import com.liferay.portal.kernel.module.configuration.ConfigurationException;
 import com.liferay.portal.kernel.servlet.taglib.DynamicInclude;
 import com.liferay.portal.kernel.theme.ThemeDisplay;
@@ -38,6 +39,12 @@ public class FrontendJSPersonalizationWebTopHeadDynamicInclude
 		ThemeDisplay themeDisplay =
 			(ThemeDisplay)httpServletRequest.getAttribute(
 				WebKeys.THEME_DISPLAY);
+
+		if (!FeatureFlagManagerUtil.isEnabled(
+				themeDisplay.getCompanyId(), "LPD-83647")) {
+
+			return;
+		}
 
 		FrontendJSPersonalizationConfiguration
 			frontendJSPersonalizationConfiguration;
