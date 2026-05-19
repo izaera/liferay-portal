@@ -10,17 +10,14 @@ import getYarnWorkspaceProjects from '../../getYarnWorkspaceProjects.mjs';
 import {MODULES_DIR, PORTAL_DIR} from '../../locations.mjs';
 import print from '../../print.mjs';
 
-const ALLOWED_VERSION_DIVERGENCES = [
-
-	// 'axe-core',
-	// 'fetch-mock',
-	// 'qs',
-	// 'react-dropzone',
-	// 'resize-observer-polyfill',
-	// 'text-mask-addons',
-	// 'text-mask-core',
-	// 'uuid',
-];
+const ALLOWED_VERSION_DIVERGENCES = {
+	typescript: [
+		'modules/apps/change-tracking/change-tracking-rest-client-js',
+		'modules/apps/headless/headless-admin-taxonomy/headless-admin-taxonomy-client-js',
+		'modules/apps/object/object-admin-rest-client-js',
+		'modules/util/portal-tools-rest-builder-test-client-js',
+	],
+};
 
 const EXCLUDED_WORKSPACES = [
 	// 'test/playwright'
@@ -81,6 +78,7 @@ export default async function formatPackageJSONVersionAlignment() {
 		}
 
 		const relPath = path.relative(PORTAL_DIR, pkgPath);
+		const projectRelPath = path.relative(PORTAL_DIR, dir);
 
 		for (const section of ['dependencies', 'devDependencies']) {
 			if (!pkg[section]) {
@@ -88,7 +86,9 @@ export default async function formatPackageJSONVersionAlignment() {
 			}
 
 			for (const [name, version] of Object.entries(pkg[section])) {
-				if (ALLOWED_VERSION_DIVERGENCES.includes(name)) {
+				const allowedProjects = ALLOWED_VERSION_DIVERGENCES[name];
+
+				if (allowedProjects && allowedProjects.includes(projectRelPath)) {
 					continue;
 				}
 
