@@ -148,10 +148,21 @@ public class PortalLog4jTest {
 
 	@Test
 	public void testLogOutputWithCDATAClosingSequence() throws Exception {
-		for (String level : _LEVELS) {
-			_testLogOutput(
-				level, "before]]>after", null, "before]]>]]&gt;<![CDATA[after",
-				null);
+		String cdataClose = "]]>";
+		String escapedCdataClose = "]]>]]&gt;<![CDATA[";
+
+		try {
+			ThreadContext.push("ndc:" + cdataClose);
+
+			for (String level : _LEVELS) {
+				_testLogOutput(
+					level, "before" + cdataClose + "after", null,
+					"before" + escapedCdataClose + "after",
+					"ndc:" + escapedCdataClose, null);
+			}
+		}
+		finally {
+			ThreadContext.pop();
 		}
 	}
 
@@ -401,8 +412,8 @@ public class PortalLog4jTest {
 	private void _assertXmlLog(
 		String expectedLevel, String expectedMessage,
 		Throwable expectedThrowable, String expectedLogContextMessage,
-		String expectedXmlMessage, String expectedXmlNdc,
-		String expectedXmlThread, String actualOutput) {
+		String expectedXMLMessage, String expectedXMLNDC,
+		String expectedXMLThread, String actualOutput) {
 
 		String[] outputLines = StringUtil.splitLines(actualOutput);
 
@@ -455,7 +466,7 @@ public class PortalLog4jTest {
 
 		String expectedLog4JEventThread = StringBundler.concat(
 			"thread=\"",
-			(expectedXmlThread != null) ? expectedXmlThread :
+			(expectedXMLThread != null) ? expectedXMLThread :
 				currentThread.getName(),
 			StringPool.QUOTE);
 
@@ -468,16 +479,16 @@ public class PortalLog4jTest {
 		Assert.assertEquals(
 			StringBundler.concat(
 				"<log4j:message><![CDATA[",
-				(expectedXmlMessage != null) ? expectedXmlMessage :
+				(expectedXMLMessage != null) ? expectedXMLMessage :
 					expectedMessage,
 				"]]></log4j:message>"),
 			outputLines[1]);
 
 		// <log4j:NDC>...</log4j:NDC>
 
-		if (expectedXmlNdc != null) {
+		if (expectedXMLNDC != null) {
 			String expectedNdcLine = StringBundler.concat(
-				"<log4j:NDC><![CDATA[", expectedXmlNdc, "]]></log4j:NDC>");
+				"<log4j:NDC><![CDATA[", expectedXMLNDC, "]]></log4j:NDC>");
 
 			Assert.assertTrue(ArrayUtil.contains(outputLines, expectedNdcLine));
 		}
@@ -670,12 +681,13 @@ public class PortalLog4jTest {
 			String level, String message, Throwable throwable)
 		throws Exception {
 
-		_testLogOutput(level, message, throwable, null, null);
+		_testLogOutput(level, message, throwable, null, null, null);
 	}
 
 	private void _testLogOutput(
 			String level, String message, Throwable throwable,
-			String expectedXmlMessage, String expectedXmlThread)
+			String expectedXMLMessage, String expectedXMLNDC,
+			String expectedXMLThread)
 		throws Exception {
 
 		_outputLog(level, message, throwable);
@@ -689,8 +701,8 @@ public class PortalLog4jTest {
 				new String(Files.readAllBytes(_textLogFilePath)));
 
 			_assertXmlLog(
-				level, message, throwable, null, expectedXmlMessage, null,
-				expectedXmlThread,
+				level, message, throwable, null, expectedXMLMessage,
+				expectedXMLNDC, expectedXMLThread,
 				new String(Files.readAllBytes(_xmlLogFilePath)));
 		}
 		finally {
@@ -717,8 +729,8 @@ public class PortalLog4jTest {
 
 	private void _testLogOutputWithLogContext(
 			Map<String, String> contexts, String logContextMessage,
-			String expectedXmlLogContextMessage, String expectedXmlNdc,
-			String expectedXmlThread, String logContextName)
+			String expectedXMLLogContextMessage, String expectedXMLNDC,
+			String expectedXMLThread, String logContextName)
 		throws Exception {
 
 		Bundle bundle = FrameworkUtil.getBundle(PortalLog4jTest.class);
@@ -793,8 +805,8 @@ public class PortalLog4jTest {
 		try {
 			for (String level : _LEVELS) {
 				_testLogOutputWithLogContext(
-					level, logContextMessage, expectedXmlLogContextMessage,
-					expectedXmlNdc, expectedXmlThread, textUnsyncStringWriter,
+					level, logContextMessage, expectedXMLLogContextMessage,
+					expectedXMLNDC, expectedXMLThread, textUnsyncStringWriter,
 					xmlUnsyncStringWriter);
 			}
 		}
@@ -817,8 +829,8 @@ public class PortalLog4jTest {
 
 	private void _testLogOutputWithLogContext(
 		String level, String logContextMessage,
-		String expectedXmlLogContextMessage, String expectedXmlNdc,
-		String expectedXmlThread, UnsyncStringWriter textUnsyncStringWriter,
+		String expectedXMLLogContextMessage, String expectedXMLNDC,
+		String expectedXMLThread, UnsyncStringWriter textUnsyncStringWriter,
 		UnsyncStringWriter xmlUnsyncStringWriter) {
 
 		String message = level + " message";
@@ -829,8 +841,8 @@ public class PortalLog4jTest {
 			level, message, null, logContextMessage,
 			textUnsyncStringWriter.toString());
 		_assertXmlLog(
-			level, message, null, expectedXmlLogContextMessage, null,
-			expectedXmlNdc, expectedXmlThread,
+			level, message, null, expectedXMLLogContextMessage, null,
+			expectedXMLNDC, expectedXMLThread,
 			xmlUnsyncStringWriter.toString());
 
 		textUnsyncStringWriter.reset();
