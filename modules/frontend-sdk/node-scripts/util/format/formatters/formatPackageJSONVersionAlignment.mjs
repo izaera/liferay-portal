@@ -23,6 +23,8 @@ const EXCLUDED_WORKSPACES = [
 	// 'test/playwright'
 ];
 
+const NON_EXPLICIT_VERSION_RE = /[\^~<>|]|\s|^=/;
+
 export default async function formatPackageJSONVersionAlignment() {
 	let checksPassed = true;
 
@@ -34,6 +36,7 @@ export default async function formatPackageJSONVersionAlignment() {
 	);
 
 	const versionsByName = new Map();
+	const nonExplicitVersions = new Map();
 
 	const rootPkg = JSON.parse(
 		fs.readFileSync(path.join(MODULES_DIR, 'package.json'), 'utf-8')
@@ -86,6 +89,20 @@ export default async function formatPackageJSONVersionAlignment() {
 			}
 
 			for (const [name, version] of Object.entries(pkg[section])) {
+				if (NON_EXPLICIT_VERSION_RE.test(version)) {
+					if (!nonExplicitVersions.has(name)) {
+						nonExplicitVersions.set(name, new Map());
+					}
+
+					const filesByVersion = nonExplicitVersions.get(name);
+
+					if (!filesByVersion.has(version)) {
+						filesByVersion.set(version, new Set());
+					}
+
+					filesByVersion.get(version).add(relPath);
+				}
+
 				const allowedProjects = ALLOWED_VERSION_DIVERGENCES[name];
 
 				if (allowedProjects && allowedProjects.includes(projectRelPath)) {
@@ -142,6 +159,36 @@ export default async function formatPackageJSONVersionAlignment() {
 
 		checksPassed = false;
 	}
+
+	const nonExplicitEntries = [...nonExplicitVersions.entries()].sort(
+		(a, b) => a[0].localeCompare(b[0])
+	);
+
+	// for (const [name, filesByVersion] of nonExplicitEntries) {
+	// 	print(
+	// 		2,
+	// 		print.error('ERROR:'),
+	// 		'Dependency',
+	// 		print.underline(name),
+	// 		'uses non-explicit version(s):'
+	// 	);
+
+	// 	const sortedVersions = [...filesByVersion.entries()].sort(
+	// 		(a, b) => b[1].size - a[1].size
+	// 	);
+
+	// 	for (const [version, files] of sortedVersions) {
+	// 		print(3, `${version} in:`);
+
+	// 		for (const file of [...files].sort()) {
+	// 			print(4, file);
+	// 		}
+	// 	}
+
+	// 	print(2, '');
+
+	// 	checksPassed = false;
+	// }
 
 	return checksPassed;
 }
