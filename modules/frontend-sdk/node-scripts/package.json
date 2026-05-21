@@ -21,7 +21,6 @@
 		"@testing-library/react-hooks-3.4.2": "npm:@testing-library/react-hooks@3.4.2",
 		"@testing-library/user-event": "^14.5.1",
 		"@testing-library/user-event-4.2.4": "npm:@testing-library/user-event@4.2.4",
-		"@typescript-eslint/parser": "^7.8.0",
 		"acorn": "^8.14.0",
 		"acorn-typescript": "^1.4.13",
 		"babel-eslint": "^10.1.0",
