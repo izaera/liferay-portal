@@ -35,6 +35,7 @@ import com.liferay.portal.kernel.zip.ZipWriter;
 import com.liferay.portal.kernel.zip.ZipWriterFactory;
 import com.liferay.portal.util.PropsValues;
 import com.liferay.segments.service.SegmentsExperienceLocalService;
+import com.liferay.translation.exception.XLIFFFileException;
 import com.liferay.translation.exporter.TranslationInfoItemFieldValuesExporter;
 import com.liferay.translation.exporter.TranslationInfoItemFieldValuesExporterRegistry;
 import com.liferay.translation.web.internal.helper.InfoItemHelper;
@@ -95,10 +96,18 @@ public class ExportTranslationServlet extends HttpServlet {
 
 			String exportMimeType = ParamUtil.getString(
 				httpServletRequest, "exportMimeType");
+
 			String sourceLanguageId = ParamUtil.getString(
 				httpServletRequest, "sourceLanguageId");
+
+			_validateLanguageId(sourceLanguageId);
+
 			String[] targetLanguageIds = ParamUtil.getStringValues(
 				httpServletRequest, "targetLanguageIds");
+
+			for (String targetLanguageId : targetLanguageIds) {
+				_validateLanguageId(targetLanguageId);
+			}
 
 			ZipWriter zipWriter = _zipWriterFactory.getZipWriter();
 
@@ -296,6 +305,12 @@ public class ExportTranslationServlet extends HttpServlet {
 		}
 
 		return false;
+	}
+
+	private void _validateLanguageId(String languageId) throws PortalException {
+		if (!_language.isAvailableLocale(languageId)) {
+			throw new XLIFFFileException.MustBeSupportedLanguage(languageId);
+		}
 	}
 
 	@Reference
