@@ -10,6 +10,7 @@ import {getBrowserLanguage} from './attributes/browser_language';
 import {getBrowserName} from './attributes/browser_name';
 import {getBrowserVersion} from './attributes/browser_version';
 import {getCookie} from './attributes/cookie';
+import {getCustom} from './attributes/custom';
 import {getHostname} from './attributes/hostname';
 import {getLocalDate} from './attributes/local_date';
 import {getLocalHour} from './attributes/local_hour';
@@ -44,6 +45,7 @@ interface OperatorImpl {
 }
 
 const COOKIE_PREFIX = 'cookie:';
+const CUSTOM_PREFIX = 'custom:';
 const SEARCH_PARAM_PREFIX = 'search_param:';
 
 export class Detection {
@@ -90,6 +92,9 @@ export class Detection {
 		}
 		else if (attr.startsWith(COOKIE_PREFIX)) {
 			return getCookie(attr.slice(COOKIE_PREFIX.length));
+		}
+		else if (attr.startsWith(CUSTOM_PREFIX)) {
+			return getCustom(attr.slice(CUSTOM_PREFIX.length));
 		}
 		else if (attr === 'hostname') {
 			return getHostname();

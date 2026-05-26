@@ -47,6 +47,7 @@ export type Attribute =
 	| 'browser_name'
 	| 'browser_version'
 	| `cookie:${string}`
+	| `custom:${string}`
 	| 'hostname'
 	| 'local_date'
 	| 'local_hour'
@@ -59,6 +60,11 @@ export type Attribute =
 export type Operator = 'between' | 'eq' | 'include' | 'matches';
 
 // JavaScript API
+
+export interface CustomAttribute<T> {
+	name: string | undefined;
+	(): Promise<T> | T;
+}
 
 export interface Handler {
 	name: string | undefined;

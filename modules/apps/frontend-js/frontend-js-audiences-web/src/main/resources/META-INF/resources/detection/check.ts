@@ -33,6 +33,8 @@ const COMBINATORS: Combinator[] = ['and', 'or'];
 
 const COOKIE_PREFIX = 'cookie:';
 
+const CUSTOM_PREFIX = 'custom:';
+
 const OPERATORS: Operator[] = ['between', 'eq', 'include', 'matches'];
 
 const RETENTIONS: Retention[] = ['BROWSER', 'PAGE', 'TAB'];
@@ -118,6 +120,12 @@ function checkLeafRule(leafRule: LeafRule, what: string) {
 function checkAttribute(value: any, what: string) {
 	checkString(value, what);
 
+	if (value.startsWith(CUSTOM_PREFIX)) {
+		checkCustomAttribute(value, what);
+
+		return;
+	}
+
 	if (
 		value.startsWith(COOKIE_PREFIX) ||
 		value.startsWith(SEARCH_PARAM_PREFIX)
@@ -128,7 +136,21 @@ function checkAttribute(value: any, what: string) {
 	if (!ATTRIBUTES.includes(value)) {
 		throw new Error(
 			`${what} must be one of: ${ATTRIBUTES.map((v) => `'${v}'`).join(', ')}, ` +
-				`'${COOKIE_PREFIX}<name>', '${SEARCH_PARAM_PREFIX}<name>'`
+				`'${COOKIE_PREFIX}<name>', '${CUSTOM_PREFIX}<url>[#<symbol>]', ` +
+				`'${SEARCH_PARAM_PREFIX}<name>'`
+		);
+	}
+}
+
+function checkCustomAttribute(value: string, what: string) {
+	const url = value.slice(CUSTOM_PREFIX.length);
+
+	const hashIndex = url.indexOf('#');
+
+	if (url === '' || hashIndex === 0 || hashIndex === url.length - 1) {
+		throw new Error(
+			`${what} must use the syntax '${CUSTOM_PREFIX}<url>' or ` +
+				`'${CUSTOM_PREFIX}<url>#<symbol>'`
 		);
 	}
 }
