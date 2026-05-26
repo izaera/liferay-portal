@@ -20,7 +20,6 @@ import com.liferay.portal.kernel.log.Log;
 import com.liferay.portal.kernel.model.Company;
 import com.liferay.portal.kernel.module.framework.ModuleServiceLifecycle;
 import com.liferay.portal.kernel.module.service.Snapshot;
-import com.liferay.portal.kernel.security.auth.CompanyInheritableThreadLocalCallable;
 import com.liferay.portal.kernel.service.CompanyLocalService;
 import com.liferay.portal.kernel.service.UserLocalService;
 import com.liferay.portal.kernel.util.GetterUtil;
@@ -51,21 +50,20 @@ public abstract class BaseConfigurationFactory {
 		}
 
 		DependencyManagerSyncUtil.registerSyncCallable(
-			new CompanyInheritableThreadLocalCallable<>(
-				() -> {
-					ConfigurationFactoryUtil.executeAsCompany(
-						companyLocalService, properties,
-						companyId -> {
-							String externalReferenceCode =
-								ConfigurationFactoryUtil.
-									getExternalReferenceCode(properties);
+			() -> {
+				ConfigurationFactoryUtil.executeAsCompany(
+					companyLocalService, properties,
+					companyId -> {
+						String externalReferenceCode =
+							ConfigurationFactoryUtil.
+								getExternalReferenceCode(properties);
 
-							doActivate(
-								properties, companyId, externalReferenceCode);
-						});
+						doActivate(
+							properties, companyId, externalReferenceCode);
+					});
 
-					return null;
-				}));
+				return null;
+			});
 	}
 
 	@Deactivate
