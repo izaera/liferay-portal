@@ -5,12 +5,12 @@
 
 import {expect, mergeTests} from '@playwright/test';
 
-import {apiHelpersTest} from '../../../fixtures/apiHelpersTest';
-import {isolatedSiteTest} from '../../../fixtures/isolatedSiteTest';
-import {loginTest} from '../../../fixtures/loginTest';
-import {usersAndOrganizationsPagesTest} from '../../../fixtures/usersAndOrganizationsPagesTest';
-import getRandomString from '../../../utils/getRandomString';
-import getBasicWebContentStructureId from '../../../utils/structured-content/getBasicWebContentStructureId';
+import {apiHelpersTest} from '../../fixtures/apiHelpersTest';
+import {isolatedSiteTest} from '../../fixtures/isolatedSiteTest';
+import {loginTest} from '../../fixtures/loginTest';
+import {usersAndOrganizationsPagesTest} from '../../fixtures/usersAndOrganizationsPagesTest';
+import getRandomString from '../../utils/getRandomString';
+import getBasicWebContentStructureId from '../../utils/structured-content/getBasicWebContentStructureId';
 import {contentDashboardPagesTest} from './fixtures/contentDashboardPagesTest';
 
 export const test = mergeTests(
