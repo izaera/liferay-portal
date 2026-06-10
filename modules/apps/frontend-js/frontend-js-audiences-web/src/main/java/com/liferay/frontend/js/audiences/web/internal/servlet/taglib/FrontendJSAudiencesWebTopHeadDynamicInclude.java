@@ -84,6 +84,9 @@ public class FrontendJSAudiencesWebTopHeadDynamicInclude
 		printWriter.print(servletAbsolutePortalURLBuilder.build());
 
 		printWriter.println("');");
+
+		printWriter.println("import 'sample-audience-variations';");
+
 		printWriter.println("await audiences.runHandlers();");
 		printWriter.println("</script>");
 	}
