@@ -83,3 +83,4 @@
     # LPD-86504 Ignore GraphQL query templates.
     #
     apps/site/site-dsr-analytics-rest-impl/src/main/resources/com/liferay/site/dsr/analytics/rest/internal/client/dependencies/
+    dxp/apps/osb/osb-faro/osb-faro-rest-impl/src/main/resources/graphql/
