@@ -127,6 +127,18 @@ const COMMANDS = {
 		parameters: '',
 		script: './gitmerge/setup.mjs',
 	},
+	'report:dependencies': {
+		description: `
+		Generate aggregated information about bundled npm packages.
+
+		This task must be invoked after running 'CREATE_BUNDLE_REPORTS=yes ant
+		all' (i.e: running 'ant all' with the environment variable
+		'CREATE_BUNDLE_REPORTS' set to 'yes', so that JSON reports about bundle
+		sizes are created inside the 'build' directory of each project).
+`,
+		parameters: '',
+		script: './report/dependencies.mjs',
+	},
 	'setup': {
 		description: `
 		Setup working environment used by node-scripts (for example: download the binary Sass
