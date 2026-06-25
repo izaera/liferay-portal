@@ -27,6 +27,7 @@ async function doRunEsbuild(esbuildesbuildConfig, configName) {
 					? 'true'
 					: 'false',
 			},
+			metafile: true,
 			minify: process.env.NODE_ENV === 'production',
 			...esbuildesbuildConfig,
 		});

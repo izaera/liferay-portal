@@ -41,6 +41,8 @@ export const BUILD_SASS_CACHE_PATH = path.join(
 	'.sass-cache'
 );
 
+export const BUNDLE_REPORTS_PATH = path.join('build', 'bundle-reports');
+
 export const LIFERAY_WORKING_BRANCH = 'master';
 export const GIT_ORIGIN_NAME = 'upstream';
 
