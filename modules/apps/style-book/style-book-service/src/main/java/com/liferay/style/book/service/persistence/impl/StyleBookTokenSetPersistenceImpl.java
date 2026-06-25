@@ -977,6 +977,7 @@ public class StyleBookTokenSetPersistenceImpl
 			_SQL_SELECT_STYLEBOOKTOKENSET_WHERE,
 			_SQL_COUNT_STYLEBOOKTOKENSET_WHERE,
 			StyleBookTokenSetModelImpl.ORDER_BY_JPQL, _ENTITY_ALIAS_PREFIX, "",
+			"",
 			new FinderColumn<>(
 				"styleBookTokenSet.", "uuid", "uuid_", FinderColumn.Type.STRING,
 				"=", true, true, StyleBookTokenSet::getUuid));
@@ -1019,7 +1020,7 @@ public class StyleBookTokenSetPersistenceImpl
 				_SQL_SELECT_STYLEBOOKTOKENSET_WHERE,
 				_SQL_COUNT_STYLEBOOKTOKENSET_WHERE,
 				StyleBookTokenSetModelImpl.ORDER_BY_JPQL, _ENTITY_ALIAS_PREFIX,
-				"",
+				"", "",
 				new FinderColumn<>(
 					"styleBookTokenSet.", "uuid", "uuid_",
 					FinderColumn.Type.STRING, "=", true, true,
@@ -1053,7 +1054,7 @@ public class StyleBookTokenSetPersistenceImpl
 				_SQL_SELECT_STYLEBOOKTOKENSET_WHERE,
 				_SQL_COUNT_STYLEBOOKTOKENSET_WHERE,
 				StyleBookTokenSetModelImpl.ORDER_BY_JPQL, _ENTITY_ALIAS_PREFIX,
-				"",
+				"", "",
 				new FinderColumn<>(
 					"styleBookTokenSet.", "styleBookEntryId",
 					FinderColumn.Type.LONG, "=", true, true,
@@ -1182,4 +1183,4 @@ public class StyleBookTokenSetPersistenceImpl
 	}
 
 }
-// LIFERAY-SERVICE-BUILDER-HASH:665814577
+// LIFERAY-SERVICE-BUILDER-HASH:-1395332873

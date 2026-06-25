@@ -145,7 +145,9 @@ public class StyleBookTokenSetPersistenceTest {
 
 		newStyleBookTokenSet.setThemeId(RandomTestUtil.randomString());
 
-		_styleBookTokenSets.add(_persistence.update(newStyleBookTokenSet));
+		newStyleBookTokenSet = _persistence.update(newStyleBookTokenSet);
+
+		_styleBookTokenSets.add(newStyleBookTokenSet);
 
 		StyleBookTokenSet existingStyleBookTokenSet =
 			_persistence.findByPrimaryKey(newStyleBookTokenSet.getPrimaryKey());
@@ -672,4 +674,4 @@ public class StyleBookTokenSetPersistenceTest {
 	private ClassLoader _dynamicQueryClassLoader;
 
 }
-// LIFERAY-SERVICE-BUILDER-HASH:1207962779
+// LIFERAY-SERVICE-BUILDER-HASH:-805199039
