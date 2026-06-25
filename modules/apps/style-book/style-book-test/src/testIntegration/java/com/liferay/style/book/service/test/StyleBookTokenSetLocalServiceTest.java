@@ -9,6 +9,7 @@ import com.liferay.arquillian.extension.junit.bridge.junit.Arquillian;
 import com.liferay.petra.string.StringPool;
 import com.liferay.portal.kernel.model.Group;
 import com.liferay.portal.kernel.service.ServiceContext;
+import com.liferay.portal.kernel.test.AssertUtils;
 import com.liferay.portal.kernel.test.rule.AggregateTestRule;
 import com.liferay.portal.kernel.test.rule.DeleteAfterTestRun;
 import com.liferay.portal.kernel.test.util.GroupTestUtil;
@@ -61,6 +62,44 @@ public class StyleBookTokenSetLocalServiceTest {
 
 	@Test
 	public void testAddStyleBookTokenSet() throws Exception {
+		AssertUtils.assertFailure(
+			StyleBookTokenSetNameException.class, "Name is null",
+			() -> _addStyleBookTokenSet(
+				_styleBookEntry.getStyleBookEntryId(),
+				_FRONTEND_TOKEN_CATEGORY_NAME, StringPool.BLANK,
+				_THEME_ID_CLASSIC));
+		AssertUtils.assertFailure(
+			StyleBookTokenSetNameException.class, "Name is null",
+			() -> _addStyleBookTokenSet(
+				_styleBookEntry.getStyleBookEntryId(),
+				_FRONTEND_TOKEN_CATEGORY_NAME, null, _THEME_ID_CLASSIC));
+		AssertUtils.assertFailure(
+			StyleBookTokenSetNameException.class,
+			"Name exceeds the maximum length",
+			() -> _addStyleBookTokenSet(
+				_styleBookEntry.getStyleBookEntryId(),
+				_FRONTEND_TOKEN_CATEGORY_NAME, RandomTestUtil.randomString(76),
+				_THEME_ID_CLASSIC));
+
+		String frontendTokenCategoryName = RandomTestUtil.randomString();
+
+		AssertUtils.assertFailure(
+			StyleBookTokenSetFrontendTokenCategoryNameException.class,
+			"Frontend token category \"" + frontendTokenCategoryName +
+				"\" does not exist",
+			() -> _addStyleBookTokenSet(
+				_styleBookEntry.getStyleBookEntryId(),
+				frontendTokenCategoryName, RandomTestUtil.randomString(),
+				_THEME_ID_CLASSIC));
+
+		AssertUtils.assertFailure(
+			DuplicateStyleBookTokenSetNameException.class,
+			"Style book token set name \"brandColors\" already exists",
+			() -> _addStyleBookTokenSet(
+				_styleBookEntry.getStyleBookEntryId(),
+				_FRONTEND_TOKEN_CATEGORY_NAME, "brandColors",
+				_THEME_ID_CLASSIC));
+
 		String description = RandomTestUtil.randomString();
 		String externalReferenceCode = RandomTestUtil.randomString();
 		String name = RandomTestUtil.randomString();
@@ -87,91 +126,25 @@ public class StyleBookTokenSetLocalServiceTest {
 		Assert.assertEquals(_THEME_ID_CLASSIC, styleBookTokenSet.getThemeId());
 		Assert.assertEquals(
 			TestPropsValues.getUserId(), styleBookTokenSet.getUserId());
-	}
 
-	@Test
-	public void testAddStyleBookTokenSetWhenFrontendTokenCategoryDoesNotExist()
-		throws Exception {
-
-		Assert.assertThrows(
-			StyleBookTokenSetFrontendTokenCategoryNameException.class,
-			() -> _styleBookTokenSetLocalService.addStyleBookTokenSet(
-				RandomTestUtil.randomString(), TestPropsValues.getUserId(),
-				_styleBookEntry.getStyleBookEntryId(),
-				RandomTestUtil.randomString(), RandomTestUtil.randomString(),
-				RandomTestUtil.randomString(), RandomTestUtil.randomString()));
-	}
-
-	@Test
-	public void testAddStyleBookTokenSetWhenNameIsInvalid() throws Exception {
-		Assert.assertThrows(
-			StyleBookTokenSetNameException.class,
-			() -> _styleBookTokenSetLocalService.addStyleBookTokenSet(
-				RandomTestUtil.randomString(), TestPropsValues.getUserId(),
-				_styleBookEntry.getStyleBookEntryId(),
-				RandomTestUtil.randomString(), RandomTestUtil.randomString(),
-				StringPool.BLANK, RandomTestUtil.randomString()));
-		Assert.assertThrows(
-			StyleBookTokenSetNameException.class,
-			() -> _styleBookTokenSetLocalService.addStyleBookTokenSet(
-				RandomTestUtil.randomString(), TestPropsValues.getUserId(),
-				_styleBookEntry.getStyleBookEntryId(),
-				RandomTestUtil.randomString(), RandomTestUtil.randomString(),
-				null, RandomTestUtil.randomString()));
-		Assert.assertThrows(
-			StyleBookTokenSetNameException.class,
-			() -> _styleBookTokenSetLocalService.addStyleBookTokenSet(
-				RandomTestUtil.randomString(), TestPropsValues.getUserId(),
-				_styleBookEntry.getStyleBookEntryId(),
-				RandomTestUtil.randomString(), RandomTestUtil.randomString(),
-				RandomTestUtil.randomString(76),
-				RandomTestUtil.randomString()));
-	}
-
-	@Test
-	public void testAddStyleBookTokenSetWhenNameIsReused() throws Exception {
-		Assert.assertThrows(
+		AssertUtils.assertFailure(
 			DuplicateStyleBookTokenSetNameException.class,
-			() -> _styleBookTokenSetLocalService.addStyleBookTokenSet(
-				RandomTestUtil.randomString(), TestPropsValues.getUserId(),
+			"Style book token set name \"" + name + "\" already exists",
+			() -> _addStyleBookTokenSet(
 				_styleBookEntry.getStyleBookEntryId(),
-				RandomTestUtil.randomString(), _FRONTEND_TOKEN_CATEGORY_NAME,
-				"brandColors", _THEME_ID_CLASSIC));
+				_FRONTEND_TOKEN_CATEGORY_NAME, name, _THEME_ID_CLASSIC));
 
-		String name = RandomTestUtil.randomString();
-
-		StyleBookTokenSet styleBookTokenSet =
-			_styleBookTokenSetLocalService.addStyleBookTokenSet(
-				RandomTestUtil.randomString(), TestPropsValues.getUserId(),
-				_styleBookEntry.getStyleBookEntryId(),
-				RandomTestUtil.randomString(), _FRONTEND_TOKEN_CATEGORY_NAME,
-				name, _THEME_ID_CLASSIC);
-
-		Assert.assertThrows(
-			DuplicateStyleBookTokenSetNameException.class,
-			() -> _styleBookTokenSetLocalService.addStyleBookTokenSet(
-				RandomTestUtil.randomString(), TestPropsValues.getUserId(),
-				_styleBookEntry.getStyleBookEntryId(),
-				RandomTestUtil.randomString(), _FRONTEND_TOKEN_CATEGORY_NAME,
-				name, _THEME_ID_CLASSIC));
-
-		StyleBookTokenSet cmsThemeStyleBookTokenSet =
-			_styleBookTokenSetLocalService.addStyleBookTokenSet(
-				RandomTestUtil.randomString(), TestPropsValues.getUserId(),
-				_styleBookEntry.getStyleBookEntryId(),
-				RandomTestUtil.randomString(), _FRONTEND_TOKEN_CATEGORY_NAME,
-				name, "cms_WAR_cmstheme");
+		StyleBookTokenSet cmsThemeStyleBookTokenSet = _addStyleBookTokenSet(
+			_styleBookEntry.getStyleBookEntryId(),
+			_FRONTEND_TOKEN_CATEGORY_NAME, name, "cms_WAR_cmstheme");
 
 		Assert.assertNotEquals(
 			styleBookTokenSet.getStyleBookTokenSetId(),
 			cmsThemeStyleBookTokenSet.getStyleBookTokenSetId());
 
-		StyleBookTokenSet spacingStyleBookTokenSet =
-			_styleBookTokenSetLocalService.addStyleBookTokenSet(
-				RandomTestUtil.randomString(), TestPropsValues.getUserId(),
-				_styleBookEntry.getStyleBookEntryId(),
-				RandomTestUtil.randomString(), "spacing", name,
-				_THEME_ID_CLASSIC);
+		StyleBookTokenSet spacingStyleBookTokenSet = _addStyleBookTokenSet(
+			_styleBookEntry.getStyleBookEntryId(), "spacing", name,
+			_THEME_ID_CLASSIC);
 
 		Assert.assertNotEquals(
 			styleBookTokenSet.getStyleBookTokenSetId(),
@@ -184,15 +157,24 @@ public class StyleBookTokenSetLocalServiceTest {
 				null, RandomTestUtil.randomString(), _serviceContext);
 
 		StyleBookTokenSet styleBookEntryStyleBookTokenSet =
-			_styleBookTokenSetLocalService.addStyleBookTokenSet(
-				RandomTestUtil.randomString(), TestPropsValues.getUserId(),
+			_addStyleBookTokenSet(
 				styleBookEntry.getStyleBookEntryId(),
-				RandomTestUtil.randomString(), _FRONTEND_TOKEN_CATEGORY_NAME,
-				name, _THEME_ID_CLASSIC);
+				_FRONTEND_TOKEN_CATEGORY_NAME, name, _THEME_ID_CLASSIC);
 
 		Assert.assertNotEquals(
 			styleBookTokenSet.getStyleBookTokenSetId(),
 			styleBookEntryStyleBookTokenSet.getStyleBookTokenSetId());
+	}
+
+	private StyleBookTokenSet _addStyleBookTokenSet(
+			long styleBookEntryId, String frontendTokenCategoryName,
+			String name, String themeId)
+		throws Exception {
+
+		return _styleBookTokenSetLocalService.addStyleBookTokenSet(
+			RandomTestUtil.randomString(), TestPropsValues.getUserId(),
+			styleBookEntryId, RandomTestUtil.randomString(),
+			frontendTokenCategoryName, name, themeId);
 	}
 
 	private static final String _FRONTEND_TOKEN_CATEGORY_NAME = "colorSystem";
