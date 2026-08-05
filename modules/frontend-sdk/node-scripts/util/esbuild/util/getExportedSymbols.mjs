@@ -114,26 +114,49 @@ async function loadSymbols(moduleName) {
  * Only declarations that survive to runtime count. An `interface` or a `type`
  * is erased when the module is bundled, so exporting its name would describe a
  * symbol the bundle does not have. An `enum` is a real object and does count.
+ *
+ * A shape that is in neither list throws rather than being passed over. Ignoring
+ * it would drop a symbol the module really exports and nothing would say so:
+ * that is how `useDropzone` went missing from the react-dropzone bridge, from an
+ * `export function` this function did not yet read. Throwing hands the module to
+ * getSymbolsFromEsbuild(), which is slower but asks esbuild for the answer, so
+ * an unread shape costs time instead of correctness.
  */
 function addDeclaredSymbols(symbols, declaration) {
 	if (!declaration) {
 		return;
 	}
 
-	if (declaration.type === 'VariableDeclaration') {
-		for (const {id} of declaration.declarations) {
-			if (id.type === 'Identifier') {
+	switch (declaration.type) {
+		case 'ClassDeclaration':
+		case 'FunctionDeclaration':
+		case 'TSEnumDeclaration':
+			symbols[declaration.id.name] = true;
+			break;
+
+		case 'VariableDeclaration':
+			for (const {id} of declaration.declarations) {
+				if (id.type !== 'Identifier') {
+					throw new Error(
+						`Cannot infer symbols from a ${id.type} in an export`
+					);
+				}
+
 				symbols[id.name] = true;
 			}
-		}
-	}
-	else if (
-		declaration.id &&
-		(declaration.type === 'ClassDeclaration' ||
-			declaration.type === 'FunctionDeclaration' ||
-			declaration.type === 'TSEnumDeclaration')
-	) {
-		symbols[declaration.id.name] = true;
+			break;
+
+		// Erased when the module is bundled, so they export no symbol.
+
+		case 'TSDeclareFunction':
+		case 'TSInterfaceDeclaration':
+		case 'TSTypeAliasDeclaration':
+			break;
+
+		default:
+			throw new Error(
+				`Cannot infer symbols from an exported ${declaration.type}`
+			);
 	}
 }
 
