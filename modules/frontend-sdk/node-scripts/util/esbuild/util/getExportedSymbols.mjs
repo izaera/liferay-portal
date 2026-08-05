@@ -10,6 +10,7 @@ import fs from 'fs/promises';
 import resolve from 'resolve';
 
 import projectScopeRequire from '../../projectScopeRequire.mjs';
+import getSymbolsFromEsbuild from './getSymbolsFromEsbuild.mjs';
 
 export default async function getExportedSymbols(
 	overridenPackageSymbols,
@@ -64,7 +65,17 @@ async function loadSymbols(moduleName) {
 		module = projectScopeRequire(moduleName);
 	}
 	catch (_error) {
-		module = await parseESMExports(moduleName);
+		try {
+			module = await parseESMExports(moduleName);
+		}
+		catch (_parseError) {
+
+			// The module is an ES module that acorn cannot read: either it uses
+			// export * or acorn-typescript rejects its source. Let esbuild link
+			// it and report the symbols instead.
+
+			return getSymbolsFromEsbuild(moduleName);
+		}
 	}
 
 	const symbols = Object.keys(module).reduce((symbols, key) => {
