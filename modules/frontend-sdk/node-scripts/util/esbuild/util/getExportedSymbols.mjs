@@ -7,10 +7,10 @@ import {Parser} from 'acorn';
 import tsPlugin from 'acorn-typescript';
 import estraverse from 'estraverse';
 import fs from 'fs/promises';
-import resolve from 'resolve';
 
 import projectScopeRequire from '../../projectScopeRequire.mjs';
 import getSymbolsFromEsbuild from './getSymbolsFromEsbuild.mjs';
+import resolveWithEsbuild from './resolveWithEsbuild.mjs';
 
 export default async function getExportedSymbols(
 	overridenPackageSymbols,
@@ -59,14 +59,21 @@ export default async function getExportedSymbols(
 }
 
 async function loadSymbols(moduleName) {
+
+	// Inspect the file esbuild will bundle rather than the one Node would load,
+	// because the two disagree for packages that ship a CommonJS `main` next to
+	// an ES `module`.
+
+	const modulePath = await resolveWithEsbuild(moduleName);
+
 	let module;
 
 	try {
-		module = projectScopeRequire(moduleName);
+		module = projectScopeRequire(modulePath);
 	}
 	catch (_error) {
 		try {
-			module = await parseESMExports(moduleName);
+			module = await parseESMExports(modulePath);
 		}
 		catch (_parseError) {
 
@@ -99,9 +106,38 @@ async function loadSymbols(moduleName) {
 	return symbols;
 }
 
-async function parseESMExports(moduleName, projectDir = '.') {
-	const modulePath = resolve.sync(moduleName, {basedir: projectDir});
+/**
+ * Record the names an `export` declares inline, as in `export function foo`,
+ * `export class Foo` or `export const foo`, which name their symbol on the
+ * declaration instead of listing it as a specifier.
+ *
+ * Only declarations that survive to runtime count. An `interface` or a `type`
+ * is erased when the module is bundled, so exporting its name would describe a
+ * symbol the bundle does not have. An `enum` is a real object and does count.
+ */
+function addDeclaredSymbols(symbols, declaration) {
+	if (!declaration) {
+		return;
+	}
 
+	if (declaration.type === 'VariableDeclaration') {
+		for (const {id} of declaration.declarations) {
+			if (id.type === 'Identifier') {
+				symbols[id.name] = true;
+			}
+		}
+	}
+	else if (
+		declaration.id &&
+		(declaration.type === 'ClassDeclaration' ||
+			declaration.type === 'FunctionDeclaration' ||
+			declaration.type === 'TSEnumDeclaration')
+	) {
+		symbols[declaration.id.name] = true;
+	}
+}
+
+async function parseESMExports(modulePath) {
 	const ast = Parser.extend(tsPlugin()).parse(
 		await fs.readFile(modulePath, 'utf-8'),
 		{
@@ -116,7 +152,19 @@ async function parseESMExports(moduleName, projectDir = '.') {
 		enter: (node) => {
 			switch (node.type) {
 				case 'ExportAllDeclaration':
-					throw new Error('Cannot infer symbols if export * is used');
+
+					// `export * as ns from` names one symbol and can be read
+					// here, unlike a bare `export *`, whose names exist only in
+					// the modules being re-exported.
+
+					if (!node.exported) {
+						throw new Error(
+							'Cannot infer symbols if export * is used'
+						);
+					}
+
+					symbols[node.exported.name] = true;
+					break;
 
 				case 'ExportDefaultDeclaration':
 					symbols['default'] = true;
@@ -127,6 +175,8 @@ async function parseESMExports(moduleName, projectDir = '.') {
 						for (const specifier of node.specifiers) {
 							symbols[specifier.exported.name] = true;
 						}
+
+						addDeclaredSymbols(symbols, node.declaration);
 					}
 					break;
 

@@ -6,7 +6,6 @@
 import esbuild from 'esbuild';
 
 import getProjectAlias from '../../configuration/getProjectAlias.mjs';
-import {WORK_EXPORT_PATH} from '../../locations.mjs';
 
 /**
  * Ask esbuild which symbols a module exports.
@@ -100,11 +99,11 @@ function runProbe(moduleName, source) {
 		stdin: {
 			contents: source,
 
-			// Resolve from the directory the real export bridge lives in, so
-			// that a nested node_modules resolves the same way it will when the
-			// bridge itself is bundled.
+			// Resolve from the project directory, not from the directory the
+			// export bridge lives in: that only exists in a project that
+			// exports something, and a project that merely imports has none.
 
-			resolveDir: WORK_EXPORT_PATH,
+			resolveDir: '.',
 			sourcefile: 'getSymbolsFromEsbuild-probe.js',
 		},
 		write: false,
