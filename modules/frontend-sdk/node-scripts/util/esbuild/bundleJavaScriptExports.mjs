@@ -10,7 +10,6 @@ import Sonda from 'sonda/esbuild';
 import getFlatName from '../../util/getFlatName.mjs';
 import {BUILD_MAIN_EXPORTS_PATH, BUNDLE_REPORTS_PATH} from '../locations.mjs';
 import getLinkerPlugin from './plugins/getLinkerPlugin.mjs';
-import checkDeclaredSymbols from './util/checkDeclaredSymbols.mjs';
 import getExportBridgeJavaScript from './util/getExportBridgeJavaScript.mjs';
 import getExportBridgePath from './util/getExportBridgePath.mjs';
 import relocateSourcemap from './util/relocateSourcemap.mjs';
@@ -121,8 +120,6 @@ async function bundle(
 	}
 
 	const {metafile} = await runEsbuild(esbuildConfig, getFlatName(moduleName));
-
-	await checkDeclaredSymbols(overridenPackageSymbols, moduleName, metafile);
 
 	const {outputs} = metafile;
 
