@@ -33,6 +33,18 @@
 							'sortable',
 						],
 					},
+					'liferay-menu': {
+						path: 'menu.js',
+						requires: ['aui-debounce', 'aui-node'],
+					},
+					'liferay-menu-filter': {
+						path: 'menu_filter.js',
+						requires: [
+							'autocomplete-base',
+							'autocomplete-filters',
+							'autocomplete-highlighters',
+						],
+					},
 				},
 				root: PATH_JAVASCRIPT + '/liferay/',
 			},
