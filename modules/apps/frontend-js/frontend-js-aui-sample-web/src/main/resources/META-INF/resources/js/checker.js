@@ -20,6 +20,25 @@
 			removedBy: 'LPD-51537',
 			title: 'AutoFields',
 		},
+
+		// Liferay.Menu and Liferay.MenuFilter are still installed by the vanilla
+		// components in frontend-js-web, so neither global says anything about
+		// the deprecated module and globals stays empty for both entries.
+
+		{
+			featureFlagKey: 'LPD-57347',
+			globals: [],
+			moduleKey: 'liferay-menu',
+			removedBy: 'LPD-51552',
+			title: 'Menu',
+		},
+		{
+			featureFlagKey: 'LPD-57347',
+			globals: [],
+			moduleKey: 'liferay-menu-filter',
+			removedBy: 'LPD-51552',
+			title: 'MenuFilter',
+		},
 	];
 
 	const EXPECTED_GROUP = 'liferaydeprecated';
