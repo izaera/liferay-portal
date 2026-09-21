@@ -20,6 +20,20 @@ const CHECKS = [
 		removedBy: 'LPD-51537',
 		title: 'AutoFields',
 	},
+	{
+		featureFlagKey: 'LPD-57347',
+		globals: [],
+		moduleKey: 'liferay-menu',
+		removedBy: 'LPD-51552',
+		title: 'Menu',
+	},
+	{
+		featureFlagKey: 'LPD-57347',
+		globals: [],
+		moduleKey: 'liferay-menu-filter',
+		removedBy: 'LPD-51552',
+		title: 'MenuFilter',
+	},
 ];
 
 const EXPECTED_GROUP = 'liferaydeprecated';
