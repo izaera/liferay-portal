@@ -14,21 +14,18 @@ import React, {useEffect, useState} from 'react';
 
 const CHECKS = [
 	{
-		featureFlagKey: 'LPD-57347',
 		globals: ['Liferay.AutoFields'],
 		moduleKey: 'liferay-auto-fields',
 		removedBy: 'LPD-51537',
 		title: 'AutoFields',
 	},
 	{
-		featureFlagKey: 'LPD-57347',
 		globals: [],
 		moduleKey: 'liferay-menu',
 		removedBy: 'LPD-51552',
 		title: 'Menu',
 	},
 	{
-		featureFlagKey: 'LPD-57347',
 		globals: [],
 		moduleKey: 'liferay-menu-filter',
 		removedBy: 'LPD-51552',
@@ -37,6 +34,8 @@ const CHECKS = [
 ];
 
 const EXPECTED_GROUP = 'liferaydeprecated';
+
+const FEATURE_FLAG_KEY = 'LPD-57347';
 
 const USE_TIMEOUT = 10000;
 
@@ -182,7 +181,7 @@ function Module({result}) {
 							(result.enabled ? 'label-info' : 'label-secondary')
 						}
 					>
-						{result.check.featureFlagKey}
+						{FEATURE_FLAG_KEY}
 
 						{result.enabled ? ' enabled' : ' disabled'}
 					</span>
@@ -220,11 +219,11 @@ function getModuleInfo(moduleKey) {
 	return loader.moduleInfo[moduleKey] || null;
 }
 
-function isFeatureFlagEnabled(featureFlagKey) {
+function isFeatureFlagEnabled() {
 	return Boolean(
 		window.Liferay &&
 			Liferay.FeatureFlags &&
-			Liferay.FeatureFlags[featureFlagKey]
+			Liferay.FeatureFlags[FEATURE_FLAG_KEY]
 	);
 }
 
@@ -323,7 +322,7 @@ function assert(label, expected, actual) {
 }
 
 async function runCheck(check) {
-	const enabled = isFeatureFlagEnabled(check.featureFlagKey);
+	const enabled = isFeatureFlagEnabled();
 
 	const moduleInfo = getModuleInfo(check.moduleKey);
 
