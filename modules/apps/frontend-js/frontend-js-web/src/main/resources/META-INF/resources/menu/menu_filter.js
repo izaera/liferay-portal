@@ -22,9 +22,9 @@ const TPL_INPUT_FILTER =
  * is all this reimplements. The <code>minQueryLength</code>,
  * <code>queryDelay</code>, <code>resultFilters</code>,
  * <code>resultTextLocator</code> and <code>source</code> options the
- * constructor used to accept are still tolerated, so that existing callers of
- * the public <code>Liferay.MenuFilter</code> keep working, but they no longer
- * have an effect: the source is always the list the filter is attached to.
+ * constructor used to accept are still tolerated, so that callers written
+ * against the AlloyUI component keep working, but they no longer have an
+ * effect: the source is always the list the filter is attached to.
  */
 export default class MenuFilter {
 	constructor({content, menu}) {

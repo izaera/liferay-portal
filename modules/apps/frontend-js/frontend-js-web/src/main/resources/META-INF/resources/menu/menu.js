@@ -3,9 +3,9 @@
  * SPDX-License-Identifier: LGPL-2.1-or-later OR LicenseRef-Liferay-DXP-EULA-2.0.0-2023-06
  */
 
-import debounce from '../debounce/debounce.es';
-import isPhone from '../util/is_phone';
-import isTablet from '../util/is_tablet';
+import debounce from '../liferay/debounce/debounce.es';
+import isPhone from '../liferay/util/is_phone';
+import isTablet from '../liferay/util/is_tablet';
 import {all, create, guid, toElement} from './dom';
 import FocusManager from './focus_manager';
 import MenuFilter from './menu_filter';

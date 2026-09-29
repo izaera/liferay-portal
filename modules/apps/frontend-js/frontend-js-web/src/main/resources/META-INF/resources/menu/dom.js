@@ -59,9 +59,8 @@ export function show(element) {
 
 /**
  * Accepts a CSS selector, a DOM element, an AlloyUI node or an AlloyUI node
- * list. The AlloyUI branches are still needed because
- * <code>Liferay.Menu.handleFocus</code> is public API and the Dynamic Data
- * Mapping translation manager calls it with an AlloyUI node.
+ * list. The AlloyUI branches are still needed because the Dynamic Data Mapping
+ * translation manager calls <code>Menu.handleFocus</code> with an AlloyUI node.
  */
 export function toElement(elementOrSelector) {
 	if (!elementOrSelector) {
