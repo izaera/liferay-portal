@@ -20,13 +20,13 @@ const CHECKS = [
 		title: 'AutoFields',
 	},
 	{
-		globals: [],
+		globals: ['Liferay.Menu'],
 		moduleKey: 'liferay-menu',
 		removedBy: 'LPD-51552',
 		title: 'Menu',
 	},
 	{
-		globals: [],
+		globals: ['Liferay.MenuFilter'],
 		moduleKey: 'liferay-menu-filter',
 		removedBy: 'LPD-51552',
 		title: 'MenuFilter',
