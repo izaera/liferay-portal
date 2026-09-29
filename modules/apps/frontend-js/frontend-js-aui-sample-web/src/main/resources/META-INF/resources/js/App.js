@@ -11,6 +11,10 @@ import React, {useEffect, useState} from 'react';
 // /modules_deprecated.js. Add one entry here per removal. The checker asserts
 // both directions: with the flag on the module must load, with the flag off it
 // must be gone.
+//
+// Set `preloaded` only for a module the portal itself used to load on every
+// page, so its globals were there without anyone calling AUI().use(). The
+// checker then also asserts that they still arrive on their own.
 
 const CHECKS = [
 	{
@@ -22,6 +26,7 @@ const CHECKS = [
 	{
 		globals: ['Liferay.Menu'],
 		moduleKey: 'liferay-menu',
+		preloaded: true,
 		removedBy: 'LPD-51552',
 		title: 'Menu',
 	},
@@ -37,6 +42,10 @@ const EXPECTED_GROUP = 'liferaydeprecated';
 
 const FEATURE_FLAG_KEY = 'LPD-57347';
 
+const PRELOAD_POLL_INTERVAL = 50;
+
+const PRELOAD_TIMEOUT = 10000;
+
 const USE_TIMEOUT = 10000;
 
 export function App() {
@@ -46,10 +55,12 @@ export function App() {
 		let cancelled = false;
 
 		const run = async () => {
+			const preloadedGlobals = await getPreloadedGlobals();
+
 			const nextResults = [];
 
 			for (const check of CHECKS) {
-				nextResults.push(await runCheck(check));
+				nextResults.push(await runCheck(check, preloadedGlobals));
 			}
 
 			if (!cancelled) {
@@ -219,6 +230,37 @@ function getModuleInfo(moduleKey) {
 	return loader.moduleInfo[moduleKey] || null;
 }
 
+// Snapshot which preloaded globals arrived on their own, and do it before any
+// check calls AUI().use. It cannot wait: liferay-auto-fields requires
+// liferay-menu, so the moment the AutoFields check runs the menu is attached
+// either way and the question can no longer be asked.
+//
+// The preload is an AUI().use() issued from modules_deprecated.js in the top
+// head, so it resolves on its own schedule rather than by the time this
+// component mounts. Give it a bounded window instead of sampling once.
+
+async function getPreloadedGlobals() {
+	const paths = [];
+
+	for (const check of CHECKS) {
+		if (check.preloaded) {
+			paths.push(...check.globals);
+		}
+	}
+
+	if (isFeatureFlagEnabled()) {
+		await waitForGlobals(paths);
+	}
+
+	const preloadedGlobals = {};
+
+	for (const path of paths) {
+		preloadedGlobals[path] = resolveGlobal(path) !== undefined;
+	}
+
+	return preloadedGlobals;
+}
+
 function isFeatureFlagEnabled() {
 	return Boolean(
 		window.Liferay &&
@@ -242,6 +284,37 @@ function resolveGlobal(path) {
 				value === undefined || value === null ? value : value[name],
 			window
 		);
+}
+
+// Resolves on timeout rather than rejecting, so a global that never arrives
+// fails its assertion instead of stopping the run.
+
+function waitForGlobals(paths) {
+	return new Promise((resolve) => {
+		if (!paths.length) {
+			resolve();
+
+			return;
+		}
+
+		const deadline = Date.now() + PRELOAD_TIMEOUT;
+
+		const poll = () => {
+			const arrived = paths.every(
+				(path) => resolveGlobal(path) !== undefined
+			);
+
+			if (arrived || Date.now() >= deadline) {
+				resolve();
+
+				return;
+			}
+
+			setTimeout(poll, PRELOAD_POLL_INTERVAL);
+		};
+
+		poll();
+	});
 }
 
 // Resolves rather than rejects, so one broken module cannot stop the run. A
@@ -321,7 +394,7 @@ function assert(label, expected, actual) {
 	};
 }
 
-async function runCheck(check) {
+async function runCheck(check, preloadedGlobals) {
 	const enabled = isFeatureFlagEnabled();
 
 	const moduleInfo = getModuleInfo(check.moduleKey);
@@ -370,6 +443,20 @@ async function runCheck(check) {
 				resolveGlobal(path) !== undefined
 			)
 		);
+
+		if (check.preloaded) {
+			assertions.push(
+				assert(
+					enabled
+						? 'Global ' + path + ' arrives without an AUI().use()'
+						: 'Global ' +
+								path +
+								' does not arrive without an AUI().use()',
+					enabled,
+					preloadedGlobals[path]
+				)
+			);
+		}
 	});
 
 	return {
