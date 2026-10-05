@@ -87,6 +87,8 @@ describe('OrderItemRow', () => {
 	const handleSubmit = jest.fn();
 
 	beforeEach(() => {
+		fetchMock.mockGlobal();
+
 		(window as any).Liferay = {
 			...(window as any).Liferay,
 			CustomDialogs: {},
@@ -94,7 +96,7 @@ describe('OrderItemRow', () => {
 	});
 
 	afterEach(() => {
-		fetchMock.restore();
+		fetchMock.hardReset();
 		jest.restoreAllMocks();
 		jest.clearAllMocks();
 
@@ -663,10 +665,12 @@ describe('OrderItemRow', () => {
 			});
 		});
 
-		expect(fetchMock.calls().matched[0][1].body).toBe(
+		expect(fetchMock.callHistory.calls('matched')[0].options.body).toBe(
 			'{"deliveryGroupName":"DeliveryGroupName1","options":"[]","quantity":10,"replacedSkuId":0,"requestedDeliveryDate":"","shippingAddressId":100,"skuId":1001,"skuUnitOfMeasure":{}}'
 		);
-		expect(fetchMock.calls().matched[0][1].method).toBe('PATCH');
+		expect(fetchMock.callHistory.calls('matched')[0].options.method).toBe(
+			'patch'
+		);
 
 		await setFieldValue(deliveryGroup2Input, 8);
 
@@ -695,10 +699,12 @@ describe('OrderItemRow', () => {
 			});
 		});
 
-		expect(fetchMock.calls().matched[1][1].body).toBe(
+		expect(fetchMock.callHistory.calls('matched')[1].options.body).toBe(
 			'{"deliveryGroupName":"DeliveryGroupName2","options":"[]","quantity":8,"replacedSkuId":0,"requestedDeliveryDate":"","shippingAddressId":100,"skuId":1001,"skuUnitOfMeasure":{}}'
 		);
-		expect(fetchMock.calls().matched[1][1].method).toBe('PATCH');
+		expect(fetchMock.callHistory.calls('matched')[1].options.method).toBe(
+			'patch'
+		);
 	});
 
 	it('Must save a new delivery group', async () => {
@@ -830,10 +836,12 @@ describe('OrderItemRow', () => {
 			});
 		});
 
-		expect(fetchMock.calls().matched[0][1].body).toBe(
+		expect(fetchMock.callHistory.calls('matched')[0].options.body).toBe(
 			'{"deliveryGroupName":"DeliveryGroupName2","options":"[]","quantity":20,"replacedSkuId":0,"requestedDeliveryDate":"","shippingAddressId":100,"skuId":1001,"skuUnitOfMeasure":{}}'
 		);
-		expect(fetchMock.calls().matched[0][1].method).toBe('POST');
+		expect(fetchMock.callHistory.calls('matched')[0].options.method).toBe(
+			'post'
+		);
 
 		await setFieldValue(deliveryGroup2Input, 8);
 
@@ -862,10 +870,12 @@ describe('OrderItemRow', () => {
 			});
 		});
 
-		expect(fetchMock.calls().matched[1][1].body).toBe(
+		expect(fetchMock.callHistory.calls('matched')[1].options.body).toBe(
 			'{"deliveryGroupName":"DeliveryGroupName2","options":"[]","quantity":8,"replacedSkuId":0,"requestedDeliveryDate":"","shippingAddressId":100,"skuId":1001,"skuUnitOfMeasure":{}}'
 		);
-		expect(fetchMock.calls().matched[1][1].method).toBe('PATCH');
+		expect(fetchMock.callHistory.calls('matched')[1].options.method).toBe(
+			'patch'
+		);
 	});
 
 	it('Must delete a new delivery group', async () => {
@@ -973,7 +983,9 @@ describe('OrderItemRow', () => {
 		await setFieldValue(deliveryGroup2Input, 0);
 
 		expect(quantityCell).toHaveTextContent(String(0));
-		expect(fetchMock.calls().matched[0][1].method).toBe('DELETE');
+		expect(fetchMock.callHistory.calls('matched')[0].options.method).toBe(
+			'delete'
+		);
 
 		await waitFor(() => {
 			expect(handleSubmit).toBeCalledWith({});
@@ -1270,16 +1282,18 @@ describe('OrderItemRow - actions', () => {
 	const handleSubmit = jest.fn();
 
 	beforeEach(() => {
+		fetchMock.mockGlobal();
+
 		(window as any).Liferay = {
 			...(window as any).Liferay,
 			CustomDialogs: {},
 		};
 
-		fetchMock.mock('*', JSON.stringify({}));
+		fetchMock.route('*', JSON.stringify({}));
 	});
 
 	afterEach(() => {
-		fetchMock.restore();
+		fetchMock.hardReset();
 		jest.restoreAllMocks();
 		jest.clearAllMocks();
 

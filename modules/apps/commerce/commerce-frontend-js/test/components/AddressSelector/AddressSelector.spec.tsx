@@ -145,6 +145,8 @@ describe('AddressSelector', () => {
 	const isFormValid = jest.fn();
 
 	beforeEach(async () => {
+		fetchMock.mockGlobal();
+
 		fetchMock.get(
 			/headless-admin-address\/.*\/countries/i,
 			(): ICountryAPIResponse => {
@@ -230,7 +232,7 @@ describe('AddressSelector', () => {
 	});
 
 	afterEach(() => {
-		fetchMock.restore();
+		fetchMock.hardReset();
 		jest.clearAllMocks();
 
 		cleanup();
@@ -636,10 +638,12 @@ describe('AddressSelector', () => {
 			await handlerCallbackInstance(new Event(''));
 		expect(handlerCallbackResult.id).toBe(100);
 
-		expect(fetchMock.calls().matched[2][1].body).toBe(
+		expect(fetchMock.callHistory.calls('matched')[2].options.body).toBe(
 			'{"addressType":"shipping","id":0,"primary":false,"addressRegion":"Alabama","addressCountry":"United States","addressLocality":"addressLocality","name":"name","phoneNumber":"phoneNumberInput","postalCode":"postalCode","streetAddressLine1":"streetAddressLine1","streetAddressLine2":"streetAddressLine2","streetAddressLine3":"streetAddressLine3"}'
 		);
-		expect(fetchMock.calls().matched[2][1].method).toBe('POST');
+		expect(fetchMock.callHistory.calls('matched')[2].options.method).toBe(
+			'post'
+		);
 	});
 
 	it('Must submit selected address', async () => {
@@ -739,7 +743,7 @@ describe('AddressSelector', () => {
 			/>
 		);
 
-		expect(fetchMock.calls().matched.length).toBe(2);
+		expect(fetchMock.callHistory.calls('matched').length).toBe(2);
 
 		const {addressSubtypeInput} = getLocators(renderedComponent);
 
@@ -772,7 +776,7 @@ describe('AddressSelector', () => {
 			/>
 		);
 
-		expect(fetchMock.calls().matched.length).toBe(3);
+		expect(fetchMock.callHistory.calls('matched').length).toBe(3);
 
 		const {addressSubtypeInput} = getLocators(renderedComponent);
 
@@ -794,7 +798,7 @@ describe('AddressSelector', () => {
 			/>
 		);
 
-		expect(fetchMock.calls().matched.length).toBe(2);
+		expect(fetchMock.callHistory.calls('matched').length).toBe(2);
 
 		const {addressSubtypeInput} = getLocators(renderedComponent);
 
@@ -849,7 +853,7 @@ describe('AddressSelector', () => {
 			/>
 		);
 
-		expect(fetchMock.calls().matched.length).toBe(3);
+		expect(fetchMock.callHistory.calls('matched').length).toBe(3);
 
 		const {
 			addressCountrySelect,
@@ -886,10 +890,12 @@ describe('AddressSelector', () => {
 			await handlerCallbackInstance(new Event(''));
 		expect(handlerCallbackResult.id).toBe(100);
 
-		expect(fetchMock.calls().matched[3][1].body).toBe(
+		expect(fetchMock.callHistory.calls('matched')[3].options.body).toBe(
 			'{"addressType":"shipping","id":0,"primary":false,"addressRegion":"Alabama","addressCountry":"United States","addressLocality":"addressLocality","name":"name","phoneNumber":"phoneNumberInput","postalCode":"postalCode","streetAddressLine1":"streetAddressLine1","streetAddressLine2":"streetAddressLine2","streetAddressLine3":"streetAddressLine3"}'
 		);
-		expect(fetchMock.calls().matched[3][1].method).toBe('POST');
+		expect(fetchMock.callHistory.calls('matched')[3].options.method).toBe(
+			'post'
+		);
 	});
 
 	it('Must save the subtype field when adding a new address', async () => {
@@ -937,7 +943,7 @@ describe('AddressSelector', () => {
 			/>
 		);
 
-		expect(fetchMock.calls().matched.length).toBe(3);
+		expect(fetchMock.callHistory.calls('matched').length).toBe(3);
 
 		const {
 			addressCountrySelect,
@@ -979,10 +985,12 @@ describe('AddressSelector', () => {
 			await handlerCallbackInstance(new Event(''));
 		expect(handlerCallbackResult.id).toBe(100);
 
-		expect(fetchMock.calls().matched[3][1].body).toBe(
+		expect(fetchMock.callHistory.calls('matched')[3].options.body).toBe(
 			'{"addressType":"shipping","id":0,"primary":false,"addressRegion":"Alabama","addressCountry":"United States","addressLocality":"addressLocality","name":"name","phoneNumber":"phoneNumberInput","postalCode":"postalCode","streetAddressLine1":"streetAddressLine1","streetAddressLine2":"streetAddressLine2","streetAddressLine3":"streetAddressLine3","addressSubtype":"SHIPPING2"}'
 		);
-		expect(fetchMock.calls().matched[3][1].method).toBe('POST');
+		expect(fetchMock.callHistory.calls('matched')[3].options.method).toBe(
+			'post'
+		);
 	});
 
 	it('Must preload subtype field if specified address as it', async () => {
@@ -1013,7 +1021,7 @@ describe('AddressSelector', () => {
 			/>
 		);
 
-		expect(fetchMock.calls().matched.length).toBe(3);
+		expect(fetchMock.callHistory.calls('matched').length).toBe(3);
 
 		const {addressIdSelect, addressSubtypeInput} =
 			getLocators(renderedComponent);
@@ -1082,7 +1090,7 @@ describe('AddressSelector', () => {
 			/>
 		);
 
-		expect(fetchMock.calls().matched.length).toBe(3);
+		expect(fetchMock.callHistory.calls('matched').length).toBe(3);
 
 		const {addressIdSelect, addressSubtypeInput} =
 			getLocators(renderedComponent);
@@ -1102,17 +1110,17 @@ describe('AddressSelector', () => {
 
 		await changeAddress(105, 'SHIPPING 2');
 
-		expect(fetchMock.calls().matched.length).toBe(3);
+		expect(fetchMock.callHistory.calls('matched').length).toBe(3);
 		expect(isFormValid).toBeCalledWith(true);
 
 		await changeAddress(106, 'BILLING AND SHIPPING 2');
 
-		expect(fetchMock.calls().matched.length).toBe(4);
+		expect(fetchMock.callHistory.calls('matched').length).toBe(4);
 		expect(isFormValid).toBeCalledWith(true);
 
 		await changeAddress(101, '');
 
-		expect(fetchMock.calls().matched.length).toBe(4);
+		expect(fetchMock.callHistory.calls('matched').length).toBe(4);
 		expect(isFormValid).toBeCalledWith(true);
 	});
 });
@@ -1121,6 +1129,8 @@ describe('AddressSelector API errors', () => {
 	const spyOnShowError = jest.spyOn(ErrorMessage, 'showError');
 
 	beforeEach(async () => {
+		fetchMock.mockGlobal();
+
 		fetchMock.get(/headless-admin-address\/.*\/countries/i, () => {
 			return {
 				status: 500,
@@ -1138,7 +1148,7 @@ describe('AddressSelector API errors', () => {
 	});
 
 	afterEach(() => {
-		fetchMock.restore();
+		fetchMock.hardReset();
 		jest.clearAllMocks();
 
 		cleanup();

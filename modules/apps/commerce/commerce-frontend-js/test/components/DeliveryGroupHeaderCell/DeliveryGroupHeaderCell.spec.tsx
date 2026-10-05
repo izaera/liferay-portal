@@ -48,6 +48,8 @@ describe('DeliveryGroupHeaderCell', () => {
 	const handleSubmit = jest.fn();
 
 	beforeEach(async () => {
+		fetchMock.mockGlobal();
+
 		(window as any).Liferay = {
 			...(window as any).Liferay,
 			CustomDialogs: {},
@@ -113,7 +115,7 @@ describe('DeliveryGroupHeaderCell', () => {
 	});
 
 	afterEach(() => {
-		fetchMock.restore();
+		fetchMock.hardReset();
 		jest.clearAllMocks();
 
 		cleanup();

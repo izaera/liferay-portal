@@ -42,7 +42,7 @@ describe('SaveTemplateModal', () => {
 	});
 
 	afterEach(() => {
-		fetchMock.restore();
+		fetchMock.hardReset();
 	});
 
 	it('must render a save template button', () => {
@@ -184,12 +184,11 @@ describe('SaveTemplateModal', () => {
 		});
 
 		it('must call api with form data and add the input field data', async () => {
-			const mockedApi = fetchMock.mock(
-				BASE_PROPS.formSaveAsTemplateURL,
-				() => {
-					return {test: 'test'};
-				}
-			);
+			fetchMock.mockGlobal();
+
+			fetchMock.route(BASE_PROPS.formSaveAsTemplateURL, () => {
+				return {test: 'test'};
+			});
 
 			const testName = 'test';
 			const {
@@ -222,7 +221,7 @@ describe('SaveTemplateModal', () => {
 				fireEvent.click(getByText(Liferay.Language.get('save')));
 			});
 
-			expect(mockedApi.called()).toBe(true);
+			expect(fetchMock.callHistory.called()).toBe(true);
 
 			await waitFor(() => {
 				expect(

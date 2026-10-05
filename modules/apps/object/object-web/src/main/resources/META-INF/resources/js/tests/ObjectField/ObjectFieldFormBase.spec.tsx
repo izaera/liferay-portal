@@ -59,7 +59,7 @@ afterAll(() => {
 });
 
 afterEach(() => {
-	fetchMock.restore();
+	fetchMock.hardReset();
 });
 
 beforeAll(() => {
@@ -69,6 +69,8 @@ beforeAll(() => {
 });
 
 beforeEach(() => {
+	fetchMock.mockGlobal();
+
 	fetchMock.get('http://localhost/url', {});
 });
 

@@ -18,10 +18,12 @@ afterAll(() => {
 });
 
 afterEach(() => {
-	fetchMock.restore();
+	fetchMock.hardReset();
 });
 
 beforeEach(() => {
+	fetchMock.mockGlobal();
+
 	fetchMock.get(
 		'/o/object-admin/v1.0/object-definitions/by-external-reference-code/',
 		{

@@ -64,10 +64,12 @@ afterAll(() => {
 });
 
 afterEach(() => {
-	fetchMock.restore();
+	fetchMock.hardReset();
 });
 
 beforeEach(() => {
+	fetchMock.mockGlobal();
+
 	fetchMock.get('http://localhost/url', {
 		objectRelationshipTypes: ['oneToMany'],
 	});

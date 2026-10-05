@@ -47,11 +47,13 @@ jest.mock('frontend-js-components-web', () => {
 
 describe('TemplateSelect', () => {
 	beforeEach(() => {
-		fetchMock.mock(getPlanInfoURL, mockGetPlan);
+		fetchMock.mockGlobal();
+
+		fetchMock.route(getPlanInfoURL, mockGetPlan);
 	});
 
 	afterEach(() => {
-		fetchMock.restore();
+		fetchMock.hardReset();
 
 		jest.resetAllMocks();
 	});

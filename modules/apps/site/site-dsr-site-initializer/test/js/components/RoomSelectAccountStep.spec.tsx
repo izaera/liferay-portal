@@ -90,7 +90,7 @@ describe('RoomSelectAccountStep', () => {
 	});
 
 	afterEach(() => {
-		fetchMock.restore();
+		fetchMock.hardReset();
 		jest.clearAllMocks();
 
 		cleanup();
@@ -120,6 +120,8 @@ describe('RoomSelectAccountStep', () => {
 	});
 
 	it('loads accounts', async () => {
+		fetchMock.mockGlobal();
+
 		const spyOnGetAccounts = jest.spyOn(RoomService, 'getAccounts');
 
 		fetchMock.get(/headless-admin-user\/.*\/accounts.*/i, () => {
@@ -181,6 +183,8 @@ describe('RoomSelectAccountStep', () => {
 	});
 
 	it('validate UI interaction', async () => {
+		fetchMock.mockGlobal();
+
 		fetchMock.get(/headless-admin-user\/.*\/accounts.*/i, () => {
 			return {
 				items: [

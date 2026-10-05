@@ -35,7 +35,7 @@ const renderComponent = ({
 
 describe('RoomInitializer', () => {
 	afterEach(() => {
-		fetchMock.restore();
+		fetchMock.hardReset();
 		jest.clearAllMocks();
 
 		cleanup();
@@ -61,6 +61,8 @@ describe('RoomInitializer', () => {
 	});
 
 	it('navigates between steps', async () => {
+		fetchMock.mockGlobal();
+
 		fetchMock.get(/headless-admin-user\/.*\/accounts.*/i, () => {
 			return {
 				items: [
@@ -150,6 +152,8 @@ describe('RoomInitializer', () => {
 	});
 
 	it('closes modal on cancel button', async () => {
+		fetchMock.mockGlobal();
+
 		fetchMock.get(/headless-admin-user\/.*\/accounts.*/i, () => {
 			return {
 				items: [
@@ -178,6 +182,8 @@ describe('RoomInitializer', () => {
 	});
 
 	it('calls API on save button with all the steps', async () => {
+		fetchMock.mockGlobal();
+
 		fetchMock.get(/headless-admin-user\/.*\/accounts.*/i, () => {
 			return {
 				items: [

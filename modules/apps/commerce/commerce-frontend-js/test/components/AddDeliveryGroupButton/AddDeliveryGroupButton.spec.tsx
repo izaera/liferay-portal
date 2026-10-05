@@ -51,6 +51,8 @@ describe('AddDeliveryGroupButton', () => {
 	const handleSubmit = jest.fn();
 
 	beforeEach(async () => {
+		fetchMock.mockGlobal();
+
 		fetchMock.get(
 			/headless-admin-address\/.*\/countries/i,
 			(): ICountryAPIResponse => {
@@ -111,7 +113,7 @@ describe('AddDeliveryGroupButton', () => {
 	});
 
 	afterEach(() => {
-		fetchMock.restore();
+		fetchMock.hardReset();
 		jest.clearAllMocks();
 
 		cleanup();
