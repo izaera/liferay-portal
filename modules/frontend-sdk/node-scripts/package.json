@@ -4,10 +4,12 @@
 		"node-scripts": "./bin.js"
 	},
 	"com.liferay": {
-		"sha256": "3777793ba87b78e66eb510f9db34844a1291056f08abc220fcfea4c26ce20050"
+		"sha256": "bb0a7752831095f94390f818262a2491397b6759b32f571f074d6b4b24612222"
 	},
 	"dependencies": {
-		"@babel/preset-env": "7.24.7",
+		"@babel/plugin-transform-dynamic-import": "7.27.1",
+		"@babel/plugin-transform-export-namespace-from": "7.27.1",
+		"@babel/plugin-transform-modules-commonjs": "7.28.6",
 		"@babel/preset-react": "7.24.7",
 		"@babel/preset-typescript": "7.10.4",
 		"@testing-library/dom": "10.4.0",
