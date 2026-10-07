@@ -4,7 +4,7 @@
 		"node-scripts": "./bin.js"
 	},
 	"com.liferay": {
-		"sha256": "bb0a7752831095f94390f818262a2491397b6759b32f571f074d6b4b24612222"
+		"sha256": "6dfee1a87076a27a45644b386f196969f8b8a2be5b571f99137457532c8b93e5"
 	},
 	"dependencies": {
 		"@babel/plugin-transform-dynamic-import": "7.27.1",
@@ -43,6 +43,8 @@
 		"liferay-theme-tasks": "11.5.6",
 		"micromatch": "4.0.2",
 		"minimist": "1.2.8",
+		"postcss": "8.5.29",
+		"postcss-scss": "4.0.9",
 		"prettier": "3.2.5",
 		"react-test-renderer": "18.2.0",
 		"react-test-renderer-16.12.0": "npm:react-test-renderer@16.12.0",
@@ -51,7 +53,7 @@
 		"rtlcss": "4.3.0",
 		"sass": "1.77.5",
 		"sonda": "0.7.1",
-		"stylelint": "13.2.0",
+		"stylelint": "16.26.1",
 		"tar": "7.5.22",
 		"typescript": "4.7.4",
 		"unzipper": "0.12.5"

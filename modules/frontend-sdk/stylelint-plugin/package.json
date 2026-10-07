@@ -2,7 +2,7 @@
 	"main": "./index.js",
 	"name": "@liferay/stylelint-plugin",
 	"peerDependencies": {
-		"stylelint": "^13.2.0"
+		"stylelint": "^16.26.1"
 	},
 	"scripts": {
 		"build": "true",
