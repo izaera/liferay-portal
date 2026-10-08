@@ -4,7 +4,7 @@
 		"node-scripts": "./bin.js"
 	},
 	"com.liferay": {
-		"sha256": "6dfee1a87076a27a45644b386f196969f8b8a2be5b571f99137457532c8b93e5"
+		"sha256": "d487f6235d4a0ad8ad12455e377b354bebb7e12f287084ecc37bbd064e557d0f"
 	},
 	"dependencies": {
 		"@babel/plugin-transform-dynamic-import": "7.27.1",
