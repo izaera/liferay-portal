@@ -136,6 +136,45 @@ const COMMANDS = {
 		parameters: '',
 		script: './report/java-imports.mjs',
 	},
+	'report:outdated': {
+		description: `
+		Generate an HTML report of the outdated packages in the yarn.lock file
+		of the current directory (for example, 'modules' or a workspace). The
+		report is written to outdated-packages.html unless --output is given.
+
+		The first tab lists the top-level dependencies (the ones declared in
+		the package.json files) that pull in outdated packages, most urgent
+		first, with the teams that own those package.json files according to
+		the most specific matching path in .github/CODEOWNERS (when there is
+		one). Each of them shows its health: whether it is deprecated, how
+		many of the packages it pulls in (itself included) have known security
+		advisories, whether it has published no release in two years, and how
+		many majors it is behind. Expanding a dependency shows the chain of
+		dependencies that leads to each outdated package below it, tagged with
+		the action that updates it: refreshing yarn.lock, raising the declared
+		range, upgrading the package that depends on it, or none (blocked)
+		when even the latest release of that package still requires the old
+		version.
+
+		The second tab lists the outdated packages that a yarn.lock refresh
+		updates without touching any package.json, with the yarn.lock entries
+		to delete before running yarn install. Versions that the refresh would
+		merge into a newer copy that is already locked are flagged as
+		duplicates.
+
+		The third tab lists every outdated package version once, with the
+		top-level dependencies that pull it in. All tabs can be filtered by
+		name, team, and how far behind the packages are (major, minor, or
+		patch).
+
+		Registry metadata is cached for a day in build/node-scripts. Pass
+		--refresh to ignore the cache, and --registry to use a registry other
+		than the one Yarn is configured with.
+`,
+		parameters:
+			'[--output=<html file>] [--refresh] [--registry=<registry url>]',
+		script: './report/outdated.mjs',
+	},
 	'report:source-imports': {
 		description: `
 		Generate aggregated information about imported external symbols by
