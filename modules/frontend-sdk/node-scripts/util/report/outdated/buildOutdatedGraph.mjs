@@ -190,7 +190,7 @@ export function classifyGraph({nodes, roots}, packuments) {
 /**
  * Adds the health signals of the report: the security advisories of every
  * node and, for the top-level dependencies, how old their locked and latest
- * releases are and how many majors they are behind.
+ * releases are.
  *
  * @param {object} graph the classified graph
  * @param {object} options
@@ -214,12 +214,6 @@ export function addHealth({nodes, roots}, {advisories, releaseDates}) {
 
 		if (node.latest) {
 			node.latestReleasedAt = time[node.latest];
-		}
-
-		if (node.outdated && node.diff === 'major') {
-			node.majorsBehind = semver.major(node.latest)
-				? semver.major(node.latest) - semver.major(node.version)
-				: semver.minor(node.latest) - semver.minor(node.version);
 		}
 	}
 }
