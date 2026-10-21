@@ -4,7 +4,7 @@
 		"node-scripts": "./bin.js"
 	},
 	"com.liferay": {
-		"sha256": "c6b97b564052f0462c03f02c603d24fd164ec434ee47b68afb05e75b0eb14081"
+		"sha256": "645724430a1cfe65be566bfb4f81bfcd89a7995230d04a51c82a6d11fd0a91b3"
 	},
 	"dependencies": {
 		"@babel/eslint-parser": "7.28.6",
