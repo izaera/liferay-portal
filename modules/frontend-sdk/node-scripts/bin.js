@@ -158,29 +158,30 @@ const COMMANDS = {
 		report is written to outdated-packages.html unless --output is given.
 
 		The first tab lists the top-level dependencies (the ones declared in
-		the package.json files) that pull in outdated packages, most urgent
-		first, with the teams that own those package.json files according to
-		the most specific matching path in .github/CODEOWNERS (when there is
-		one). Each of them shows its health: whether it is deprecated, how
-		many of the packages it pulls in (itself included) have known security
-		advisories, whether it has published no release in two years, and how
-		many majors it is behind. Expanding a dependency shows the chain of
-		dependencies that leads to each outdated package below it, tagged with
-		the action that updates it: refreshing yarn.lock, raising the declared
-		range, upgrading the package that depends on it, or none (blocked)
-		when even the latest release of that package still requires the old
-		version.
+		the package.json files) that are outdated or pull in outdated
+		packages, most urgent first, with the teams that own those
+		package.json files according to the most specific matching path in
+		.github/CODEOWNERS (when there is one). Each of them shows its own
+		health: how far behind it is, whether it is deprecated, whether it has
+		known security advisories, and whether it has published no release in
+		two years. It also shows how many outdated packages it pulls in,
+		linking to the second tab filtered to them, and how many of them have
+		security advisories.
 
-		The second tab lists the outdated packages that a yarn.lock refresh
+		The second tab lists every outdated package version once, with the
+		top-level dependencies that pull it in and the action that updates it:
+		refreshing yarn.lock, raising the declared range, upgrading the
+		package that depends on it, or none (blocked) when even the latest
+		release of that package still requires the old version. All tabs can
+		be filtered by name, team, and how far behind the packages are (major,
+		minor, or patch). Filtering by by:<top-level dependency> lists only
+		the packages that it pulls in.
+
+		The third tab lists the outdated packages that a yarn.lock refresh
 		updates without touching any package.json, with the yarn.lock entries
 		to delete before running yarn install. Versions that the refresh would
 		merge into a newer copy that is already locked are flagged as
 		duplicates.
-
-		The third tab lists every outdated package version once, with the
-		top-level dependencies that pull it in. All tabs can be filtered by
-		name, team, and how far behind the packages are (major, minor, or
-		patch).
 
 		Registry metadata is cached for a day in build/node-scripts. Pass
 		--refresh to ignore the cache, and --registry to use a registry other
