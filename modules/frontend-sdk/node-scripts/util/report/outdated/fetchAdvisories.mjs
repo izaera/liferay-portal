@@ -21,7 +21,8 @@ const CHUNK_SIZE = 250;
  * @param {Map<string, Set<string>>} versionsByName the locked versions of each
  *     package
  * @return {Map<string, Array<object>>} a map from `name@version` to its
- *     advisories (`{id, severity, title, url}`), or `null` when the registry
+ *     advisories (`{id, severity, title, url, vulnerableVersions}`), or
+ *     `null` when the registry
  *     does not answer
  */
 export default async function fetchAdvisories(
@@ -56,11 +57,12 @@ export default async function fetchAdvisories(
 					if (matching.length) {
 						advisories.set(
 							`${name}@${version}`,
-							matching.map(({id, severity, title, url}) => ({
-								id,
-								severity,
-								title,
-								url,
+							matching.map((entry) => ({
+								id: entry.id,
+								severity: entry.severity,
+								title: entry.title,
+								url: entry.url,
+								vulnerableVersions: entry.vulnerable_versions,
 							}))
 						);
 					}

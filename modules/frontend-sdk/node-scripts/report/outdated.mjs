@@ -23,6 +23,11 @@ import renderOutdatedReport from '../util/report/outdated/renderOutdatedReport.m
 
 const DEFAULT_REGISTRY = 'https://registry.yarnpkg.com';
 
+// .github/CODEOWNERS does not list modules/package.json, which the frontend
+// team owns
+
+const MODULES_ROOT_MANIFEST_OWNER = '@liferay-frontend';
+
 export default async function main() {
 	const {
 		output,
@@ -75,6 +80,13 @@ export default async function main() {
 			manifest.owners = getOwners(
 				path.join(rootDir, path.dirname(manifest.path))
 			);
+		}
+
+		if (
+			path.basename(rootDir) === 'modules' &&
+			!rootManifest.owners.length
+		) {
+			rootManifest.owners = [MODULES_ROOT_MANIFEST_OWNER];
 		}
 	}
 
@@ -151,7 +163,7 @@ export default async function main() {
 		registry,
 	});
 
-	addHealth(graph, {advisories, releaseDates});
+	addHealth(graph, {advisories, packuments, releaseDates});
 
 	const reportFile =
 		typeof output === 'string' ? output : 'outdated-packages.html';

@@ -49,10 +49,13 @@ export default function renderOutdatedReport(
 <button class="tab" data-view="refresh" type="button">Lock refresh</button>
 </nav>
 <p class="legend">
-<span class="legend-item" data-views="roots flat"><span class="badge deprecated">deprecated</span> the package is deprecated in the registry</span>
+<span class="legend-item" data-views="roots flat"><span class="badge deprecated">package deprecated</span> even the latest release is deprecated, so the package needs a replacement</span>
+<span class="legend-item" data-views="roots flat"><span class="badge version-deprecated">version deprecated</span> the locked release is deprecated, but the latest one is not</span>
 <span class="legend-item" data-views="roots flat"><span class="badge vulnerable">vulnerable</span> the package has known security advisories</span>
+<span class="legend-item" data-views="roots"><span class="muted">fixed in</span> <span class="version">x.y.z</span> the lowest release without those advisories, and how far it is</span>
 <span class="legend-item" data-views="roots"><span class="badge vulnerable">N vulnerable</span> how many of the outdated packages it pulls in have known security advisories</span>
 <span class="legend-item" data-views="roots"><span class="badge unmaintained">no release since</span> the package has not published a release in two years</span>
+<span class="legend-item" data-views="roots"><span class="dev">dev</span> only declared in <code>devDependencies</code>, so it does not reach the code that users run</span>
 <span class="legend-item" data-views="roots flat refresh"><span class="badge duplicate">duplicate of x.y.z</span> a newer version is already locked and every range that requests this one accepts it, so refreshing <code>yarn.lock</code> merges them</span>
 <span class="legend-item" data-views="roots flat-actions"><span class="action refresh">refresh lock</span> a newer release fits the requested range, so refreshing <code>yarn.lock</code> is enough</span>
 <span class="legend-item" data-views="flat-actions"><span class="action raise-range">raise range</span> change the range declared in <code>package.json</code></span>
@@ -127,13 +130,23 @@ function getHealth(root) {
 		!!node.latestReleasedAt &&
 		Date.now() - Date.parse(node.latestReleasedAt) > UNMAINTAINED_AGE;
 
+	// A deprecated latest release means that the package itself is going away,
+	// while a deprecated locked release only needs an upgrade
+
+	const deprecation = node.latestDeprecated
+		? 'package'
+		: node.deprecated
+			? 'version'
+			: undefined;
+
 	return {
-		deprecated: !!node.deprecated,
+		deprecation,
+		dev: root.declarations.every(({type}) => type === 'devDependencies'),
 		latestReleasedAt: node.latestReleasedAt,
 		priority:
-			node.deprecated || severity >= 2
+			deprecation === 'package' || severity >= 2
 				? 0
-				: severity >= 0 || unmaintained
+				: deprecation || severity >= 0 || unmaintained
 					? 1
 					: 2,
 		releasedAt: node.releasedAt,
@@ -178,6 +191,7 @@ function serializeGraph(
 		.sort(
 			(a, b) =>
 				healthByRoot.get(a).priority - healthByRoot.get(b).priority ||
+				healthByRoot.get(a).dev - healthByRoot.get(b).dev ||
 				SEVERITIES.indexOf(healthByRoot.get(b).transitiveSeverity) -
 					SEVERITIES.indexOf(
 						healthByRoot.get(a).transitiveSeverity
@@ -300,7 +314,12 @@ function serializeGraph(
 			deprecated: node.deprecated,
 			diff: node.diff,
 			duplicateOf: node.duplicateOf,
+			fixedIn: node.fixedIn,
+			fixedInDiff: node.fixedIn
+				? getDiff(node.version, node.fixedIn)
+				: undefined,
 			latest: node.latest,
+			latestDeprecated: node.latestDeprecated,
 			lockHeaders: node.refreshTo
 				? [...node.lockHeaders].sort()
 				: undefined,
@@ -517,8 +536,22 @@ nav {
 	color: var(--major);
 }
 
+.version-deprecated {
+	color: var(--minor);
+}
+
+.dev {
+	color: var(--muted);
+	font-size: 12px;
+	margin-left: 6px;
+}
+
 .legend-item {
 	margin-right: 12px;
+}
+
+.dependency summary {
+	cursor: pointer;
 }
 
 .declarations {
@@ -557,6 +590,23 @@ th, td {
 
 tbody tr:nth-child(odd) {
 	background: var(--row);
+}
+
+#roots tbody tr {
+	background: none;
+}
+
+#roots tbody tr.odd {
+	background: var(--row);
+}
+
+#roots tr.expanded td {
+	border-bottom: 0;
+}
+
+.declarations-row td {
+	padding-left: 22px;
+	padding-top: 0;
 }
 
 td .action {
@@ -617,12 +667,29 @@ function el(tag, className, text) {
 }
 
 function describeDeprecated(container, node) {
-	if (node.deprecated) {
-		const badge = el('span', 'badge deprecated', 'deprecated');
+	if (node.latestDeprecated) {
+		const badge = el('span', 'badge deprecated', 'package deprecated');
 
-		badge.title = node.deprecated;
+		badge.title = 'Even the latest release (' + node.latest + ') is deprecated: ' + node.latestDeprecated;
 		container.append(badge);
 	}
+	else if (node.deprecated) {
+		const badge = el('span', 'badge version-deprecated', 'version deprecated');
+
+		badge.title = node.version + ' is deprecated, but the latest release (' + node.latest + ') is not: ' + node.deprecated;
+		container.append(badge);
+	}
+}
+
+function describeAdvisories(container, node) {
+	if (!node.advisories) {
+		return;
+	}
+
+	const badge = el('span', 'badge vulnerable', 'vulnerable (' + getMaxSeverity(node.advisories) + ')');
+
+	badge.title = node.advisories.map((advisory) => advisory.severity + ': ' + advisory.title).join('\\n') + '\\n\\n' + (node.fixedIn ? 'Fixed in ' + node.fixedIn : 'No release fixes them yet');
+	container.append(badge);
 }
 
 function getMaxSeverity(advisories) {
@@ -636,16 +703,26 @@ function describeHealth(container, root) {
 	const {health} = root;
 
 	describeDeprecated(container, node);
+	describeAdvisories(container, node);
 
 	if (node.advisories) {
-		const badge = el('span', 'badge vulnerable', 'vulnerable (' + health.severity + ')');
-
-		badge.title = node.advisories.map((advisory) => advisory.severity + ': ' + advisory.title).join('\\n');
-		container.append(badge);
+		if (node.fixedIn) {
+			container.append(el('span', 'muted', ' fixed in '), el('span', 'version', node.fixedIn), el('span', 'badge ' + node.fixedInDiff, node.fixedInDiff));
+		}
+		else {
+			container.append(el('span', 'muted', ' no fix released'));
+		}
 	}
 
 	if (health.unmaintained) {
 		container.append(el('span', 'badge unmaintained', 'no release since ' + health.latestReleasedAt.substring(0, 7)));
+	}
+
+	if (health.dev) {
+		const marker = el('span', 'dev', 'dev');
+
+		marker.title = 'Only declared in devDependencies, so it does not reach the code that users run';
+		container.append(marker);
 	}
 }
 
@@ -681,11 +758,36 @@ function renderRoots() {
 
 		const nameCell = el('td');
 
-		const declarations = root.declarations.map(([manifest, type, range]) => manifest + ' (' + type + ' ' + range + ')');
-		const declarationsDiv = el('div', 'declarations', 'Declared in ' + (declarations.length === 1 ? declarations[0] : declarations.length + ' package.json files'));
+		// The package.json files that declare it go in a row of their own
+		// below, spanning the whole table, which expanding its name shows
 
-		declarationsDiv.title = declarations.join('\\n');
-		nameCell.append(el('span', 'name', node.name), declarationsDiv);
+		const dependency = el('details', 'dependency');
+		const summary = el('summary');
+
+		summary.append(el('span', 'name', node.name));
+		summary.title = 'Show the package.json files that declare it';
+		dependency.append(summary);
+		dependency.addEventListener('toggle', () => {
+			row.classList.toggle('expanded', dependency.open);
+			declarationsRow.hidden = row.hidden || !dependency.open;
+		});
+
+		nameCell.append(dependency);
+
+		const declarationsRow = el('tr', 'declarations-row');
+		const declarationsCell = el('td');
+
+		declarationsCell.colSpan = data.hasOwners ? 6 : 5;
+
+		for (const [manifest, type, range] of root.declarations) {
+			declarationsCell.append(el('div', 'declarations', manifest + ' (' + type + ' ' + range + ')'));
+		}
+
+		declarationsRow.append(declarationsCell);
+		declarationsRow.hidden = true;
+
+		row.classList.toggle('odd', rootIndex % 2 === 0);
+		declarationsRow.classList.toggle('odd', rootIndex % 2 === 0);
 
 		const lockedCell = el('td');
 
@@ -750,7 +852,7 @@ function renderRoots() {
 			row.append(el('td', null, teams.join(', ')));
 		}
 
-		tbody.append(row);
+		tbody.append(row, declarationsRow);
 	});
 }
 
@@ -843,13 +945,7 @@ function renderFlat() {
 
 		nameCell.append(el('span', 'name', node.name));
 		describeDeprecated(nameCell, node);
-
-		if (node.advisories) {
-			const badge = el('span', 'badge vulnerable', 'vulnerable (' + getMaxSeverity(node.advisories) + ')');
-
-			badge.title = node.advisories.map((advisory) => advisory.severity + ': ' + advisory.title).join('\\n');
-			nameCell.append(badge);
-		}
+		describeAdvisories(nameCell, node);
 
 		const lockedCell = el('td');
 
@@ -1009,10 +1105,11 @@ function applyFilters() {
 	// Top-level dependencies are filtered by their own level, and the ones
 	// that are up to date by their own checkbox
 
-	for (const row of document.querySelectorAll('#roots tbody tr')) {
+	for (const row of document.querySelectorAll('#roots tbody tr:not(.declarations-row)')) {
 		const {level} = row.dataset;
 
 		row.hidden = !matches(row) || (level === 'none' ? !showUpToDate : !(LEVELS[level] & selectedLevels));
+		row.nextElementSibling.hidden = row.hidden || !row.querySelector('details.dependency').open;
 	}
 }
 
@@ -1142,7 +1239,8 @@ function renderRefresh() {
 document.getElementById('summary').textContent =
 	roots.length + ' top-level dependencies pull in outdated packages (' +
 	roots.filter((root) => nodes[root.node].outdated).length + ' are outdated themselves, ' +
-	roots.filter((root) => root.health.deprecated).length + ' deprecated, ' +
+	roots.filter((root) => root.health.deprecation === 'package').length + ' deprecated, ' +
+	roots.filter((root) => root.health.deprecation === 'version').length + ' on a deprecated version, ' +
 	(data.hasAdvisories ? roots.filter((root) => nodes[root.node].advisories).length + ' with security advisories, ' + roots.filter((root) => root.health.transitiveVulnerableCount).length + ' pulling in outdated packages with security advisories, ' : '') +
 	roots.filter((root) => root.health.unmaintained).length + ' unmaintained). ' +
 	outdated.length + ' of the ' + data.packageCount + ' locked packages are outdated, and a lock refresh updates ' +
