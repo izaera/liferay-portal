@@ -162,6 +162,11 @@ export function classifyGraph({nodes, roots}, packuments) {
 		}
 
 		node.deprecated = packument?.versions?.[node.version]?.deprecated;
+
+		if (node.latest) {
+			node.latestDeprecated =
+				packument.versions?.[node.latest]?.deprecated;
+		}
 	}
 
 	for (const root of roots.values()) {
@@ -189,20 +194,29 @@ export function classifyGraph({nodes, roots}, packuments) {
 
 /**
  * Adds the health signals of the report: the security advisories of every
- * node and, for the top-level dependencies, how old their locked and latest
- * releases are.
+ * node with the lowest release that fixes them and, for the top-level
+ * dependencies, how old their locked and latest releases are.
  *
  * @param {object} graph the classified graph
  * @param {object} options
  * @param {?Map<string, Array<object>>} options.advisories the advisories of
  *     each `name@version`, or `null` when they could not be fetched
+ * @param {Map<string, object>} options.packuments the abbreviated packuments
+ *     of every package
  * @param {Map<string, object>} options.releaseDates the full packuments (dist
  *     tags and publish times) of the top-level dependencies
  */
-export function addHealth({nodes, roots}, {advisories, releaseDates}) {
+export function addHealth(
+	{nodes, roots},
+	{advisories, packuments, releaseDates}
+) {
 	if (advisories) {
 		for (const node of nodes.values()) {
 			node.advisories = advisories.get(node.id);
+
+			if (node.advisories) {
+				node.fixedIn = getFixedVersion(node, packuments.get(node.name));
+			}
 		}
 	}
 
@@ -216,6 +230,28 @@ export function addHealth({nodes, roots}, {advisories, releaseDates}) {
 			node.latestReleasedAt = time[node.latest];
 		}
 	}
+}
+
+/**
+ * Returns the lowest stable release above the locked version that none of its
+ * advisories affect, or `undefined` when there is none yet.
+ */
+function getFixedVersion(node, packument) {
+	if (!semver.valid(node.version)) {
+		return undefined;
+	}
+
+	return Object.keys(packument?.versions || {})
+		.filter(
+			(version) =>
+				semver.valid(version) &&
+				!semver.prerelease(version) &&
+				semver.gt(version, node.version) &&
+				!node.advisories.some((advisory) =>
+					semver.satisfies(version, advisory.vulnerableVersions)
+				)
+		)
+		.sort(semver.compare)[0];
 }
 
 function classifyDirectEdge(root, resolver) {

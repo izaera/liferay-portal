@@ -162,11 +162,12 @@ const COMMANDS = {
 		packages, most urgent first, with the teams that own those
 		package.json files according to the most specific matching path in
 		.github/CODEOWNERS (when there is one). Each of them shows its own
-		health: how far behind it is, whether it is deprecated, whether it has
-		known security advisories, and whether it has published no release in
-		two years. It also shows how many outdated packages it pulls in,
-		linking to the second tab filtered to them, and how many of them have
-		security advisories.
+		health: how far behind it is, whether the package or just the locked
+		version is deprecated, which security advisories it has and the lowest
+		release that fixes them, whether it has published no release in two
+		years, and whether it is only a devDependency. It also shows how many
+		outdated packages it pulls in, linking to the second tab filtered to
+		them, and how many of them have security advisories.
 
 		The second tab lists every outdated package version once, with the
 		top-level dependencies that pull it in and the action that updates it:
