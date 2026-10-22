@@ -14,6 +14,11 @@ const CACHE_MAX_AGE = 24 * 60 * 60 * 1000;
 
 const CHUNK_SIZE = 250;
 
+// The endpoint answers with errors for a while when the registry is busy, so
+// failed requests are retried after growing waits
+
+const RETRY_DELAYS = [5000, 15000, 45000];
+
 /**
  * Asks the registry's bulk advisory endpoint which of the given package
  * versions have known security advisories.
@@ -83,6 +88,43 @@ export default async function fetchAdvisories(
 	return advisories;
 }
 
+async function postChunk(json, registry) {
+	for (let attempt = 0; ; attempt++) {
+		try {
+			const response = await fetch(
+				`${registry.replace(/\/$/, '')}/-/npm/v1/security/advisories/bulk`,
+				{
+					body: json,
+					headers: {'content-type': 'application/json'},
+					method: 'POST',
+				}
+			);
+
+			if (!response.ok) {
+				throw new Error(`HTTP ${response.status}`);
+			}
+
+			return await response.json();
+		}
+		catch (error) {
+			if (attempt === RETRY_DELAYS.length) {
+				throw error;
+			}
+
+			print(
+				1,
+				print.info('INFO:'),
+				`Unable to fetch security advisories (${error.message}),`,
+				`retrying in ${RETRY_DELAYS[attempt] / 1000} seconds`
+			);
+
+			await new Promise((resolve) =>
+				setTimeout(resolve, RETRY_DELAYS[attempt])
+			);
+		}
+	}
+}
+
 async function fetchChunk(body, {cacheDir, refresh, registry}) {
 	const json = JSON.stringify(body);
 
@@ -106,20 +148,7 @@ async function fetchChunk(body, {cacheDir, refresh, registry}) {
 		}
 	}
 
-	const response = await fetch(
-		`${registry.replace(/\/$/, '')}/-/npm/v1/security/advisories/bulk`,
-		{
-			body: json,
-			headers: {'content-type': 'application/json'},
-			method: 'POST',
-		}
-	);
-
-	if (!response.ok) {
-		throw new Error(`HTTP ${response.status}`);
-	}
-
-	const result = await response.json();
+	const result = await postChunk(json, registry);
 
 	await fs.mkdir(cacheDir, {recursive: true});
 	await fs.writeFile(cacheFile, JSON.stringify(result));
