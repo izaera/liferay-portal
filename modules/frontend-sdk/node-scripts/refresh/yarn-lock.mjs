@@ -38,7 +38,7 @@ export default async function main() {
 			0,
 			print.info('\nINFO:'),
 			`Paste the yarn.lock entries copied from the 'Lock refresh' tab of`,
-			`\n      the report:outdated report, then press Ctrl+D.\n`
+			`\n      the outdated packages report, then press Ctrl+D.\n`
 		);
 	}
 

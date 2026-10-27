@@ -4,7 +4,7 @@
 		"node-scripts": "./bin.js"
 	},
 	"com.liferay": {
-		"sha256": "7efb41576faf1381f0a6ec7f374e3a73ec73e5aebf1613b749f74d6fc3a69e39"
+		"sha256": "f51a25be6f336f2208a452af10e58919c2ada5309ec4869d29c4af8ae6b2b7f3"
 	},
 	"dependencies": {
 		"@babel/eslint-parser": "7.28.6",
@@ -53,7 +53,6 @@
 		"resolve": "1.22.11",
 		"rtlcss": "4.3.0",
 		"sass": "1.77.5",
-		"semver": "7.7.4",
 		"sonda": "0.7.1",
 		"stylelint": "17.16.0",
 		"tar": "7.5.22",

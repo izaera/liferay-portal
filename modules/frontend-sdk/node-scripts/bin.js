@@ -78,10 +78,11 @@ const COMMANDS = {
 		highest versions their ranges allow.
 
 		The entries are read from the standard input, one header line per
-		entry, as the 'Lock refresh' tab of the report:outdated report copies
-		them: paste them and press Ctrl+D, or pipe a file. The command deletes
-		those entries from yarn.lock and runs 'yarn install' to resolve them
-		again, without touching any package.json.
+		entry, as the 'Lock refresh' tab of the outdated packages reports
+		(https://github.com/izaera/liferay-outdated-report) copies them:
+		paste them and press Ctrl+D, or pipe a file. The command deletes those
+		entries from yarn.lock and runs 'yarn install' to resolve them again,
+		without touching any package.json.
 `,
 		parameters: '',
 		script: './refresh/yarn-lock.mjs',
@@ -150,47 +151,6 @@ const COMMANDS = {
 `,
 		parameters: '',
 		script: './report/java-imports.mjs',
-	},
-	'report:outdated': {
-		description: `
-		Generate an HTML report of the outdated packages in the yarn.lock file
-		of the current directory (for example, 'modules' or a workspace). The
-		report is written to outdated-packages.html unless --output is given.
-
-		The first tab lists the top-level dependencies (the ones declared in
-		the package.json files) that are outdated or pull in outdated
-		packages, most urgent first, with the teams that own those
-		package.json files according to the most specific matching path in
-		.github/CODEOWNERS (when there is one). Each of them shows its own
-		health: how far behind it is, whether the package or just the locked
-		version is deprecated, which security advisories it has and the lowest
-		release that fixes them, whether it has published no release in two
-		years, and whether it is only a devDependency. It also shows how many
-		outdated packages it pulls in, linking to the second tab filtered to
-		them, and how many of them have security advisories.
-
-		The second tab lists every outdated package version once, with the
-		top-level dependencies that pull it in and the action that updates it:
-		refreshing yarn.lock, raising the declared range, upgrading the
-		package that depends on it, or none (blocked) when even the latest
-		release of that package still requires the old version. All tabs can
-		be filtered by name, team, and how far behind the packages are (major,
-		minor, or patch). Filtering by by:<top-level dependency> lists only
-		the packages that it pulls in.
-
-		The third tab lists the outdated packages that a yarn.lock refresh
-		updates without touching any package.json, with the yarn.lock entries
-		to delete before running yarn install. Versions that the refresh would
-		merge into a newer copy that is already locked are flagged as
-		duplicates.
-
-		Registry metadata is cached for a day in build/node-scripts. Pass
-		--refresh to ignore the cache, and --registry to use a registry other
-		than the one Yarn is configured with.
-`,
-		parameters:
-			'[--output=<html file>] [--refresh] [--registry=<registry url>]',
-		script: './report/outdated.mjs',
 	},
 	'report:source-imports': {
 		description: `
